@@ -1,25 +1,28 @@
-import React from 'react';
-import styled from 'styled-components';
-import Header from './components/Header';
-import BrandGrid from './components/BrandGrid';
-import Footer from './components/Footer';
+import React from 'react'
+import { Route, Routes } from "react-router-dom";
+import Header from "./components/header/Header"
+import Footer from "./components/footer/Footer"
+import Home from "./page/home/Home"
+import Auctions from "./page/auctions/Auctions"
+import About from "./page/about/About"
 
-const AppContainer = styled.div`
-  background-color: #1a1d21;
-  color: white;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-`;
+
 
 function App() {
+
   return (
-    <AppContainer>
+    <>
       <Header />
-      <BrandGrid />
+      {/* <Register />
+      <Tables/> */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/auctions" element={<Auctions />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
       <Footer />
-    </AppContainer>
+    </>
   );
 }
 
-export default App;
+export default App

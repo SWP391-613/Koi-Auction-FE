@@ -3,11 +3,11 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 2rem;
     padding: 3rem;
-    background-color: #1a1d21;
+    background-color: #ffffff;
 }
 
 .brand-item {
-    background-color: #2a2e35;
+    background-color: #e2e5ea;
     border-radius: 12px;
     padding: 1.5rem;
     text-align: center;
@@ -39,7 +39,7 @@
 }
 
 .brand-name {
-    color: #e0e0e0;
+    color: #000000;
     font-size: 1rem;
     font-weight: 600;
     margin: 0;

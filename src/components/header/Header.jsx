@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
+import ThemeSwitch from "../themeSwitch/ThemeSwitch";
 
 function Header() {
   const currentPath = window.location.pathname;
@@ -58,6 +59,7 @@ function Header() {
         </Link>
       </nav>
       <div className="auth-buttons">
+        <ThemeSwitch />
         <Link to="/login" className="auth-button login-button">
           Log in
         </Link>

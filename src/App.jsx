@@ -7,11 +7,11 @@ import Auctions from "./page/auctions/Auctions";
 import About from "./page/about/About";
 import Login from "./page/login/Login";
 import Register from "./page/register/Register";
-
+import { ThemeProvider } from "./page/theme/ThemeContext";
 
 function App() {
   return (
-    <>
+    <ThemeProvider>
       <Header />
       {/* <Register />
       <Tables/> */}
@@ -23,7 +23,7 @@ function App() {
         <Route path="/register" element={<Register />} />
       </Routes>
       <Footer />
-    </>
+    </ThemeProvider>
   );
 }
 

@@ -9,7 +9,6 @@ import Login from "./page/login/Login";
 import Register from "./page/register/Register";
 import "./styles/style.scss";
 
-
 function App() {
   return (
     <>

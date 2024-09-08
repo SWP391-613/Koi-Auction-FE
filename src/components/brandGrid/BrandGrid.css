@@ -1,16 +1,16 @@
 .grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    background-color: #1e2129;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  background-color: #1e2129;
 }
 
 .brand-item {
-    background-color: #2f3542;
-    aspect-ratio: 1 / 1;
+  background-color: #2f3542;
+  aspect-ratio: 1 / 1;
 }
 
 .brand-logo {
-    width: 90%;
-    height: 70%;
-    object-fit: contain;
+  width: 90%;
+  height: 70%;
+  object-fit: contain;
 }

@@ -53,3 +53,38 @@ h6 {
   margin-top: 0;
   font-weight: 600;
 }
+
+body.dark-mode {
+  background-color: #1a1d21;
+  color: #e0e0e0;
+}
+
+body.dark-mode .grid-container {
+  background-color: #0d1117;
+}
+
+body.dark-mode .brand-item {
+  background-color: #2a2e35;
+}
+
+body.dark-mode .brand-name {
+  color: #e0e0e0;
+}
+
+body.dark-mode .brand-item:hover .brand-name {
+  color: #58a6ff;
+}
+
+body.dark-mode .header-container {
+  background-color: #161b22;
+}
+
+body.dark-mode .nav-link {
+  color: #c9d1d9;
+}
+
+body.dark-mode .nav-link:hover,
+body.dark-mode .nav-link:focus,
+body.dark-mode .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.1);
+}

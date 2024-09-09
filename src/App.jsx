@@ -9,12 +9,13 @@ import Login from "./page/login/Login";
 import Register from "./page/register/Register";
 import "./styles/style.scss";
 import { Helmet } from "react-helmet";
+import { ThemeProvider } from "./page/theme/ThemeContext";
 
 const TITLE = "Auction Koi";
 
 function App() {
   return (
-    <>
+    <ThemeProvider>
       <Helmet>
         <title>{ TITLE }</title>
       </Helmet>
@@ -29,7 +30,7 @@ function App() {
         <Route path="/register" element={<Register />} />
       </Routes>
       <Footer />
-    </>
+    </ThemeProvider>
   );
 }
 

@@ -7,7 +7,7 @@ import Auctions from "./page/auctions/Auctions";
 import About from "./page/about/About";
 import Login from "./page/login/Login";
 import Register from "./page/register/Register";
-
+import "./styles/style.scss";
 
 function App() {
   return (

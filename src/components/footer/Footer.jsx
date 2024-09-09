@@ -1,12 +1,12 @@
 import React from "react";
 import "./Footer.css";
-import SecurityIcon from '@mui/icons-material/Security';
-import DescriptionIcon from '@mui/icons-material/Description';
-import HomeIcon from '@mui/icons-material/Home';
-import AuctionIcon from '@mui/icons-material/Gavel';
-import InfoIcon from '@mui/icons-material/Info';
-import LoginIcon from '@mui/icons-material/Login';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import SecurityIcon from "@mui/icons-material/Security";
+import DescriptionIcon from "@mui/icons-material/Description";
+import HomeIcon from "@mui/icons-material/Home";
+import AuctionIcon from "@mui/icons-material/Gavel";
+import InfoIcon from "@mui/icons-material/Info";
+import LoginIcon from "@mui/icons-material/Login";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 function Footer() {
   return (
@@ -78,7 +78,9 @@ function Footer() {
           </a>
         </div>
       </div>
-      <div className="footer-bottom">AuctionKoi.com is a division of SelectKoi.com</div>
+      <div className="footer-bottom">
+        AuctionKoi.com is a division of SelectKoi.com
+      </div>
     </footer>
   );
 }

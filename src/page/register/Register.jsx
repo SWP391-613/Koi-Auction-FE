@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './Register.css';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import "./Register.css";
 
 const Register = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,7 +14,7 @@ const Register = () => {
       alert("Passwords don't match");
       return;
     }
-    console.log('Registration attempt with:', { email, password });
+    console.log("Registration attempt with:", { email, password });
   };
 
   return (
@@ -51,7 +51,9 @@ const Register = () => {
             required
           />
         </div>
-        <button type="submit" className="register-button">Register</button>
+        <button type="submit" className="register-button">
+          Register
+        </button>
       </form>
       <p>
         Already have an account? <Link to="/login">Login here</Link>

@@ -24,10 +24,7 @@ function BrandGrid() {
   return (
     <div className="grid-container gap-1 p-2">
       {koiImages.map((image, index) => (
-        <div
-          key={index}
-          className="brand-item"
-        >
+        <div key={index} className="brand-item">
           <img
             src={image.urls.regular}
             alt={image.alt_description || image.description}

@@ -131,56 +131,55 @@
 }
 
 .dark-mode .form {
-    background-color: #1c2128;
-    color: #c9d1d9;
-  }
-  
-  .dark-mode .flex-column > label {
-    color: #8b949e;
-  }
-  
-  .dark-mode .inputForm {
-    border-color: #30363d;
-    background-color: #0d1117;
-  }
-  
-  .dark-mode .input {
-    color: #c9d1d9;
-    background-color: #0d1117;
-  }
-  
-  .dark-mode .button-submit {
-    background-color: #238636;
-  }
-  
-  .dark-mode .button-submit:hover {
-    background-color: #2ea043;
-  }
-  
-  .dark-mode .p,
-  .dark-mode .flex-row > div > label {
-    color: #8b949e;
-  }
-  
-  .dark-mode .span {
-    color: #58a6ff;
-  }
-  
-  .dark-mode .btn {
-    background-color: #21262d;
-    border-color: #30363d;
-    color: #c9d1d9;
-  }
-  
-  .dark-mode .btn:hover {
-    background-color: #30363d;
-  }
+  background-color: #1c2128;
+  color: #c9d1d9;
+}
 
-  .dark-mode .inputForm svg {
-    fill: #8b949e;
-  }
-  
-  .dark-mode .inputForm:focus-within svg {
-    fill: #58a6ff;
-  }
+.dark-mode .flex-column > label {
+  color: #8b949e;
+}
 
+.dark-mode .inputForm {
+  border-color: #30363d;
+  background-color: #0d1117;
+}
+
+.dark-mode .input {
+  color: #c9d1d9;
+  background-color: #0d1117;
+}
+
+.dark-mode .button-submit {
+  background-color: #238636;
+}
+
+.dark-mode .button-submit:hover {
+  background-color: #2ea043;
+}
+
+.dark-mode .p,
+.dark-mode .flex-row > div > label {
+  color: #8b949e;
+}
+
+.dark-mode .span {
+  color: #58a6ff;
+}
+
+.dark-mode .btn {
+  background-color: #21262d;
+  border-color: #30363d;
+  color: #c9d1d9;
+}
+
+.dark-mode .btn:hover {
+  background-color: #30363d;
+}
+
+.dark-mode .inputForm svg {
+  fill: #8b949e;
+}
+
+.dark-mode .inputForm:focus-within svg {
+  fill: #58a6ff;
+}

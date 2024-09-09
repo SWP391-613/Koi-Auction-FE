@@ -59,13 +59,13 @@ function Header() {
         </Link>
       </nav>
       <div className="auth-buttons">
-        <ThemeSwitch />
         <Link to="/login" className="auth-button login-button">
-          Log in
+          Login
         </Link>
         <Link to="/register" className="auth-button register-button">
           Register
         </Link>
+        <ThemeSwitch />
       </div>
     </header>
   );

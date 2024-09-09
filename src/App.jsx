@@ -17,7 +17,7 @@ function App() {
   return (
     <ThemeProvider>
       <Helmet>
-        <title>{ TITLE }</title>
+        <title>{TITLE}</title>
       </Helmet>
       <Header />
       {/* <Register />

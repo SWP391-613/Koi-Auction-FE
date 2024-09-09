@@ -23,6 +23,7 @@ const Register = () => {
     } catch (error) {
       setError(error.message || 'An error occurred during registration');
     }
+    console.log("Registration attempt with:", { email, password });
   };
 
   return (

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import './BrandGrid.css';
-import { getImagesFromUnsplash } from '../../data/imageUtils'; // Import your API function
+import React, { useEffect, useState } from "react";
+import "./BrandGrid.css";
+import { getImagesFromUnsplash } from "../../data/imageUtils"; // Import your API function
 
 function BrandGrid() {
   // State to hold the images data
@@ -9,10 +9,10 @@ function BrandGrid() {
   // Fetch images from the API when the component mounts
   useEffect(() => {
     async function fetchData() {
-      const images = await getImagesFromUnsplash('koi', 20); // Adjust the search term and quantity as needed
+      const images = await getImagesFromUnsplash("koi", 20); // Adjust the search term and quantity as needed
       setKoiImages(images); // Store the fetched images in state
     }
-    
+
     fetchData(); // Call the function to fetch data
   }, []); // Empty dependency array means this runs once after the first render
 
@@ -22,10 +22,17 @@ function BrandGrid() {
   }
 
   return (
-    <div className="grid-container">
+    <div className="grid-container gap-1 p-2">
       {koiImages.map((image, index) => (
-        <div key={index} className="brand-item">
-          <img src={image.urls.small} alt={image.alt_description || image.description} className="brand-logo" />
+        <div
+          key={index}
+          className="brand-item"
+        >
+          <img
+            src={image.urls.regular}
+            alt={image.alt_description || image.description}
+            className="brand-logo"
+          />
           <p className="brand-name">{image.slug}</p>
         </div>
       ))}

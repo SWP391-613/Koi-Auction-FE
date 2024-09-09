@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const auctions = () => {
-  return (
-    <div>auctions</div>
-  )
-}
+  return <div>auctions</div>;
+};
 
-export default auctions
+export default auctions;

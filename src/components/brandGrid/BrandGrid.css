@@ -1,73 +1,73 @@
 .grid-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    padding: 3rem;
-    background-color: #1a1d21;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  padding: 3rem;
+  background-color: #1a1d21;
 }
 
 .brand-item {
-    background-color: #2a2e35;
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    aspect-ratio: 1 / 1;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
+  background-color: #2a2e35;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 .brand-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
 }
 
 .brand-logo {
-    width: 80%;
-    height: 80%;
-    object-fit: contain;
-    margin-bottom: 1rem;
-    transition: transform 0.3s ease;
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  margin-bottom: 1rem;
+  transition: transform 0.3s ease;
 }
 
 .brand-item:hover .brand-logo {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 .brand-name {
-    color: #e0e0e0;
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0;
-    transition: color 0.3s ease;
+  color: #e0e0e0;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  transition: color 0.3s ease;
 }
 
 .brand-item:hover .brand-name {
-    color: #58a6ff;
+  color: #58a6ff;
 }
 
 @media (max-width: 1200px) {
-    .grid-container {
-        grid-template-columns: repeat(3, 1fr);
-    }
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
-    .grid-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        padding: 2rem;
-    }
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 2rem;
+  }
 }
 
 @media (max-width: 480px) {
-    .grid-container {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 1.5rem;
-    }
+  .grid-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
 }

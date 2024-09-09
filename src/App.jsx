@@ -8,10 +8,16 @@ import About from "./page/about/About";
 import Login from "./page/login/Login";
 import Register from "./page/register/Register";
 import "./styles/style.scss";
+import { Helmet } from "react-helmet";
+
+const TITLE = "Auction Koi";
 
 function App() {
   return (
     <>
+      <Helmet>
+        <title>{ TITLE }</title>
+      </Helmet>
       <Header />
       {/* <Register />
       <Tables/> */}

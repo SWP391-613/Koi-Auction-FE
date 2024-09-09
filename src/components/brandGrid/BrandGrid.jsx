@@ -26,14 +26,14 @@ function BrandGrid() {
       {koiImages.map((image, index) => (
         <div
           key={index}
-          className="brand-item text text-success text-lg-start d-flex flex-column align-items-center justify-content-center rounded p-1"
+          className="brand-item"
         >
           <img
             src={image.urls.regular}
             alt={image.alt_description || image.description}
-            className="brand-logo mb-1 rounded"
+            className="brand-logo"
           />
-          <p className="brand-name text m-0 text-white">{image.slug}</p>
+          <p className="brand-name">{image.slug}</p>
         </div>
       ))}
     </div>

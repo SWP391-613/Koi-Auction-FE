@@ -87,3 +87,26 @@
   font-size: 0.9rem;
   color: #a4b0be;
 }
+
+body:not(.dark-mode) .footer-container {
+  background-color: #d6d6d6;
+  color: #333;
+}
+
+body:not(.dark-mode) .footer-title {
+  color: #5352ed;
+}
+
+body:not(.dark-mode) .footer-link {
+  background: #e0e0e0;
+  color: #333;
+}
+
+body:not(.dark-mode) .footer-link:hover {
+  background: #d0d0d0;
+}
+
+body:not(.dark-mode) .footer-bottom {
+  color: #666;
+}
+

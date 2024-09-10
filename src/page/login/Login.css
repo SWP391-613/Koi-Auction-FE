@@ -115,11 +115,15 @@
   justify-content: center;
   align-items: center;
   font-weight: 500;
-  gap: 10px;
+  gap: 15px;  /* Increased from 10px to 15px */
   border: 1px solid #ededef;
   background-color: white;
   cursor: pointer;
   transition: 0.2s ease-in-out;
+}
+
+.btn svg {
+  margin-right: 5px;  /* Added this line */
 }
 
 .btn:hover {
@@ -128,6 +132,10 @@
 
 .google {
   color: #151717;
+}
+
+.dark-mode .login-container {
+  background-color: #303233;
 }
 
 .dark-mode .form {

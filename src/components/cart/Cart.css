@@ -1,10 +1,9 @@
-/* From Uiverse.io by JohnnyCSilva */ 
+/* From Uiverse.io by JohnnyCSilva */
 .card {
   width: 400px;
   height: 800px !important;
   background: #313131;
   border-radius: 20px;
-  ;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -85,4 +84,3 @@
 .card:hover {
   transform: scale(1.04) rotate(-1deg);
 }
-

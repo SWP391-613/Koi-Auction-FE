@@ -1,16 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
 import ThemeSwitch from "../themeSwitch/ThemeSwitch";
-import { useContext } from "react";
-import { ThemeContext } from "../../page/theme/ThemeContext";
+import { ThemeContext } from "../../pages/theme/ThemeContext";
 
 function Header() {
   const currentPath = window.location.pathname;
   const { isDarkMode } = useContext(ThemeContext);
 
   return (
-    <header className={`header-container ${isDarkMode ? 'dark-mode' : ''}`}>
+    <header className={`header-container ${isDarkMode ? "dark-mode" : ""}`}>
       <div className="logo">AUCTIONKOI</div>
       <nav className="nav">
         <Link

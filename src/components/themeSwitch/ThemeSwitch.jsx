@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ThemeContext } from "../../page/theme/ThemeContext";
+import { ThemeContext } from "../../pages/theme/ThemeContext";
 import "./ThemeSwitch.css";
 
 const ThemeSwitch = () => {

@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { ThemeContext } from '../../page/theme/ThemeContext';
-import './ThemeSwitch.css';
+import React, { useContext } from "react";
+import { ThemeContext } from "../../page/theme/ThemeContext";
+import "./ThemeSwitch.css";
 
 const ThemeSwitch = () => {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
@@ -13,8 +13,8 @@ const ThemeSwitch = () => {
         checked={!isDarkMode}
         onChange={toggleTheme}
       />
-      <span className="slider"></span>
-      <span className="decoration"></span>
+      <span className="slider" />
+      <span className="decoration" />
     </label>
   );
 };

@@ -1,24 +1,26 @@
 .grid-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    padding: 3rem;
-    background-color: #ffffff;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  padding: 3rem;
+  background-color: #ffffff;
 }
 
 .brand-item {
-    background-color: #e2e5ea;
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    aspect-ratio: 1 / 1;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
+  background-color: #e2e5ea;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 .brand-item:hover {
@@ -39,11 +41,11 @@
 }
 
 .brand-name {
-    color: #000000;
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0;
-    transition: color 0.3s ease;
+  color: #000000;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  transition: color 0.3s ease;
 }
 
 .brand-item:hover .brand-name {

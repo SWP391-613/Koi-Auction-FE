@@ -3,9 +3,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #0d1117;
+  background-color: #d6d6d6;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+} 
 
 .logo {
   font-size: 1.8rem;
@@ -23,31 +23,35 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #8b949e;
+  color: #5352ed;
   text-decoration: none;
   padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border-radius: 20px;
   transition: all 0.3s ease;
+  font-weight: 500;
+  background-color: rgba(83, 82, 237, 0.1);
 }
 
 .nav-link:hover,
 .nav-link:focus,
 .nav-link.active {
   color: #fff;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #5352ed;
+  box-shadow: 0 4px 6px rgba(83, 82, 237, 0.2);
 }
 
 .nav-link svg {
   width: 18px;
   height: 18px;
   transition: transform 0.3s ease;
+  fill: #5352ed;
 }
 
 .nav-link:hover svg,
 .nav-link:focus svg,
 .nav-link.active svg {
   transform: scale(1.1);
-  fill: #2f81f7;
+  fill: #fff;
 }
 
 .auth-buttons {
@@ -110,4 +114,46 @@
   background: linear-gradient(45deg, #3634a5, #1e1c9e);
   box-shadow: 0 6px 8px rgba(30, 28, 158, 0.3);
   color: #fff;
+}
+
+.dark-mode .login-button {
+  color: #c9d1d9;
+  border-color: #30363d;
+}
+
+.dark-mode .login-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.dark-mode .register-button {
+  background: linear-gradient(45deg, #238636, #2ea043);
+  color: #fff;
+}
+
+.dark-mode .register-button:hover {
+  background: linear-gradient(45deg, #2ea043, #238636);
+  color: #fff;
+}
+
+.dark-mode .nav-link {
+  color: #58a6ff;
+  background-color: rgba(88, 166, 255, 0.1);
+}
+
+.dark-mode .nav-link:hover,
+.dark-mode .nav-link:focus,
+.dark-mode .nav-link.active {
+  color: #fff;
+  background-color: #58a6ff;
+}
+
+.dark-mode .nav-link svg {
+  fill: #58a6ff;
+}
+
+.dark-mode .nav-link:hover svg,
+.dark-mode .nav-link:focus svg,
+.dark-mode .nav-link.active svg {
+  fill: #fff;
 }

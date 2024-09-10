@@ -88,3 +88,21 @@ body.dark-mode .nav-link:focus,
 body.dark-mode .nav-link.active {
   background-color: rgba(255, 255, 255, 0.1);
 }
+
+body.dark-mode .footer-container {
+  background-color: #0d1117;
+  color: #fff;
+}
+
+body.dark-mode .footer-link {
+  background: #212121;
+  color: white;
+}
+
+body.dark-mode .footer-link:hover {
+  background: #000;
+}
+
+body.dark-mode .footer-bottom {
+  color: #a4b0be;
+}

@@ -130,6 +130,10 @@
   color: #151717;
 }
 
+.dark-mode .register-container{
+  background-color: #303233;
+}
+
 .dark-mode .form {
     background-color: #1c2128;
     color: #c9d1d9;

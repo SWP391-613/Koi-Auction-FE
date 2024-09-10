@@ -119,7 +119,7 @@
     ]
   },
   "settings": {
-    // need to set react version for eslint-plugin-react, doesn't auto detect by default
+    // need to set react version for eslint-plugin-react, doesn't auto-detect by default
     "react": {
       "version": "detect"
     },

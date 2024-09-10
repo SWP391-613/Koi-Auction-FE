@@ -2,7 +2,7 @@ import axios from "axios";
 // import 'dotenv/config';
 
 // const BASE_URL_DEVELOPMENT_BE = process.env.BASE_URL_DEVELOPMENT_BE ?? "http://localhost:8080/api/v1"
-type UnsplashImageDTO = {
+interface UnsplashImageDTO {
   slug: string;
   description: string;
   alt_description: string;
@@ -17,7 +17,7 @@ type UnsplashImageDTO = {
       small_s3: string;
     }
   >;
-};
+}
 
 export async function getImagesFromUnsplash(
   search: string,

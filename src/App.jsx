@@ -10,27 +10,38 @@ import Register from "./pages/register/Register";
 import "./styles/style.scss";
 import { Helmet } from "react-helmet";
 import { ThemeProvider } from "./pages/theme/ThemeContext";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const TITLE = "Auction Koi";
 
+const GOOGLE_CLIENT_ID = "";
+
 function App() {
   return (
-    <ThemeProvider>
-      <Helmet>
-        <title>{TITLE}</title>
-      </Helmet>
-      <Header />
-      {/* <Register />
-      <Tables/> */}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/auctions" element={<Auctions />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-      <Footer />
-    </ThemeProvider>
+    <GoogleOAuthProvider
+      clientId={GOOGLE_CLIENT_ID}
+      onScriptLoadError={() =>
+        console.log("Failed to load Google Sign-In script")
+      }
+      onScriptLoadSuccess={() =>
+        console.log("Google Sign-In script loaded successfully")
+      }
+    >
+      <ThemeProvider>
+        <Helmet>
+          <title>{TITLE}</title>
+        </Helmet>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/auctions" element={<Auctions />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+        <Footer />
+      </ThemeProvider>
+    </GoogleOAuthProvider>
   );
 }
 

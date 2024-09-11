@@ -26,9 +26,12 @@ const Login = () => {
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const response = await axios.post("http://localhost:4000/api/v1/autho2/google", {
-        token: credentialResponse.credential,
-      });
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/autho2/google",
+        {
+          token: credentialResponse.credential,
+        },
+      );
 
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
@@ -37,7 +40,10 @@ const Login = () => {
         setError("Google login failed");
       }
     } catch (error) {
-      setError(error.response?.data?.message || "An error occurred during Google login");
+      setError(
+        error.response?.data?.message ||
+          "An error occurred during Google login",
+      );
     }
   };
 

@@ -11,11 +11,12 @@
     "paths": {
       "~/*": ["src/*"], // Đường dẫn tương đối cho các import (alias)
       "type": ["jest"]
-    }
+    },
+    "allowImportingTsExtensions": true
   },
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   },
   "files": ["src/type.d.ts"], // Các file dùng để defined global type cho dự án
-  "include": ["src/**/*", "passport.config.ts"] // Đường dẫn include cho các file cần build
+  "include": ["src/**/*"] // Đường dẫn include cho các file cần build
 }

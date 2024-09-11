@@ -9,7 +9,6 @@
     "preview": "vite preview",
     "prepare": "husky",
     "lint": "npm run prettier:fix && npm run eslint:check && npm run check-types",
-    "lint-staged": "lint-staged",
     "prettier:check": "prettier --check . --cache",
     "prettier:fix": "prettier --write . --cache",
     "eslint:fix": "eslint --fix ./src --ext .ts,.tsx,.js,.jsx --max-warnings 0",
@@ -18,16 +17,6 @@
     "eslint:check-allow-warning": "eslint --quiet ./src --ext .ts,.tsx,.js,.jsx",
     "check-conflict-prettier-eslint": "npx eslint-config-prettier src/App.tsx --print-config",
     "check-types": "tsc --noemit"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.*": [
-      "npm run prettier:fix"
-    ]
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",

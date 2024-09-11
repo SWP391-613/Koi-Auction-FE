@@ -94,6 +94,7 @@
     "@typescript-eslint/no-misused-promises": "warn",
     "@typescript-eslint/no-unnecessary-type-assertion": "warn",
     "@typescript-eslint/explicit-module-boundary-types": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
 
     // react
     "react-refresh/only-export-components": "warn", //eslint-plugin-react-refresh
@@ -118,7 +119,7 @@
     ]
   },
   "settings": {
-    // need to set react version for eslint-plugin-react, doesn't auto detect by default
+    // need to set react version for eslint-plugin-react, doesn't auto-detect by default
     "react": {
       "version": "detect"
     },

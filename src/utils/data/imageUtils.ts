@@ -1,23 +1,5 @@
 import axios from "axios";
-// import 'dotenv/config';
-
-// const BASE_URL_DEVELOPMENT_BE = process.env.BASE_URL_DEVELOPMENT_BE ?? "http://localhost:8080/api/v1"
-interface UnsplashImageDTO {
-  slug: string;
-  description: string;
-  alt_description: string;
-  urls: Record<
-    string,
-    {
-      raw: string;
-      full: string;
-      regular: string;
-      small: string;
-      thumb: string;
-      small_s3: string;
-    }
-  >;
-}
+import { UnsplashImageDTO } from "~/types/unsplashImage.type";
 
 export async function getImagesFromUnsplash(
   search: string,
@@ -25,7 +7,7 @@ export async function getImagesFromUnsplash(
 ): Promise<UnsplashImageDTO[]> {
   try {
     const response = await axios.get(
-      `http://localhost:8080/api/v1/products/test/view?query=${search}&perPage=${quantity}`,
+      `http://localhost:4000/api/v1/products/test/view?query=${search}&perPage=${quantity}`,
     );
 
     // Ensure the response data matches the expected type

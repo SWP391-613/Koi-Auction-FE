@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./BrandGrid.css";
-import { getImagesFromUnsplash } from "../../data/imageUtils"; // Import your API function
+import { getImagesFromUnsplash } from "../../utils/data/imageUtils.ts"; // Import your API function
 
 function BrandGrid() {
   // State to hold the images data

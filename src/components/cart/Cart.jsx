@@ -1,6 +1,6 @@
 import React from "react";
 import "./Cart.css";
-import koi_data from "../../data/koi_data.json";
+import koi_data from "../../utils/data/koi_data.json";
 
 const Cart = () => {
   const koiItems = koi_data.items;

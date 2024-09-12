@@ -1,17 +1,17 @@
 :root {
   --primary-color: #3498db;
-  --secondary-color: #2ecc71;
+  --secondary-color: #808edf;
   --text-color: #333333;
   --bg-color: #ffffff;
-  --nav-hover-bg: #f0f0f0;
+  --nav-hover-bg: #d3d3d3;
 }
 
 .dark-mode {
   --primary-color: #3498db;
-  --secondary-color: #2ecc71;
+  --secondary-color: #808edf;
   --text-color: #f0f0f1;
   --bg-color: #2c3e50;
-  --nav-hover-bg: #34495e;
+  --nav-hover-bg: #1a2c3f;
 }
 
 .header-container {

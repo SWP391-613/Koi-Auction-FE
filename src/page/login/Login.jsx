@@ -1,7 +1,8 @@
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ThemeContext } from "../theme/ThemeContext";
-import { login } from "../../api/api";
+import { useAuth } from "../../AuthContext";
+import { login } from "../../api/Api";
 import "./Login.css";
 
 const Login = () => {
@@ -10,6 +11,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const { isDarkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,7 +19,8 @@ const Login = () => {
       const data = await login(email, password);
       console.log('Login successful:', data);
       localStorage.setItem('token', data.token);
-      navigate('/');
+      login({ username: email, avatar: "path/to/avatar.jpg" });
+      navigate("/auctions");
     } catch (error) {
       setError(error.message || 'An error occurred during login');
     }

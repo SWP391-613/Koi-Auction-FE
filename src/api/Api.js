@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/api/v1'; // Adjust this URL to match your backend URL
+const API_URL = 'http://localhost:4000/api/v1'; // Adjust this URL to match your backend URL
 
 export const login = async (email, password) => {
   const response = await fetch(`${API_URL}/users/login`, {

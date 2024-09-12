@@ -7,8 +7,11 @@ import AuctionIcon from "@mui/icons-material/Gavel";
 import InfoIcon from "@mui/icons-material/Info";
 import LoginIcon from "@mui/icons-material/Login";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { useAuth } from "../../AuthContext";
 
 function Footer() {
+  const { isLoggedIn } = useAuth();
+
   return (
     <footer className="footer-container">
       <div className="footer-content">
@@ -58,28 +61,30 @@ function Footer() {
             <span>Terms and Conditions</span>
           </a>
         </div>
-        <div className="footer-section">
-          <h3 className="footer-title">Account</h3>
-          <a href="/login" className="footer-link">
-            <div className="svg-wrapper-1">
-              <div className="svg-wrapper">
-                <LoginIcon />
+        {!isLoggedIn && (
+          <div className="footer-section">
+            <h3 className="footer-title">Account</h3>
+            <a href="/login" className="footer-link">
+              <div className="svg-wrapper-1">
+                <div className="svg-wrapper">
+                  <LoginIcon />
+                </div>
               </div>
-            </div>
-            <span>Login</span>
-          </a>
-          <a href="/register" className="footer-link">
-            <div className="svg-wrapper-1">
-              <div className="svg-wrapper">
-                <PersonAddIcon />
+              <span>Login</span>
+            </a>
+            <a href="/register" className="footer-link">
+              <div className="svg-wrapper-1">
+                <div className="svg-wrapper">
+                  <PersonAddIcon />
+                </div>
               </div>
-            </div>
-            <span>Register</span>
-          </a>
-        </div>
+              <span>Register</span>
+            </a>
+          </div>
+        )}
       </div>
       <div className="footer-bottom">
-        AuctionKoi.com is a division of SelectKoi.com
+        Duong Cong Son, Luu Cao Hoang, Nguyen Manh Duong.
       </div>
     </footer>
   );

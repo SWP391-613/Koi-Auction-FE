@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Cart.css";
 import koi_data from "../../data/koi_data.json";
 
@@ -12,10 +13,9 @@ const Cart = () => {
   return (
     <div className="koi-container">
       {koiItems.map((koi) => (
-        <div key={koi.id} className="koi-card">
+        <Link to={`/koi/${koi.id}`} key={koi.id} className="koi-card">
           <div className="image-container">
             {koi.image && <img src={koi.image.url} alt={koi.type} />}
-            {/* Đã loại bỏ phần hiển thị ID */}
           </div>
           <div className="info">
             <h2 className="title">{koi.type}</h2>
@@ -27,7 +27,7 @@ const Cart = () => {
               <p><span>Age:</span> {koi.age.years} years ({koi.age.type})</p>
             </div>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import Avatar from '@mui/material/Avatar';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from "../../AuthContext";
 import './Header.css';
 
 const Header = () => {
   const location = useLocation();
   const [darkMode, setDarkMode] = useState(false);
+  const { isLoggedIn, user, logout } = useAuth();
 
   useEffect(() => {
     if (darkMode) {
@@ -54,8 +57,17 @@ const Header = () => {
               </div>
             </div>
           </label>
-          <Link to="/login" className="auth-button login-button">Login</Link>
-          <Link to="/register" className="auth-button register-button">Register</Link>
+          {isLoggedIn ? (
+            <>
+              <Avatar src="/broken-image.jpg" />
+              <button onClick={logout} className="logout-button">Logout</button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="auth-button login-button">Login</Link>
+              <Link to="/register" className="auth-button register-button">Register</Link>
+            </>
+          )}
         </div>
       </div>
     </header>

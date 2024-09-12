@@ -115,7 +115,7 @@
   justify-content: center;
   align-items: center;
   font-weight: 500;
-  gap: 15px;  /* Increased from 10px to 15px */
+  gap: 15px; /* Increased from 10px to 15px */
   border: 1px solid #ededef;
   background-color: white;
   cursor: pointer;
@@ -123,7 +123,7 @@
 }
 
 .btn svg {
-  margin-right: 5px;  /* Added this line */
+  margin-right: 5px; /* Added this line */
 }
 
 .btn:hover {

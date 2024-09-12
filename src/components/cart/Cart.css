@@ -27,7 +27,9 @@
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .koi-container {
@@ -69,7 +71,6 @@ body {
 .koi-card:hover .image-container img {
   transform: scale(1.05);
 }
-
 
 .info {
   padding: 15px;

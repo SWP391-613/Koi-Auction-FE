@@ -14,7 +14,8 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const TITLE = "Auction Koi";
 
-const GOOGLE_CLIENT_ID = "1093656938461-fod9qlmrd68m0otn7mhrggipp15b8cnj.apps.googleusercontent.com"
+const GOOGLE_CLIENT_ID =
+  "1093656938461-fod9qlmrd68m0otn7mhrggipp15b8cnj.apps.googleusercontent.com";
 
 function App() {
   return (

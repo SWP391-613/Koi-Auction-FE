@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://lcaohoanq.github.io/deploy-github/",
+  "homepage": "https://github.com/SWP391-613.github.io/Koi-Auction-FE",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

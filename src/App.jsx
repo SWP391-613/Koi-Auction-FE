@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
@@ -14,15 +14,31 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "./AuthContext";
 import KoiDetail from "./pages/koiDetail/KoiDetail";
 import koi_data from "./utils/data/koi_data.json";
+import { useState } from "react";
+import { fetchGoogleClientId } from "./utils/apiUtils.js";
 
 const TITLE = "Auction Koi";
-const GOOGLE_CLIENT_ID =
-  "1093656938461-fod9qlmrd68m0otn7mhrggipp15b8cnj.apps.googleusercontent.com";
 
 function App() {
+  const [googleClientId, setGoogleClientId] = useState("");
+
+  useEffect(() => {
+    const loadGoogleClientId = async () => {
+      const clientId = await fetchGoogleClientId();
+      if (clientId) {
+        setGoogleClientId(clientId);
+      }
+    };
+    loadGoogleClientId();
+  }, []);
+
+  if (!googleClientId) {
+    return <div>Loading...</div>; // Or some other loading indicator
+  }
+
   return (
     <GoogleOAuthProvider
-      clientId={GOOGLE_CLIENT_ID}
+      clientId={googleClientId}
       onScriptLoadError={() =>
         console.log("Failed to load Google Sign-In script")
       }

@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://lcaohoanq.github.io/deploy-github/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -16,7 +17,9 @@
     "eslint:debug": "eslint ./src --debug --ext .ts,.tsx,.js,.jsx --max-warnings 0",
     "eslint:check-allow-warning": "eslint --quiet ./src --ext .ts,.tsx,.js,.jsx",
     "check-conflict-prettier-eslint": "npx eslint-config-prettier src/App.tsx --print-config",
-    "check-types": "tsc --noemit"
+    "check-types": "tsc --noemit",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -30,6 +33,7 @@
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "dotenv": "^16.4.5",
+    "gh-pages": "^6.1.1",
     "husky": "^9.1.5",
     "koiproject": "file:",
     "react": "^18.3.1",

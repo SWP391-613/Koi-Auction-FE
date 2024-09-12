@@ -1,22 +1,33 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Cart.css";
 import koi_data from "../../utils/data/koi_data.json";
 
 const Cart = () => {
+  const koiItems = koi_data.items;
+
+  if (!Array.isArray(koiItems) || koiItems.length === 0) {
+    return <div>Không có dữ liệu cá Koi.</div>;
+  }
+
   return (
-    <div className="cart-container">
-      {koi_data.items.map((item) => (
-        <div key={item.id} className="card">
-          <img className="img" src={item.image.url} alt={item.type} />
-          <span className="textStatus"> {item.status}</span>
-          <div className="textBox">
-            <p className="text head">{item.type}</p>
-            <span>{item.breeder}</span>
-            <p className="text price">
-              {item.price} {item.currency}
-            </p>
+    <div className="koi-container">
+      {koiItems.map((koi) => (
+        <Link to={`/koi/${koi.id}`} key={koi.id} className="koi-card">
+          <div className="image-container">
+            {koi.image && <img src={koi.image.url} alt={koi.type} />}
           </div>
-        </div>
+          <div className="info">
+            <h2 className="title">{koi.type}</h2>
+            <span className="price">{koi.price} {koi.currency}</span>
+            <div className="details">
+              <p><span>Breeder:</span> {koi.breeder}</p>
+              <p><span>Length:</span> {koi.length}</p>
+              <p><span>Sex:</span> {koi.sex}</p>
+              <p><span>Age:</span> {koi.age.years} years ({koi.age.type})</p>
+            </div>
+          </div>
+        </Link>
       ))}
     </div>
   );

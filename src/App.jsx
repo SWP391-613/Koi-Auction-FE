@@ -12,9 +12,12 @@ import { Helmet } from "react-helmet";
 import { ThemeProvider } from "./pages/theme/ThemeContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "./AuthContext";
+import KoiDetail from "./pages/koiDetail/KoiDetail";
+import koi_data from "./utils/data/koi_data.json";
 
 const TITLE = "Auction Koi";
-const GOOGLE_CLIENT_ID = "1093656938461-fod9qlmrd68m0otn7mhrggipp15b8cnj.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID =
+  "1093656938461-fod9qlmrd68m0otn7mhrggipp15b8cnj.apps.googleusercontent.com";
 
 function App() {
   return (
@@ -39,6 +42,10 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route
+              path="/koi/:id"
+              element={<KoiDetail koiData={koi_data.items} />}
+            />
           </Routes>
           <Footer />
         </ThemeProvider>

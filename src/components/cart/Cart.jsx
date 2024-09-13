@@ -19,12 +19,22 @@ const Cart = () => {
           </div>
           <div className="info">
             <h2 className="title">{koi.type}</h2>
-            <span className="price">{koi.price} {koi.currency}</span>
+            <span className="price">
+              {koi.price} {koi.currency}
+            </span>
             <div className="details">
-              <p><span>Breeder:</span> {koi.breeder}</p>
-              <p><span>Length:</span> {koi.length}</p>
-              <p><span>Sex:</span> {koi.sex}</p>
-              <p><span>Age:</span> {koi.age.years} years ({koi.age.type})</p>
+              <p>
+                <span>Breeder:</span> {koi.breeder}
+              </p>
+              <p>
+                <span>Length:</span> {koi.length}
+              </p>
+              <p>
+                <span>Sex:</span> {koi.sex}
+              </p>
+              <p>
+                <span>Age:</span> {koi.age.years} years ({koi.age.type})
+              </p>
             </div>
           </div>
         </Link>

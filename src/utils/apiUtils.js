@@ -37,3 +37,17 @@ export const register = async (name, email, password) => {
 
   return response.json();
 };
+
+export const fetchGoogleClientId = async () => {
+  try {
+    const response = await fetch(`${API_URL}/autho2/google-client-id`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch Google client ID');
+    }
+    const data = await response.json();
+    return data.clientId;
+  } catch (error) {
+    console.error('Error fetching Google client ID:', error);
+    return null;
+  }
+};

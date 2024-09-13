@@ -131,7 +131,27 @@
 }
 
 .google {
+  margin: 20px 0 10px 0;
+  background-color: #ffffff;
+  border: 1px solid #151717;
   color: #151717;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 10px;
+  height: 50px;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.google:hover {
+  background-color: #f5f5f5;
+}
+
+.google svg {
+  margin-right: 10px;
 }
 
 .dark-mode .login-container {

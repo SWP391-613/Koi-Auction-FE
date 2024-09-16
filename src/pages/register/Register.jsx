@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { ThemeContext } from "../theme/ThemeContext";
 import { Link, useNavigate } from "react-router-dom";
-import { register } from "../../utils/apiUtils.js";
+import { register } from "../../utils/apiUtils";
 import "./Register.css";
 
 const Register = () => {

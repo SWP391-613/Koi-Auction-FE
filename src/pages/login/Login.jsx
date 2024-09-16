@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ThemeContext } from "../theme/ThemeContext";
-import { login, fetchGoogleClientId } from "../../utils/apiUtils.js";
+import { login, fetchGoogleClientId } from "../../utils/apiUtils";
 import { GoogleLogin } from "@react-oauth/google";
 import "./Login.css";
 import axios from "axios";

@@ -2,7 +2,7 @@ import { environment } from "../environments/environment.ts";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`; // Adjust this URL to match your backend URL
 
-export const login = async (email, password) => {
+export const login = async (email : string, password : string) => {
   const response = await fetch(`${API_URL}/users/login`, {
     method: "POST",
     headers: {
@@ -19,7 +19,7 @@ export const login = async (email, password) => {
   return response.json();
 };
 
-export const register = async (name, email, password) => {
+export const register = async (name: string, email: string, password: string) => {
   const response = await fetch(`${API_URL}/users/register`, {
     method: "POST",
     headers: {

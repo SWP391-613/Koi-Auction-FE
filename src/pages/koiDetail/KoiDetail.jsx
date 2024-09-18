@@ -48,8 +48,16 @@ const KoiDetail = () => {
       </div>
       <div className="koi-detail-content">
         <div className="koi-detail-left">
-          <img src={koi.image.url} alt={koi.type} className="koi-detail-image" />
-          <img src={koi.image.url} alt={koi.type} className="koi-detail-image-small" />
+          <img
+            src={koi.image.url}
+            alt={koi.type}
+            className="koi-detail-image"
+          />
+          <img
+            src={koi.image.url}
+            alt={koi.type}
+            className="koi-detail-image-small"
+          />
         </div>
         <div className="koi-detail-right">
           <h1 className="koi-detail-title">{koi.type}</h1>
@@ -99,7 +107,9 @@ const KoiDetail = () => {
                     onChange={(e) => setBidAmount(e.target.value)}
                     placeholder="Enter your bid"
                   />
-                  <button type="submit" className="place-bid-button">Place Bid</button>
+                  <button type="submit" className="place-bid-button">
+                    Place Bid
+                  </button>
                 </form>
               ) : (
                 <div className="bidding-buttons">

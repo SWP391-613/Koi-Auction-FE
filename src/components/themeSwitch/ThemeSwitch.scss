@@ -12,7 +12,9 @@
   border-radius: 50%;
   left: 10%;
   bottom: 15%;
-  box-shadow: inset 8px -4px 0px 0px #ececd9, -4px 1px 4px 0px #dadada;
+  box-shadow:
+    inset 8px -4px 0px 0px #ececd9,
+    -4px 1px 4px 0px #dadada;
   background: var(--background);
   transition: 0.5s;
 }
@@ -22,8 +24,12 @@ input:checked ~ .decoration {
   width: 10px;
   height: 10px;
   background: white;
-  box-shadow: -12px 0 0 white, -6px 0 0 1.6px white, 5px 15px 0 1px white,
-  1px 17px 0 white, 10px 17px 0 white;
+  box-shadow:
+    -12px 0 0 white,
+    -6px 0 0 1.6px white,
+    5px 15px 0 1px white,
+    1px 17px 0 white,
+    10px 17px 0 white;
 }
 
 input:checked + .slider {
@@ -32,5 +38,7 @@ input:checked + .slider {
 
 input:checked + .slider:before {
   transform: translateX(100%);
-  box-shadow: inset 15px -4px 0px 15px #efdf2b, 0 0 10px 0px #efdf2b;
+  box-shadow:
+    inset 15px -4px 0px 15px #efdf2b,
+    0 0 10px 0px #efdf2b;
 }

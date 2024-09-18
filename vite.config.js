@@ -4,10 +4,8 @@ import path from "path";
 
 export default defineConfig({
   plugins: [react()],
-  resolve: {
-    alias: {
-      "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
-    },
+  css: {
+    postcss: "./postcss.config.js",
   },
   server: {
     port: 3000,

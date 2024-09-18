@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./Cart.css";
+import "./Cart.scss";
 import koi_data from "../../utils/data/koi_data.json";
 
 const Cart = () => {

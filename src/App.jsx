@@ -7,7 +7,6 @@ import Auctions from "./pages/auctions/Auctions";
 import About from "./pages/about/About";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
-import "./styles/style.scss";
 import { Helmet } from "react-helmet";
 import { ThemeProvider } from "./pages/theme/ThemeContext";
 import { AuthProvider } from "./AuthContext";

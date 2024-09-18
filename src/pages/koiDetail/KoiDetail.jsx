@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import koi_data from "../../utils/data/koi_data.json";
-import "./KoiDetail.css";
+import "./KoiDetail.scss";
 import { useAuth } from "../../AuthContext";
 
 const KoiDetail = () => {

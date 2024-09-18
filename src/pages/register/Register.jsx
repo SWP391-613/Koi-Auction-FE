@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { ThemeContext } from "../theme/ThemeContext";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "../../utils/apiUtils";
-import "./Register.css";
+import "./Register.scss";
 
 const Register = () => {
   const [name, setName] = useState("");

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
-import "./Header.css";
+import "./Header.scss";
 
 const Header = () => {
   const location = useLocation();

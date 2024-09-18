@@ -1,0 +1,56 @@
+{
+  "env": {
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:jsx-a11y/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "eslint-config-prettier",
+    "prettier"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "project": "./tsconfig.json", // Add this line
+    "tsconfigRootDir": "./" // Optional: specify the root directory for the tsconfig
+  },
+  "plugins": ["react", "prettier"],
+  "settings": {
+    "import/resolver": {
+      "node": {},
+      "typescript": {}
+    },
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "react/jsx-no-target-blank": "error",
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
+    "eqeqeq": "error",
+    "no-nested-ternary": "error",
+    "require-await": "error",
+    "no-console": "error",
+    "prettier/prettier": [
+      "error",
+      {
+        "$schema": "https://json.schemastore.org/prettierrc.json",
+        "plugins": ["prettier-plugin-tailwindcss"],
+        "arrowParens": "always",
+        "semi": true,
+        "trailingComma": "all",
+        "tabWidth": 2,
+        "endOfLine": "auto",
+        "useTabs": false,
+        "singleQuote": false,
+        "printWidth": 80
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": "warn"
+  }
+}

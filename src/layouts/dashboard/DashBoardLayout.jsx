@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, List, ListItem, ListItemText } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const DashboardLayout = ({ children }) => {
   return (
@@ -9,17 +10,30 @@ const DashboardLayout = ({ children }) => {
         sx={{ width: "240px", backgroundColor: "#f4f4f4", p: 2 }}
       >
         <List>
-          <ListItem button>
-            <ListItemText primary="Product" />
-          </ListItem>
-          <ListItem button>
+          <ListItem button component={Link} to="/manager/koi">
+            {" "}
+            {/* Link to Koi */}
             <ListItemText primary="Koi" />
           </ListItem>
-          <ListItem button>
-            <ListItemText primary="User" />
+          <ListItem button component={Link} to="/manager/breeder">
+            {" "}
+            {/* Link to Breeder */}
+            <ListItemText primary="Breeder" />
           </ListItem>
-          <ListItem button>
+          <ListItem button component={Link} to="/manager/member">
+            {" "}
+            {/* Link to member */}
+            <ListItemText primary="Member" />
+          </ListItem>
+          <ListItem button component={Link} to="/manager/employee">
+            {" "}
+            {/* Link to Employee */}
             <ListItemText primary="Employee" />
+          </ListItem>
+          <ListItem button component={Link} to="/manager/setting">
+            {" "}
+            {/* Link to Settings */}
+            <ListItemText primary="Settings" />
           </ListItem>
         </List>
       </Box>

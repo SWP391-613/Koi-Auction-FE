@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-
   const navigate = useNavigate();
 
   return (
@@ -13,9 +12,7 @@ const Home = () => {
         className="mt-5 mb-4 w-3/6 rounded-b-2xl"
       />
       <div className="text-center mt-5 mb-4">
-        <p className="text-5xl font-bold mb-2">
-          Your Direct Connection To The
-        </p>
+        <p className="text-5xl font-bold mb-2">Your Direct Connection To The</p>
         <p className="text-5xl font-bold">
           Top <span className="text-red-500">Japanese</span> Koi Breeders
         </p>

@@ -42,16 +42,16 @@ const Login = () => {
           let role = account.role;
           let route = `/${account.role}`;
           navigate(`/${account.role}`);
-          if(role === 0){
+          if (role === 0) {
             route = `/member`;
           }
-          if(role === 1){
+          if (role === 1) {
             route = `/staff`;
           }
-          if(role === 2){
+          if (role === 2) {
             route = `/breeder`;
           }
-          if(role === 3){
+          if (role === 3) {
             route = `/manager`;
           }
           navigate(route);
@@ -73,7 +73,7 @@ const Login = () => {
         "http://localhost:4000/api/v1/oauth2/google",
         {
           token: credentialResponse.credential,
-        }
+        },
       );
 
       if (response.status === 200) {
@@ -84,7 +84,8 @@ const Login = () => {
       }
     } catch (error) {
       setError(
-        error.response?.data?.message || "An error occurred during Google login"
+        error.response?.data?.message ||
+          "An error occurred during Google login",
       );
     }
   };

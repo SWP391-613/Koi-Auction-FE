@@ -1,11 +1,11 @@
-type Account  = {
+type Account = {
   id: string;
   email: string;
   phoneNumber: string;
   password: string;
   role: number;
   status: number;
-}
+};
 
 enum Role {
   MEMBER = 0,
@@ -22,7 +22,7 @@ enum Status {
   BANNED = 4,
 }
 
-const testAccounts : Account[] = [
+const testAccounts: Account[] = [
   {
     id: "1",
     email: "hoangclw@gmail.com",
@@ -58,4 +58,3 @@ const testAccounts : Account[] = [
 ];
 
 export default testAccounts;
-

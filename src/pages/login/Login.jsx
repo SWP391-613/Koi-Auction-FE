@@ -5,10 +5,12 @@ import { login, fetchGoogleClientId } from "../../utils/apiUtils";
 import { GoogleLogin } from "@react-oauth/google";
 import "./Login.scss";
 import axios from "axios";
+import { useAuth } from "../../AuthContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import testAccounts from "../../utils/testAccounts.ts";
 
 const Login = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -39,6 +41,7 @@ const Login = () => {
       for (const account of testAccounts) {
         if (account.email === email && account.password === password) {
           // Role-based routing
+          login(account);
           let role = account.role;
           let route = `/${account.role}`;
           navigate(`/${account.role}`);

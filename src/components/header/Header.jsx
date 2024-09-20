@@ -83,21 +83,15 @@ const Header = () => {
             </div>
           </label>
           {isLoggedIn ? (
-            <div className="user-info">
-              <Avatar src="/broken-image.jpg" />
-              <button onClick={logout} className="logout-button">
-                Logout
-              </button>
-            </div>
+            <>
+              <Avatar alt={user.name} src={user.avatar} className="avatar" />
+              <button className="logout-button" onClick={logout}>Logout</button>
+            </>
           ) : (
-            <div className="auth-buttons">
-              <Link to="/login" className="auth-button login-button">
-                Login
-              </Link>
-              <Link to="/register" className="auth-button register-button">
-                Register
-              </Link>
-            </div>
+            <>
+              <Link to="/login" className="login-button">Login</Link>
+              <Link to="/register" className="register-button">Register</Link>
+            </>
           )}
         </div>
       </div>

@@ -59,20 +59,6 @@
   border: 1.5px solid #2d79f3;
 }
 
-.flex-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  justify-content: space-between;
-}
-
-.flex-row > div > label {
-  font-size: 14px;
-  color: black;
-  font-weight: 400;
-}
-
 .span {
   font-size: 14px;
   margin-left: 5px;
@@ -162,7 +148,7 @@
 }
 
 .dark-mode .p,
-.dark-mode .flex-row > div > label {
+.dark-mode > div > label {
   color: #8b949e;
 }
 

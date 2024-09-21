@@ -15,6 +15,8 @@ import { AuthProvider } from "./AuthContext";
 import KoiDetail from "./pages/koiDetail/KoiDetail";
 import koi_data from "./utils/data/koi_data.json";
 import KoiList from "./pages/manager/koi/KoiList.jsx";
+import BreederList from "./pages/manager/breeder/BreederList.jsx";
+import StaffList from "./pages/manager/staff/StaffList.jsx";
 
 const TITLE = "Auction Koi";
 
@@ -34,6 +36,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/manager" element={<Manager />}>
             <Route path="member" element={<MemberList />} />
+            <Route path="breeder" element={<BreederList />} />
+            <Route path="staff" element={<StaffList />} />
             {/* Define other nested routes here */}
             <Route path="koi" element={<KoiList />} />
             <Route path="koi" element={<KoiDetail />} />

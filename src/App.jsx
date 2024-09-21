@@ -14,6 +14,7 @@ import { ThemeProvider } from "./pages/theme/ThemeContext";
 import { AuthProvider } from "./AuthContext";
 import KoiDetail from "./pages/koiDetail/KoiDetail";
 import koi_data from "./utils/data/koi_data.json";
+import KoiList from "./pages/manager/koi/KoiList.jsx";
 
 const TITLE = "Auction Koi";
 
@@ -34,6 +35,7 @@ function App() {
           <Route path="/manager" element={<Manager />}>
             <Route path="member" element={<MemberList />} />
             {/* Define other nested routes here */}
+            <Route path="koi" element={<KoiList />} />
             <Route path="koi" element={<KoiDetail />} />
             {/* Add other nested routes if needed */}
           </Route>

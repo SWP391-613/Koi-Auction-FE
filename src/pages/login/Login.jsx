@@ -94,13 +94,13 @@ const Login = () => {
   };
 
   return (
-    <div className={`login-container ${isDarkMode ? "dark-mode" : ""}`}>
-      <form className="form" onSubmit={handleSubmit}>
+    <div className={`login-container flex justify-center items-center h-lvh bg-[#f0f2f5] ${isDarkMode ? "dark-mode" : ""}`}>
+      <form className="form flex flex-col gap-4 bg-[#ffffff] p-9" onSubmit={handleSubmit}>
         {error && <p className="error">{error}</p>}
         <div className="flex-column">
-          <label>Email</label>
+          <label className="text semi-bold text-[#151717]">Email</label>
         </div>
-        <div className="inputForm">
+        <div className="inputForm h-12 flex items-center p-e ">
           <input
             type="email"
             className="input"
@@ -111,9 +111,9 @@ const Login = () => {
           />
         </div>
         <div className="flex-column">
-          <label>Password</label>
+          <label className="text semi-bold text-[#151717]">Password</label>
         </div>
-        <div className="inputForm">
+        <div className="inputForm h-12 flex items-center pl-2.5  ">
           <input
             type="password"
             className="input"
@@ -126,6 +126,19 @@ const Login = () => {
         <button className="button-submit" type="submit">
           Login
         </button>
+        {/* Google Login Section */}
+        {googleClientId && (
+          <GoogleOAuthProvider clientId={googleClientId}>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError("Google login failed")}
+              useOneTap
+              shape={"square"}
+              size={"large"}
+              width={390}
+            />
+          </GoogleOAuthProvider>
+        )}
         <p className="p">
           Don&apos;t have an account?{" "}
           <Link to="/register" className="span">
@@ -134,19 +147,6 @@ const Login = () => {
         </p>
       </form>
 
-      {/* Google Login Section */}
-      {googleClientId && (
-        <GoogleOAuthProvider clientId={googleClientId}>
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={() => setError("Google login failed")}
-            useOneTap
-            shape={"square"}
-            size={"large"}
-            width={390}
-          />
-        </GoogleOAuthProvider>
-      )}
     </div>
   );
 };

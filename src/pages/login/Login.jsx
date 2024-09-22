@@ -94,8 +94,13 @@ const Login = () => {
   };
 
   return (
-    <div className={`login-container flex justify-center items-center h-lvh bg-[#f0f2f5] ${isDarkMode ? "dark-mode" : ""}`}>
-      <form className="form flex flex-col gap-4 bg-[#ffffff] p-9" onSubmit={handleSubmit}>
+    <div
+      className={`login-container flex justify-center items-center h-lvh bg-[#f0f2f5] ${isDarkMode ? "dark-mode" : ""}`}
+    >
+      <form
+        className="form flex flex-col gap-4 bg-[#ffffff] p-9"
+        onSubmit={handleSubmit}
+      >
         {error && <p className="error">{error}</p>}
         <div className="flex-column">
           <label className="text semi-bold text-[#151717]">Email</label>
@@ -146,7 +151,6 @@ const Login = () => {
           </Link>
         </p>
       </form>
-
     </div>
   );
 };

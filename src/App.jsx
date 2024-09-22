@@ -17,6 +17,7 @@ import koi_data from "./utils/data/koi_data.json";
 import KoiList from "./pages/manager/koi/KoiList.jsx";
 import BreederList from "./pages/manager/breeder/BreederList.jsx";
 import StaffList from "./pages/manager/staff/StaffList.jsx";
+import { ToastContainer } from "react-toastify";
 
 const TITLE = "Auction Koi";
 
@@ -49,6 +50,7 @@ function App() {
           <Route path="/koi/:id" element={<KoiDetail koiData={koi_data.items} />} />
         </Routes>
         <Footer />
+        <ToastContainer />
       </ThemeProvider>
     </AuthProvider>
   );

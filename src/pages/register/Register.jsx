@@ -5,9 +5,13 @@ import { register } from "../../utils/apiUtils";
 import "./Register.scss";
 
 const Register = () => {
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [receiveEmailNotifications, setReceiveEmailNotifications] = useState(false);
+  const [acceptPolicy, setAcceptPolicy] = useState(false);
   const [error, setError] = useState("");
   const { isDarkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
@@ -15,7 +19,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await register(name, email, password);
+      const data = await register({ firstName, lastName, email, phoneNumber, password });
       console.log("Registration successful:", data);
       localStorage.setItem("token", data.token);
       navigate("/");
@@ -26,83 +30,127 @@ const Register = () => {
   };
 
   return (
-    <div className={`register-container ${isDarkMode ? "dark-mode" : ""}`}>
-      <form className="form" onSubmit={handleSubmit}>
+    <div
+      className={`register-container flex justify-center items-center h-lvh bg-[#f0f2f5] ${isDarkMode
+        ? "dark-mode" : ""}`}
+    >
+      <form
+        className="form flex flex-col gap-4 bg-[#f8f9fa] p-9" // Light gray background
+        onSubmit={handleSubmit}
+      >
         {error && <p className="error">{error}</p>}
+        <div className="name-container">
+          <div className="flex gap-4">
+            <div className="flex-1 flex flex-col">
+              <label className="text semi-bold text-[#151717]">First Name
+                *</label>
+              <div className="inputForm h-12 flex items-center p-e">
+                <input
+                  type="text"
+                  className="input flex-1"
+                  placeholder="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+            <div className="flex-1 flex flex-col">
+              <label className="text semi-bold text-[#151717]">Last Name
+                *</label>
+              <div className="inputForm h-12 flex items-center p-e">
+                <input
+                  type="text"
+                  className="input flex-1"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="flex-column">
-          <label>Name </label>
+          <label className="text semi-bold text-[#151717]">Email Address
+            *</label>
         </div>
-        <div className="inputForm">
-          <svg
-            height="60"
-            viewBox="0 -9 32 32"
-            width="40"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g id="Layer_3" data-name="Layer 3">
-              <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z" />
-            </g>
-          </svg>
-          <input
-            type="text"
-            className="input"
-            placeholder="Enter your Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
-        <div className="flex-column">
-          <label>Email </label>
-        </div>
-        <div className="inputForm">
-          <svg
-            height="20"
-            viewBox="0 0 32 32"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g id="Layer_3" data-name="Layer 3">
-              <path d="m30.853 13.87a15 15 0 0 0 -29.729 4.082 15.1 15.1 0 0 0 12.876 12.918 15.6 15.6 0 0 0 2.016.13 14.85 14.85 0 0 0 7.715-2.145 1 1 0 1 0 -1.031-1.711 13.007 13.007 0 1 1 5.458-6.529 2.149 2.149 0 0 1 -4.158-.759v-10.856a1 1 0 0 0 -2 0v1.726a8 8 0 1 0 .2 10.325 4.135 4.135 0 0 0 7.83.274 15.2 15.2 0 0 0 .823-7.455zm-14.853 8.13a6 6 0 1 1 6-6 6.006 6.006 0 0 1 -6 6z" />
-            </g>
-          </svg>
+        <div className="inputForm h-12 flex items-center p-e">
           <input
             type="email"
             className="input"
-            placeholder="Enter your Email"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
         <div className="flex-column">
-          <label>Password </label>
+          <label className="text semi-bold text-[#151717]">Phone Number
+            *</label>
         </div>
-        <div className="inputForm">
-          <svg
-            height="20"
-            viewBox="-64 0 512 512"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="m336 512h-288c-26.453125 0-48-21.523438-48-48v-224c0-26.476562 21.546875-48 48-48h288c26.453125 0 48 21.523438 48 48v224c0 26.476562-21.546875 48-48 48zm-288-288c-8.8125 0-16 7.167969-16 16v224c0 8.832031 7.1875 16 16 16h288c8.8125 0 16-7.167969 16-16v-224c0-8.832031-7.1875-16-16-16zm0 0" />
-            <path d="m304 224c-8.832031 0-16-7.167969-16-16v-80c0-52.929688-43.070312-96-96-96s-96 43.070312-96 96v80c0 8.832031-7.167969 16-16 16s-16-7.167969-16-16v-80c0-70.59375 57.40625-128 128-128s128 57.40625 128 128v80c0 8.832031-7.167969 16-16 16zm0 0" />
-          </svg>
+        <div className="inputForm h-12 flex items-center p-e">
+          <input
+            type="phoneNumber"
+            className="input"
+            placeholder="Phone Number"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            required
+          />
+        </div>
+        <div className="flex-column">
+          <label className="text semi-bold text-[#151717]">Password *</label>
+        </div>
+        <div className="inputForm h-12 flex items-center p-e">
           <input
             type="password"
             className="input"
-            placeholder="Enter your Password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <button className="button-submit" type="submit">
+
+        {/* Checkbox for email notifications */}
+        <div className="flex items-center mb-4">
+          <input
+            type="checkbox"
+            id="emailNotifications"
+            className="form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            checked={receiveEmailNotifications}
+            onChange={(e) => setReceiveEmailNotifications(e.target.checked)}
+          />
+          <label htmlFor="emailNotifications" className="ml-2 text-[#151717]">
+            Receive email notifications
+          </label>
+        </div>
+
+        {/* Checkbox for accepting the policy */}
+        <div className="flex items-center mb-4">
+          <input
+            type="checkbox"
+            id="acceptPolicy"
+            className="form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            checked={acceptPolicy}
+            onChange={(e) => setAcceptPolicy(e.target.checked)}
+            required
+          />
+          <label htmlFor="acceptPolicy" className="ml-2 text-[#151717]">
+            I accept the policy
+          </label>
+        </div>
+
+        <button className="button-submit text-white font-bold" type="submit">
           Register
         </button>
-        <p className="p">
+        <p className="p text-gray-700 text-base mt-4 mb-2 leading-relaxed">
           Already have an account?{" "}
-          <Link to="/login" className="span">
+          <Link
+            to="/login"
+            className="ml-4 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-400 focus:outline-none no-underline"
+          >
             Login
           </Link>
         </p>

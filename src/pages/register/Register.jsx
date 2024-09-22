@@ -42,7 +42,7 @@ const Register = () => {
         <div className="name-container">
           <div className="flex gap-4">
             <div className="flex-1 flex flex-col">
-              <label className="text semi-bold text-[#151717]">First Name
+              <label className="text semi-bold text-[#8B949E]">First Name
                 *</label>
               <div className="inputForm h-12 flex items-center p-e">
                 <input
@@ -56,7 +56,7 @@ const Register = () => {
               </div>
             </div>
             <div className="flex-1 flex flex-col">
-              <label className="text semi-bold text-[#151717]">Last Name
+              <label className="text semi-bold text-[#8B949E]">Last Name
                 *</label>
               <div className="inputForm h-12 flex items-center p-e">
                 <input
@@ -72,7 +72,7 @@ const Register = () => {
           </div>
         </div>
         <div className="flex-column">
-          <label className="text semi-bold text-[#151717]">Email Address
+          <label className="text semi-bold text-[#8B949E]">Email Address
             *</label>
         </div>
         <div className="inputForm h-12 flex items-center p-e">
@@ -86,7 +86,7 @@ const Register = () => {
           />
         </div>
         <div className="flex-column">
-          <label className="text semi-bold text-[#151717]">Phone Number
+          <label className="text semi-bold text-[#8B949E]">Phone Number
             *</label>
         </div>
         <div className="inputForm h-12 flex items-center p-e">
@@ -100,7 +100,7 @@ const Register = () => {
           />
         </div>
         <div className="flex-column">
-          <label className="text semi-bold text-[#151717]">Password *</label>
+          <label className="text semi-bold text-[#8B949E]">Password *</label>
         </div>
         <div className="inputForm h-12 flex items-center p-e">
           <input
@@ -122,7 +122,7 @@ const Register = () => {
             checked={receiveEmailNotifications}
             onChange={(e) => setReceiveEmailNotifications(e.target.checked)}
           />
-          <label htmlFor="emailNotifications" className="ml-2 text-[#151717]">
+          <label htmlFor="emailNotifications" className="ml-2 text-[#8B949E]">
             Receive email notifications
           </label>
         </div>
@@ -137,19 +137,19 @@ const Register = () => {
             onChange={(e) => setAcceptPolicy(e.target.checked)}
             required
           />
-          <label htmlFor="acceptPolicy" className="ml-2 text-[#151717]">
+          <label htmlFor="acceptPolicy" className="ml-2 text-[#8B949E]">
             I accept the policy
           </label>
         </div>
 
-        <button className="button-submit text-white font-bold" type="submit">
+        <button className="button-submit text w-full cursor-pointer border-none text-xl bg-[#FF4081] text-white font-bold" type="submit">
           Register
         </button>
-        <p className="p text-gray-700 text-base mt-4 mb-2 leading-relaxed">
+        <p className="p text-gray-700 font-bold text-base mt-4 mb-2 leading-relaxed">
           Already have an account?{" "}
           <Link
             to="/login"
-            className="ml-4 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-400 focus:outline-none no-underline"
+            className="ml-4 bg-blue-500 rounded-bl-xl text-white font-bold py-2 px-4 rounded hover:bg-blue-400 focus:outline-none no-underline"
           >
             Login
           </Link>

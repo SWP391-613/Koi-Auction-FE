@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setIsLoggedIn(false);
     setUser(null);
-    history.push('/login'); // Chuyển hướng về trang đăng nhập
+    history.push("/login"); // Chuyển hướng về trang đăng nhập
   };
 
   return (

@@ -7,6 +7,6 @@ export interface RegisterDTO {
   address?: string;
   date_of_birth?: string;
   google_account_id?: number;
-  status: string
-  role_id: number
+  status: string;
+  role_id: number;
 }

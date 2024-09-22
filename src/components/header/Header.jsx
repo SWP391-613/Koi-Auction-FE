@@ -85,12 +85,18 @@ const Header = () => {
           {isLoggedIn ? (
             <>
               <Avatar alt={user.name} src={user.avatar} className="avatar" />
-              <button className="logout-button" onClick={logout}>Logout</button>
+              <button className="logout-button" onClick={logout}>
+                Logout
+              </button>
             </>
           ) : (
             <>
-              <Link to="/login" className="text-xl login-button">Login</Link>
-              <Link to="/register" className="text-xl register-button">Register</Link>
+              <Link to="/login" className="text-xl login-button">
+                Login
+              </Link>
+              <Link to="/register" className="text-xl register-button">
+                Register
+              </Link>
             </>
           )}
         </div>

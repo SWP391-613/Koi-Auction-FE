@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError } from "axios";
 import { environment } from "../environments/environment.ts";
 import { RegisterDTO } from "~/dtos/register.dto.ts";
 
@@ -14,7 +14,8 @@ export const login = async (email: string, password: string) => {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Narrowing down to AxiosError type
-      const errorMessage = error.response?.data?.message || "An error occurred during login";
+      const errorMessage =
+        error.response?.data?.message || "An error occurred during login";
       throw new Error(errorMessage);
     } else {
       // Generic fallback error message
@@ -42,7 +43,9 @@ export const register = async (data: RegisterDTO) => {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Narrowing down to AxiosError type
-      const errorMessage = error.response?.data?.message || "An error occurred during registration";
+      const errorMessage =
+        error.response?.data?.message ||
+        "An error occurred during registration";
       throw new Error(errorMessage);
     } else {
       // Generic fallback error message
@@ -57,9 +60,15 @@ export const fetchGoogleClientId = async () => {
     return response.data.clientId;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error("Error fetching Google client ID:", error.response?.data?.message || error.message);
+      console.error(
+        "Error fetching Google client ID:",
+        error.response?.data?.message || error.message,
+      );
     } else {
-      console.error("Error fetching Google client ID:", "An unexpected error occurred");
+      console.error(
+        "Error fetching Google client ID:",
+        "An unexpected error occurred",
+      );
     }
     return null;
   }

@@ -24,8 +24,20 @@ export const login = async (email: string, password: string) => {
 };
 
 export const register = async (data: RegisterDTO) => {
+  const fullData: RegisterDTO = {
+    first_name: data.first_name || "",
+    last_name: data.last_name || "",
+    email: data.email || "",
+    password: data.password || "",
+    confirm_password: data.confirm_password || "",
+    address: data.address || "", // Optional
+    date_of_birth: data.date_of_birth || "", // Optional
+    google_account_id: data.google_account_id || 0, // Default value
+    status: data.status || "UNVERIFIED", // Default value for status
+    role_id: data.role_id || 1, // Default value for role_id
+  };
   try {
-    const response = await axios.post(`${API_URL}/users/register`, data);
+    const response = await axios.post(`${API_URL}/users/register`, fullData);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

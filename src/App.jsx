@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import Home from "./pages/home/Home";
@@ -11,7 +11,7 @@ import Manager from "./pages/manager/Manager";
 import MemberList from "./pages/manager/member/MemberList";
 import { Helmet } from "react-helmet";
 import { ThemeProvider } from "./pages/theme/ThemeContext";
-import { AuthProvider } from "./AuthContext";
+import { AuthProvider, useAuth } from "./AuthContext";
 import KoiDetail from "./pages/koiDetail/KoiDetail";
 import koi_data from "./utils/data/koi_data.json";
 import KoiList from "./pages/manager/koi/KoiList.jsx";
@@ -19,6 +19,11 @@ import BreederList from "./pages/manager/breeder/BreederList.jsx";
 import StaffList from "./pages/manager/staff/StaffList.jsx";
 
 const TITLE = "Auction Koi";
+
+const ProtectedRoute = ({ element }) => {
+  const { isLoggedIn } = useAuth();
+  return isLoggedIn ? element : <Navigate to="/login" />;
+};
 
 function App() {
   return (
@@ -34,19 +39,14 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/manager" element={<Manager />}>
-            <Route path="member" element={<MemberList />} />
-            <Route path="breeder" element={<BreederList />} />
-            <Route path="staff" element={<StaffList />} />
-            {/* Define other nested routes here */}
-            <Route path="koi" element={<KoiList />} />
-            <Route path="koi" element={<KoiDetail />} />
-            {/* Add other nested routes if needed */}
+          <Route path="/manager" element={<ProtectedRoute element={<Manager />} />}>
+            <Route path="member" element={<ProtectedRoute element={<MemberList />} />} />
+            <Route path="breeder" element={<ProtectedRoute element={<BreederList />} />} />
+            <Route path="staff" element={<ProtectedRoute element={<StaffList />} />} />
+            <Route path="koi" element={<ProtectedRoute element={<KoiList />} />} />
+            <Route path="koi-detail" element={<ProtectedRoute element={<KoiDetail />} />} />
           </Route>
-          <Route
-            path="/koi/:id"
-            element={<KoiDetail koiData={koi_data.items} />}
-          />
+          <Route path="/koi/:id" element={<KoiDetail koiData={koi_data.items} />} />
         </Routes>
         <Footer />
       </ThemeProvider>

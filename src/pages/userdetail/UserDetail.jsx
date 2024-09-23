@@ -36,9 +36,7 @@ const UserDetail = () => {
   return (
     <div className="user-detail-page bg-[#F0F0F0] flex flex-col">
       <div className="auction-header flex items-center flex-col bg-[#FFF] mb-6 justify-between">
-        <h1 className="text-4xl">
-          User Details
-        </h1>
+        <h1 className="text-4xl">User Details</h1>
       </div>
       <div className="user-detail-conten flex bg-white">
         <div className="flex flex-col gap-2">
@@ -49,8 +47,7 @@ const UserDetail = () => {
           />
         </div>
         <div className="user-detail-right">
-          <h1
-            className="user-detail-title">{`${user.first_name} ${user.last_name}`}</h1>
+          <h1 className="user-detail-title">{`${user.first_name} ${user.last_name}`}</h1>
           <div className="user-rating">
             <span className="star-rating">★★★★★</span>
             <span className="user-id">#{user.id}</span>
@@ -75,8 +72,9 @@ const UserDetail = () => {
             </div>
             <div className="font-bold text-lg">
               <span className="text-[#666] text-lg">Status Name: </span>
-              <span
-                className="info-value text-red-500">{user.status_name.name}</span>
+              <span className="info-value text-red-500">
+                {user.status_name.name}
+              </span>
             </div>
             <div className="font-bold text-lg">
               <span className="text-[#666] text-lg">Role Name: </span>
@@ -87,9 +85,7 @@ const UserDetail = () => {
               <span className="info-value">{user.wallet_id}</span>
             </div>
           </div>
-          <button onClick={handleUpdateAccount}
-                  className="font-bold">
-          </button>
+          <button onClick={handleUpdateAccount} className="font-bold"></button>
         </div>
       </div>
     </div>

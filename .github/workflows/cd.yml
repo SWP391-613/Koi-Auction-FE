@@ -1,0 +1,59 @@
+name: CD for Koi-Auction-FE
+
+# Trigger the workflow on push to the develop branch
+on:
+  push:
+    branches: [ "main", "production" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code from the private repository
+      - uses: actions/checkout@v4
+
+      # Set up Node.js
+      - name: Set up Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'npm'
+
+      # Install dependencies
+      - run: npm ci
+
+      # Build the project
+      - run: npm run build
+
+      # Deploy the `dist` folder to the public repository
+      - name: Deploy to Production Repo
+        run: |
+          # Configure Git for pushing to the public repository
+          git config --global user.name "lcaohoanq"
+          git config --global user.email "hoangclw@gmail.com"
+
+          # Set up SSH
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+          # Clone the public production repository using SSH
+          git clone git@github.com:lcaohoanq/Koi-Auction-Production.git production-repo
+          cd production-repo
+
+          # Remove all previous content in the production repository
+          rm -rf *
+
+          # Copy the new build files from the dist folder
+          cp -r ../dist/* .
+
+          # Commit and push the new build to the public repository
+          git add .
+          git commit -m "Deploy new build from develop branch"
+          git push
+
+      # Use a GitHub secret for the SSH key (if needed for pushing to the public repo)
+    env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}

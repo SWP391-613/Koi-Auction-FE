@@ -52,5 +52,13 @@ jobs:
           # Commit and push changes
           cd production-repo
           git add .
-          git commit -m "Deploy new build from ${{ github.ref_name }} branch"
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            # No changes, create an empty commit
+            git commit --allow-empty -m "Trigger CD"
+          else
+            # Changes exist, commit them
+            git commit -m "Deploy new build from ${{ github.ref_name }} branch"
+          fi
+          
           git push origin main

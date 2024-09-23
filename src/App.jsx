@@ -35,46 +35,48 @@ function App() {
           <title>{TITLE}</title>
         </Helmet>
         <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/auctions" element={<Auctions />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/manager"
-            element={<ProtectedRoute element={<Manager />} />}
-          >
+        <div>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/auctions" element={<Auctions />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route
-              path="member"
-              element={<ProtectedRoute element={<MemberList />} />}
-            />
+              path="/manager"
+              element={<ProtectedRoute element={<Manager />} />}
+            >
+              <Route
+                path="member"
+                element={<ProtectedRoute element={<MemberList />} />}
+              />
+              <Route
+                path="breeder"
+                element={<ProtectedRoute element={<BreederList />} />}
+              />
+              <Route
+                path="staff"
+                element={<ProtectedRoute element={<StaffList />} />}
+              />
+              <Route
+                path="setting"
+                element={<ProtectedRoute element={<Settings />} />}
+              />
+              <Route
+                path="koi"
+                element=<ProtectedRoute element={<KoiList />} />
+              />
+              <Route
+                path="koi-detail"
+                element={<ProtectedRoute element={<KoiDetail />} />}
+              />
+            </Route>
             <Route
-              path="breeder"
-              element={<ProtectedRoute element={<BreederList />} />}
+              path="/koi/:id"
+              element={<KoiDetail koiData={koi_data.items} />}
             />
-            <Route
-              path="staff"
-              element={<ProtectedRoute element={<StaffList />} />}
-            />
-            <Route
-              path="setting"
-              element={<ProtectedRoute element={<Settings />} />}
-            />
-            <Route
-              path="koi"
-              element={<ProtectedRoute element={<KoiList />} />}
-            />
-            <Route
-              path="koi-detail"
-              element={<ProtectedRoute element={<KoiDetail />} />}
-            />
-          </Route>
-          <Route
-            path="/koi/:id"
-            element={<KoiDetail koiData={koi_data.items} />}
-          />
-        </Routes>
+          </Routes>
+        </div>
         <Footer />
         <ToastContainer />
       </ThemeProvider>

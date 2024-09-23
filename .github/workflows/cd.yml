@@ -3,9 +3,7 @@ name: CD for Koi-Auction-FE
 # Trigger the workflow on push to the develop branch
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches: [ "main", "production" ]
 
 jobs:
   build:

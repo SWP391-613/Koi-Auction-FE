@@ -34,7 +34,6 @@ const KoiList = () => {
         },
       });
       console.log("API response:", response.data);
-
       // Giả sử response.data chứa mảng kois
       if (Array.isArray(response.data)) {
         setKois(response.data); // Sử dụng response.data trực tiếp

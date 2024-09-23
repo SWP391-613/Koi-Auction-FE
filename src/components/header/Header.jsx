@@ -30,19 +30,19 @@ const Header = () => {
         <nav className="nav">
           <Link
             to="/"
-            className={`nav-link ${location.pathname === "/" ? "active" : ""}`}
+            className={`text-xl  nav-link ${location.pathname === "/" ? "active" : ""}`}
           >
             Home
           </Link>
           <Link
             to="/auctions"
-            className={`nav-link ${location.pathname === "/auctions" ? "active" : ""}`}
+            className={`text-xl  nav-link ${location.pathname === "/auctions" ? "active" : ""}`}
           >
             Auctions
           </Link>
           <Link
             to="/about"
-            className={`nav-link ${location.pathname === "/about" ? "active" : ""}`}
+            className={`text-xl  nav-link ${location.pathname === "/about" ? "active" : ""}`}
           >
             About
           </Link>
@@ -91,10 +91,10 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Link to="/login" className="login-button">
+              <Link to="/login" className="text-xl login-button">
                 Login
               </Link>
-              <Link to="/register" className="register-button">
+              <Link to="/register" className="text-xl register-button">
                 Register
               </Link>
             </>

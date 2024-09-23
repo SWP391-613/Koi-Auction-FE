@@ -1,109 +1,277 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { ThemeContext } from "../theme/ThemeContext";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "../../utils/apiUtils";
+import { useForm, Controller } from "react-hook-form";
 import "./Register.scss";
+import * as yup from "yup"; // Import yup
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { yupResolver } from "@hookform/resolvers/yup"; // Import yup resolver
+
+const schema = yup.object().shape({
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters long")
+    .matches(
+      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
+      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
+    ),
+  confirm_password: yup
+    .string()
+    .required("Confirm Password is required")
+    .oneOf([yup.ref("password"), null], "Passwords must match"), // Use oneOf for confirm password
+  first_name: yup.string().required("First name is required"),
+  last_name: yup.string().required("Last name is required"),
+  email: yup
+    .string()
+    .email("Invalid email address")
+    .required("Email is required"),
+});
 
 const Register = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const { isDarkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const {
+    control,
+    handleSubmit,
+    setError,
+    watch,
+    clearErrors,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      email: "",
+      password: "",
+      confirm_password: "",
+      receiveEmailNotifications: true,
+      acceptPolicy: false,
+    },
+  });
+
+  const onSubmit = async (data) => {
     try {
-      const data = await register(name, email, password);
-      console.log("Registration successful:", data);
-      localStorage.setItem("token", data.token);
-      navigate("/");
+      const response = await register({ ...data });
+      console.log("Registration successful:", response);
+      toast.success("Register successfully");
+      // localStorage.setItem("access_token", response.token);
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
     } catch (error) {
-      setError(error.message || "An error occurred during registration");
+      setError("api", {
+        type: "manual",
+        message: error.message || "An error occurred during registration",
+      });
+      toast.error(error.message || "An error occurred during registration");
     }
-    console.log("Registration attempt with:", { email, password });
+    console.log("Registration attempt with:", data);
   };
 
   return (
-    <div className={`register-container ${isDarkMode ? "dark-mode" : ""}`}>
-      <form className="form" onSubmit={handleSubmit}>
-        {error && <p className="error">{error}</p>}
-        <div className="flex-column">
-          <label>Name </label>
+    <div
+      className={`register-container flex justify-center items-center h-lvh bg-[#f0f2f5] ${isDarkMode ? "dark-mode" : ""}`}
+    >
+      <form
+        className="form flex flex-col gap-4 bg-[#f8f9fa] p-9"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        {errors.api && (
+          <p className="error text-red-500">{errors.api.message}</p>
+        )}
+        <h1 className="text-4xl mb-6">Register</h1>
+        <div className="name-container">
+          <div className="flex">
+            {/* First Name Field */}
+            <Controller
+              name="first_name"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <div className="flex-1 flex flex-col">
+                  <label className="text semi-bold text-[#121212]">
+                    First Name *
+                  </label>
+                  <input
+                    type="text"
+                    className="input h-12 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="First Name"
+                    {...field}
+                  />
+                  {errors.first_name && (
+                    <p className="error text-red-500">
+                      {errors.first_name.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
+            {/* Last Name Field */}
+            <Controller
+              name="last_name"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <div className="flex-1 flex flex-col">
+                  <label className="text semi-bold text-[#121212]">
+                    Last Name *
+                  </label>
+                  <input
+                    type="text"
+                    className="input h-12 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Last Name"
+                    {...field}
+                  />
+                  {errors.last_name && (
+                    <p className="error text-red-500">
+                      {errors.last_name.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            />
+          </div>
         </div>
-        <div className="inputForm">
-          <svg
-            height="60"
-            viewBox="0 -9 32 32"
-            width="40"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g id="Layer_3" data-name="Layer 3">
-              <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z" />
-            </g>
-          </svg>
-          <input
-            type="text"
-            className="input"
-            placeholder="Enter your Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
+        {/* Email Field */}
+        <Controller
+          name="email"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <div className="flex-column">
+              <label className="text semi-bold text-[#121212]">
+                Email Address *
+              </label>
+              <input
+                type="email"
+                className="input h-12 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Email"
+                {...field}
+              />
+              {errors.email && (
+                <p className="error text-red-500">{errors.email.message}</p>
+              )}
+            </div>
+          )}
+        />
+        {/* Password Field */}
+        <Controller
+          name="password"
+          control={control}
+          defaultValue=""
+          rules={{ required: "Password is required" }}
+          render={({ field }) => (
+            <div className="flex-column">
+              <label className="text semi-bold text-[#121212]">
+                Password *
+              </label>
+              <input
+                type="password"
+                className="input h-12 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Password"
+                {...field}
+              />
+              {errors.password && (
+                <p className="error text-red-500">{errors.password.message}</p>
+              )}
+            </div>
+          )}
+        />
+        {/* Confirm Password Field */}
+        <Controller
+          name="confirm_password"
+          control={control}
+          defaultValue=""
+          rules={{
+            required: "Confirm Password is required",
+            validate: (value) =>
+              value === watch("password") || "Passwords do not match.",
+          }}
+          render={({ field }) => (
+            <div className="flex-column">
+              <label className="text semi-bold text-[#121212]">
+                Confirm Password *
+              </label>
+              <input
+                type="password"
+                className="input h-12 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Confirm Password"
+                {...field}
+              />
+              {errors.confirm_password && (
+                <p className="error text-red-500">
+                  {errors.confirm_password.message}
+                </p>
+              )}
+            </div>
+          )}
+        />
+        {/* Email Notifications Field */}
+        <div className="flex items-center mb-4">
+          <Controller
+            name="receiveEmailNotifications"
+            control={control}
+            defaultValue={false}
+            render={({ field }) => (
+              <>
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  {...field}
+                  checked={field.value}
+                />
+                <label className="ml-2 text-[#121212]">
+                  Send me promotional emails about AuctionKoi auctions
+                </label>
+              </>
+            )}
           />
         </div>
-        <div className="flex-column">
-          <label>Email </label>
-        </div>
-        <div className="inputForm">
-          <svg
-            height="20"
-            viewBox="0 0 32 32"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g id="Layer_3" data-name="Layer 3">
-              <path d="m30.853 13.87a15 15 0 0 0 -29.729 4.082 15.1 15.1 0 0 0 12.876 12.918 15.6 15.6 0 0 0 2.016.13 14.85 14.85 0 0 0 7.715-2.145 1 1 0 1 0 -1.031-1.711 13.007 13.007 0 1 1 5.458-6.529 2.149 2.149 0 0 1 -4.158-.759v-10.856a1 1 0 0 0 -2 0v1.726a8 8 0 1 0 .2 10.325 4.135 4.135 0 0 0 7.83.274 15.2 15.2 0 0 0 .823-7.455zm-14.853 8.13a6 6 0 1 1 6-6 6.006 6.006 0 0 1 -6 6z" />
-            </g>
-          </svg>
-          <input
-            type="email"
-            className="input"
-            placeholder="Enter your Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+        {/* Accept Policy Field */}
+        <div className="flex items-center mb-4">
+          <Controller
+            name="acceptPolicy"
+            control={control}
+            defaultValue={false}
+            rules={{ required: "You must accept the policy" }}
+            render={({ field }) => (
+              <>
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  {...field}
+                  checked={field.value}
+                />
+                <label className="ml-2 text-[#121212]">
+                  I agree to the terms and policy *
+                </label>
+                {errors.acceptPolicy && (
+                  <p className="error text-red-500">
+                    {errors.acceptPolicy.message}
+                  </p>
+                )}
+              </>
+            )}
           />
         </div>
-        <div className="flex-column">
-          <label>Password </label>
-        </div>
-        <div className="inputForm">
-          <svg
-            height="20"
-            viewBox="-64 0 512 512"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="m336 512h-288c-26.453125 0-48-21.523438-48-48v-224c0-26.476562 21.546875-48 48-48h288c26.453125 0 48 21.523438 48 48v224c0 26.476562-21.546875 48-48 48zm-288-288c-8.8125 0-16 7.167969-16 16v224c0 8.832031 7.1875 16 16 16h288c8.8125 0 16-7.167969 16-16v-224c0-8.832031-7.1875-16-16-16zm0 0" />
-            <path d="m304 224c-8.832031 0-16-7.167969-16-16v-80c0-52.929688-43.070312-96-96-96s-96 43.070312-96 96v80c0 8.832031-7.167969 16-16 16s-16-7.167969-16-16v-80c0-70.59375 57.40625-128 128-128s128 57.40625 128 128v80c0 8.832031-7.167969 16-16 16zm0 0" />
-          </svg>
-          <input
-            type="password"
-            className="input"
-            placeholder="Enter your Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button className="button-submit" type="submit">
+        <button
+          className="button-submit text w-full cursor-pointer border-none text-xl bg-[#FF4081] text-white font-bold"
+          type="submit"
+        >
           Register
         </button>
-        <p className="p">
+        <p className="p text-gray-700 font-bold text-base mt-4 mb-2 leading-relaxed">
           Already have an account?{" "}
-          <Link to="/login" className="span">
-            Login
+          <Link
+            to="/login"
+            className="ml-4 bg-blue-500 rounded text-white font-bold py-2 px-4 rounded hover:bg-blue-400 focus:outline-none no-underline"
+          >
+            Login here
           </Link>
         </p>
       </form>

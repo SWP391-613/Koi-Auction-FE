@@ -17,6 +17,7 @@ import koi_data from "./utils/data/koi_data.json";
 import KoiList from "./pages/manager/koi/KoiList.jsx";
 import BreederList from "./pages/manager/breeder/BreederList.jsx";
 import StaffList from "./pages/manager/staff/StaffList.jsx";
+import Settings from "./pages/manager/settings/Settings.jsx";
 
 const TITLE = "Auction Koi";
 
@@ -54,6 +55,10 @@ function App() {
             <Route
               path="staff"
               element={<ProtectedRoute element={<StaffList />} />}
+            />
+            <Route
+              path="setting"
+              element={<ProtectedRoute element={<Settings />} />}
             />
             <Route
               path="koi"

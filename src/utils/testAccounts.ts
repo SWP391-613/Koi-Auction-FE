@@ -1,3 +1,5 @@
+import { LoginDTO } from "~/dtos/login.dto";
+
 type Account = {
   id: string;
   email: string;
@@ -22,7 +24,7 @@ enum Status {
   BANNED = 4,
 }
 
-const testAccounts: Account[] = [
+export const testAccounts: Account[] = [
   {
     id: "1",
     email: "hoangclw@gmail.com",
@@ -56,5 +58,3 @@ const testAccounts: Account[] = [
     status: Status.VERIFIED,
   },
 ];
-
-export default testAccounts;

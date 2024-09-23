@@ -14,11 +14,13 @@ import { ThemeProvider } from "./pages/theme/ThemeContext";
 import { AuthProvider, useAuth } from "./AuthContext";
 import KoiDetail from "./pages/koiDetail/KoiDetail";
 import koi_data from "./utils/data/koi_data.json";
+import user_data from "./utils/data/user_data.json";
 import KoiList from "./pages/manager/koi/KoiList.jsx";
 import BreederList from "./pages/manager/breeder/BreederList.jsx";
 import StaffList from "./pages/manager/staff/StaffList.jsx";
 import Settings from "./pages/manager/settings/Settings.jsx";
 import { ToastContainer } from "react-toastify";
+import UserDetail from "./pages/userdetail/UserDetail.jsx";
 
 const TITLE = "Auction Koi";
 
@@ -35,17 +37,35 @@ function App() {
           <title>{TITLE}</title>
         </Helmet>
         <Header />
-        <div>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/auctions" element={<Auctions />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/manager"
-              element={<ProtectedRoute element={<Manager />} />}
-            >
+        <Routes>
+              <Route 
+                path="/hoang" 
+                element={<UserDetail userData={user_data.items} />} 
+              />
+              <Route 
+                path="/"
+                element={<Home />}
+              />
+              <Route 
+                path="/auctions"
+                element={<Auctions />}
+              />
+              <Route 
+                path="/about"
+                element={<About />}
+              />
+              <Route 
+                path="/login"
+                element={<Login />}
+              />
+              <Route 
+                path="/register"
+                element={<Register />}
+              />
+              <Route
+                path="/manager"
+                element={<ProtectedRoute element={<Manager />} />}
+              >
               <Route
                 path="member"
                 element={<ProtectedRoute element={<MemberList />} />}

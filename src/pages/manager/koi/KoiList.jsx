@@ -21,7 +21,7 @@ const KoiList = () => {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const itemsPerPage = 10; // Giới hạn số lượng kois trên mỗi trang
+  const itemsPerPage = 6; // Giới hạn số lượng kois trên mỗi trang
 
   const fetchKois = useCallback(async () => {
     try {
@@ -76,8 +76,7 @@ const KoiList = () => {
   }
 
   return (
-    <Container sx={{ paddingBottom: "80px" }}>
-      {" "}
+    <Container>
       {/* Adjust padding as needed */}
       <Typography variant="h4" gutterBottom>
         Koi List

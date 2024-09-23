@@ -43,8 +43,11 @@ jobs:
           # Clone the production repository
           git clone git@github.com:lcaohoanq/Koi-Auction-Production.git production-repo
           
-          # Copy new build files
-          cp -r dist/* production-repo/
+          # Remove existing dist folder in production repo (if it exists)
+          rm -rf production-repo/dist
+          
+          # Copy new dist folder
+          cp -r dist production-repo/
           
           # Commit and push changes
           cd production-repo

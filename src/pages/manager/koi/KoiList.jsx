@@ -34,7 +34,6 @@ const KoiList = () => {
         },
       });
       console.log("API response:", response.data);
-      
       // Giả sử response.data chứa mảng kois
       if (Array.isArray(response.data)) {
         setKois(response.data); // Sử dụng response.data trực tiếp
@@ -77,7 +76,9 @@ const KoiList = () => {
   }
 
   return (
-    <Container sx={{ paddingBottom: '80px' }}> {/* Adjust padding as needed */}
+    <Container sx={{ paddingBottom: "80px" }}>
+      {" "}
+      {/* Adjust padding as needed */}
       <Typography variant="h4" gutterBottom>
         Koi List
       </Typography>
@@ -91,7 +92,7 @@ const KoiList = () => {
                     <Avatar alt={item.description} src={item.thumbnail} />
                   </ListItemAvatar>
                   <ListItemText
-                    primary={`Name: ${item.name || 'N/A'}`}
+                    primary={`Name: ${item.name || "N/A"}`}
                     secondary={
                       <>
                         <Typography
@@ -99,12 +100,12 @@ const KoiList = () => {
                           variant="body2"
                           color="textPrimary"
                         >
-                          Sex: {item.sex || 'N/A'}
+                          Sex: {item.sex || "N/A"}
                         </Typography>
                         <br />
-                        Length: {item.length || 'N/A'}
+                        Length: {item.length || "N/A"}
                         <br />
-                        Age: {item.age || 'N/A'}
+                        Age: {item.age || "N/A"}
                       </>
                     }
                   />
@@ -113,10 +114,10 @@ const KoiList = () => {
               </React.Fragment>
             ))}
           </List>
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: 2 }}>
-            <Pagination 
-              count={totalPages} 
-              page={page} 
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 2 }}>
+            <Pagination
+              count={totalPages}
+              page={page}
               onChange={handlePageChange}
               color="primary"
               showFirstButton
@@ -125,7 +126,9 @@ const KoiList = () => {
           </Box>
         </>
       ) : (
-        <Typography>No kois available. (Current page: {page}, Total pages: {totalPages})</Typography>
+        <Typography>
+          No kois available. (Current page: {page}, Total pages: {totalPages})
+        </Typography>
       )}
     </Container>
   );

@@ -39,7 +39,7 @@ jobs:
           eval "$(ssh-agent -s)"
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 400 ~/.ssh/id_ed25519
-          ssh-add id_ed25519
+          ssh-add ~/.ssh/id_ed25519
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
           # Verify

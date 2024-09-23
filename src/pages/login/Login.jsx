@@ -102,34 +102,35 @@ const Login = () => {
         onSubmit={handleSubmit}
       >
         {error && <p className="error">{error}</p>}
+        <h1 className="text-4xl mb-6">Welcome back!</h1>
         <div className="flex-column">
-          <label className="text semi-bold text-[#151717]">Email</label>
+          <label className="text semi-bold text-[#151717]">Email Address *</label>
         </div>
         <div className="inputForm h-12 flex items-center p-e ">
           <input
             type="email"
-            className="input"
-            placeholder="Enter your Email"
+            className="input cursor-pointer"
+            placeholder="Enter your Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
         <div className="flex-column">
-          <label className="text semi-bold text-[#151717]">Password</label>
+          <label className="text semi-bold text-[#151717]">Password *</label>
         </div>
         <div className="inputForm h-12 flex items-center pl-2.5  ">
           <input
             type="password"
-            className="input"
+            className="input cursor-pointer"
             placeholder="Enter your Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <button className="button-submit" type="submit">
-          Login
+        <button className="button-submit w-full h-[50px] font-bold my-[10px] mt-[20px] cursor-pointer rounded text-xl text-white border-none bg-[#3498db]" type="submit">
+          Log In
         </button>
         {/* Google Login Section */}
         {googleClientId && (
@@ -144,9 +145,9 @@ const Login = () => {
             />
           </GoogleOAuthProvider>
         )}
-        <p className="p">
+        <p className="p text-gray-700 text-base mt-4 mb-2 leading-relaxed">
           Don&apos;t have an account?{" "}
-          <Link to="/register" className="span">
+          <Link to="/register" className="ml-4 bg-[#ec4b80] rounded text-white font-bold py-2 px-4 rounded hover:bg-blue-400 focus:outline-none no-underline">
             Register here
           </Link>
         </p>

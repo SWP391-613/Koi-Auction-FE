@@ -20,11 +20,11 @@ const Home = () => {
         </p>
       </div>
       <div className="mb-20 flex w-3/6 h-20 items-center justify-center">
-          <NavigateButton
-            text="Register"
-            to="/register"
-            className="flex items-center justify-center w-full max-w-[300px] h-[4rem] bg-red-500 hover:bg-red-600 text-white text-2xl font-semibold mt-10 py-2 px-4 rounded-2xl mr-4"
-          />
+        <NavigateButton
+          text="Register"
+          to="/register"
+          className="flex items-center justify-center w-full max-w-[300px] h-[4rem] bg-red-500 hover:bg-red-600 text-white text-2xl font-semibold mt-10 py-2 px-4 rounded-2xl mr-4"
+        />
         <NavigateButton
           text="View Auction"
           to="/auctions"

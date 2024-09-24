@@ -20,7 +20,7 @@ const Home = () => {
       </div>
       <div className="mb-20 flex w-3/6 h-20 items-center justify-center">
         <button
-          className="w-full max-w-[300px] h-[4rem] bg-red-500 text-white text-2xl font-semibold mt-10 py-2 px-4 rounded-2xl mr-4"
+          className="w-full max-w-[300px] h-[4rem] bg-red-500 hover:bg-red-600 text-white text-2xl font-semibold mt-10 py-2 px-4 rounded-2xl mr-4"
           onClick={() => navigate("/register")}
         >
           Register

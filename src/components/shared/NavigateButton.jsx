@@ -9,7 +9,8 @@ const NavigateButton = ({ text, to, icon, className }) => {
       onClick={() => navigate(to)}
       className={`flex items-center rounded-xl text-white font-bold py-2 px-4 focus:outline-none ${className}`}
     >
-      {icon && <span className="mr-2">{icon}</span>} {/* Render icon if provided */}
+      {icon && <span className="mr-2">{icon}</span>}{" "}
+      {/* Render icon if provided */}
       {text}
     </button>
   );

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
-import { Link, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFire, faHouse, faQuestion } from "@fortawesome/free-solid-svg-icons";
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(false);
   const { isLoggedIn, user, logout } = useAuth();
 
@@ -25,27 +26,27 @@ const Header = () => {
   return (
     <header className="bg-gray-50 dark:bg-gray-800 py-4 px-8 shadow-md transition-all duration-300">
       <div className="max-w-7xl mx-auto flex justify-between items-center flex-col md:flex-row">
-        <Link to="/" className="mb-4 md:mb-0">
+        <button onClick={() => navigate("/")} className="bg-[#F9FAFB] hover:bg-[#F9FAFB] mb-4 md:mb-0">
           <img
             src="/koi-svgrepo-com.svg"
             alt="Koi Auction Logo"
             className="w-12"
           />
-        </Link>
+        </button>
         <nav className="flex flex-col md:flex-row gap-4 md:gap-10 mb-4 md:mb-0 w-full md:w-auto">
-          <Link
-            to="/"
-            className={`text-xl font-bold text-gray-800 dark:text-gray-200 hover:bg-blue-200 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300 ${
+          <button
+            onClick={() => navigate("/")}
+            className={`text-xl font-bold text-white dark:text-gray-200 hover:bg-blue-400 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300 ${
               location.pathname === "/" ? "bg-blue-500 dark:bg-gray-700" : ""
             }`}
           >
             <FontAwesomeIcon icon={faHouse} className="me-4" />
             Home
-          </Link>
+          </button>
 
-          <Link
-            to="/auctions"
-            className={`text-xl font-bold text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300 ${
+          <button
+            onClick={() => navigate("/auctions")}
+            className={`bg-[#F9FAFB] text-xl font-bold text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300 ${
               location.pathname === "/auctions"
                 ? "bg-gray-200 dark:bg-gray-700"
                 : ""
@@ -53,10 +54,10 @@ const Header = () => {
           >
             <FontAwesomeIcon icon={faFire} className="me-4" />
             Auctions
-          </Link>
-          <Link
-            to="/about"
-            className={`text-xl font-bold text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300 ${
+          </button>
+          <button
+            onClick={() => navigate("/about")}
+            className={`bg-[#F9FAFB] text-xl font-bold text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300 ${
               location.pathname === "/about"
                 ? "bg-gray-200 dark:bg-gray-700"
                 : ""
@@ -64,7 +65,7 @@ const Header = () => {
           >
             <FontAwesomeIcon icon={faQuestion} className="me-4" />
             About
-          </Link>
+          </button>
         </nav>
         <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
           {isLoggedIn ? (
@@ -82,20 +83,20 @@ const Header = () => {
               </button>
             </>
           ) : (
-            <>
-              <Link
-                to="/login"
-                className="text-xl font-bold text-blue-500 border-none border-blue-500 hover:bg-blue-500 hover:text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-300"
+            <div className="flex gap-2">
+              <button
+                onClick={() => navigate("/login")}
+                className=" text-xl text-blue-600 bg-[#F9FAFB] hover:bg-blue-500 hover:text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-300"
               >
                 Login
-              </Link>
-              <Link
-                to="/register"
-                className="text-xl bg-red-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-300"
+              </button>
+              <button
+                onClick={() => navigate("/register")}
+                className="text-xl bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-xl transition-colors duration-300"
               >
                 Register
-              </Link>
-            </>
+              </button>
+            </div>
           )}
           <label className="theme-switch relative inline-block w-[5em] h-10">
             <input

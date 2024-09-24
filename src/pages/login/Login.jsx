@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../theme/ThemeContext";
 import { login, fetchGoogleClientId } from "../../utils/apiUtils";
 import { GoogleLogin } from "@react-oauth/google";
@@ -8,6 +8,7 @@ import axios from "axios";
 import { useAuth } from "../../AuthContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import testAccounts from "../../utils/testAccounts.ts";
+import NavigateButton from "../../components/shared/NavigateButton.jsx";
 
 const Login = () => {
   const { login } = useAuth();
@@ -131,12 +132,11 @@ const Login = () => {
             required
           />
         </div>
-        <button
-          className="button-submit w-full h-[50px] font-bold my-[10px] mt-[20px] cursor-pointer rounded text-xl text-white border-none bg-[#3498db]"
-          type="submit"
-        >
-          Log In
-        </button>
+        <NavigateButton
+          text="Login In"
+          to="/login"
+          className="w-full h-[50px] font-bold my-[10px] mt-[20px] rounded-xl text-xl text-white border-none bg-blue-500 hover:bg-blue-600"
+        />
         {/* Google Login Section */}
         {googleClientId && (
           <GoogleOAuthProvider clientId={googleClientId}>
@@ -152,12 +152,11 @@ const Login = () => {
         )}
         <p className="p text-gray-700 text-base mt-4 mb-2 leading-relaxed">
           Don&apos;t have an account?{" "}
-          <Link
+          <NavigateButton
+            text="Register here"
             to="/register"
-            className="ml-4 bg-[#ec4b80] rounded text-white font-bold py-2 px-4 rounded hover:bg-blue-400 focus:outline-none no-underline"
-          >
-            Register here
-          </Link>
+            className="ml-4 bg-red-500 hover:bg-red-400"
+          />
         </p>
       </form>
     </div>

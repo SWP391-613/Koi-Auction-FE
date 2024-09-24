@@ -54,7 +54,7 @@ const Header = () => {
             text="About"
             to="/about"
             icon={<FontAwesomeIcon icon={faQuestion} />}
-            className="bg-[#F9FAFB] text-xl font-bold text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300"
+            className="bg-[#F9FAFB] text-xl font-bold text-gray-900 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300"
           />
         </nav>
         <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">

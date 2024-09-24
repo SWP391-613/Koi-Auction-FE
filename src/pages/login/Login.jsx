@@ -150,14 +150,16 @@ const Login = () => {
             />
           </GoogleOAuthProvider>
         )}
-        <p className="p text-gray-700 text-base mt-4 mb-2 leading-relaxed">
-          Don&apos;t have an account?{" "}
+        <div className="w-full flex items-center justify-center p-4">
+          <p className="text-gray-700 text-base mt-4 mb-2 leading-relaxed">
+            Don&apos;t have an account?{" "}
+          </p>
           <NavigateButton
             text="Register here"
             to="/register"
             className="ml-4 bg-red-500 hover:bg-red-400"
           />
-        </p>
+        </div>
       </form>
     </div>
   );

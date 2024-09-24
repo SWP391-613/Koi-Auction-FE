@@ -8,6 +8,10 @@ import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 const Cart = () => {
   const koiItems = koi_data.items;
 
+  const getRandomByColor = () => {
+    return Math.random() > 0.5 ? "bg-green-500" : "bg-red-500";
+  };
+
   if (!Array.isArray(koiItems) || koiItems.length === 0) {
     return <div>Không có dữ liệu cá Koi.</div>;
   }
@@ -33,7 +37,7 @@ const Cart = () => {
           </div>
           <div className="info p-4">
             <h2 className="title text-2xl font-semibold">{koi.type}</h2>
-            <div className="price text-left p-2 rounded-xl text-white bg-green-500 text-md font-bold">
+            <div className={`price text-left p-2 rounded-xl text-white ${getRandomByColor()} text-md font-bold`}>
               <FontAwesomeIcon icon={faDollarSign} />
               {koi.price} {koi.currency}
             </div>

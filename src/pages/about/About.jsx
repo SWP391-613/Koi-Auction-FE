@@ -2,10 +2,8 @@ import React from "react";
 
 const About = () => {
   return (
-    <div
-      className="min-h-screen flex flex-col bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
-      <div
-        className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="p-6">
           <div className="text-center mb-4">
             <h1 className="text-3xl font-bold">Welcome to Koi Auction!</h1>
@@ -27,11 +25,11 @@ const About = () => {
           </p>
         </div>
       </div>
-      <div
-        className="max-w-3xl mx-auto bg-[#FFFFFF] shadow-lg rounded-lg overflow-hidden mt-6">
+      <div className="max-w-3xl mx-auto bg-[#FFFFFF] shadow-lg rounded-lg overflow-hidden mt-6">
         <div className="p-6">
-          <h2 className="text-2xl font-bold mb-2">Frequently Asked
-            Questions</h2>
+          <h2 className="text-2xl font-bold mb-2">
+            Frequently Asked Questions
+          </h2>
 
           <h3 className="font-semibold mt-4">How does the auction work?</h3>
           <p className="text-gray-700 mb-4">
@@ -43,8 +41,9 @@ const About = () => {
             preferred shipping time, location, and payment.
           </p>
 
-          <h3 className="font-semibold mt-4">How does shipping work and how much
-            does it cost?</h3>
+          <h3 className="font-semibold mt-4">
+            How does shipping work and how much does it cost?
+          </h3>
           <p className="text-gray-700 mb-4">
             When you win a koi, we'll reach out to you to schedule a shipping
             date for which the default method is Delta Cargo. Shipping costs
@@ -55,8 +54,9 @@ const About = () => {
             any additional fees or refunds will be invoiced separately.
           </p>
 
-          <h3 className="font-semibold mt-4">What happens if my koi passes away
-            in transit?</h3>
+          <h3 className="font-semibold mt-4">
+            What happens if my koi passes away in transit?
+          </h3>
           <p className="text-gray-700 mb-4">
             If your koi passes away in transit from a Breeder to our Company,
             you will be credited the amount paid for your loss to your Koi
@@ -74,28 +74,31 @@ const About = () => {
             the amount will be returned to your wallet.
           </p>
 
-          <h3 className="font-semibold mt-4">Is there bid sniping
-            protection?</h3>
+          <h3 className="font-semibold mt-4">
+            Is there bid sniping protection?
+          </h3>
           <p className="text-gray-700 mb-6">
             Yes, bids made in the final 5 minutes of the auction will add 5
             minutes to the time remaining to bid for that specific koi.
           </p>
         </div>
-        <div
-          className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 p-6">
+        <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-6 p-6">
           <h2 className="text-2xl font-bold mb-2">Contact Us</h2>
           <p className="text-gray-700">
-            Phone: <a href="tel:+18658767474" className="text-blue-600">+1 (865)
-            876-7474</a>
+            Phone:{" "}
+            <a href="tel:+18658767474" className="text-blue-600">
+              +1 (865) 876-7474
+            </a>
           </p>
           <p className="text-gray-700">
-            Email: <a href="mailto:contact@auctionkoi.com"
-                      className="text-blue-600">contact@auctionkoi.com</a>
+            Email:{" "}
+            <a href="mailto:contact@auctionkoi.com" className="text-blue-600">
+              contact@auctionkoi.com
+            </a>
           </p>
         </div>
       </div>
     </div>
-
   );
 };
 

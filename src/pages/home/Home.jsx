@@ -38,7 +38,7 @@ const Home = () => {
         {koiBreeders.map((breeder, index) => (
           <div
             key={index}
-            className="border border-gray-400 p-4 bg-gray-200 rounded-2xl flex justify-center items-center h-[11rem] w-[11rem]"
+            className="border border-gray-400 p-4 bg-gray-200 rounded-2xl flex justify-center items-center h-[11rem] w-[11rem] transition-shadow duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.5)]"
           >
             <img
               src={breeder.logo}

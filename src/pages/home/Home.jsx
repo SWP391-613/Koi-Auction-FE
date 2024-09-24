@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { koiBreeders } from "../../utils/data/koibreeders";
+import NavigateButton from "../../components/shared/NavigateButton.jsx";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -19,18 +20,16 @@ const Home = () => {
         </p>
       </div>
       <div className="mb-20 flex w-3/6 h-20 items-center justify-center">
-        <button
-          className="w-full max-w-[300px] h-[4rem] bg-red-500 hover:bg-red-600 text-white text-2xl font-semibold mt-10 py-2 px-4 rounded-2xl mr-4"
-          onClick={() => navigate("/register")}
-        >
-          Register
-        </button>
-        <button
-          className="w-full max-w-[300px] h-[4rem] bg-blue-500 text-white text-2xl font-semibold mt-10 py-2 px-4 rounded-2xl"
-          onClick={() => navigate("/auctions")}
-        >
-          View Auction
-        </button>
+          <NavigateButton
+            text="Register"
+            to="/register"
+            className="flex items-center justify-center w-full max-w-[300px] h-[4rem] bg-red-500 hover:bg-red-600 text-white text-2xl font-semibold mt-10 py-2 px-4 rounded-2xl mr-4"
+          />
+        <NavigateButton
+          text="View Auction"
+          to="/auctions"
+          className="flex items-center justify-center w-full max-w-[300px] h-[4rem] bg-blue-500 text-white text-2xl font-semibold mt-10 py-2 px-4 rounded-2xl"
+        />
       </div>
 
       {/* Image grid */}

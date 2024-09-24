@@ -68,7 +68,7 @@ function FooterLink({ href, icon, text }) {
   return (
     <a
       href={href}
-      className="flex items-center text-[#121212] px-4 py-2 rounded-full mb-2 transition duration-300 ease-in-out hover:bg-gray-700 dark:hover:bg-gray-600 group"
+      className="flex items-center text-[#121212] px-4 py-2 rounded-full mb-2 transition duration-300 ease-in-out hover:bg-gray-300 hover:text-black dark:hover:bg-gray-600 group"
     >
       <div className="transform transition-transform duration-300 ease-in-out group-hover:translate-x-1 group-hover:rotate-12">
         {icon}

@@ -26,7 +26,10 @@ const Header = () => {
   return (
     <header className="bg-gray-50 dark:bg-gray-800 py-4 px-8 shadow-md transition-all duration-300">
       <div className="max-w-7xl mx-auto flex justify-between items-center flex-col md:flex-row">
-        <button onClick={() => navigate("/")} className="bg-[#F9FAFB] hover:bg-[#F9FAFB] mb-4 md:mb-0">
+        <button
+          onClick={() => navigate("/")}
+          className="bg-[#F9FAFB] hover:bg-[#F9FAFB] mb-4 md:mb-0"
+        >
           <img
             src="/koi-svgrepo-com.svg"
             alt="Koi Auction Logo"

@@ -1,0 +1,16 @@
+export const koiBreeders = [
+  { name: "NND", logo: "https://auctionkoi.com/images/nnd-logo.png" },
+  { name: "Marushin", logo: "https://auctionkoi.com/images/marushin-logo.png" },
+  { name: "Sakai", logo: "https://auctionkoi.com/images/sakai-logo.png" },
+  { name: "ISA", logo: "https://auctionkoi.com/images/isa-logo.png" },
+  { name: "Maruho", logo: "https://auctionkoi.com/images/maruhiro-logo.png" },
+  { name: "Torazo", logo: "https://auctionkoi.com/images/torazo-logo.png" },
+  { name: "Shinoda", logo: "https://auctionkoi.com/images/shinoda-logo.png" },
+  { name: "Kanno", logo: "https://auctionkoi.com/images/kanno-logo.png" },
+  { name: "Dainichi", logo: "https://auctionkoi.com/images/dainichi-logo.png" },
+  { name: "Omosako", logo: "https://auctionkoi.com/images/omosako-logo.png" },
+  { name: "Izumiya", logo: "https://auctionkoi.com/images/izumiya-logo.png" },
+  { name: "Marudo", logo: "https://auctionkoi.com/images/marudo-logo.png" },
+  { name: "Marujyu", logo: "https://auctionkoi.com/images/marujyu-logo.png" },
+  { name: "Shintaro", logo: "https://auctionkoi.com/images/shintaro-logo.png" },
+];

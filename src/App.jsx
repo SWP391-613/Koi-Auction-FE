@@ -21,6 +21,7 @@ import StaffList from "./pages/manager/staff/StaffList.jsx";
 import Settings from "./pages/manager/settings/Settings.jsx";
 import { ToastContainer } from "react-toastify";
 import UserDetail from "./pages/userdetail/UserDetail.jsx";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const TITLE = "Auction Koi";
 
@@ -84,6 +85,7 @@ function App() {
         <Footer />
         <ToastContainer />
       </ThemeProvider>
+      <SpeedInsights />
     </AuthProvider>
   );
 }

@@ -17,7 +17,7 @@ function Footer() {
       <div className="max-w-6xl mx-auto flex justify-start flex-wrap gap-12">
         <Link to="/" className="mb-4 md:mb-0">
           <img
-            src="/public/koi-svgrepo-com.svg"
+            src="/koi-svgrepo-com.svg"
             alt="Koi Auction Logo"
             className="w-12 h-auto max-w-full"
           />

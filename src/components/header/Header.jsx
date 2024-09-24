@@ -27,7 +27,7 @@ const Header = () => {
       <div className="max-w-7xl mx-auto flex justify-between items-center flex-col md:flex-row">
         <Link to="/" className="mb-4 md:mb-0">
           <img
-            src="/public/koi-svgrepo-com.svg"
+            src="/koi-svgrepo-com.svg"
             alt="Koi Auction Logo"
             className="w-12"
           />

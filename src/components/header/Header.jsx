@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFire, faHouse, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import NavigateButton from "../shared/NavigateButton.jsx";
 
 const Header = () => {
   const location = useLocation();
@@ -37,38 +38,24 @@ const Header = () => {
           />
         </button>
         <nav className="flex flex-col md:flex-row gap-4 md:gap-10 mb-4 md:mb-0 w-full md:w-auto">
-          <button
-            onClick={() => navigate("/")}
-            className={`text-xl font-bold text-white dark:text-gray-200 hover:bg-blue-400 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300 ${
-              location.pathname === "/" ? "bg-blue-500 dark:bg-gray-700" : ""
-            }`}
-          >
-            <FontAwesomeIcon icon={faHouse} className="me-4" />
-            Home
-          </button>
-
-          <button
-            onClick={() => navigate("/auctions")}
-            className={`bg-[#F9FAFB] text-xl font-bold text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300 ${
-              location.pathname === "/auctions"
-                ? "bg-gray-200 dark:bg-gray-700"
-                : ""
-            }`}
-          >
-            <FontAwesomeIcon icon={faFire} className="me-4" />
-            Auctions
-          </button>
-          <button
-            onClick={() => navigate("/about")}
-            className={`bg-[#F9FAFB] text-xl font-bold text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300 ${
-              location.pathname === "/about"
-                ? "bg-gray-200 dark:bg-gray-700"
-                : ""
-            }`}
-          >
-            <FontAwesomeIcon icon={faQuestion} className="me-4" />
-            About
-          </button>
+            <NavigateButton
+              text="Home"
+              to="/"
+              icon={<FontAwesomeIcon icon={faHouse} />}
+              className="text-xl bg-blue-300 hover:bg-blue-400 dark:hover:bg-gray-700 transition-colors duration-300"
+            />
+          <NavigateButton
+              text="Auctions"
+              to="/auctions"
+              icon={<FontAwesomeIcon icon={faFire} />}
+              className="bg-[#F9FAFB] text-xl font-bold text-black dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300"
+          />
+          <NavigateButton
+            text="About"
+            to="/about"
+            icon={<FontAwesomeIcon icon={faQuestion} />}
+            className="bg-[#F9FAFB] text-xl font-bold text-black dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300"
+          />
         </nav>
         <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
           {isLoggedIn ? (

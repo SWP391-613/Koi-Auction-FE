@@ -1,11 +1,10 @@
 import { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ThemeContext } from "../theme/ThemeContext";
 import { login, fetchGoogleClientId } from "../../utils/apiUtils";
-import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
@@ -15,7 +14,10 @@ import "./Login.scss";
 import { setCookie } from "../../utils/cookieUtils";
 import NavigateButton from "../../components/shared/NavigateButton.tsx";
 const schema = yup.object().shape({
-  email: yup.string().email("Invalid email address").required("Email is required"),
+  email: yup
+    .string()
+    .email("Invalid email address")
+    .required("Email is required"),
   password: yup.string().required("Password is required"),
 });
 
@@ -47,14 +49,17 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       console.log(data);
-      const response = await login({...data});
+      const response = await login({ ...data });
       setCookie("access_token", response.token, 30); //be must response date
       toast.success("Login successful!");
       setTimeout(() => {
         navigate("/");
       }, 2000);
     } catch (error) {
-      setError("api", { type: "manual", message: error.message || "An error occurred during login" });
+      setError("api", {
+        type: "manual",
+        message: error.message || "An error occurred during login",
+      });
       toast.error(error.message || "An error occurred during login");
     }
   };
@@ -77,17 +82,30 @@ const Login = () => {
         toast.error("Google login failed");
       }
     } catch (error) {
-      setError("api", { type: "manual", message: error.response?.data?.message || "An error occurred during Google login" });
-      toast.error(error.response?.data?.message || "An error occurred during Google login");
+      setError("api", {
+        type: "manual",
+        message:
+          error.response?.data?.message ||
+          "An error occurred during Google login",
+      });
+      toast.error(
+        error.response?.data?.message ||
+          "An error occurred during Google login",
+      );
     }
   };
 
   return (
-    <div className={`login-container flex justify-center items-center h-screen bg-gray-100 ${isDarkMode ? "dark-mode" : ""}`}>
-      <form className="form flex flex-col gap-4 bg-white p-9 shadow-md rounded-lg" onSubmit={handleSubmit(onSubmit)}>
-        <h1 className="text-4xl mb-6">Welcome back!</h1>
+    <div
+      className={`login-container flex h-screen items-center justify-center bg-gray-100 ${isDarkMode ? "dark-mode" : ""}`}
+    >
+      <form
+        className="form flex flex-col gap-4 rounded-lg bg-white p-9 shadow-md"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <h1 className="mb-6 text-4xl">Welcome back!</h1>
         <div className="flex flex-col">
-          <label className="text-lg text-gray-700 mb-3">Email Address *</label>
+          <label className="mb-3 text-lg text-gray-700">Email Address *</label>
           <Controller
             name="email"
             control={control}
@@ -95,16 +113,18 @@ const Login = () => {
             render={({ field }) => (
               <input
                 type="email"
-                className="input mt-1 p-2 border-2 border-indigo rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input border-indigo mt-1 rounded-lg border-2 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter your Email Address"
                 {...field}
               />
             )}
           />
-          {errors.email && <p className="error text-red-500">{errors.email.message}</p>}
+          {errors.email && (
+            <p className="error text-red-500">{errors.email.message}</p>
+          )}
         </div>
         <div className="flex flex-col">
-          <label className="text-lg text-gray-700 mb-3">Password *</label>
+          <label className="mb-3 text-lg text-gray-700">Password *</label>
           <Controller
             name="password"
             control={control}
@@ -112,15 +132,20 @@ const Login = () => {
             render={({ field }) => (
               <input
                 type="password"
-                className="input mt-1 p-2 border-2 border-indigo-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
+                className="input mt-1 rounded-lg border-2 border-indigo-500 p-2 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter your Password"
                 {...field}
               />
             )}
           />
-          {errors.password && <p className="error text-red-500">{errors.password.message}</p>}
+          {errors.password && (
+            <p className="error text-red-500">{errors.password.message}</p>
+          )}
         </div>
-        <button className="button-submit w-full h-12 font-bold mt-4 rounded-lg text-xl text-white bg-blue-500 hover:bg-blue-600" type="submit">
+        <button
+          className="button-submit mt-4 h-12 w-full rounded-lg bg-blue-500 text-xl font-bold text-white hover:bg-blue-600"
+          type="submit"
+        >
           Log In
         </button>
         {googleClientId && (
@@ -135,9 +160,12 @@ const Login = () => {
             />
           </GoogleOAuthProvider>
         )}
-        <p className="p text-gray-700 text-base mt-4 mb-2 leading-relaxed">
+        <p className="p mb-2 mt-4 text-base leading-relaxed text-gray-700">
           Don&apos;t have an account?{" "}
-          <Link to="/register" className="ml-2 bg-pink-500 rounded text-white font-bold py-2 px-4 hover:bg-pink-600">
+          <Link
+            to="/register"
+            className="ml-2 rounded bg-pink-500 px-4 py-2 font-bold text-white hover:bg-pink-600"
+          >
             Register here
           </Link>
         </p>

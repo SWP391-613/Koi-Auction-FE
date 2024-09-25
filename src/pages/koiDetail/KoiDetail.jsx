@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import koi_data from "../../utils/data/koi_data.json";
 import "./KoiDetail.scss";
 import { useAuth } from "../../AuthContext";
+import NavigateButton from "../../components/shared/NavigateButton";
 
 const KoiDetail = () => {
   const { isLoggedIn } = useAuth();
@@ -60,11 +61,15 @@ const KoiDetail = () => {
           />
         </div>
         <div className="koi-detail-right">
-          <h1 className="koi-detail-title">{koi.type}</h1>
-          <div className="koi-rating">
-            <span className="star-rating">★★★★★</span>
-            <span className="koi-id">#{koi.id}</span>
-            {isAvailable && <span className="live-tag">Live</span>}
+          <h1 className="koi-detail-title text-5xl">{koi.type}</h1>
+          <div className="flex flex-row justify-content-around">
+            {/* <span className="star-rating">★★★★★</span> */}
+            {/* <span className="koi-id">#{koi.id}</span> */}
+            {isAvailable && (
+              <span className="flex items-center justify-center text-center mt-3 mb-3 text-white font-bold w-[5rem] h-[2rem] rounded-xl bg-green-500">
+                Live
+              </span>
+            )}
           </div>
           <div className="koi-info-grid">
             <div className="info-item">
@@ -88,17 +93,25 @@ const KoiDetail = () => {
           </div>
           {isAvailable ? (
             <div className="bidding-section">
-              <h3>Bids</h3>
+              <h3 className="text-3xl mb-5">Bid Details</h3>
               <div className="starting-bid">
-                <span>Starting Bid</span>
+                <span className="m-3">Starting time</span>
+                <span className="bid-amount">${koi.price}</span>
+              </div>
+              <div className="starting-bid">
+                <span className="m-3">End time</span>
+                <span className="bid-amount">${koi.price}</span>
+              </div>
+              <div className="starting-bid">
+                <span className="m-3">Step</span>
                 <span className="bid-amount">${koi.price}</span>
               </div>
               <div className="current-bid">
-                <span>Current Highest Bidder</span>
+                <span className="m-3">Current Highest Bidder</span>
                 <span className="bid-amount">${koi.price}</span>
-                <span className="bidder-name">Bidding User Name</span>
+                <span className="bidder-name m-3">lcaohoanq</span>
               </div>
-              <div className="countdown">Countdown Timer: {timeLeft}</div>
+              <div className="countdown mt-5">Countdown Timer: {timeLeft}</div>
               {isLoggedIn ? (
                 <form onSubmit={handleBidSubmit}>
                   <input
@@ -113,8 +126,16 @@ const KoiDetail = () => {
                 </form>
               ) : (
                 <div className="bidding-buttons">
-                  <button className="register-button">Register</button>
-                  <button className="login-button">Login</button>
+                  <NavigateButton
+                    text="Login"
+                    to="/login"
+                    className="w-full h-[50px] font-bold my-[10px] mt-[20px] rounded-xl text-xl text-white border-none bg-blue-500 hover:bg-blue-600"
+                  />
+                  <NavigateButton
+                    text="Register"
+                    to="/register"
+                    className="w-full h-[50px] font-bold my-[10px] mt-[20px] rounded-xl text-xl text-white border-none bg-red-500 hover:bg-red-600"
+                  />
                 </div>
               )}
             </div>

@@ -55,6 +55,14 @@ const testAccounts: Account[] = [
     role: Role.STAFF,
     status: Status.VERIFIED,
   },
+  {
+    id: "5",
+    email: "manhduonglhp4@gmail.com",
+    phoneNumber: "076543219",
+    password: "123456",
+    role: Role.MEMBER,
+    status: Status.VERIFIED,
+  }
 ];
 
 export default testAccounts;

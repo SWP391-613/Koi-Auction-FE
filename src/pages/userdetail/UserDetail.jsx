@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import user_data from "../../utils/data/user_data.json";
 import "./UserDetail.scss";
+import { getCookie } from "~/utils/cookieUtils";
 
 const UserDetail = () => {
   const { id } = useParams();
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (getCookie("access_token") === null) {
+      navigate("/notfound");
+      return;
+    }
+
     const foundUser = user_data.items; // Directly using the new structure
     if (foundUser) {
       setUser(foundUser);

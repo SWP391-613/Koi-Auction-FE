@@ -9,7 +9,7 @@ const NavigateButton = ({
 }: {
   text: string;
   to: string;
-  icon: JSX.Element;
+  icon?: JSX.Element;
   className: string;
 }) => {
   const navigate = useNavigate();

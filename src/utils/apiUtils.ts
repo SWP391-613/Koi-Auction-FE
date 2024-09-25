@@ -3,6 +3,7 @@ import { environment } from "../environments/environment";
 import { RegisterDTO } from "~/dtos/register.dto";
 import { LoginDTO } from "~/dtos/login.dto";
 import { Auction } from "~/pages/auctions/Auction.model";
+import { getCookie } from "./cookieUtils";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -94,6 +95,11 @@ export const fetchAuctions = async (
   limit: number,
 ): Promise<Auction[]> => {
   try {
+
+    if(getCookie("access_token") === null){
+      throw new Error("You are not logged in");
+    }
+
     const response = await axios.get(`${API_URL}/auctions`, {
       params: { page, limit },
     });
@@ -108,7 +114,7 @@ export const fetchAuctions = async (
         error.response?.data?.message || error.message,
       );
     } else {
-      console.error("Error fetching auctions:", "An unexpected error occurred");
+      console.error("Error fetching auctions:", error.message);
     }
     return [];
   }

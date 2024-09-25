@@ -22,6 +22,7 @@ import Settings from "./pages/manager/settings/Settings.jsx";
 import { ToastContainer } from "react-toastify";
 import UserDetail from "./pages/userdetail/UserDetail.jsx";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import Kois from "./pages/kois/Kois.jsx";
 
 const TITLE = "Auction Koi";
 
@@ -45,6 +46,7 @@ function App() {
           />
           <Route path="/" element={<Home />} />
           <Route path="/auctions" element={<Auctions />} />
+          <Route path="/kois" element={<Kois />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

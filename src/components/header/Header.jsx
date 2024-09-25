@@ -51,6 +51,12 @@ const Header = () => {
             className="bg-[#F9FAFB] text-xl font-bold text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300"
           />
           <NavigateButton
+            text="KoiS"
+            to="/kois"
+            icon={<FontAwesomeIcon icon={faFire} />}
+            className="bg-[#F9FAFB] text-xl font-bold text-gray-900 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 px-4 py-2 rounded-xl transition-colors duration-300"
+          />
+          <NavigateButton
             text="About"
             to="/about"
             icon={<FontAwesomeIcon icon={faQuestion} />}

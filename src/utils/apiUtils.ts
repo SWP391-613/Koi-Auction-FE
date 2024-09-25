@@ -1,16 +1,14 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { environment } from "../environments/environment";
 import { RegisterDTO } from "~/dtos/register.dto";
+import { LoginDTO } from "~/dtos/login.dto";
 import { Auction } from "~/pages/auctions/Auction.model";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
-export const login = async (email: string, password: string) => {
+export const login = async (payload: LoginDTO) => {
   try {
-    const response = await axios.post(`${API_URL}/users/login`, {
-      email,
-      password,
-    });
+    const response = await axios.post(`${API_URL}/users/login`, payload);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -25,18 +23,18 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-export const register = async (data: RegisterDTO) => {
+export const register = async (payload: RegisterDTO) => {
   const fullData: RegisterDTO = {
-    first_name: data.first_name || "",
-    last_name: data.last_name || "",
-    email: data.email || "",
-    password: data.password || "",
-    confirm_password: data.confirm_password || "",
-    address: data.address || "", // Optional
-    date_of_birth: data.date_of_birth || "", // Optional
-    google_account_id: data.google_account_id || 0, // Default value
-    status: data.status || "UNVERIFIED", // Default value for status
-    role_id: data.role_id || 1, // Default value for role_id
+    first_name: payload.first_name || "",
+    last_name: payload.last_name || "",
+    email: payload.email || "",
+    password: payload.password || "",
+    confirm_password: payload.confirm_password || "",
+    address: payload.address || "", // Optional
+    date_of_birth: payload.date_of_birth || "", // Optional
+    google_account_id: payload.google_account_id || 0, // Default value
+    status: payload.status || "UNVERIFIED", // Default value for status
+    role_id: payload.role_id || 1, // Default value for role_id
   };
   try {
     const response = await axios.post(`${API_URL}/users/register`, fullData);

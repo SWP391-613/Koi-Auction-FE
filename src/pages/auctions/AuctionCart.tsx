@@ -1,21 +1,20 @@
+import React from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import "./Cart.scss";
-import auction_data from "../../utils/data/auction_data.json";
+import { Auction } from "./Auction.model";
 
-const Cart = () => {
-  const auctionItems = auction_data.items;
+interface AuctionCartProps {
+  items: Auction[];
+}
 
-  const getRandomByColor = () => {
-    return Math.random() > 0.5 ? "bg-green-500" : "bg-red-500";
-  };
-
-  if (!Array.isArray(auctionItems) || auctionItems.length === 0) {
-    return <div>Không có dữ liệu Auction.</div>;
+const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
+  if (!Array.isArray(items) || items.length === 0) {
+    return <div>No auction data available.</div>;
   }
 
   return (
     <div className="koi-container m-10 grid grid-cols-1 gap-4 p-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {auctionItems.map((auction) => (
+      {items.map((auction) => (
         <Link
           to={`/auction/${auction.id}`}
           key={auction.id}
@@ -27,11 +26,15 @@ const Cart = () => {
           <div className="details p-2 text-sm text-gray-600">
             <p className="flex justify-between">
               <span>Start time:</span>
-              <span className="text-lg text-black">{auction.start_time}</span>
+              <span className="text-lg text-black">
+                {auction.start_time.toUTCString()}
+              </span>
             </p>
             <p className="flex justify-between">
               <span>End time:</span>
-              <span className="text-lg text-black">{auction.end_time}</span>
+              <span className="text-lg text-black">
+                {auction.end_time.toUTCString()}
+              </span>
             </p>
             <p className="flex justify-between">
               <span>Status:</span>
@@ -44,4 +47,9 @@ const Cart = () => {
   );
 };
 
-export default Cart;
+// Prop validation
+AuctionCart.propTypes = {
+  items: PropTypes.array.isRequired,
+};
+
+export default AuctionCart;

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { environment } from "../environments/environment";
 import { RegisterDTO } from "~/dtos/register.dto";
+import { Auction } from "~/pages/auctions/Auction.model";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -71,5 +72,46 @@ export const fetchGoogleClientId = async () => {
       );
     }
     return null;
+  }
+};
+
+const convertTimeArrayToDate = (
+  timeArray: [number, number, number, number, number, number, number],
+): Date => {
+  return new Date(Date.UTC(...timeArray));
+};
+
+const createAuctionFromApi = (apiData: any): Auction => {
+  return {
+    id: apiData.id,
+    title: apiData.title,
+    start_time: convertTimeArrayToDate(apiData.start_time),
+    end_time: convertTimeArrayToDate(apiData.end_time),
+    status: apiData.status,
+  };
+};
+
+export const fetchAuctions = async (
+  page: number,
+  limit: number,
+): Promise<Auction[]> => {
+  try {
+    const response = await axios.get(`${API_URL}/auctions`, {
+      params: { page, limit },
+    });
+
+    // Map the response data to Auction model
+    const auctions: Auction[] = response.data.map(createAuctionFromApi);
+    return auctions;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Error fetching auctions:",
+        error.response?.data?.message || error.message,
+      );
+    } else {
+      console.error("Error fetching auctions:", "An unexpected error occurred");
+    }
+    return [];
   }
 };

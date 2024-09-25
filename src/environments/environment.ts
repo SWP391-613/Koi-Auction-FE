@@ -6,6 +6,8 @@ export const environment: any = {
     endPoint: {
       login: "/login",
       register: "/register",
+      auctions: "/auctions",
+      kois: "/kois",
     },
   },
 };

@@ -62,7 +62,7 @@ const testAccounts: Account[] = [
     password: "123456",
     role: Role.MEMBER,
     status: Status.VERIFIED,
-  }
+  },
 ];
 
 export default testAccounts;

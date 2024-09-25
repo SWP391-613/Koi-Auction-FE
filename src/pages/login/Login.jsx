@@ -104,7 +104,9 @@ const Login = () => {
         {error && <p className="error">{error}</p>}
         <h1 className="text-4xl mb-6">Welcome back!</h1>
         <div className="flex-column">
-          <label className="text semi-bold text-[#151717]">Email Address *</label>
+          <label className="text semi-bold text-[#151717]">
+            Email Address *
+          </label>
         </div>
         <div className="inputForm h-12 flex items-center p-e ">
           <input
@@ -129,7 +131,10 @@ const Login = () => {
             required
           />
         </div>
-        <button className="button-submit w-full h-[50px] font-bold my-[10px] mt-[20px] cursor-pointer rounded text-xl text-white border-none bg-[#3498db]" type="submit">
+        <button
+          className="button-submit w-full h-[50px] font-bold my-[10px] mt-[20px] cursor-pointer rounded text-xl text-white border-none bg-[#3498db]"
+          type="submit"
+        >
           Log In
         </button>
         {/* Google Login Section */}
@@ -147,7 +152,10 @@ const Login = () => {
         )}
         <p className="p text-gray-700 text-base mt-4 mb-2 leading-relaxed">
           Don&apos;t have an account?{" "}
-          <Link to="/register" className="ml-4 bg-[#ec4b80] rounded text-white font-bold py-2 px-4 rounded hover:bg-blue-400 focus:outline-none no-underline">
+          <Link
+            to="/register"
+            className="ml-4 bg-[#ec4b80] rounded text-white font-bold py-2 px-4 rounded hover:bg-blue-400 focus:outline-none no-underline"
+          >
             Register here
           </Link>
         </p>

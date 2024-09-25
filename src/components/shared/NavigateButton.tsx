@@ -1,7 +1,17 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const NavigateButton = ({ text, to, icon, className }) => {
+const NavigateButton = ({
+  text,
+  to,
+  icon,
+  className,
+}: {
+  text: string;
+  to: string;
+  icon: JSX.Element;
+  className: string;
+}) => {
   const navigate = useNavigate();
 
   return (

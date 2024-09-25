@@ -1,11 +1,11 @@
-import React, { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { ThemeContext } from "../theme/ThemeContext";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "../../utils/apiUtils";
 import { useForm, Controller } from "react-hook-form";
 import "./Register.scss";
 import * as yup from "yup"; // Import yup
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { yupResolver } from "@hookform/resolvers/yup"; // Import yup resolver
 

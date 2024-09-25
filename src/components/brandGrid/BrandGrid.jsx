@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./BrandGrid.scss";
 import { getImagesFromUnsplash } from "../../utils/data/imageUtils.ts"; // Import your API function
 

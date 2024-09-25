@@ -1,7 +1,7 @@
-import React, { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../theme/ThemeContext";
-import { login, fetchGoogleClientId } from "../../utils/apiUtils";
+import { fetchGoogleClientId } from "../../utils/apiUtils";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import "./Login.scss";
 import axios from "axios";

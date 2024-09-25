@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Cart from "../../components/cart/Cart";
 import { Box, Pagination } from "@mui/material";
 

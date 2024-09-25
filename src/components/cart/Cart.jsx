@@ -1,9 +1,6 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import "./Cart.scss";
 import auction_data from "../../utils/data/auction_data.json";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 
 const Cart = () => {
   const auctionItems = auction_data.items;

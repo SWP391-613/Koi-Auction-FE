@@ -1,6 +1,6 @@
-import axios, { AxiosError } from "axios";
-import { environment } from "../environments/environment.ts";
-import { RegisterDTO } from "~/dtos/register.dto.ts";
+import axios from "axios";
+import { environment } from "../environments/environment";
+import { RegisterDTO } from "~/dtos/register.dto";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 

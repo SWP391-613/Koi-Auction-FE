@@ -22,7 +22,7 @@
     "project": "./tsconfig.json", // Add this line
     "tsconfigRootDir": "./" // Optional: specify the root directory for the tsconfig
   },
-  "plugins": ["react", "prettier", "@typescript-eslint", "unused-imports"],
+  "plugins": ["react", "prettier", "@typescript-eslint"],
   "settings": {
     "import/resolver": {
       "node": {},
@@ -60,14 +60,6 @@
     "@typescript-eslint/no-explicit-any": "warn",
     "react/jsx-uses-vars": "warn",
     "unused-imports/no-unused-imports": "warn",
-    "unused-imports/no-unused-vars": [
-      "warn",
-      {
-        "vars": "all",
-        "varsIgnorePattern": "^_",
-        "args": "after-used",
-        "argsIgnorePattern": "^_"
-      }
-    ]
+    "unused-imports/no-unused-vars": "warn"
   }
 }

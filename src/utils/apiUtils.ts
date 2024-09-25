@@ -1,9 +1,8 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { environment } from "../environments/environment";
-import { RegisterDTO } from "~/dtos/register.dto";
-import { LoginDTO } from "~/dtos/login.dto";
 import { Auction } from "~/pages/auctions/Auction.model";
-import { getCookie } from "./cookieUtils";
+import { LoginDTO } from "~/dtos/login.dto";
+import { RegisterDTO } from "~/dtos/register.dto";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -95,10 +94,9 @@ export const fetchAuctions = async (
   limit: number,
 ): Promise<Auction[]> => {
   try {
-
-    if(getCookie("access_token") === null){
-      throw new Error("You are not logged in");
-    }
+    // if (getCookie("access_token") === null) {
+    //   throw new Error("You are not logged in");
+    // }
 
     const response = await axios.get(`${API_URL}/auctions`, {
       params: { page, limit },
@@ -114,8 +112,39 @@ export const fetchAuctions = async (
         error.response?.data?.message || error.message,
       );
     } else {
-      console.error("Error fetching auctions:", error.message);
+      if (error instanceof Error) {
+        console.error("Error fetching auctions:", error.message);
+      } else {
+        console.error(
+          "Error fetching auctions:",
+          "An unexpected error occurred",
+        );
+      }
     }
     return [];
+  }
+};
+
+export const fetchAuctionById = async (id: number): Promise<Auction | null> => {
+  try {
+    const response = await axios.get(`${API_URL}/auctions/${id}`);
+    return createAuctionFromApi(response.data);
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Error fetching auction by ID:",
+        error.response?.data?.message || error.message,
+      );
+    } else {
+      if (error instanceof Error) {
+        console.error("Error fetching auction by ID:", error.message);
+      } else {
+        console.error(
+          "Error fetching auction by ID:",
+          "An unexpected error occurred",
+        );
+      }
+    }
+    return null;
   }
 };

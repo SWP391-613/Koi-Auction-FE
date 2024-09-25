@@ -12,7 +12,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Login.scss";
 import { setCookie } from "../../utils/cookieUtils";
-import NavigateButton from "../../components/shared/NavigateButton.tsx";
 const schema = yup.object().shape({
   email: yup
     .string()

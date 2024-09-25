@@ -23,6 +23,7 @@ import UserDetail from "./pages/userdetail/UserDetail.jsx";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import Kois from "./pages/kois/Kois.jsx";
 import NotFound from "./components/error/NotFound";
+import AuctionDetail from "./pages/auctions/auctiondetail/AuctionDetail";
 
 const TITLE = "Auction Koi";
 
@@ -40,15 +41,33 @@ function App() {
         </Helmet>
         <Header />
         <Routes>
+          <Route path="/" element={<Home />} />
+
           {/* Error page */}
           <Route path="/notfound" element={<NotFound />} />
+
+          {/* User */}
           <Route
             path="/users/:id"
             element={<UserDetail userData={user_data.items} />}
           />
-          <Route path="/" element={<Home />} />
+
+          {/* Auction */}
           <Route path="/auctions" element={<Auctions />} />
+          <Route
+            path="/auctions/:id"
+            element={<AuctionDetail auctionData={koi_data.items} />}
+          />
+
+          {/* Koi */}
           <Route path="/kois" element={<Kois />} />
+          <Route
+            path="/koi/:id"
+            element={<KoiDetail koiData={koi_data.items} />}
+          />
+
+          {/* Auction */}
+
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -90,10 +109,6 @@ function App() {
             <Route path="koi" element={<KoiList />} />
             <Route path="koi-detail" element={<KoiDetail />} />
           </Route>
-          <Route
-            path="/koi/:id"
-            element={<KoiDetail koiData={koi_data.items} />}
-          />
         </Routes>
         <Footer />
         <ToastContainer />

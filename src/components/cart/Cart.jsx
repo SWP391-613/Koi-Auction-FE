@@ -37,7 +37,9 @@ const Cart = () => {
           </div>
           <div className="info p-4">
             <h2 className="title text-2xl font-semibold">{koi.type}</h2>
-            <div className={`price text-left p-2 rounded-xl text-white ${getRandomByColor()} text-md font-bold`}>
+            <div
+              className={`price text-left p-2 rounded-xl text-white ${getRandomByColor()} text-md font-bold`}
+            >
               <FontAwesomeIcon icon={faDollarSign} />
               {koi.price} {koi.currency}
             </div>

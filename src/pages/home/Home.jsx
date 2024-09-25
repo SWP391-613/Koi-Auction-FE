@@ -9,7 +9,7 @@ const Home = () => {
   return (
     <div className="flex flex-col items-center">
       <img
-        src="https://auctionkoi.com/images/breeders-transparent.png"
+        src="/breeders-transparent.png"
         alt="Breeders"
         className="mt-5 mb-4 w-full max-w-[900px] h-auto rounded-b-2xl"
       />

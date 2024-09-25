@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
@@ -14,11 +13,15 @@ import { ThemeProvider } from "./pages/theme/ThemeContext";
 import { AuthProvider, useAuth } from "./AuthContext";
 import KoiDetail from "./pages/koiDetail/KoiDetail";
 import koi_data from "./utils/data/koi_data.json";
+import user_data from "./utils/data/user_data.json";
 import KoiList from "./pages/manager/koi/KoiList.jsx";
 import BreederList from "./pages/manager/breeder/BreederList.jsx";
 import StaffList from "./pages/manager/staff/StaffList.jsx";
 import Settings from "./pages/manager/settings/Settings.jsx";
 import { ToastContainer } from "react-toastify";
+import UserDetail from "./pages/userdetail/UserDetail.jsx";
+import { SpeedInsights } from "@vercel/speed-insights/react";
+import Kois from "./pages/kois/Kois.jsx";
 
 const TITLE = "Auction Koi";
 
@@ -36,8 +39,13 @@ function App() {
         </Helmet>
         <Header />
         <Routes>
+          <Route
+            path="/hoang"
+            element={<UserDetail userData={user_data.items} />}
+          />
           <Route path="/" element={<Home />} />
           <Route path="/auctions" element={<Auctions />} />
+          <Route path="/kois" element={<Kois />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -78,6 +86,7 @@ function App() {
         <Footer />
         <ToastContainer />
       </ThemeProvider>
+      <SpeedInsights />
     </AuthProvider>
   );
 }

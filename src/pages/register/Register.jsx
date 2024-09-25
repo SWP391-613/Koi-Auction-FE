@@ -1,11 +1,11 @@
-import React, { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { ThemeContext } from "../theme/ThemeContext";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "../../utils/apiUtils";
 import { useForm, Controller } from "react-hook-form";
 import "./Register.scss";
 import * as yup from "yup"; // Import yup
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { yupResolver } from "@hookform/resolvers/yup"; // Import yup resolver
 
@@ -75,7 +75,7 @@ const Register = () => {
 
   return (
     <div
-      className={`register-container flex justify-center items-center h-lvh bg-[#f0f2f5] ${isDarkMode ? "dark-mode" : ""}`}
+      className={`register-container flex h-lvh items-center justify-center bg-[#f0f2f5] ${isDarkMode ? "dark-mode" : ""}`}
     >
       <form
         className="form flex flex-col gap-4 bg-[#f8f9fa] p-9"
@@ -84,7 +84,7 @@ const Register = () => {
         {errors.api && (
           <p className="error text-red-500">{errors.api.message}</p>
         )}
-        <h1 className="text-4xl mb-6">Register</h1>
+        <h1 className="mb-6 text-4xl">Register</h1>
         <div className="name-container">
           <div className="flex">
             {/* First Name Field */}
@@ -93,13 +93,13 @@ const Register = () => {
               control={control}
               defaultValue=""
               render={({ field }) => (
-                <div className="flex-1 flex flex-col">
+                <div className="flex flex-1 flex-col">
                   <label className="text semi-bold text-[#121212]">
                     First Name *
                   </label>
                   <input
                     type="text"
-                    className="input h-12 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="input h-12 rounded-lg border px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="First Name"
                     {...field}
                   />
@@ -117,13 +117,13 @@ const Register = () => {
               control={control}
               defaultValue=""
               render={({ field }) => (
-                <div className="flex-1 flex flex-col">
+                <div className="flex flex-1 flex-col">
                   <label className="text semi-bold text-[#121212]">
                     Last Name *
                   </label>
                   <input
                     type="text"
-                    className="input h-12 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="input h-12 rounded-lg border px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Last Name"
                     {...field}
                   />
@@ -149,7 +149,7 @@ const Register = () => {
               </label>
               <input
                 type="email"
-                className="input h-12 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input h-12 rounded-lg border px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Email"
                 {...field}
               />
@@ -172,7 +172,7 @@ const Register = () => {
               </label>
               <input
                 type="password"
-                className="input h-12 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input h-12 rounded-lg border px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Password"
                 {...field}
               />
@@ -199,7 +199,7 @@ const Register = () => {
               </label>
               <input
                 type="password"
-                className="input h-12 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="input h-12 rounded-lg border px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Confirm Password"
                 {...field}
               />
@@ -212,7 +212,7 @@ const Register = () => {
           )}
         />
         {/* Email Notifications Field */}
-        <div className="flex items-center mb-4">
+        <div className="mb-4 flex items-center">
           <Controller
             name="receiveEmailNotifications"
             control={control}
@@ -221,7 +221,7 @@ const Register = () => {
               <>
                 <input
                   type="checkbox"
-                  className="form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="form-checkbox h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   {...field}
                   checked={field.value}
                 />
@@ -233,7 +233,7 @@ const Register = () => {
           />
         </div>
         {/* Accept Policy Field */}
-        <div className="flex items-center mb-4">
+        <div className="mb-4 flex items-center">
           <Controller
             name="acceptPolicy"
             control={control}
@@ -243,7 +243,7 @@ const Register = () => {
               <>
                 <input
                   type="checkbox"
-                  className="form-checkbox h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                  className="form-checkbox h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   {...field}
                   checked={field.value}
                 />
@@ -260,16 +260,16 @@ const Register = () => {
           />
         </div>
         <button
-          className="button-submit text w-full cursor-pointer border-none text-xl bg-[#FF4081] text-white font-bold"
+          className="button-submit text w-full cursor-pointer border-none bg-[#FF4081] text-xl font-bold text-white"
           type="submit"
         >
           Register
         </button>
-        <p className="p text-gray-700 font-bold text-base mt-4 mb-2 leading-relaxed">
+        <p className="p mb-2 mt-4 text-base font-bold leading-relaxed text-gray-700">
           Already have an account?{" "}
           <Link
             to="/login"
-            className="ml-4 bg-blue-500 rounded text-white font-bold py-2 px-4 rounded hover:bg-blue-400 focus:outline-none no-underline"
+            className="ml-4 rounded bg-blue-500 px-4 py-2 font-bold text-white no-underline hover:bg-blue-400 focus:outline-none"
           >
             Login here
           </Link>

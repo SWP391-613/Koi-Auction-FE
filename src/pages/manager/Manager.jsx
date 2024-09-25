@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Typography } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import DashboardLayout from "../../layouts/dashboard/DashBoardLayout";

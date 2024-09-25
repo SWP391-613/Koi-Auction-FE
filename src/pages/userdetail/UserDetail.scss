@@ -1,74 +1,47 @@
-.koi-detail-page {
-  background-color: #f0f0f0;
+.user-detail-page {
   min-height: 100vh;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
 }
 
 .auction-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fff;
   padding: 10px 20px;
   border-radius: 8px;
-  margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.auction-title {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.auction-status {
-  font-size: 14px;
-  color: #666;
-}
-
-.koi-detail-content {
-  display: flex;
+.user-detail-content {
   gap: 20px;
-  background-color: white;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.koi-detail-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.koi-detail-image {
+.user-detail-image {
   width: 100%;
   height: auto;
   border-radius: 8px;
   object-fit: cover;
 }
 
-.koi-detail-image-small {
+.user-detail-image-small {
   width: 100%;
   height: 100px;
   border-radius: 8px;
   object-fit: cover;
 }
 
-.koi-detail-right {
+.user-detail-right {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.koi-detail-title {
+.user-detail-title {
   font-size: 24px;
   margin-bottom: 10px;
 }
 
-.koi-rating {
+.user-rating {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
@@ -79,7 +52,7 @@
   margin-right: 10px;
 }
 
-.koi-id {
+.user-id {
   background-color: #f0f0f0;
   padding: 2px 8px;
   border-radius: 12px;
@@ -95,7 +68,7 @@
   margin-left: 10px;
 }
 
-.koi-info-grid {
+.user-info-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
@@ -103,21 +76,6 @@
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 20px;
-}
-
-.info-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.info-label {
-  font-size: 12px;
-  color: #666;
-}
-
-.info-value {
-  font-size: 14px;
-  font-weight: bold;
 }
 
 .bidding-section,
@@ -195,11 +153,11 @@ input[type="number"] {
 }
 
 @media (max-width: 768px) {
-  .koi-detail-content {
+  .user-detail-content {
     flex-direction: column;
   }
 
-  .koi-info-grid {
+  .user-info-grid {
     grid-template-columns: 1fr;
   }
 }

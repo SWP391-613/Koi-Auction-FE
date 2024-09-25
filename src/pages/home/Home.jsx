@@ -1,5 +1,6 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
+import { koiBreeders } from "../../utils/data/koibreeders";
+import NavigateButton from "../../components/shared/NavigateButton.tsx";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -7,40 +8,42 @@ const Home = () => {
   return (
     <div className="flex flex-col items-center">
       <img
-        src={"https://auctionkoi.com/images/breeders-transparent.png"}
+        src="/breeders-transparent.png"
         alt="Breeders"
-        className="mt-5 mb-4 w-3/6 rounded-b-2xl"
+        className="mb-4 mt-5 h-auto w-full max-w-[900px] rounded-b-2xl"
       />
-      <div className="text-center mt-5 mb-4">
-        <p className="text-5xl font-bold mb-2">Your Direct Connection To The</p>
+      <div className="mb-4 mt-5 text-center">
+        <p className="mb-5 text-5xl font-bold">Your Direct Connection To The</p>
         <p className="text-5xl font-bold">
           Top <span className="text-red-500">Japanese</span> Koi Breeders
         </p>
       </div>
-      <div className="mb-20 flex w-3/6 h-20">
-        <button
-          className="w-full bg-red-500 text-white font-semibold mt-10 py-2 px-4 rounded-2xl mr-4"
-          onClick={() => navigate("/register")}
-        >
-          Register
-        </button>
-        <button
-          className="w-full bg-blue-500 text-white font-semibold mt-10 py-2 px-4 rounded-2xl"
-          onClick={() => navigate("/auctions")}
-        >
-          View Auction
-        </button>
+      <div className="mb-20 flex h-20 w-3/6 items-center justify-center">
+        <NavigateButton
+          text="Register"
+          to="/register"
+          className="mr-4 mt-10 flex h-[4rem] w-full max-w-[300px] items-center justify-center rounded-2xl bg-red-500 px-4 py-2 text-2xl font-semibold text-white hover:bg-red-600"
+        />
+        <NavigateButton
+          text="View Auction"
+          to="/auctions"
+          className="mt-10 flex h-[4rem] w-full max-w-[300px] items-center justify-center rounded-2xl bg-blue-500 px-4 py-2 text-2xl font-semibold text-white"
+        />
       </div>
 
       {/* Image grid */}
-      <div className="grid grid-cols-7 gap-4 mb-20">
-        {Array.from({ length: 14 }).map((_, index) => (
-          <img
+      <div className="m-5 mb-20 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
+        {koiBreeders.map((breeder, index) => (
+          <div
             key={index}
-            src={"https://auctionkoi.com/images/nnd-logo.png"}
-            alt="NND logo"
-            className="w-20 h-auto"
-          />
+            className="flex h-[11rem] w-[11rem] items-center justify-center rounded-2xl border border-gray-400 bg-gray-200 p-4 transition-shadow duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+          >
+            <img
+              src={breeder.logo}
+              alt={`${breeder.name} logo`}
+              className="h-auto w-20"
+            />
+          </div>
         ))}
       </div>
     </div>

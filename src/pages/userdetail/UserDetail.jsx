@@ -34,8 +34,8 @@ const UserDetail = () => {
   const isAvailable = user.status_name.name === "Available";
 
   return (
-    <div className="user-detail-page bg-[#F0F0F0] flex flex-col">
-      <div className="auction-header flex items-center flex-col bg-[#FFF] mb-6 justify-between">
+    <div className="user-detail-page flex flex-col bg-[#F0F0F0]">
+      <div className="auction-header mb-6 flex flex-col items-center justify-between bg-[#FFF]">
         <h1 className="text-4xl">User Details</h1>
       </div>
       <div className="user-detail-conten flex bg-white">
@@ -54,34 +54,34 @@ const UserDetail = () => {
             {isAvailable && <span className="live-tag">Live</span>}
           </div>
           <div className="user-info-grid">
-            <div className="font-bold text-lg">
-              <span className="text-[#666] text-lg">Phone: </span>
+            <div className="text-lg font-bold">
+              <span className="text-lg text-[#666]">Phone: </span>
               <span className="info-value">{user.phone_number}</span>
             </div>
-            <div className="font-bold text-lg">
-              <span className="text-[#666] text-lg">Email: </span>
+            <div className="text-lg font-bold">
+              <span className="text-lg text-[#666]">Email: </span>
               <span className="info-value">{user.email}</span>
             </div>
-            <div className="font-bold text-lg">
-              <span className="text-[#666] text-lg">Address: </span>
+            <div className="text-lg font-bold">
+              <span className="text-lg text-[#666]">Address: </span>
               <span className="info-value">{user.address}</span>
             </div>
-            <div className="font-bold text-lg">
-              <span className="text-[#666] text-lg">Role: </span>
+            <div className="text-lg font-bold">
+              <span className="text-lg text-[#666]">Role: </span>
               <span className="info-value">{user.role_name.name}</span>
             </div>
-            <div className="font-bold text-lg">
-              <span className="text-[#666] text-lg">Status Name: </span>
+            <div className="text-lg font-bold">
+              <span className="text-lg text-[#666]">Status Name: </span>
               <span className="info-value text-red-500">
                 {user.status_name.name}
               </span>
             </div>
-            <div className="font-bold text-lg">
-              <span className="text-[#666] text-lg">Role Name: </span>
+            <div className="text-lg font-bold">
+              <span className="text-lg text-[#666]">Role Name: </span>
               <span className="info-value">{user.role_name.name}</span>
             </div>
-            <div className="font-bold text-lg">
-              <span className="text-[#666] text-lg">Wallet Balance: </span>
+            <div className="text-lg font-bold">
+              <span className="text-lg text-[#666]">Wallet Balance: </span>
               <span className="info-value">{user.wallet_id}</span>
             </div>
           </div>

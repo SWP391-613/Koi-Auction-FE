@@ -16,19 +16,19 @@ const KoiCart = () => {
   }
 
   return (
-    <div className="koi-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-10 m-10">
+    <div className="koi-container m-10 grid grid-cols-1 gap-4 p-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {koiItems.map((koi) => (
         <Link
           to={`/koi/${koi.id}`}
           key={koi.id}
-          className="koi-card bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105"
+          className="koi-card transform overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:scale-105"
         >
-          <div className="image-container h-48 w-full bg-gray-200 flex items-center justify-center">
+          <div className="image-container flex h-48 w-full items-center justify-center bg-gray-200">
             {koi.image ? (
               <img
                 src={koi.image.url}
                 alt={koi.type}
-                className="object-cover h-full w-full"
+                className="h-full w-full object-cover"
               />
             ) : (
               <span className="text-gray-500">No Image</span>
@@ -37,7 +37,7 @@ const KoiCart = () => {
           <div className="info p-4">
             <h2 className="title text-2xl font-semibold">{koi.type}</h2>
             <div
-              className={`price text-left p-2 rounded-xl text-white ${getRandomByColor()} text-md font-bold`}
+              className={`price rounded-xl p-2 text-left text-white ${getRandomByColor()} text-md font-bold`}
             >
               <FontAwesomeIcon icon={faDollarSign} />
               {koi.price} {koi.currency}

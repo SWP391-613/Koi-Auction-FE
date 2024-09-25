@@ -3,6 +3,12 @@
     "module": "CommonJS", // Quy định output module được sử dụng
     "moduleResolution": "node", //
     "target": "ES2020", // Target ouput cho code
+    "allowJs": true,
+    "checkJs": false,
+    "jsx": "react", // Quy định output cho JSX
+    "removeComments": true, // Xóa comment trong code
+    "noEmit": true, // Không emit file khi build
+    "pretty": true,
     "outDir": "dist", // Đường dẫn output cho thư mục build
     "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
     "strict": true /* Enable all strict type-checking options. */,
@@ -12,11 +18,12 @@
       "~/*": ["src/*"], // Đường dẫn tương đối cho các import (alias)
       "type": ["jest"]
     },
-    "allowImportingTsExtensions": true
+    "allowImportingTsExtensions": false
   },
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   },
   "files": ["src/type.d.ts"], // Các file dùng để defined global type cho dự án
-  "include": ["src/**/*"] // Đường dẫn include cho các file cần build
+  "include": ["src/**/*"], // Đường dẫn include cho các file cần build
+  "exclude": ["node_modules"]
 }

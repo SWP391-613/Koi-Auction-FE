@@ -62,11 +62,11 @@ const KoiDetail = () => {
         </div>
         <div className="koi-detail-right">
           <h1 className="koi-detail-title text-5xl">{koi.type}</h1>
-          <div className="flex flex-row justify-content-around">
+          <div className="justify-content-around flex flex-row">
             {/* <span className="star-rating">★★★★★</span> */}
             {/* <span className="koi-id">#{koi.id}</span> */}
             {isAvailable && (
-              <span className="flex items-center justify-center text-center mt-3 mb-3 text-white font-bold w-[5rem] h-[2rem] rounded-xl bg-green-500">
+              <span className="mb-3 mt-3 flex h-[2rem] w-[5rem] items-center justify-center rounded-xl bg-green-500 text-center font-bold text-white">
                 Live
               </span>
             )}
@@ -93,7 +93,7 @@ const KoiDetail = () => {
           </div>
           {isAvailable ? (
             <div className="bidding-section">
-              <h3 className="text-3xl mb-5">Bid Details</h3>
+              <h3 className="mb-5 text-3xl">Bid Details</h3>
               <div className="starting-bid">
                 <span className="m-3">Starting time</span>
                 <span className="bid-amount">${koi.price}</span>
@@ -129,12 +129,12 @@ const KoiDetail = () => {
                   <NavigateButton
                     text="Login"
                     to="/login"
-                    className="w-full h-[50px] font-bold my-[10px] mt-[20px] rounded-xl text-xl text-white border-none bg-blue-500 hover:bg-blue-600"
+                    className="my-[10px] mt-[20px] h-[50px] w-full rounded-xl border-none bg-blue-500 text-xl font-bold text-white hover:bg-blue-600"
                   />
                   <NavigateButton
                     text="Register"
                     to="/register"
-                    className="w-full h-[50px] font-bold my-[10px] mt-[20px] rounded-xl text-xl text-white border-none bg-red-500 hover:bg-red-600"
+                    className="my-[10px] mt-[20px] h-[50px] w-full rounded-xl border-none bg-red-500 text-xl font-bold text-white hover:bg-red-600"
                   />
                 </div>
               )}

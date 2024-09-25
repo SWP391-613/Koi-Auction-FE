@@ -52,6 +52,9 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.25.1",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "8.57.0",
     "@types/jest": "^29.5.12",
@@ -59,7 +62,6 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
-    "babel-eslint": "^10.1.0",
     "eslint": "8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-alias": "^1.1.2",

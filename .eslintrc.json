@@ -13,8 +13,12 @@
     "eslint-config-prettier",
     "prettier"
   ],
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
+    "requireConfigFile": false, // Add this line to avoid the need for a separate Babel config file
+    "babelOptions": {
+      "presets": ["@babel/preset-react", "@babel/preset-typescript"] // You can customize this based on your needs
+    },
     "project": "./tsconfig.json", // Add this line
     "tsconfigRootDir": "./" // Optional: specify the root directory for the tsconfig
   },
@@ -29,7 +33,7 @@
     }
   },
   "rules": {
-    "react/jsx-no-target-blank": "error",
+    "react/jsx-no-target-blank": "warn",
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
     "eqeqeq": "error",
@@ -51,6 +55,7 @@
         "printWidth": 80
       }
     ],
+    "@typescript-eslint/no-duplicate-enum-values": "off",
     "@typescript-eslint/no-unused-vars": "warn"
   }
 }

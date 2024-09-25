@@ -17,12 +17,12 @@ const Cart = () => {
   }
 
   return (
-    <div className="koi-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-10 m-10">
+    <div className="koi-container m-10 grid grid-cols-1 gap-4 p-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {auctionItems.map((auction) => (
         <Link
           to={`/auction/${auction.id}`}
           key={auction.id}
-          className="auction-card bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105"
+          className="auction-card transform overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:scale-105"
         >
           <div className="info p-4">
             <h2 className="title text-2xl font-semibold">{auction.title}</h2>

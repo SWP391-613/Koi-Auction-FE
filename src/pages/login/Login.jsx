@@ -2,13 +2,12 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../theme/ThemeContext";
 import { login, fetchGoogleClientId } from "../../utils/apiUtils";
-import { GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import "./Login.scss";
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import testAccounts from "../../utils/testAccounts.ts";
-import NavigateButton from "../../components/shared/NavigateButton.jsx";
+import NavigateButton from "../../components/shared/NavigateButton.tsx";
 
 const Login = () => {
   const { login } = useAuth();
@@ -96,20 +95,20 @@ const Login = () => {
 
   return (
     <div
-      className={`login-container flex justify-center items-center h-lvh bg-[#f0f2f5] ${isDarkMode ? "dark-mode" : ""}`}
+      className={`login-container flex h-lvh items-center justify-center bg-[#f0f2f5] ${isDarkMode ? "dark-mode" : ""}`}
     >
       <form
         className="form flex flex-col gap-4 bg-[#ffffff] p-9"
         onSubmit={handleSubmit}
       >
         {error && <p className="error">{error}</p>}
-        <h1 className="text-4xl mb-6">Welcome back!</h1>
+        <h1 className="mb-6 text-4xl">Welcome back!</h1>
         <div className="flex-column">
           <label className="text semi-bold text-[#151717]">
             Email Address *
           </label>
         </div>
-        <div className="inputForm h-12 flex items-center p-e ">
+        <div className="inputForm p-e flex h-12 items-center">
           <input
             type="email"
             className="input cursor-pointer"
@@ -122,7 +121,7 @@ const Login = () => {
         <div className="flex-column">
           <label className="text semi-bold text-[#151717]">Password *</label>
         </div>
-        <div className="inputForm h-12 flex items-center pl-2.5  ">
+        <div className="inputForm flex h-12 items-center pl-2.5">
           <input
             type="password"
             className="input cursor-pointer"
@@ -135,7 +134,7 @@ const Login = () => {
         <NavigateButton
           text="Login In"
           to="/login"
-          className="w-full h-[50px] font-bold my-[10px] mt-[20px] rounded-xl text-xl text-white border-none bg-blue-500 hover:bg-blue-600"
+          className="my-[10px] mt-[20px] h-[50px] w-full rounded-xl border-none bg-blue-500 text-xl font-bold text-white hover:bg-blue-600"
         />
         {/* Google Login Section */}
         {googleClientId && (
@@ -150,8 +149,8 @@ const Login = () => {
             />
           </GoogleOAuthProvider>
         )}
-        <div className="w-full flex items-center justify-center p-4">
-          <p className="text-gray-700 text-base mt-4 mb-2 leading-relaxed">
+        <div className="flex w-full items-center justify-center p-4">
+          <p className="mb-2 mt-4 text-base leading-relaxed text-gray-700">
             Don&apos;t have an account?{" "}
           </p>
           <NavigateButton

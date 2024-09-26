@@ -11,9 +11,8 @@ import {
   Avatar,
   ListItemText,
   Divider,
-  Pagination,
-  Box,
 } from "@mui/material";
+import PaginationComponent from "../../../components/pagination/Pagination";
 
 const KoiList = () => {
   const [kois, setKois] = useState([]);
@@ -21,7 +20,7 @@ const KoiList = () => {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const itemsPerPage = 6; // Giới hạn số lượng kois trên mỗi trang
+  const itemsPerPage = 6;
 
   const fetchKois = useCallback(async () => {
     try {
@@ -29,15 +28,14 @@ const KoiList = () => {
       console.log("Fetching kois for page:", page);
       const response = await axios.get("http://localhost:4000/api/v1/kois", {
         params: {
-          page: page - 1, // API expects 0-based index
+          page: page - 1,
           limit: itemsPerPage,
         },
       });
       console.log("API response:", response.data);
-      // Giả sử response.data chứa mảng kois
       if (Array.isArray(response.data)) {
-        setKois(response.data); // Sử dụng response.data trực tiếp
-        setTotalPages(Math.ceil(300 / itemsPerPage)); // Cập nhật tổng số trang
+        setKois(response.data);
+        setTotalPages(Math.ceil(300 / itemsPerPage));
       } else {
         console.error("Unexpected API response structure:", response.data);
         setError("Unexpected data structure from API");
@@ -77,7 +75,6 @@ const KoiList = () => {
 
   return (
     <Container>
-      {/* Adjust padding as needed */}
       <Typography variant="h4" gutterBottom>
         Koi List
       </Typography>
@@ -113,16 +110,11 @@ const KoiList = () => {
               </React.Fragment>
             ))}
           </List>
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 2 }}>
-            <Pagination
-              count={totalPages}
-              page={page}
-              onChange={handlePageChange}
-              color="primary"
-              showFirstButton
-              showLastButton
-            />
-          </Box>
+          <PaginationComponent
+            totalPages={totalPages}
+            currentPage={page}
+            onPageChange={handlePageChange}
+          />
         </>
       ) : (
         <Typography>

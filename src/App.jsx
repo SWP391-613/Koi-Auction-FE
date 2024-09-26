@@ -24,6 +24,7 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import Kois from "./pages/kois/Kois";
 import NotFound from "./components/error/NotFound";
 import AuctionDetail from "./pages/auctions/auctiondetail/AuctionDetail";
+import { Analytics } from "@vercel/analytics/react";
 
 const TITLE = "Auction Koi";
 
@@ -113,6 +114,7 @@ function App() {
         <Footer />
         <ToastContainer />
       </ThemeProvider>
+      <Analytics />
       <SpeedInsights />
     </AuthProvider>
   );

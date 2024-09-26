@@ -23,11 +23,7 @@ const KoisInAuction: React.FC = () => {
     loadAuctions();
   }, [page]);
 
-  return (
-    <div>
-      {/* <AuctionCart items={auctions} /> */}
-    </div>
-  );
+  return <div>{/* <AuctionCart items={auctions} /> */}</div>;
 };
 
 export default KoisInAuction;

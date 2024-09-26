@@ -4,6 +4,7 @@ import { Auction } from "~/pages/auctions/Auction.model";
 import { LoginDTO } from "~/dtos/login.dto";
 import { RegisterDTO } from "~/dtos/register.dto";
 import { KoiDetailModel } from "~/pages/kois/Koi.model";
+import { KoiInAuction } from "~/components/cart/KoiInAuction";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -149,6 +150,20 @@ export const fetchAuctionById = async (id: number): Promise<Auction | null> => {
     return null;
   }
 };
+
+export async function fetchKoiInAuction(
+  auctionId: number,
+): Promise<KoiInAuction[]> {
+  try {
+    const response = await axios.get<KoiInAuction[]>(
+      `${API_URL}/auctionkois/auction/${auctionId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching auction koi data:", error);
+    throw error;
+  }
+}
 
 export async function getKois(
   page: number,

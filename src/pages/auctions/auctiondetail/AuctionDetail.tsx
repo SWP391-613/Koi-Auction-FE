@@ -56,7 +56,7 @@ const AuctionDetail: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex flex-col items-center">
+        <div className="flex flex-row items-center">
           <span
             className={`rounded-lg px-4 py-2 text-lg font-bold ${auction.status === "Live" ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}
           >

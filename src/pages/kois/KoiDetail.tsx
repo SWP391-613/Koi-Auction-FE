@@ -84,7 +84,6 @@ const KoiDetail: React.FC = () => {
         />
       </div>
     </>
-
   );
 };
 

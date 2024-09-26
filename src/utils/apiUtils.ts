@@ -151,7 +151,9 @@ export const fetchAuctionById = async (id: number): Promise<Auction | null> => {
   }
 };
 
-export const fetchAuctionKoi = async (auctionId: number): Promise<AuctionKoi[]> => {
+export const fetchAuctionKoi = async (
+  auctionId: number,
+): Promise<AuctionKoi[]> => {
   try {
     const response = await axios.get<AuctionKoi[]>(
       `${API_URL}/auctionkois/auction/${auctionId}`,
@@ -161,7 +163,7 @@ export const fetchAuctionKoi = async (auctionId: number): Promise<AuctionKoi[]> 
     console.error("Error fetching auction koi data:", error);
     throw error;
   }
-}
+};
 
 export async function getKois(
   page: number,

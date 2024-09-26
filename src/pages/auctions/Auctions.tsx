@@ -1,25 +1,46 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import AuctionCart from "./AuctionCart";
 import { fetchAuctions } from "~/utils/apiUtils";
 import { Auction } from "./Auction.model";
+import PaginationComponent from "~/components/pagination/Pagination";
 
 const Auctions: React.FC = () => {
   const [auctions, setAuctions] = useState<Auction[]>([]);
-  const page = 0;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMorePages, setHasMorePages] = useState(true); // To track if more pages are available
+  const itemsPerPage = 8; // Number of auctions per page
 
   useEffect(() => {
     const loadAuctions = async () => {
-      const fetchedAuctions = await fetchAuctions(page, 100);
-      setAuctions(fetchedAuctions);
+      try {
+        const fetchedAuctions = await fetchAuctions(currentPage - 1, itemsPerPage); // Fetch auctions for the current page
+
+        if (fetchedAuctions.length < itemsPerPage) {
+          setHasMorePages(false); // No more pages if fewer items are fetched
+        }
+
+        setAuctions(fetchedAuctions); // Update auctions state
+      } catch (error) {
+        console.error("Error fetching auctions:", error);
+        setAuctions([]);
+      }
     };
 
     loadAuctions();
-  }, [page]);
+  }, [currentPage]);
+
+  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+    setCurrentPage(page); // Update the current page when pagination changes
+  };
 
   return (
     <div>
       <AuctionCart items={auctions} />
+      <PaginationComponent
+        totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

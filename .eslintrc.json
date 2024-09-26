@@ -22,7 +22,7 @@
     "project": "./tsconfig.json", // Add this line
     "tsconfigRootDir": "./" // Optional: specify the root directory for the tsconfig
   },
-  "plugins": ["react", "prettier", "@typescript-eslint"],
+  "plugins": ["react", "prettier", "@typescript-eslint", "unused-imports"],
   "settings": {
     "import/resolver": {
       "node": {},

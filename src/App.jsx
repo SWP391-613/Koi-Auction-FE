@@ -23,7 +23,7 @@ import UserDetail from "./pages/userdetail/UserDetail.jsx";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import Kois from "./pages/kois/Kois";
 import NotFound from "./components/error/NotFound";
-import AuctionDetail from "./pages/auctions/auctiondetail/AuctionDetail";
+import AuctionDetail from "./pages/auctions/AuctionDetail";
 import { Analytics } from "@vercel/analytics/react";
 
 const TITLE = "Auction Koi";

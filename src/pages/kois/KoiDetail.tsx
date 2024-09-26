@@ -29,7 +29,7 @@ const KoiDetail: React.FC = () => {
   }
 
   return (
-    <>
+    <div className="container mx-auto">
       <div className="koi-header flex flex-col items-center md:items-start text-center md:text-center">
         <h1 className="text-4xl text-red-500 font-bold mb-4">{koi.name}</h1>
       </div>
@@ -83,7 +83,7 @@ const KoiDetail: React.FC = () => {
           className="bg-blue-500 text-white py-3 px-5 rounded hover:bg-blue-600 transition hover:shadow-lg"
         />
       </div>
-    </>
+    </div>
 
   );
 };

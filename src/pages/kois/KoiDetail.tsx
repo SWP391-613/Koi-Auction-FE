@@ -30,44 +30,52 @@ const KoiDetail: React.FC = () => {
 
   return (
     <>
+      <div className="koi-header flex flex-col items-center md:items-start text-center md:text-center">
+        <h1 className="text-4xl text-red-500 font-bold mb-4">{koi.name}</h1>
+      </div>
       <div className=" bg-[#F1F1F1] m-5 flex flex-col md:flex-row p-4 gap-6">
         {/* Koi Header */}
-        <div className="koi-header flex flex-col items-center md:items-start text-center md:text-left">
-          <h1 className="text-4xl font-bold mb-4">{koi.name}</h1>
-          <img
-            className="w-3/4 h-3/4 object-cover rounded-lg shadow-md transition hover:shadow-2xl hover:scale-105 hover:brightness-110 hover:ring-4 hover:ring-blue-400 duration-300"
-            src={koi.thumbnail}
-            alt={koi.name}
-          />
-        </div>
+        <>
+          <div className="w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 lg:w-128 lg:h-160 relative bg-gray-300 rounded-xl">
+            <img
+              className="absolute inset-0 w-full h-full object-contain rounded-lg shadow-md transition hover:shadow-2xl hover:ring-4 hover:ring-blue-400 duration-300"
+              src={koi.thumbnail}
+              alt={koi.name}
+            />
+          </div>
+          {/* Koi Info */}
+          <div className="koi-info space-y-4 text-lg bg-gray-200 p-4 rounded-lg">
+            <div className="flex justify-between items-center mb-4 bg-red-300">
+              <div>
+                <h2 className="text-2xl font-bold">{koi.name}</h2>
+                <p>
+                  <strong>Sex:</strong> {koi.sex}
+                </p>
+                <p>
+                  <strong>Length:</strong> {koi.length} cm
+                </p>
+                <p>
+                  <strong>Age:</strong> {koi.age} years
+                </p>
+              </div>
+            </div>
 
-        {/* Koi Info */}
-        <div className="koi-info space-y-4 text-lg">
-          <p>
-            <strong>Sex:</strong> {koi.sex}
-          </p>
-          <p>
-            <strong>Length:</strong> {koi.length} cm
-          </p>
-          <p>
-            <strong>Age:</strong> {koi.age} years
-          </p>
-          <p>
-            <strong>Status:</strong> {koi.status_name}
-          </p>
-          <p>
-            <strong>Description:</strong> {koi.description}
-          </p>
-          <p>
-            <strong>Owner ID:</strong> {koi.owner_id}
-          </p>
-          <p>
-            <strong>Category ID:</strong> {koi.category_id}
-          </p>
-        </div>
+            <p>
+              <strong>Status:</strong> {koi.status_name}
+            </p>
+            <p>
+              <strong>Description:</strong> {koi.description}
+            </p>
+            <p>
+              <strong>Owner ID:</strong> {koi.owner_id}
+            </p>
+            <p>
+              <strong>Category ID:</strong> {koi.category_id}
+            </p>
+          </div>
+        </>
+        {/* Navigate Button */}
       </div>
-
-      {/* Navigate Button */}
       <div className="mt-6">
         <NavigateButton
           to="/kois"
@@ -76,6 +84,7 @@ const KoiDetail: React.FC = () => {
         />
       </div>
     </>
+
   );
 };
 

@@ -4,7 +4,7 @@ import { Auction } from "~/pages/auctions/Auction.model";
 import { LoginDTO } from "~/dtos/login.dto";
 import { RegisterDTO } from "~/dtos/register.dto";
 import { KoiDetailModel } from "~/pages/kois/Koi.model";
-import { KoiInAuction } from "~/components/cart/KoiInAuction";
+import { AuctionKoi } from "~/pages/auctions/AuctionDetail";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -151,11 +151,9 @@ export const fetchAuctionById = async (id: number): Promise<Auction | null> => {
   }
 };
 
-export async function fetchKoiInAuction(
-  auctionId: number,
-): Promise<KoiInAuction[]> {
+export const fetchAuctionKoi = async (auctionId: number): Promise<AuctionKoi[]> => {
   try {
-    const response = await axios.get<KoiInAuction[]>(
+    const response = await axios.get<AuctionKoi[]>(
       `${API_URL}/auctionkois/auction/${auctionId}`,
     );
     return response.data;

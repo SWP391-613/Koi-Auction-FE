@@ -3,6 +3,7 @@ import { environment } from "../environments/environment";
 import { Auction } from "~/pages/auctions/Auction.model";
 import { LoginDTO } from "~/dtos/login.dto";
 import { RegisterDTO } from "~/dtos/register.dto";
+import { KoiDetailModel } from "~/pages/kois/Koi.model";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -148,3 +149,28 @@ export const fetchAuctionById = async (id: number): Promise<Auction | null> => {
     return null;
   }
 };
+
+export async function getKois(
+  page: number,
+  limit: number,
+): Promise<KoiDetailModel[]> {
+  try {
+    const response = await axios.get<KoiDetailModel[]>(
+      `${API_URL}/kois?page=${page}&limit=${limit}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching koi data:", error);
+    throw error;
+  }
+}
+
+export async function getKoiById(id: number): Promise<KoiDetailModel> {
+  try {
+    const response = await axios.get<KoiDetailModel>(`${API_URL}/kois/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching koi data:", error);
+    throw error;
+  }
+}

@@ -11,7 +11,7 @@ import MemberList from "./pages/manager/member/MemberList";
 import { Helmet } from "react-helmet";
 import { ThemeProvider } from "./pages/theme/ThemeContext";
 import { AuthProvider, useAuth } from "./AuthContext";
-import KoiDetail from "./pages/koiDetail/KoiDetail";
+import KoiDetail from "./pages/kois/KoiDetail";
 import koi_data from "./utils/data/koi_data.json";
 import user_data from "./utils/data/user_data.json";
 import KoiList from "./pages/manager/koi/KoiList.jsx";
@@ -21,7 +21,7 @@ import Settings from "./pages/manager/settings/Settings.jsx";
 import { ToastContainer } from "react-toastify";
 import UserDetail from "./pages/userdetail/UserDetail.jsx";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import Kois from "./pages/kois/Kois.jsx";
+import Kois from "./pages/kois/Kois";
 import NotFound from "./components/error/NotFound";
 import AuctionDetail from "./pages/auctions/auctiondetail/AuctionDetail";
 

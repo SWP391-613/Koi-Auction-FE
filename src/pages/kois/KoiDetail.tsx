@@ -13,7 +13,7 @@ import {
   faListOl,
   faVenusMars,
   faUser,
-  faArrowLeft
+  faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { KoiDetailModel } from "./Kois";
 

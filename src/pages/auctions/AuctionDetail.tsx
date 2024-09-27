@@ -58,8 +58,8 @@ const AuctionDetail: React.FC = () => {
 
   return (
     <>
-      <div className="m-5 flex max-h-96 flex-col items-start justify-between gap-4 rounded-lg border border-transparent bg-gray-200 p-6 shadow-lg transition-all duration-300 ease-in-out hover:border-blue-500 hover:shadow-xl hover:ring-2 hover:ring-blue-300 md:flex-row">
-        <div className="flex flex-1 flex-col">
+      <div className="m-5 flex max-h-30 flex-col items-start justify-between gap-4 rounded-lg bg-transparent p-6 shadow-lg transition-all duration-300 ease-in-out hover:border-blue-500 hover:shadow-xl hover:ring-2 hover:ring-blue-300 md:flex-row">
+        <div className="flex flex-1 flex-row gap-10">
           <div className="mb-4 flex flex-col">
             {/* <h1 className="text-2xl font-bold text-gray-800">
             Auction #{auction.id}

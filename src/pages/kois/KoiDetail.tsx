@@ -5,9 +5,16 @@ import NavigateButton from "../../components/shared/NavigateButton";
 import axios from "axios";
 import { KoiDetailModel } from "./Koi.model";
 import { getKoiById } from "~/utils/apiUtils";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { faFish, faRuler, faCalendarDays, faListOl, faVenusMars, faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import {
+  faFish,
+  faRuler,
+  faCalendarDays,
+  faListOl,
+  faVenusMars,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface KoiDetailItemProps {
   icon: IconDefinition;
@@ -35,12 +42,14 @@ const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
   icon,
   label,
   value,
-  fontSize = 'text-2xl',
-  bgColor = 'bg-gray-100',
-  textColor = 'text-black'
+  fontSize = "text-2xl",
+  bgColor = "bg-gray-100",
+  textColor = "text-black",
 }) => {
   return (
-    <div className={`${bgColor} grid grid-cols-2 border border-gray-300 rounded-3xl p-3 m-2`}>
+    <div
+      className={`${bgColor} grid grid-cols-2 border border-gray-300 rounded-3xl p-3 m-2`}
+    >
       <div className="flex items-center">
         <FontAwesomeIcon icon={icon as IconDefinition} color="#d66b56" />
         <p className={`text-lg ml-2`}>{label}</p>
@@ -97,32 +106,65 @@ const KoiDetail: React.FC = () => {
           <div className="koi-info space-y-4 text-lg bg-gray-200 p-4 rounded-2xl w-full">
             <div className="items-center mb-4 rounded-2xl">
               <div className="w-full grid grid-cols-1 xl:grid-cols-2">
-                <h2 className="text-4xl font-bold col-span-1 xl:col-span-2 m-4">{koi.name}</h2>
-                <KoiDetailItem icon={faVenusMars} label="Sex" value={koi.sex} bgColor="bg-gray-300" />
-                <KoiDetailItem icon={faRuler} label="Length" value={koi.length} bgColor="bg-gray-300" />
-                <KoiDetailItem icon={faCalendarDays} label="Age" value={koi.age} bgColor="bg-gray-300" />
-                <KoiDetailItem icon={faFish} label="Category ID" value={koi.category_id} bgColor="bg-gray-300" />
+                <h2 className="text-4xl font-bold col-span-1 xl:col-span-2 m-4">
+                  {koi.name}
+                </h2>
+                <KoiDetailItem
+                  icon={faVenusMars}
+                  label="Sex"
+                  value={koi.sex}
+                  bgColor="bg-gray-300"
+                />
+                <KoiDetailItem
+                  icon={faRuler}
+                  label="Length"
+                  value={koi.length}
+                  bgColor="bg-gray-300"
+                />
+                <KoiDetailItem
+                  icon={faCalendarDays}
+                  label="Age"
+                  value={koi.age}
+                  bgColor="bg-gray-300"
+                />
+                <KoiDetailItem
+                  icon={faFish}
+                  label="Category ID"
+                  value={koi.category_id}
+                  bgColor="bg-gray-300"
+                />
               </div>
             </div>
 
             <div className="flex flex-col md:flex-row justify-between items-center mb-4 rounded-2xl">
               <div className="w-full grid grid-cols-1 lg:grid-cols-2">
-                <KoiDetailItem icon={faListOl} label="Status" value={koi.status_name}
+                <KoiDetailItem
+                  icon={faListOl}
+                  label="Status"
+                  value={koi.status_name}
                   {...getStatusStyles(koi.status_name)}
                 />
-                <KoiDetailItem icon={faUser} label="Owner ID" value={koi.owner_id} bgColor="bg-gray-300" />
+                <KoiDetailItem
+                  icon={faUser}
+                  label="Owner ID"
+                  value={koi.owner_id}
+                  bgColor="bg-gray-300"
+                />
               </div>
             </div>
             <div className="grid grid-cols-2 grid-rows-3 rounded-2xl">
-              <h2 className="text-4xl font-bold col-span-2 row-span-1 m-4">Description</h2>
-              <p className="text-2xl col-span-2 row-span-2 m-4">{koi.description}</p>
+              <h2 className="text-4xl font-bold col-span-2 row-span-1 m-4">
+                Description
+              </h2>
+              <p className="text-2xl col-span-2 row-span-2 m-4">
+                {koi.description}
+              </p>
             </div>
           </div>
         </>
         {/* Navigate Button */}
       </div>
     </div>
-
   );
 };
 

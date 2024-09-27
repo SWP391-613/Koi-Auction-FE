@@ -13,7 +13,10 @@ const Auctions: React.FC = () => {
   useEffect(() => {
     const loadAuctions = async () => {
       try {
-        const fetchedAuctions = await fetchAuctions(currentPage - 1, itemsPerPage); // Fetch auctions for the current page
+        const fetchedAuctions = await fetchAuctions(
+          currentPage - 1,
+          itemsPerPage,
+        ); // Fetch auctions for the current page
 
         if (fetchedAuctions.length < itemsPerPage) {
           setHasMorePages(false); // No more pages if fewer items are fetched
@@ -29,7 +32,10 @@ const Auctions: React.FC = () => {
     loadAuctions();
   }, [currentPage]);
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number,
+  ) => {
     setCurrentPage(page); // Update the current page when pagination changes
   };
 

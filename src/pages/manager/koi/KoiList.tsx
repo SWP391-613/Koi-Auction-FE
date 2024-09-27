@@ -16,12 +16,15 @@ const KoiList = () => {
   const fetchKois = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get<KoiApiResponse>("http://localhost:4000/api/v1/kois", {
-        params: {
-          page: page - 1, // Assuming the API is zero-based
-          limit: itemsPerPage,
+      const response = await axios.get<KoiApiResponse>(
+        "http://localhost:4000/api/v1/kois",
+        {
+          params: {
+            page: page - 1, // Assuming the API is zero-based
+            limit: itemsPerPage,
+          },
         },
-      });
+      );
 
       const data = response.data;
 
@@ -42,7 +45,10 @@ const KoiList = () => {
     fetchKois();
   }, [fetchKois]);
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
     setPage(value);
   };
 

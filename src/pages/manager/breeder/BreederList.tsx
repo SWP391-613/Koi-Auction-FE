@@ -1,25 +1,48 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Container, CircularProgress, Alert } from "@mui/material";
 
+interface Breeder {
+  id: number;
+  first_name: string;
+  last_name: string;
+  phone_number: string | null;
+  email: string;
+  address: string;
+  password: string | null;
+  status_name: string;
+  date_of_birth: number;
+  avatar_url: string;
+  google_account_id: number;
+  role_name: string;
+  account_balance: number;
+}
+
+interface BreedersResponse {
+  total_page: number;
+  total_item: number;
+  item: Breeder[];
+}
+
 const BreederList = () => {
-  const [breeders, setBreeders] = useState([]);
+  const [breeders, setBreeders] = useState<Breeder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchBreeders = async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.get<BreedersResponse>(
           "http://localhost:4000/api/v1/breeders",
           {
             params: {
               page: 0,
-              limit: 10,
+              limit: 5,
             },
           },
         );
-        setBreeders(response.data);
+        setBreeders(response.data.item);
         setLoading(false);
       } catch (err) {
         setError("Error fetching breeders");
@@ -29,6 +52,10 @@ const BreederList = () => {
 
     fetchBreeders();
   }, []);
+
+  if (!Array.isArray(breeders)) {
+    return <div>Error: Breeders data is not an array</div>;
+  }
 
   const handleView = (id) => {
     // Implement view logic
@@ -77,9 +104,9 @@ const BreederList = () => {
             <tr key={breeder.id} className="text-gray-700 dark:text-gray-400">
               <td className="px-4 py-3">
                 <div className="flex items-center text-sm">
-                  <div className="relative mr-3 hidden h-8 w-8 rounded-full md:block">
+                  <div className="relative mr-3 hidden h-[3rem] w-[3rem] rounded-full md:block">
                     <img
-                      className="h-full w-full rounded-full object-cover"
+                      className="w-full rounded-full object-cover"
                       src={breeder.avatar_url}
                       alt=""
                       loading="lazy"
@@ -90,7 +117,7 @@ const BreederList = () => {
                     ></div>
                   </div>
                   <div>
-                    <p className="font-semibold">{breeder.full_name}</p>
+                    <p className="font-semibold">{breeder.first_name}</p>
                     <p className="text-xs text-gray-600 dark:text-gray-400">
                       Breeder
                     </p>

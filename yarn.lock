@@ -2402,11 +2402,6 @@ eslint-plugin-tailwindcss@^3.17.4:
     fast-glob "^3.2.5"
     postcss "^8.4.4"
 
-eslint-plugin-unused-imports@^4.1.4:
-  version "4.1.4"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-unused-imports/-/eslint-plugin-unused-imports-4.1.4.tgz#62ddc7446ccbf9aa7b6f1f0b00a980423cda2738"
-  integrity sha512-YptD6IzQjDardkl0POxnnRBhU1OEePMV0nd6siHaRBbd+lyh6NAhFEobiznKU7kTsSsDeSD62Pe7kAM1b7dAZQ==
-
 eslint-scope@5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-5.1.1.tgz#e786e59a66cb92b3f6c1fb0d508aab174848f48c"
@@ -3277,7 +3272,7 @@ keyv@^4.5.3:
     bootstrap "^5.3.3"
     dotenv "^16.4.5"
     husky "^9.1.5"
-    koiproject "file:../../../../../home/lcaohoanq/.cache/yarn/v6/npm-koiproject-0.0.0-de075e44-2461-4caf-8abd-e03e64a2eec2-1727407164326/node_modules/koiproject"
+    koiproject "file:../../../../../home/lcaohoanq/.cache/yarn/v6/npm-koiproject-0.0.0-5f60b0ae-dccc-4ef0-826c-575759ee1f90-1727409864708/node_modules/koiproject"
     prop-types "^15.8.1"
     react "^18.3.1"
     react-dom "^18.3.1"

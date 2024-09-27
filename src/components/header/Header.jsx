@@ -1,14 +1,16 @@
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { useAuth } from "../../AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFire, faHouse, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faTimes, faFire, faHouse, faQuestion } from "@fortawesome/free-solid-svg-icons";
 import NavigateButton from "../shared/NavigateButton.tsx";
 
 const Header = () => {
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
   const { isLoggedIn, user, logout } = useAuth();
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   // Button data for navigation
   const navButtons = [
@@ -44,25 +46,33 @@ const Header = () => {
 
   return (
     <header className="bg-gray-50 px-8 py-4 shadow-md transition-all duration-300">
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between md:flex-row">
-        <button
-          onClick={() => navigate("/")}
-          className="mb-4 bg-[#F9FAFB] hover:bg-[#F9FAFB] md:mb-0"
-        >
-          <img
-            src="/koi-svgrepo-com.svg"
-            alt="Koi Auction Logo"
-            className="w-12"
-          />
-        </button>
-        <nav className="mb-4 flex w-full flex-col gap-4 md:mb-0 md:w-auto md:flex-row md:gap-10">
+      <div className="mx-auto flex max-w-7xl flex-col md:flex-row items-center justify-between md:items-start">
+        <div className="flex flex-col items-center md:items-start">
+          <button
+            onClick={() => navigate("/")}
+            className="mb-4 bg-[#F9FAFB] hover:bg-[#F9FAFB] md:mb-0"
+          >
+            <img
+              src="/koi-svgrepo-com.svg"
+              alt="Koi Auction Logo"
+              className="w-12"
+            />
+          </button>
+          <button
+            className="md:hidden mb-4"
+            onClick={() => setIsNavOpen(!isNavOpen)}
+          >
+            <FontAwesomeIcon icon={isNavOpen ? faTimes : faBars} className="w-6 h-6" />
+          </button>
+        </div>
+        <nav className={`mb-4 flex w-full flex-col gap-4 md:mb-0 md:w-auto md:flex-row md:gap-10 ${isNavOpen ? 'block' : 'hidden'} md:flex`}>
           {navButtons.map((button, index) => (
             <NavigateButton
               key={index}
               text={button.text}
               to={button.to}
               icon={button.icon}
-              className={button.className}
+              className={`${button.className} ${location.pathname === button.to ? 'text-blue-600' : ''}`}
             />
           ))}
         </nav>

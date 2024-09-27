@@ -29,7 +29,10 @@ const Kois: React.FC = () => {
     fetchItems();
   }, [currentPage]);
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number,
+  ) => {
     setCurrentPage(page);
   };
 

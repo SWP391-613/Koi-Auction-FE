@@ -1,8 +1,9 @@
+import React from "react";
 import { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ThemeContext } from "../theme/ThemeContext";
 import { login, fetchGoogleClientId } from "../../utils/apiUtils";
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
 import * as yup from "yup";
@@ -12,6 +13,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Login.scss";
 import { setCookie } from "../../utils/cookieUtils";
+import { LoginDTO } from "~/dtos/login.dto";
 const schema = yup.object().shape({
   email: yup
     .string()
@@ -20,7 +22,7 @@ const schema = yup.object().shape({
   password: yup.string().required("Password is required"),
 });
 
-const Login = () => {
+const Login: React.FC = () => {
   const { loginWithGoogle } = useAuth();
   const { isDarkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
@@ -45,25 +47,36 @@ const Login = () => {
     loadGoogleClientId();
   }, []);
 
-  const onSubmit = async (data) => {
+  function routeUserToEachPage(roleName: string): string {
+    let route;
+    if (roleName === "MANAGER") {
+      route = "/manager";
+    } else if (roleName === "STAFF") {
+      route = "/staff";
+    } else {
+      route = "/";
+    }
+    return route;
+  }
+
+  const onSubmit = async (data: LoginDTO) => {
     try {
       console.log(data);
       const response = await login({ ...data });
       setCookie("access_token", response.token, 30); //be must response date
       toast.success("Login successful!");
       setTimeout(() => {
-        navigate("/");
+        navigate(routeUserToEachPage(response.roles[0]));
       }, 2000);
     } catch (error) {
-      setError("api", {
-        type: "manual",
-        message: error.message || "An error occurred during login",
-      });
-      toast.error(error.message || "An error occurred during login");
+      if (axios.isAxiosError(error)) {
+        toast.error(error.message);
+      }
+      toast.error("An error occurred during login");
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
+  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
     try {
       const response = await axios.post(
         "http://localhost:4000/api/v1/oauth2/google",
@@ -77,20 +90,16 @@ const Login = () => {
         toast.success("Google login successful!");
         navigate("/");
       } else {
-        setError("api", { type: "manual", message: "Google login failed" });
         toast.error("Google login failed");
       }
     } catch (error) {
-      setError("api", {
-        type: "manual",
-        message:
+      if (axios.isAxiosError(error)) {
+        toast.error(
           error.response?.data?.message ||
-          "An error occurred during Google login",
-      });
-      toast.error(
-        error.response?.data?.message ||
-          "An error occurred during Google login",
-      );
+            "An error occurred during Google login",
+        );
+      }
+      toast.error("An error occurred during Google login");
     }
   };
 

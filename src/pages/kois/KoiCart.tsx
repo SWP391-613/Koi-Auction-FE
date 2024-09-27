@@ -1,12 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { KoiDetailModel } from "./Koi.model";
+import { KoiDetailModel } from "./Kois";
 
 interface KoiCartProps {
   items: KoiDetailModel[];
 }
 
 const KoiCart: React.FC<KoiCartProps> = ({ items }) => {
+  // useRedirectIfEmpty(items)
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "VERIFIED":
@@ -24,12 +26,8 @@ const KoiCart: React.FC<KoiCartProps> = ({ items }) => {
     }
   };
 
-  if (!Array.isArray(items) || items.length === 0) {
-    return <div>Không có dữ liệu cá Koi.</div>;
-  }
-
   return (
-    <div className="koi-container h-full m-3 grid grid-cols-1 gap-4 p-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    <div className="koi-container m-3 grid h-full grid-cols-1 gap-4 p-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       {items.map((koi) => (
         <Link
           to={`/koi/${koi.id}`}
@@ -37,7 +35,7 @@ const KoiCart: React.FC<KoiCartProps> = ({ items }) => {
           className="koi-card m-2 transform overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:scale-105"
         >
           <div className="flex flex-row">
-            <div className="image-container flex w-3/6 bg-gray-200">
+            <div className="image-container flex w-3/6 bg-[#4086c7]">
               {koi.thumbnail ? (
                 <img
                   src={koi.thumbnail}
@@ -48,7 +46,7 @@ const KoiCart: React.FC<KoiCartProps> = ({ items }) => {
                 <span className="text-gray-500">No Image</span>
               )}
             </div>
-            <div className="flex flex-col items-start ml-8">
+            <div className="ml-8 flex flex-col items-start">
               <div className="info p-4">
                 <h2 className="title text-2xl font-semibold">{koi.name}</h2>
                 <div

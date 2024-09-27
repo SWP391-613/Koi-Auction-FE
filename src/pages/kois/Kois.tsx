@@ -1,47 +1,64 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import KoiCart from "./KoiCart";
-import { KoiDetailModel } from "./Koi.model";
 import { getKois } from "~/utils/apiUtils";
 import PaginationComponent from "~/components/pagination/Pagination";
 
+export interface KoisResponse {
+  total_page: number;
+  total_item: number;
+  items: KoiDetailModel[];
+}
+export interface KoiDetailModel {
+  id: number;
+  name: string;
+  sex: string;
+  length: number;
+  age: number;
+  status_name: string;
+  is_display: number; //0, 1
+  thumbnail: string;
+  description: string;
+  owner_id: number;
+  category_id: number;
+}
+
 const Kois: React.FC = () => {
-  const [items, setItems] = useState<KoiDetailModel[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [hasMorePages, setHasMorePages] = useState(true); // State to track if more pages exist
-  const itemsPerPage = 6; // Number of items per page
+  const [koisData, setKoisData] = useState<KoisResponse>({
+    total_page: 0,
+    total_item: 0,
+    items: [],
+  });
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 10; // Adjusted to match the API response
 
   useEffect(() => {
-    const fetchItems = async () => {
+    const fetchKois = async () => {
       try {
-        const data = await getKois(currentPage - 1, itemsPerPage); // Fetch page data
-
-        if (data.length < itemsPerPage) {
-          setHasMorePages(false); // No more pages if the result is less than the page size
-        }
-
-        setItems(data); // Update items with the fetched data
+        const response = await getKois(currentPage, itemsPerPage);
+        setKoisData(response);
       } catch (error) {
         console.error("Error fetching koi data:", error);
-        setItems([]);
+        setKoisData({ total_page: 0, total_item: 0, items: [] });
       }
     };
 
-    fetchItems();
+    fetchKois();
   }, [currentPage]);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     page: number,
   ) => {
-    setCurrentPage(page);
+    setCurrentPage(page - 1); // Adjust to 0-based index for API
   };
 
   return (
     <div>
-      <KoiCart items={items} />
+      <KoiCart items={koisData.items} />
       <PaginationComponent
-        totalPages={hasMorePages ? currentPage + 1 : currentPage} // Only increment total pages if there's more data
-        currentPage={currentPage}
+        totalPages={koisData.total_page}
+        currentPage={currentPage + 1} // Adjust to 1-based index for UI
         onPageChange={handlePageChange}
       />
     </div>

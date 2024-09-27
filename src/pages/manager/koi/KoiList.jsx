@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Container, Typography, CircularProgress, Alert } from "@mui/material";
 import PaginationComponent from "../../../components/pagination/Pagination";
@@ -77,9 +77,9 @@ const KoiList = () => {
             Koi List
           </Typography>
         </div>
-        <div className="my-2 flex sm:flex-row flex-col">
-          <div className="block relative">
-            <span className="h-full absolute inset-y-0 left-0 flex items-center pl-2">
+        <div className="my-2 flex flex-col sm:flex-row">
+          <div className="relative block">
+            <span className="absolute inset-y-0 left-0 flex h-full items-center pl-2">
               <svg
                 viewBox="0 0 24 24"
                 className="h-4 w-4 fill-current text-gray-500"
@@ -89,28 +89,28 @@ const KoiList = () => {
             </span>
             <input
               placeholder="Search"
-              className="appearance-none rounded-r rounded-l sm:rounded-l-none border border-gray-400 border-b block pl-8 pr-6 py-2 w-full bg-white text-sm placeholder-gray-400 text-gray-700 focus:bg-white focus:placeholder-gray-600 focus:text-gray-700 focus:outline-none"
+              className="block w-full appearance-none rounded-l rounded-r border border-b border-gray-400 bg-white py-2 pl-8 pr-6 text-sm text-gray-700 placeholder-gray-400 focus:bg-white focus:text-gray-700 focus:placeholder-gray-600 focus:outline-none sm:rounded-l-none"
             />
           </div>
         </div>
-        <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-          <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+        <div className="-mx-4 overflow-x-auto px-4 py-4 sm:-mx-8 sm:px-8">
+          <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
             <table className="min-w-full leading-normal">
               <thead>
                 <tr>
-                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
                     Koi
                   </th>
-                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
                     Sex
                   </th>
-                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
                     Length
                   </th>
-                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
                     Age
                   </th>
-                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
                     Actions
                   </th>
                 </tr>
@@ -118,38 +118,38 @@ const KoiList = () => {
               <tbody>
                 {kois.map((koi) => (
                   <tr key={koi.id}>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 w-10 h-10">
+                        <div className="h-10 w-10 flex-shrink-0">
                           <img
-                            className="w-full h-full rounded-full"
+                            className="h-full w-full rounded-full"
                             src={koi.thumbnail}
                             alt=""
                           />
                         </div>
                         <div className="ml-3">
-                          <p className="text-gray-900 whitespace-no-wrap">
+                          <p className="whitespace-no-wrap text-gray-900">
                             {koi.name || "N/A"}
                           </p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">
+                    <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                      <p className="whitespace-no-wrap text-gray-900">
                         {koi.sex || "N/A"}
                       </p>
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">
+                    <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                      <p className="whitespace-no-wrap text-gray-900">
                         {koi.length || "N/A"}
                       </p>
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      <p className="text-gray-900 whitespace-no-wrap">
+                    <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                      <p className="whitespace-no-wrap text-gray-900">
                         {koi.age || "N/A"}
                       </p>
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => handleView(koi.id)}
@@ -208,7 +208,7 @@ const KoiList = () => {
                 ))}
               </tbody>
             </table>
-            <div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
+            <div className="xs:flex-row xs:justify-between flex flex-col items-center border-t bg-white px-5 py-5">
               <PaginationComponent
                 totalPages={totalPages}
                 currentPage={page}

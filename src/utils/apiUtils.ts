@@ -1,10 +1,10 @@
 import axios from "axios";
 import { environment } from "../environments/environment";
-import { Auction } from "~/pages/auctions/Auction.model";
-import { LoginDTO } from "~/dtos/login.dto";
-import { RegisterDTO } from "~/dtos/register.dto";
-import { KoiDetailModel } from "~/pages/kois/Koi.model";
 import { AuctionKoi } from "~/pages/auctions/AuctionDetail";
+import { RegisterDTO } from "~/dtos/register.dto";
+import { LoginDTO } from "~/dtos/login.dto";
+import { KoiDetailModel, KoisResponse } from "~/pages/kois/Kois";
+import { Auction } from "~/pages/auctions/Auctions";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -168,9 +168,9 @@ export const fetchAuctionKoi = async (
 export async function getKois(
   page: number,
   limit: number,
-): Promise<KoiDetailModel[]> {
+): Promise<KoisResponse> {
   try {
-    const response = await axios.get<KoiDetailModel[]>(
+    const response = await axios.get<KoisResponse>(
       `${API_URL}/kois?page=${page}&limit=${limit}`,
     );
     return response.data;

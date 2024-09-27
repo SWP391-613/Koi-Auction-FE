@@ -1,8 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import AuctionCart from "./AuctionCart";
 import { fetchAuctions } from "~/utils/apiUtils";
-import { Auction } from "./Auction.model";
 import PaginationComponent from "~/components/pagination/Pagination";
+
+export interface Auction {
+  id: number;
+  title: string;
+  start_time: Date;
+  end_time: Date;
+  status: string;
+}
 
 const Auctions: React.FC = () => {
   const [auctions, setAuctions] = useState<Auction[]>([]);

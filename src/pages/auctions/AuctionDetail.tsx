@@ -64,7 +64,7 @@ const AuctionDetail: React.FC = () => {
             {/* <h1 className="text-2xl font-bold text-gray-800">
             Auction #{auction.id}
           </h1> */}
-            <h2 className="text-xl font-semibold text-gray-600">
+            <h2 className="text-3xl font-semibold text-black">
               {auction.title}
             </h2>
           </div>
@@ -93,38 +93,48 @@ const AuctionDetail: React.FC = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-2 md:grid-cols-3">
-      {koiData.map((koi) =>
-        koi.is_display === 1 && (
-          <Link
-            to={`/koi/${koi.id}`}
-            key={koi.id}
-            className="koi-card m-2 transform overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:scale-105"
-          >
-            <div className="flex flex-row rounded-lg border border-gray-300 bg-gray-200 p-4 shadow-lg transition-all duration-300 ease-in-out hover:border-blue-500 hover:shadow-xl">
-              <div>
-                <img
-                  src={koi.thumbnail}
-                  alt={koi.name}
-                  className="h-48 bg-[#4086c7] w-full rounded-md object-cover"
-                />
-              </div>
-              <div className="ml-8">
-                <h1 className="text-xl font-semibold text-gray-800 mb-3">{koi.name}</h1>
-                <p className="text-md text-gray-600">ID: {koi.id}</p>
-                <p className="text-md text-gray-600">Length: {koi.length} cm</p>
-                <p className="text-md text-gray-600">Sex: {koi.sex}</p>
-                <p className="text-md text-gray-600">Age: {koi.age}</p>
-                <p className="text-md text-gray-600">Status: {koi.status_name}</p>
-                <p className="text-md text-gray-600">Owner ID: {koi.owner_id}</p>
-                <p className="text-md text-gray-600">Category ID: {koi.category_id}</p>
-                <p className="mt-3 text-gray-600">{koi.description}</p>
-              </div>
-            </div>
-          </Link>
-        )
-      )}
-</div>
-
+        {koiData.map(
+          (koi) =>
+            koi.is_display === 1 && (
+              <Link
+                to={`/koi/${koi.id}`}
+                key={koi.id}
+                className="koi-card m-2 transform overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:scale-105"
+              >
+                <div className="flex flex-row justify-between items-start rounded-lg border border-gray-300 bg-gray-200 p-4 shadow-lg transition-all duration-300 ease-in-out hover:border-blue-500 hover:shadow-xl">
+                  <div>
+                    <img
+                      src={koi.thumbnail}
+                      alt={koi.name}
+                      className="h-[40rem] bg-[#4086c7] w-[30rem] rounded-md object-cover"
+                    />
+                  </div>
+                  <div className="ml-8">
+                    <h1 className="text-2xl font-semibold text-gray-800 mb-10">
+                      {koi.name}
+                    </h1>
+                    <p className="text-md text-black">ID: {koi.id}</p>
+                    <p className="text-md text-black">
+                      Length: {koi.length} cm
+                    </p>
+                    <p className="text-md text-black">Sex: {koi.sex}</p>
+                    <p className="text-md text-black">Age: {koi.age}</p>
+                    <p className="text-md text-black">
+                      Status: {koi.status_name}
+                    </p>
+                    <p className="text-md text-black">
+                      Owner ID: {koi.owner_id}
+                    </p>
+                    <p className="text-md text-black">
+                      Category ID: {koi.category_id}
+                    </p>
+                    <p className="mt-3 text-gray-600">{koi.description}</p>
+                  </div>
+                </div>
+              </Link>
+            ),
+        )}
+      </div>
     </>
   );
 };

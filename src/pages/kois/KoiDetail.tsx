@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React from "react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
 import NavigateButton from "../../components/shared/NavigateButton";
-import axios from "axios";
-import { KoiDetailModel } from "./Koi.model";
 import { getKoiById } from "~/utils/apiUtils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
@@ -15,6 +14,7 @@ import {
   faVenusMars,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { KoiDetailModel } from "./Kois";
 
 interface KoiDetailItemProps {
   icon: IconDefinition;
@@ -48,11 +48,11 @@ const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
 }) => {
   return (
     <div
-      className={`${bgColor} grid grid-cols-2 border border-gray-300 rounded-3xl p-3 m-2`}
+      className={`${bgColor} m-2 grid grid-cols-2 rounded-3xl border border-gray-300 p-3`}
     >
       <div className="flex items-center">
         <FontAwesomeIcon icon={icon as IconDefinition} color="#d66b56" />
-        <p className={`text-lg ml-2`}>{label}</p>
+        <p className={`ml-2 text-lg`}>{label}</p>
       </div>
       <p className={`${fontSize} text-end ${textColor}`}>{value}</p>
     </div>
@@ -63,12 +63,20 @@ const KoiDetail: React.FC = () => {
   const { isLoggedIn } = useAuth();
   const { id } = useParams<{ id: string }>();
   const [koi, setKoi] = useState<KoiDetailModel | null>(null);
-
+  const [loading, setLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchKoiData = async () => {
       try {
         const response = await getKoiById(parseInt(id || ""));
-        setKoi(response);
+
+        // Check if the response is valid
+        if (!response) {
+          // If Koi is not found, navigate to Not Found page
+          navigate("/notfound");
+        } else {
+          setKoi(response);
+        }
       } catch (error) {
         console.error("Error fetching koi data:", error);
       }
@@ -78,35 +86,33 @@ const KoiDetail: React.FC = () => {
   }, [id]);
 
   if (!koi) {
-    return <div className="py-8 text-center">Không tìm thấy cá Koi.</div>;
+    return null;
   }
 
   return (
     <div className="container mx-auto">
-      <div className="mt-6 ml-10">
+      <div className="ml-10 mt-6">
         <NavigateButton
           to="/kois"
           text="<-- Back to Koi List"
-          className="text-black text-lg py-3 px-5 rounded transition bg-transparent hover:bg-gray-200"
+          className="rounded bg-transparent px-5 py-3 text-lg text-black transition hover:bg-gray-200"
         />
       </div>
-      <div className="m-5 flex flex-col md:flex-row sm:flex-col p-4 gap-6">
+      <div className="m-5 flex flex-col gap-6 p-4 sm:flex-col md:flex-row">
         {/* Koi Image */}
         <>
-          <div className="w-full h-96 sm:h-128 md:w-128 md:h-144 lg:h-192 relative bg-[#4086c7] rounded-xl">
+          <div className="relative h-96 w-full rounded-xl bg-[#4086c7] sm:h-128 md:h-144 md:w-128 lg:h-192">
             <img
-              className="absolute inset-0 w-full h-full
-              object-contain rounded-xl shadow-md
-              transition hover:shadow-2xl hover:ring-4 hover:ring-blue-400 duration-300"
+              className="absolute inset-0 h-full w-full rounded-xl object-contain shadow-md transition duration-300 hover:shadow-2xl hover:ring-4 hover:ring-blue-400"
               src={koi.thumbnail}
               alt={koi.name}
             />
           </div>
           {/* Koi Info */}
-          <div className="koi-info space-y-4 text-lg bg-gray-200 p-4 rounded-2xl w-full">
-            <div className="items-center mb-4 rounded-2xl">
-              <div className="w-full grid grid-cols-1 xl:grid-cols-2">
-                <h2 className="text-4xl font-bold col-span-1 xl:col-span-2 m-4">
+          <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-4 text-lg">
+            <div className="mb-4 items-center rounded-2xl">
+              <div className="grid w-full grid-cols-1 xl:grid-cols-2">
+                <h2 className="col-span-1 m-4 text-4xl font-bold xl:col-span-2">
                   {koi.name}
                 </h2>
                 <KoiDetailItem
@@ -136,8 +142,8 @@ const KoiDetail: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row justify-between items-center mb-4 rounded-2xl">
-              <div className="w-full grid grid-cols-1 lg:grid-cols-2">
+            <div className="mb-4 flex flex-col items-center justify-between rounded-2xl md:flex-row">
+              <div className="grid w-full grid-cols-1 lg:grid-cols-2">
                 <KoiDetailItem
                   icon={faListOl}
                   label="Status"
@@ -153,10 +159,10 @@ const KoiDetail: React.FC = () => {
               </div>
             </div>
             <div className="grid grid-cols-2 grid-rows-3 rounded-2xl">
-              <h2 className="text-4xl font-bold col-span-2 row-span-1 m-4">
+              <h2 className="col-span-2 row-span-1 m-4 text-4xl font-bold">
                 Description
               </h2>
-              <p className="text-2xl col-span-2 row-span-2 m-4">
+              <p className="col-span-2 row-span-2 m-4 text-2xl">
                 {koi.description}
               </p>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { useAuth } from "../../AuthContext";
@@ -52,7 +52,7 @@ const Header = () => {
 
   return (
     <header className="bg-gray-50 px-8 py-4 shadow-md transition-all duration-300">
-      <div className="mx-auto flex max-w-7xl flex-col md:flex-row items-center justify-between md:items-start">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between md:flex-row md:items-start">
         <div className="flex flex-col items-center md:items-start">
           <button
             onClick={() => navigate("/")}
@@ -65,12 +65,12 @@ const Header = () => {
             />
           </button>
           <button
-            className="md:hidden mb-4"
+            className="mb-4 md:hidden"
             onClick={() => setIsNavOpen(!isNavOpen)}
           >
             <FontAwesomeIcon
               icon={isNavOpen ? faTimes : faBars}
-              className="w-6 h-6"
+              className="h-6 w-6"
             />
           </button>
         </div>

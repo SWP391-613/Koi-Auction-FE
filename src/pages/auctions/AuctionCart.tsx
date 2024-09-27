@@ -1,16 +1,14 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { Auction } from "./Auction.model";
+import PropTypes from "prop-types";
+import { Auction } from "./Auctions";
 
 interface AuctionCartProps {
   items: Auction[];
 }
 
 const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
-  if (!Array.isArray(items) || items.length === 0) {
-    return <div>No auction data available.</div>;
-  }
+  // useRedirectIfEmpty(items)
 
   return (
     <div className="koi-container m-10 grid grid-cols-1 gap-4 p-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

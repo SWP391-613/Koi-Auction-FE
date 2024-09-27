@@ -7,8 +7,8 @@ import {
   getKoiById,
 } from "~/utils/apiUtils"; // Assume we have this API function
 import { useAuth } from "~/AuthContext";
-import { Auction } from "./Auction.model";
-import { KoiDetailModel } from "../kois/Koi.model";
+import { KoiDetailModel } from "../kois/Kois";
+import { Auction } from "./Auctions";
 
 export interface AuctionKoi {
   id: number;
@@ -98,7 +98,7 @@ const AuctionDetail: React.FC = () => {
             koi.is_display === 1 && (
               <div
                 key={koi.id}
-                className="flex flex-row rounded-lg border border-gray-300 bg-white p-4 shadow-lg hover:border-blue-500 hover:shadow-xl transition-all duration-300 ease-in-out"
+                className="flex flex-row rounded-lg border border-gray-300 bg-white p-4 shadow-lg transition-all duration-300 ease-in-out hover:border-blue-500 hover:shadow-xl"
               >
                 <div>
                   <img

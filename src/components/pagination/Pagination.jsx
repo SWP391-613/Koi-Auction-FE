@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Pagination } from "@mui/material";
 
 const PaginationComponent = ({ totalPages, currentPage, onPageChange }) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Container, CircularProgress, Alert } from "@mui/material";
 
@@ -63,23 +63,23 @@ const StaffList = () => {
 
   return (
     <div className="w-full overflow-x-auto">
-      <table className="w-full whitespace-no-wrap">
+      <table className="whitespace-no-wrap w-full">
         <thead>
-          <tr className="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+          <tr className="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
             <th className="px-4 py-3">Staff</th>
             <th className="px-4 py-3">Email</th>
             <th className="px-4 py-3">Address</th>
             <th className="px-4 py-3">Actions</th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+        <tbody className="divide-y bg-white dark:divide-gray-700 dark:bg-gray-800">
           {staffs.map((staff) => (
             <tr key={staff.id} className="text-gray-700 dark:text-gray-400">
               <td className="px-4 py-3">
                 <div className="flex items-center text-sm">
-                  <div className="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                  <div className="relative mr-3 hidden h-8 w-8 rounded-full md:block">
                     <img
-                      className="object-cover w-full h-full rounded-full"
+                      className="h-full w-full rounded-full object-cover"
                       src={staff.avatar_url}
                       alt=""
                       loading="lazy"
@@ -103,11 +103,11 @@ const StaffList = () => {
                 <div className="flex items-center space-x-4 text-sm">
                   <button
                     onClick={() => handleView(staff.id)}
-                    className="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-100 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                    className="focus:shadow-outline-gray flex items-center justify-between rounded-lg px-2 py-2 text-sm font-medium leading-5 text-purple-100 focus:outline-none dark:text-gray-400"
                     aria-label="View"
                   >
                     <svg
-                      className="w-5 h-5"
+                      className="h-5 w-5"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -121,11 +121,11 @@ const StaffList = () => {
                   </button>
                   <button
                     onClick={() => handleEdit(staff.id)}
-                    className="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-100 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                    className="focus:shadow-outline-gray flex items-center justify-between rounded-lg px-2 py-2 text-sm font-medium leading-5 text-purple-100 focus:outline-none dark:text-gray-400"
                     aria-label="Edit"
                   >
                     <svg
-                      className="w-5 h-5"
+                      className="h-5 w-5"
                       aria-hidden="true"
                       fill="currentColor"
                       viewBox="0 0 20 20"
@@ -135,11 +135,11 @@ const StaffList = () => {
                   </button>
                   <button
                     onClick={() => handleDelete(staff.id)}
-                    className="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-100 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                    className="focus:shadow-outline-gray flex items-center justify-between rounded-lg px-2 py-2 text-sm font-medium leading-5 text-purple-100 focus:outline-none dark:text-gray-400"
                     aria-label="Delete"
                   >
                     <svg
-                      className="w-5 h-5"
+                      className="h-5 w-5"
                       aria-hidden="true"
                       fill="currentColor"
                       viewBox="0 0 20 20"

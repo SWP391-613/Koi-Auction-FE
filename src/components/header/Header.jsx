@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { useAuth } from "../../AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faTimes, faFire, faHouse, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faTimes,
+  faFire,
+  faHouse,
+  faQuestion,
+} from "@fortawesome/free-solid-svg-icons";
 import NavigateButton from "../shared/NavigateButton.tsx";
 
 const Header = () => {
@@ -62,17 +68,22 @@ const Header = () => {
             className="md:hidden mb-4"
             onClick={() => setIsNavOpen(!isNavOpen)}
           >
-            <FontAwesomeIcon icon={isNavOpen ? faTimes : faBars} className="w-6 h-6" />
+            <FontAwesomeIcon
+              icon={isNavOpen ? faTimes : faBars}
+              className="w-6 h-6"
+            />
           </button>
         </div>
-        <nav className={`mb-4 flex w-full flex-col gap-4 md:mb-0 md:w-auto md:flex-row md:gap-10 ${isNavOpen ? 'block' : 'hidden'} md:flex`}>
+        <nav
+          className={`mb-4 flex w-full flex-col gap-4 md:mb-0 md:w-auto md:flex-row md:gap-10 ${isNavOpen ? "block" : "hidden"} md:flex`}
+        >
           {navButtons.map((button, index) => (
             <NavigateButton
               key={index}
               text={button.text}
               to={button.to}
               icon={button.icon}
-              className={`${button.className} ${location.pathname === button.to ? 'text-blue-600' : ''}`}
+              className={`${button.className} ${location.pathname === button.to ? "text-blue-600" : ""}`}
             />
           ))}
         </nav>

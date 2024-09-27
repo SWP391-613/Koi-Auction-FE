@@ -3,7 +3,11 @@ import { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ThemeContext } from "../theme/ThemeContext";
 import { login, fetchGoogleClientId } from "../../utils/apiUtils";
-import { CredentialResponse, GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import {
+  CredentialResponse,
+  GoogleLogin,
+  GoogleOAuthProvider,
+} from "@react-oauth/google";
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
 import * as yup from "yup";
@@ -76,7 +80,9 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+  const handleGoogleSuccess = async (
+    credentialResponse: CredentialResponse,
+  ) => {
     try {
       const response = await axios.post(
         "http://localhost:4000/api/v1/oauth2/google",

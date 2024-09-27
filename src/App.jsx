@@ -14,7 +14,7 @@ import { AuthProvider, useAuth } from "./AuthContext";
 import KoiDetail from "./pages/kois/KoiDetail";
 import koi_data from "./utils/data/koi_data.json";
 import user_data from "./utils/data/user_data.json";
-import KoiList from "./pages/manager/koi/KoiList.jsx";
+import KoiList from "./pages/manager/koi/KoiList";
 import BreederList from "./pages/manager/breeder/BreederList.jsx";
 import StaffList from "./pages/manager/staff/StaffList.jsx";
 import Settings from "./pages/manager/settings/Settings.jsx";

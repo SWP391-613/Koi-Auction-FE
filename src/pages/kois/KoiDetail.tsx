@@ -13,6 +13,7 @@ import {
   faListOl,
   faVenusMars,
   faUser,
+  faArrowLeft
 } from "@fortawesome/free-solid-svg-icons";
 import { KoiDetailModel } from "./Kois";
 
@@ -94,8 +95,9 @@ const KoiDetail: React.FC = () => {
       <div className="ml-10 mt-6">
         <NavigateButton
           to="/kois"
-          text="<-- Back to Koi List"
-          className="rounded bg-transparent px-5 py-3 text-lg text-black transition hover:bg-gray-200"
+          icon={<FontAwesomeIcon icon={faArrowLeft} />}
+          text="Back to Koi List"
+          className="rounded bg-gray-200 px-5 py-3 text-lg text-black transition hover:bg-gray-200"
         />
       </div>
       <div className="m-5 flex flex-col gap-6 p-4 sm:flex-col md:flex-row">

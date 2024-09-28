@@ -1,3 +1,4 @@
+import React from "react";
 import { useContext } from "react";
 import { ThemeContext } from "../../pages/theme/ThemeContext";
 import "./ThemeSwitch.scss";

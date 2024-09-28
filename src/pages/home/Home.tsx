@@ -1,3 +1,4 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { koiBreeders } from "../../utils/data/koibreeders";
 import NavigateButton from "../../components/shared/NavigateButton.tsx";

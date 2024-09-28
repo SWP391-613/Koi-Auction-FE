@@ -1,3 +1,4 @@
+import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
@@ -17,7 +18,7 @@ import user_data from "./utils/data/user_data.json";
 import KoiList from "./pages/manager/koi/KoiList";
 import BreederList from "./pages/manager/breeder/BreederList";
 import StaffList from "./pages/manager/staff/StaffList.jsx";
-import Settings from "./pages/manager/settings/Settings.jsx";
+import Settings from "./pages/manager/settings/Settings.js";
 import { ToastContainer } from "react-toastify";
 import UserDetail from "./pages/userdetail/UserDetail";
 import { SpeedInsights } from "@vercel/speed-insights/react";

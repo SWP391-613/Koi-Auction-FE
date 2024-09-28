@@ -1,3 +1,4 @@
+import React from "react";
 import { createContext, useContext } from "react";
 
 // Create a context for the app

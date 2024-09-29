@@ -26,6 +26,7 @@ import Kois from "./pages/kois/Kois";
 import NotFound from "./components/error/NotFound";
 import AuctionDetail from "./pages/auctions/AuctionDetail";
 import { Analytics } from "@vercel/analytics/react";
+import KoiBidding from "./pages/auctions/KoiBidding";
 
 const TITLE = "Auction Koi";
 
@@ -59,6 +60,11 @@ function App() {
           <Route
             path="/auctions/:id"
             element={<AuctionDetail auctionData={koi_data.items} />}
+          />
+          {/* route for koi bidding */}
+          <Route
+            path="/auctionkois/:auctionId/:koiId"
+            element={<KoiBidding />}
           />
 
           {/* Koi */}

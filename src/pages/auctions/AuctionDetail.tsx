@@ -92,48 +92,55 @@ const AuctionDetail: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-2 md:grid-cols-3">
-        {koiData.map(
-          (koi) =>
-            koi.is_display === 1 && (
-              <Link
-                to={`/koi/${koi.id}`}
-                key={koi.id}
-                className="koi-card m-2 transform overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:scale-105"
-              >
-                <div className="flex flex-row justify-between items-start rounded-lg border border-gray-300 bg-gray-200 p-4 shadow-lg transition-all duration-300 ease-in-out hover:border-blue-500 hover:shadow-xl">
-                  <div>
-                    <img
-                      src={koi.thumbnail}
-                      alt={koi.name}
-                      className="h-[40rem] bg-[#4086c7] w-[30rem] rounded-md object-cover"
-                    />
-                  </div>
-                  <div className="ml-8">
-                    <h1 className="text-2xl font-semibold text-gray-800 mb-10">
-                      {koi.name}
-                    </h1>
-                    <p className="text-md text-black">ID: {koi.id}</p>
-                    <p className="text-md text-black">
-                      Length: {koi.length} cm
-                    </p>
-                    <p className="text-md text-black">Sex: {koi.sex}</p>
-                    <p className="text-md text-black">Age: {koi.age}</p>
-                    <p className="text-md text-black">
-                      Status: {koi.status_name}
-                    </p>
-                    <p className="text-md text-black">
-                      Owner ID: {koi.owner_id}
-                    </p>
-                    <p className="text-md text-black">
-                      Category ID: {koi.category_id}
-                    </p>
-                    <p className="mt-3 text-gray-600">{koi.description}</p>
-                  </div>
+      <div className="grid grid-cols-1 gap-6 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {koiData.map((koi) => (
+          <Link
+            to={`/auctionkois/${auction.id}/${koi.id}`}
+            key={koi.id}
+            className="koi-card transform overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:scale-105"
+          >
+            <div className="relative">
+              <img
+                src={koi.thumbnail}
+                alt={koi.name}
+                className="h-48 w-full object-cover bg-[#4086c7]"
+              />
+              <div className="absolute top-2 left-2 bg-black bg-opacity-50 text-white rounded-full p-1 text-xs">
+                {koi.id}
+              </div>
+              <div className="absolute bottom-2 right-2 flex">
+                {[...Array(5)].map((_, i) => (
+                  <svg
+                    key={i}
+                    className="w-4 h-4 text-yellow-400 fill-current"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                  </svg>
+                ))}
+              </div>
+            </div>
+            <div className="p-4">
+              <h2 className="text-xl font-semibold mb-2">{koi.name}</h2>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm text-gray-600">{koi.status_name}</span>
+                <span className="text-lg font-bold">
+                  ${koi.current_bid || koi.base_price}
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <div>
+                  <p>Breeder: {koi.breeder}</p>
+                  <p>Sex: {koi.sex}</p>
                 </div>
-              </Link>
-            ),
-        )}
+                <div className="text-right">
+                  <p>Length: {koi.length}cm</p>
+                  <p>Age: {koi.age}</p>
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
     </>
   );

@@ -5,6 +5,8 @@ import { RegisterDTO } from "~/dtos/register.dto";
 import { LoginDTO, LoginResponse } from "~/dtos/login.dto";
 import { KoiDetailModel, KoisResponse } from "~/pages/kois/Kois";
 import { Auction } from "~/pages/auctions/Auctions";
+import { AuctionKoiResponse } from "~/pages/auctions/KoiBidding";
+import { Bid } from "~/components/BiddingHistory";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -189,3 +191,57 @@ export async function getKoiById(id: number): Promise<KoiDetailModel> {
     throw error;
   }
 }
+
+export const fetchAuctionKoiDetails = async (
+  auctionId: number,
+  koiId: number,
+): Promise<AuctionKoiResponse> => {
+  const response = await fetch(`${API_URL}/auctionkois/${auctionId}/${koiId}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch auction koi details");
+  }
+  return response.json();
+};
+
+export const fetchBidHistory = async (auctionKoiId: number): Promise<any[]> => {
+  const response = await fetch(`${API_URL}/auctionkoidetails/${auctionKoiId}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch bid history");
+  }
+  return response.json();
+};
+
+export const placeBid = async (
+  auctionId: number,
+  koiId: number,
+  amount: number,
+): Promise<void> => {
+  const response = await fetch(
+    `${API_URL}/auctions/${auctionId}/koi/${koiId}/bid`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Add any authentication headers here if required
+      },
+      body: JSON.stringify({ amount }),
+    },
+  );
+  if (!response.ok) {
+    throw new Error("Failed to place bid");
+  }
+};
+
+export const fetchBiddingHistory = async (
+  auctionKoiId: number,
+): Promise<Bid[]> => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/auctionkoidetails/${auctionKoiId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching bidding history:", error);
+    throw new Error("Failed to fetch bidding history");
+  }
+};

@@ -7,6 +7,7 @@ import { KoiDetailModel, KoisResponse } from "~/pages/kois/Kois";
 import { Auction } from "~/pages/auctions/Auctions";
 import { AuctionKoiResponse } from "~/pages/auctions/KoiBidding";
 import { Bid } from "~/components/BiddingHistory";
+import { getSocket } from './websocket';
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -196,11 +197,18 @@ export const fetchAuctionKoiDetails = async (
   auctionId: number,
   koiId: number,
 ): Promise<AuctionKoiResponse> => {
-  const response = await fetch(`${API_URL}/auctionkois/${auctionId}/${koiId}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch auction koi details");
+  try {
+    const response = await axios.get(`${API_URL}/auctionkois/${auctionId}/${koiId}`);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      throw new Error(`Failed to fetch auction koi details: ${error.response?.data?.message || error.message}`);
+    } else {
+      throw error;
+    }
   }
-  return response.json();
 };
 
 export const fetchBidHistory = async (auctionKoiId: number): Promise<any[]> => {
@@ -216,20 +224,17 @@ export const placeBid = async (
   koiId: number,
   amount: number,
 ): Promise<void> => {
-  const response = await fetch(
-    `${API_URL}/auctions/${auctionId}/koi/${koiId}/bid`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // Add any authentication headers here if required
-      },
-      body: JSON.stringify({ amount }),
-    },
-  );
-  if (!response.ok) {
-    throw new Error("Failed to place bid");
+  const socket = getSocket();
+  if (!socket) {
+    throw new Error("WebSocket connection not established");
   }
+
+  socket.send(JSON.stringify({
+    type: 'place_bid',
+    auctionId,
+    koiId,
+    amount
+  }));
 };
 
 export const fetchBiddingHistory = async (

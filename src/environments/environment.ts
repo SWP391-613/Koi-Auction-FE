@@ -10,4 +10,9 @@ export const environment: any = {
       kois: "/kois",
     },
   },
+  //websocket
+  ws: {
+    baseUrl: "ws://localhost:4000",
+    apiPrefix: "/ws",
+  },
 };

@@ -14,24 +14,24 @@ function Footer() {
       className="border-t-4 border-solid bg-[#F1F1F1] p-8 text-white shadow-lg dark:bg-gray-800"
       style={{ boxShadow: "0 -2px 2px rgba(0, 0, 0, 0.1)" }}
     >
-      <div className="mx-auto flex max-w-6xl flex-wrap justify-start gap-12">
-        <Link to="/" className="mb-4 md:mb-0">
+      <div className="mx-auto flex flex-col md:flex-row gap-12 ">
+        <Link to="/" className="md:mb-0">
           <img
             src="/koi-svgrepo-com.svg"
             alt="Koi Auction Logo"
-            className="h-auto w-12 max-w-full"
+            className="w-24 max-w-full"
           />
         </Link>
-        <div className="mb-4 flex flex-col">
-          <h3 className="mb-4 rounded-xl bg-gray-300 p-2 text-xl font-bold text-[#121212]">
+        <div className="flex flex-col w-full md:flex-col md:w-1/3">
+          <h3 className="rounded-xl bg-gray-300 p-2 text-xl font-bold text-[#121212]">
             Navigation
           </h3>
           <FooterLink href="/" icon={<HomeIcon />} text="Home" />
           <FooterLink href="/auctions" icon={<AuctionIcon />} text="Auctions" />
           <FooterLink href="/about" icon={<InfoIcon />} text="About" />
         </div>
-        <div className="mb-4 flex flex-col">
-          <h3 className="mb-4 rounded-xl bg-gray-300 p-2 text-xl font-bold text-[#121212]">
+        <div className="flex flex-col w-full md:flex-col md:w-1/3">
+          <h3 className="rounded-xl bg-gray-300 p-2 text-xl font-bold text-[#121212]">
             Policy
           </h3>
           <FooterLink
@@ -45,8 +45,8 @@ function Footer() {
             text="Terms and Conditions"
           />
         </div>
-        <div className="mb-4 flex flex-col">
-          <h3 className="mb-4 rounded-xl bg-gray-300 p-2 text-xl font-bold text-[#121212]">
+        <div className="flex flex-col w-full md:flex-col md:w-1/3">
+          <h3 className="rounded-xl bg-gray-300 p-2 text-xl font-bold text-[#121212]">
             Account
           </h3>
           <FooterLink href="/login" icon={<LoginIcon />} text="Login" />

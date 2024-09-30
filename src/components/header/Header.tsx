@@ -10,8 +10,11 @@ import {
   faFire,
   faHouse,
   faQuestion,
+  faUser,
+  faSignOutAlt,
+  faFish,
 } from "@fortawesome/free-solid-svg-icons";
-import NavigateButton from "../shared/NavigateButton.tsx";
+import NavigateButton from "../shared/NavigateButton";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -25,99 +28,176 @@ const Header = () => {
       text: "Home",
       to: "/",
       icon: <FontAwesomeIcon icon={faHouse} />,
-      className:
-        "bg-blue-300 text-xl transition-colors duration-300 hover:bg-blue-400",
     },
     {
       text: "Auctions",
       to: "/auctions",
       icon: <FontAwesomeIcon icon={faFire} />,
-      className:
-        "rounded-xl bg-[#F9FAFB] px-4 py-2 text-xl font-bold text-gray-900 transition-colors duration-300 hover:bg-gray-200",
     },
-    {
-      text: "KoiS",
-      to: "/kois",
-      icon: <FontAwesomeIcon icon={faFire} />,
-      className:
-        "rounded-xl bg-[#F9FAFB] px-4 py-2 text-xl font-bold text-gray-900 transition-colors duration-300 hover:bg-gray-200",
-    },
+    // {
+    //   text: "Koi",
+    //   to: "/kois",
+    //   icon: <FontAwesomeIcon icon={faFish} />,
+    // },
     {
       text: "About",
       to: "/about",
       icon: <FontAwesomeIcon icon={faQuestion} />,
-      className:
-        "rounded-xl bg-[#F9FAFB] px-4 py-2 text-xl font-bold text-gray-900 transition-colors duration-300 hover:bg-gray-200",
     },
   ];
 
+  const accountButtons = [
+    {
+      text: "My Account",
+      to: "/account",
+      icon: <FontAwesomeIcon icon={faUser} />,
+    },
+    {
+      text: "Log Out",
+      onClick: logout,
+      icon: <FontAwesomeIcon icon={faSignOutAlt} />,
+    },
+  ];
+
+  const isActive = (path: string) => location.pathname === path;
+
   return (
-    <header className="bg-gray-50 px-8 py-4 shadow-md transition-all duration-300">
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between md:flex-row md:items-start">
-        <div className="flex flex-col items-center md:items-start">
-          <button
-            onClick={() => navigate("/")}
-            className="mb-4 bg-[#F9FAFB] hover:bg-[#F9FAFB] md:mb-0"
-          >
-            <img
-              src="/koi-svgrepo-com.svg"
-              alt="Koi Auction Logo"
-              className="w-12"
-            />
-          </button>
-          <button
-            className="mb-4 md:hidden"
-            onClick={() => setIsNavOpen(!isNavOpen)}
-          >
-            <FontAwesomeIcon
-              icon={isNavOpen ? faTimes : faBars}
-              className="h-6 w-6"
-            />
-          </button>
-        </div>
-        <nav
-          className={`mb-4 flex w-full flex-col gap-4 md:mb-0 md:w-auto md:flex-row md:gap-10 ${isNavOpen ? "block" : "hidden"} md:flex`}
+    <header className="bg-gray-50 px-4 py-2 shadow-md transition-all duration-300">
+      <div className="mx-auto flex max-w-7xl items-center justify-between">
+        <button
+          onClick={() => navigate("/")}
+          id="home"
+          className="bg-transparent hover:bg-transparent flex items-center"
         >
+          <img
+            src="/koi-svgrepo-com.svg"
+            alt="Koi Auction Logo"
+            className="w-8"
+          />
+          <h1 className="ml-2 text-2xl font-bold text-red-500">Koi Auction</h1>
+        </button>
+
+        {/* Desktop navigation */}
+        <nav className="hidden md:flex md:gap-6">
           {navButtons.map((button, index) => (
             <NavigateButton
               key={index}
               text={button.text}
               to={button.to}
               icon={button.icon}
-              className={`${button.className} ${location.pathname === button.to ? "text-blue-600" : ""}`}
+              className={`text-gray-600 bg-gray-100 hover:bg-[#4f92d1] hover:text-white
+                ${isActive(button.to) ? "bg-[#4f92d1] text-white" : ""}`}
             />
           ))}
         </nav>
-        <div className="flex w-full items-center justify-between gap-4 md:w-auto md:justify-end">
+        {/* Account buttons */}
+        <div className="hidden md:flex md:gap-6">
           {isLoggedIn ? (
-            <>
-              <Avatar
-                alt={user.name}
-                src={user.avatar}
-                className="h-10 w-10 border-2 border-blue-500 transition-transform duration-300 hover:scale-110"
-              />
+            accountButtons.map((button, index) => (
               <button
-                className="rounded-xl bg-blue-500 px-4 py-2 font-semibold text-white transition-colors duration-300 hover:bg-blue-600"
-                onClick={logout}
+                key={index}
+                onClick={() => {
+                  button.onClick ? button.onClick() : navigate(button.to);
+                }}
+                className="text-gray-600 bg-gray-100 hover:bg-[#4f92d1] hover:text-white"
               >
-                Logout
+                {button.icon}
+                <span className="ml-2">{button.text}</span>
               </button>
-            </>
+            ))
           ) : (
-            <div className="flex gap-2">
+            <>
               <button
                 onClick={() => navigate("/login")}
-                className="rounded-xl bg-[#F9FAFB] px-4 py-2 text-xl font-semibold text-blue-600 transition-colors duration-300 hover:bg-blue-500 hover:text-white"
+                className="text-gray-600 bg-gray-100 rounded-2xl hover:bg-green-200 hover:text-white"
               >
                 Login
               </button>
               <button
                 onClick={() => navigate("/register")}
-                className="rounded-xl bg-red-500 px-4 py-2 text-xl font-semibold text-white transition-colors duration-300 hover:bg-red-600"
+                className="text-white text-lg font-bold bg-red-500 rounded-2xl hover:bg-red-400"
               >
                 Register
               </button>
-            </div>
+            </>
+          )}
+        </div>
+
+        {/* Mobile menu button */}
+        <button
+          className="md:hidden bg-gray-100 rounded-2xl"
+          onClick={() => setIsNavOpen(!isNavOpen)}
+          aria-label="Toggle navigation menu"
+        >
+          <FontAwesomeIcon
+            icon={faBars}
+            className="h-6 w-6 text-gray-600"
+          />
+        </button>
+      </div>
+
+      {/* Mobile slide-out menu */}
+      <div className={`fixed inset-y-0 right-0 z-50 w-64 bg-white shadow-lg transform
+        ${isNavOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out md:hidden`}>
+        <div className="flex justify-end p-4">
+          <button
+            onClick={() => setIsNavOpen(false)}
+            aria-label="Close navigation menu"
+            className="bg-gray-100 rounded-2xl"
+          >
+            <FontAwesomeIcon icon={faTimes} className="h-6 w-6 text-gray-600" />
+          </button>
+        </div>
+        <div className="px-4 py-2">
+          <h2 className="text-lg font-semibold mb-4">Navigation</h2>
+          {navButtons.map((button, index) => (
+            <NavigateButton
+              key={index}
+              text={button.text}
+              to={button.to}
+              icon={button.icon}
+              className={`block w-full text-left py-2 px-4 text-gray-600 bg-gray-100 m-2
+                ${isActive(button.to) ? "bg-[#4f92d1] text-white" : ""}`}
+            />
+          ))}
+          <h2 className="text-lg font-semibold mt-6 mb-4">Account</h2>
+          {isLoggedIn ? (
+            accountButtons.map((button, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setIsNavOpen(false);
+                  button.onClick ? button.onClick() : navigate(button.to);
+                }}
+                className="block w-full text-left py-2 px-4 text-gray-600 hover:bg-gray-100"
+              >
+                {button.icon}
+                <span className="ml-2">{button.text}</span>
+              </button>
+            ))
+          ) : (
+            <>
+              <button
+                onClick={() => {
+                  setIsNavOpen(false);
+                  navigate("/login");
+                }}
+                className="block w-full text-center py-2 px-4 bg-gray-100 rounded-2xl
+                hover:bg-green-200 text-black font-bold"
+              >
+                Login
+              </button>
+              <button
+                onClick={() => {
+                  setIsNavOpen(false);
+                  navigate("/register");
+                }}
+                className="block w-full text-center py-2 px-4 bg-red-500 rounded-2xl
+                hover:bg-red-400 text-white font-bold mt-2"
+              >
+                Register
+              </button>
+            </>
           )}
         </div>
       </div>

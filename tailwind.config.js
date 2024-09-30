@@ -12,6 +12,7 @@ module.exports = {
         192: "48rem", // 768px
       },
       height: {
+        112: "28rem", // 448px
         128: "32rem", // 512px
         144: "36rem", // 576px
         160: "40rem", // 640px

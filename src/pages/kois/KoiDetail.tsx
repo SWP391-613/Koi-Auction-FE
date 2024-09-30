@@ -39,7 +39,7 @@ const getStatusStyles = (status: string) => {
   }
 };
 
-const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
+export const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
   icon,
   label,
   value,

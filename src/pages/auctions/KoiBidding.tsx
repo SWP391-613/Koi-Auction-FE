@@ -107,7 +107,7 @@ const KoiBidding: React.FC = () => {
       // Refresh auction details and bid history after placing a bid
       const [updatedAuctionKoi, updatedHistory] = await Promise.all([
         fetchAuctionKoiDetails(Number(auctionId), Number(koiId)),
-        fetchBidHistory(Number(auctionId), Number(koiId)),
+        fetchBiddingHistory(Number(koiId)),
       ]);
       setAuctionKoi(updatedAuctionKoi);
       setBidHistory(updatedHistory);

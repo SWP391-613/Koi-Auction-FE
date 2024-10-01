@@ -107,18 +107,16 @@ const Header = () => {
             ))
           ) : (
             <>
-              <button
-                onClick={() => navigate("/login")}
-                className="text-gray-600 bg-gray-100 rounded-2xl hover:bg-green-200 hover:text-white"
-              >
-                Login
-              </button>
-              <button
-                onClick={() => navigate("/register")}
-                className="text-white text-lg font-bold bg-red-500 rounded-2xl hover:bg-red-400"
-              >
-                Register
-              </button>
+              <NavigateButton
+                text="Login"
+                to="/login"
+                className="text-gray-600 bg-gray-100 rounded-2xl ml-5 hover:bg-green-200 hover:text-white"
+              />
+              <NavigateButton
+                text="Register"
+                to="/register"
+                className="text-white text-lg font-bold bg-red-500 rounded-2xl hover:bg-red-600"
+              />
             </>
           )}
         </div>
@@ -129,16 +127,15 @@ const Header = () => {
           onClick={() => setIsNavOpen(!isNavOpen)}
           aria-label="Toggle navigation menu"
         >
-          <FontAwesomeIcon
-            icon={faBars}
-            className="h-6 w-6 text-gray-600"
-          />
+          <FontAwesomeIcon icon={faBars} className="h-6 w-6 text-gray-600" />
         </button>
       </div>
 
       {/* Mobile slide-out menu */}
-      <div className={`fixed inset-y-0 right-0 z-50 w-64 bg-white shadow-lg transform
-        ${isNavOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out md:hidden`}>
+      <div
+        className={`fixed inset-y-0 right-0 z-50 w-64 bg-white shadow-lg transform
+        ${isNavOpen ? "translate-x-0" : "translate-x-full"} transition-transform duration-300 ease-in-out md:hidden`}
+      >
         <div className="flex justify-end p-4">
           <button
             onClick={() => setIsNavOpen(false)}

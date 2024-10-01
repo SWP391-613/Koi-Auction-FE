@@ -3272,7 +3272,7 @@ keyv@^4.5.3:
     bootstrap "^5.3.3"
     dotenv "^16.4.5"
     husky "^9.1.5"
-    koiproject "file:../../../../../../home/lcaohoanq/.cache/yarn/v6/npm-koiproject-0.0.0-35fbc655-fc51-4f90-8eee-1482936d24d0-1727744327628/node_modules/koiproject"
+    koiproject "file:../../../../../../home/lcaohoanq/.cache/yarn/v6/npm-koiproject-0.0.0-1bb91765-358d-42f2-95d6-4cb9f8c5d458-1727751111346/node_modules/koiproject"
     prop-types "^15.8.1"
     react "^18.3.1"
     react-dom "^18.3.1"

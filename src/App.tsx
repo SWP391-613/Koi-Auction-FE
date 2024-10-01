@@ -27,6 +27,7 @@ import NotFound from "./components/error/NotFound";
 import AuctionDetail from "./pages/auctions/AuctionDetail";
 import { Analytics } from "@vercel/analytics/react";
 import KoiBidding from "./pages/auctions/KoiBidding";
+import OtpVerification from "./components/otp/OtpVeficitaion";
 
 const TITLE = "Auction Koi";
 
@@ -48,6 +49,8 @@ function App() {
 
           {/* Error page */}
           <Route path="/notfound" element={<NotFound />} />
+
+          <Route path="/otp-verification" element={<OtpVerification />} />
 
           {/* User */}
           <Route

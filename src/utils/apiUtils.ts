@@ -7,7 +7,7 @@ import { KoiDetailModel, KoisResponse } from "~/pages/kois/Kois";
 import { Auction } from "~/pages/auctions/Auctions";
 import { AuctionKoiResponse } from "~/pages/auctions/KoiBidding";
 import { Bid } from "~/components/BiddingHistory";
-import { getSocket } from './websocket';
+import { getSocket } from "./websocket";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -43,6 +43,8 @@ export const register = async (payload: RegisterDTO) => {
   };
   try {
     const response = await axios.post(`${API_URL}/users/register`, fullData);
+    console.log("Data ne: " + JSON.stringify(response));
+
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -198,13 +200,17 @@ export const fetchAuctionKoiDetails = async (
   koiId: number,
 ): Promise<AuctionKoiResponse> => {
   try {
-    const response = await axios.get(`${API_URL}/auctionkois/${auctionId}/${koiId}`);
+    const response = await axios.get(
+      `${API_URL}/auctionkois/${auctionId}/${koiId}`,
+    );
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error('Error response:', error.response?.data);
-      console.error('Error status:', error.response?.status);
-      throw new Error(`Failed to fetch auction koi details: ${error.response?.data?.message || error.message}`);
+      console.error("Error response:", error.response?.data);
+      console.error("Error status:", error.response?.status);
+      throw new Error(
+        `Failed to fetch auction koi details: ${error.response?.data?.message || error.message}`,
+      );
     } else {
       throw error;
     }
@@ -229,12 +235,14 @@ export const placeBid = async (
     throw new Error("WebSocket connection not established");
   }
 
-  socket.send(JSON.stringify({
-    type: 'place_bid',
-    auctionId,
-    koiId,
-    amount
-  }));
+  socket.send(
+    JSON.stringify({
+      type: "place_bid",
+      auctionId,
+      koiId,
+      amount,
+    }),
+  );
 };
 
 export const fetchBiddingHistory = async (

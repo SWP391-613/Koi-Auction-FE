@@ -68,9 +68,7 @@ const BiddingHistory: React.FC<BiddingHistoryProps> = ({ auctionKoiId }) => {
                 >
                   ${bid.bidAmount.toLocaleString()}
                 </span>
-                <span className="text-gray-600">
-                  {bid.bidderName}
-                </span>
+                <span className="text-gray-600">{bid.bidderName}</span>
               </div>
               <div
                 className={`${index === 0 ? "text-white" : "text-gray-600"}`}

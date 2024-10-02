@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import {
   getKoiById,
   fetchAuctionKoiDetails,
-  fetchBiddingHistory,
-  placeBid,
+  fetchBidHistory,
+  fetchAuctionById,
 } from "~/utils/apiUtils";
 import { useAuth } from "~/AuthContext";
 import { KoiDetailModel } from "../kois/Kois";
@@ -22,6 +22,9 @@ import {
   faGavel,
   faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
+import { placeBid } from "~/utils/websocket";
+import { connectWebSocket, disconnectWebSocket } from "~/utils/websocket";
+import { Auction } from "./Auctions";
 
 export interface AuctionKoiResponse {
   id: number;
@@ -41,6 +44,14 @@ interface KoiDetailItemProps {
   fontSize?: string;
   bgColor?: string;
   textColor?: string;
+}
+
+export interface BidRequest {
+  auctionKoiId: number;
+  bidderId: number;
+  bidAmount: number;
+  bidTime: Date;
+  bidderName: string;
 }
 
 const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
@@ -64,30 +75,61 @@ const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
   );
 };
 
+export interface AuctionKoiResponse {
+  id: number;
+  auction_id: number;
+  koi_id: number;
+  base_price: number;
+  current_bid: number;
+  current_bidder_id: number | null;
+  is_sold: boolean;
+  bid_method: string;
+}
+
 const KoiBidding: React.FC = () => {
   const { auctionId, koiId } = useParams<{
     auctionId: string;
     koiId: string;
   }>();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const [koi, setKoi] = useState<KoiDetailModel | null>(null);
   const [auctionKoi, setAuctionKoi] = useState<AuctionKoiResponse | null>(null);
+  const [auction, setAuction] = useState<Auction | null>(null);
   const [bidHistory, setBidHistory] = useState<Bid[]>([]);
   const [bidAmount, setBidAmount] = useState<string>("");
+
+  const isAuctionOngoing = () => {
+    if (!auction) return false;
+    const now = new Date();
+    return auction.status === "ACTIVE";
+  };
+
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     const loadKoiAndBids = async () => {
       try {
-        const [koiDetails, auctionKoiDetails, bidHistoryData] =
+        console.log("Fetching data for auctionId:", auctionId, "and koiId:", koiId);
+
+        const [koiDetails, auctionKoiDetails, bidHistoryData, auctionDetails] =
           await Promise.all([
             getKoiById(Number(koiId)),
             fetchAuctionKoiDetails(Number(auctionId), Number(koiId)),
-            fetchBiddingHistory(Number(koiId)), // Assuming koiId is the same as auctionKoiId
+            fetchBidHistory(Number(koiId)),
+            fetchAuctionById(Number(auctionId)),
           ]);
+
+        console.log("Fetched auction details:", auctionDetails);
 
         setKoi(koiDetails);
         setAuctionKoi(auctionKoiDetails);
         setBidHistory(bidHistoryData);
+        setAuction(auctionDetails);
+
+        console.log("Updated auction state:", auctionDetails);
+        // Remove this line: console.log("auction: ", auction);
+
+        // If you need to log the updated auction state, use useEffect
       } catch (error) {
         console.error("Error loading koi and bids:", error);
       }
@@ -96,30 +138,68 @@ const KoiBidding: React.FC = () => {
     loadKoiAndBids();
   }, [auctionId, koiId]);
 
-  const handleBid = async () => {
-    if (!isLoggedIn) {
-      alert("Please log in to place a bid.");
-      return;
+  // Add this separate useEffect to log the auction state after it updates
+  useEffect(() => {
+    console.log("Current auction state:", auction);
+    if (isAuctionOngoing()) {
+      connectWebSocket();
+      setIsConnected(true);
+    } else {
+      disconnectWebSocket();
+      setIsConnected(false);
     }
+  }, [auction]);
 
-    try {
-      await placeBid(Number(auctionId), Number(koiId), Number(bidAmount));
-      // Refresh auction details and bid history after placing a bid
-      const [updatedAuctionKoi, updatedHistory] = await Promise.all([
-        fetchAuctionKoiDetails(Number(auctionId), Number(koiId)),
-        fetchBiddingHistory(Number(koiId)),
-      ]);
-      setAuctionKoi(updatedAuctionKoi);
-      setBidHistory(updatedHistory);
-      setBidAmount("");
-    } catch (error) {
-      console.error("Error placing bid:", error);
-      alert("Failed to place bid. Please try again.");
+  const handlePlaceBid = () => {
+    if (isLoggedIn) {
+      if (auctionKoi && isAuctionOngoing()) {
+        placeBid({
+          auctionKoiId: auctionKoi.id,
+          bidderId: user?.id || 0, // Use the user's ID if available
+          bidAmount: Number(bidAmount),
+          bidTime: new Date(),
+          bidderName: isLoggedIn ? user?.username || user?.name || "Unknown" : "Guest",
+        });
+        setBidAmount("");
+      } else {
+        console.error("Cannot place bid: Auction is not ongoing");
+      }
+    } else {
+      console.error("User is not logged in");
     }
   };
 
-  if (!koi || !auctionKoi) {
+  const isAuctionEnded = () => {
+    if (!auction) return false;
+    const now = new Date();
+    const endTime = new Date(auction.end_time);
+    return now > endTime;
+  };
+
+  if (!koi || !auctionKoi || !auction) {
     return <div>Loading...</div>;
+  }
+
+  if (isAuctionEnded()) {
+    return (
+      <div className="container mx-auto p-4">
+        <h2 className="text-2xl font-bold mb-4">Auction Ended</h2>
+        <div className="bg-gray-100 p-4 rounded-lg">
+          <p className="text-lg">This auction for {koi.name} has ended.</p>
+          {auctionKoi.is_sold ? (
+            <p className="mt-2">Final sale price: ${auctionKoi.current_bid}</p>
+          ) : (
+            <p className="mt-2">This item was not sold.</p>
+          )}
+        </div>
+        <NavigateButton
+          to={`/auctions/${auctionId}`}
+          icon={<FontAwesomeIcon icon={faArrowLeft} />}
+          text="Back to Auction"
+          className="mt-4 rounded bg-gray-200 px-5 py-3 text-lg text-black transition hover:bg-gray-300"
+        />
+      </div>
+    );
   }
 
   return (
@@ -187,7 +267,7 @@ const KoiBidding: React.FC = () => {
             </div>
           </div>
 
-          {!auctionKoi.is_sold && (
+          {!auctionKoi.is_sold && isAuctionOngoing() && (
             <div className="mb-4 rounded-2xl bg-gray-300 p-4">
               <h3 className="mb-2 text-xl font-semibold">Place Your Bid</h3>
               <input
@@ -198,7 +278,7 @@ const KoiBidding: React.FC = () => {
                 placeholder="Enter bid amount"
               />
               <button
-                onClick={handleBid}
+                onClick={handlePlaceBid}
                 className="mt-2 w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
               >
                 Place Bid
@@ -209,10 +289,17 @@ const KoiBidding: React.FC = () => {
           <div className="rounded-2xl bg-gray-300 p-4">
             <h3 className="mb-2 text-xl font-semibold">Bid History</h3>
             <div className="max-h-full overflow-y-auto">
-              <BiddingHistory auctionKoiId={auctionKoi.id} />
+              <BiddingHistory
+                auctionKoiId={auctionKoi.id}
+                isAuctionOngoing={isAuctionOngoing()}
+                isConnected={isConnected}
+              />
             </div>
           </div>
         </div>
+      </div>
+      <div className={`text-sm ${isConnected ? 'text-green-500' : 'text-red-500'}`}>
+        {isConnected ? 'Connected to live updates' : 'Not connected to live updates'}
       </div>
     </div>
   );

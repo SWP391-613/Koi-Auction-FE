@@ -6,8 +6,6 @@ import { LoginDTO, LoginResponse } from "~/dtos/login.dto";
 import { KoiDetailModel, KoisResponse } from "~/pages/kois/Kois";
 import { Auction } from "~/pages/auctions/Auctions";
 import { AuctionKoiResponse } from "~/pages/auctions/KoiBidding";
-import { Bid } from "~/components/BiddingHistory";
-import { getSocket } from './websocket';
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -198,13 +196,17 @@ export const fetchAuctionKoiDetails = async (
   koiId: number,
 ): Promise<AuctionKoiResponse> => {
   try {
-    const response = await axios.get(`${API_URL}/auctionkois/${auctionId}/${koiId}`);
+    const response = await axios.get(
+      `${API_URL}/auctionkois/${auctionId}/${koiId}`,
+    );
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error('Error response:', error.response?.data);
-      console.error('Error status:', error.response?.status);
-      throw new Error(`Failed to fetch auction koi details: ${error.response?.data?.message || error.message}`);
+      console.error("Error response:", error.response?.data);
+      console.error("Error status:", error.response?.status);
+      throw new Error(
+        `Failed to fetch auction koi details: ${error.response?.data?.message || error.message}`,
+      );
     } else {
       throw error;
     }
@@ -217,36 +219,4 @@ export const fetchBidHistory = async (auctionKoiId: number): Promise<any[]> => {
     throw new Error("Failed to fetch bid history");
   }
   return response.json();
-};
-
-export const placeBid = async (
-  auctionId: number,
-  koiId: number,
-  amount: number,
-): Promise<void> => {
-  const socket = getSocket();
-  if (!socket) {
-    throw new Error("WebSocket connection not established");
-  }
-
-  socket.send(JSON.stringify({
-    type: 'place_bid',
-    auctionId,
-    koiId,
-    amount
-  }));
-};
-
-export const fetchBiddingHistory = async (
-  auctionKoiId: number,
-): Promise<Bid[]> => {
-  try {
-    const response = await axios.get(
-      `${API_URL}/auctionkoidetails/${auctionKoiId}`,
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching bidding history:", error);
-    throw new Error("Failed to fetch bidding history");
-  }
 };

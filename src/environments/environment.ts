@@ -12,7 +12,7 @@ export const environment: any = {
   },
   //websocket
   ws: {
-    baseUrl: "ws://localhost:4000",
-    apiPrefix: "/ws",
+    baseUrl: "http://localhost:4000",
+    apiPrefix: "/auction-websocket",
   },
 };

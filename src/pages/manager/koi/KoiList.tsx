@@ -2,6 +2,14 @@ import React from "react";
 import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Container, Typography, CircularProgress, Alert } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+} from "@mui/material";
 import PaginationComponent from "../../../components/pagination/Pagination";
 import { Koi, KoiApiResponse } from "~/types/KoiDTO";
 
@@ -65,6 +73,57 @@ const KoiList = () => {
   const handleDelete = (id: number) => {
     console.log("Delete koi", id);
     // Implement delete functionality as needed
+  };
+
+  const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false);
+  const [newKoi, setNewKoi] = useState<Partial<Koi>>({
+    name: "",
+    sex: "",
+    length: 0,
+    age: 0,
+  });
+  const [koiImage, setKoiImage] = useState<File | null>(null);
+  const handleOpenCreateDialog = () => setOpenCreateDialog(true);
+  const handleCloseCreateDialog = () => setOpenCreateDialog(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewKoi({ ...newKoi, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setKoiImage(event.target.files[0]);
+    }
+  };
+
+  const handleCreateKoi = async () => {
+    try {
+      const formData = new FormData();
+      Object.keys(newKoi).forEach((key) => {
+        formData.append(
+          key,
+          newKoi[key as keyof Partial<Koi>]?.toString() || "",
+        );
+      });
+      if (koiImage) {
+        formData.append("image", koiImage);
+      }
+
+      const response = await axios.post<Koi>(
+        "http://localhost:4000/api/v1/kois",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+      setKois([...kois, response.data]);
+      handleCloseCreateDialog();
+      setKoiImage(null);
+    } catch (err: any) {
+      setError("Error creating koi: " + (err.message || "Unknown error"));
+    }
   };
 
   if (loading) {
@@ -247,6 +306,79 @@ const KoiList = () => {
           </div>
         </div>
       </div>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleOpenCreateDialog}
+        className="mb-4"
+      >
+        Create New Koi
+      </Button>
+      <Dialog open={openCreateDialog} onClose={handleCloseCreateDialog}>
+        <DialogTitle>Create New Koi</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            name="name"
+            label="Name"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={newKoi.name}
+            onChange={handleInputChange}
+          />
+          <TextField
+            margin="dense"
+            name="sex"
+            label="Sex"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={newKoi.sex}
+            onChange={handleInputChange}
+          />
+          <TextField
+            margin="dense"
+            name="length"
+            label="Length (cm)"
+            type="number"
+            fullWidth
+            variant="standard"
+            value={newKoi.length}
+            onChange={handleInputChange}
+          />
+          <TextField
+            margin="dense"
+            name="age"
+            label="Age"
+            type="number"
+            fullWidth
+            variant="standard"
+            value={newKoi.age}
+            onChange={handleInputChange}
+          />
+          <label 
+            htmlFor="koiImageUpload" 
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Upload Koi Image
+          </label>
+          <input
+            id="koiImageUpload"
+            type="file"
+            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+            accept="image/*"
+            aria-label="Upload Koi Image"
+            onChange={handleFileChange}
+            style={{ marginTop: "1rem" }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseCreateDialog}>Cancel</Button>
+          <Button onClick={handleCreateKoi}>Create</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

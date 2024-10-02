@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, CircularProgress, Alert } from "@mui/material";
+import { Container, CircularProgress, Alert, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from "@mui/material";
 
 const StaffList = () => {
   const [staffs, setStaffs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [newStaff, setNewStaff] = useState({ full_name: "", email: "", address: "" });
 
   useEffect(() => {
     const fetchStaffs = async () => {
@@ -45,6 +47,23 @@ const StaffList = () => {
     console.log("Delete staff", id);
   };
 
+  const handleOpenCreateDialog = () => setOpenCreateDialog(true);
+  const handleCloseCreateDialog = () => setOpenCreateDialog(false);
+
+  const handleInputChange = (e) => {
+    setNewStaff({ ...newStaff, [e.target.name]: e.target.value });
+  };
+
+  const handleCreateStaff = async () => {
+    try {
+      const response = await axios.post("http://localhost:4000/api/v1/staffs", newStaff);
+      setStaffs([...staffs, response.data]);
+      handleCloseCreateDialog();
+    } catch (err) {
+      setError("Error creating staff");
+    }
+  };
+
   if (loading) {
     return (
       <Container>
@@ -63,6 +82,51 @@ const StaffList = () => {
 
   return (
     <div className="w-full overflow-x-auto">
+      <Button variant="contained" color="primary" onClick={handleOpenCreateDialog} className="mb-4">
+        Create New Staff
+      </Button>
+
+      <Dialog open={openCreateDialog} onClose={handleCloseCreateDialog}>
+        <DialogTitle>Create New Staff</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            name="full_name"
+            label="Full Name"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={newStaff.full_name}
+            onChange={handleInputChange}
+          />
+          <TextField
+            margin="dense"
+            name="email"
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="standard"
+            value={newStaff.email}
+            onChange={handleInputChange}
+          />
+          <TextField
+            margin="dense"
+            name="address"
+            label="Address"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={newStaff.address}
+            onChange={handleInputChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseCreateDialog}>Cancel</Button>
+          <Button onClick={handleCreateStaff}>Create</Button>
+        </DialogActions>
+      </Dialog>
+
       <table className="whitespace-no-wrap w-full">
         <thead>
           <tr className="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">

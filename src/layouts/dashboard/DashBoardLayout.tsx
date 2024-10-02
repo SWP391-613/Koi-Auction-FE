@@ -13,6 +13,9 @@ const DashboardLayout = ({ children }) => {
           <ListItem button component={Link} to="/manager/koi">
             <ListItemText primary="Koi" />
           </ListItem>
+          <ListItem button component={Link} to="/manager/auctions">
+            <ListItemText primary="Auctions" />
+          </ListItem>
           <ListItem button component={Link} to="/manager/breeder">
             <ListItemText primary="Breeder" />
           </ListItem>

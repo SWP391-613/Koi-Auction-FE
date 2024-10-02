@@ -109,7 +109,12 @@ const KoiBidding: React.FC = () => {
   useEffect(() => {
     const loadKoiAndBids = async () => {
       try {
-        console.log("Fetching data for auctionId:", auctionId, "and koiId:", koiId);
+        console.log(
+          "Fetching data for auctionId:",
+          auctionId,
+          "and koiId:",
+          koiId,
+        );
 
         const [koiDetails, auctionKoiDetails, bidHistoryData, auctionDetails] =
           await Promise.all([
@@ -158,7 +163,9 @@ const KoiBidding: React.FC = () => {
           bidderId: user?.id || 0, // Use the user's ID if available
           bidAmount: Number(bidAmount),
           bidTime: new Date(),
-          bidderName: isLoggedIn ? user?.username || user?.name || "Unknown" : "Guest",
+          bidderName: isLoggedIn
+            ? user?.username || user?.name || "Unknown"
+            : "Guest",
         });
         setBidAmount("");
       } else {
@@ -298,8 +305,12 @@ const KoiBidding: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className={`text-sm ${isConnected ? 'text-green-500' : 'text-red-500'}`}>
-        {isConnected ? 'Connected to live updates' : 'Not connected to live updates'}
+      <div
+        className={`text-sm ${isConnected ? "text-green-500" : "text-red-500"}`}
+      >
+        {isConnected
+          ? "Connected to live updates"
+          : "Not connected to live updates"}
       </div>
     </div>
   );

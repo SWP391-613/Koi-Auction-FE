@@ -16,7 +16,11 @@ export interface Bid {
   bidder_name: string;
 }
 
-const BiddingHistory: React.FC<BiddingHistoryProps> = ({ auctionKoiId, isAuctionOngoing, isConnected }) => {
+const BiddingHistory: React.FC<BiddingHistoryProps> = ({
+  auctionKoiId,
+  isAuctionOngoing,
+  isConnected,
+}) => {
   const [bidHistory, setBidHistory] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +50,7 @@ const BiddingHistory: React.FC<BiddingHistoryProps> = ({ auctionKoiId, isAuction
         try {
           const newBid = JSON.parse(event.data);
           if (newBid.auction_koi_id === auctionKoiId) {
-            setBidHistory(prevHistory => {
+            setBidHistory((prevHistory) => {
               const updatedHistory = [newBid, ...prevHistory];
               return updatedHistory.sort((a, b) => b.bid_amount - a.bid_amount);
             });
@@ -77,8 +81,12 @@ const BiddingHistory: React.FC<BiddingHistoryProps> = ({ auctionKoiId, isAuction
     <div className="bidding-history">
       <h3 className="text-2xl font-semibold mb-4">Past Bids</h3>
       {isAuctionOngoing && (
-        <p className={`text-sm ${isConnected ? 'text-green-500' : 'text-red-500'}`}>
-          {isConnected ? 'Connected to live updates' : 'Not connected to live updates'}
+        <p
+          className={`text-sm ${isConnected ? "text-green-500" : "text-red-500"}`}
+        >
+          {isConnected
+            ? "Connected to live updates"
+            : "Not connected to live updates"}
         </p>
       )}
       {bidHistory.length === 0 ? (

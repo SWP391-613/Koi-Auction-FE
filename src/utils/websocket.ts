@@ -1,23 +1,27 @@
-import { Client } from '@stomp/stompjs';
-import { environment } from '~/environments/environment';
-import SockJS from 'sockjs-client';
-import { BidRequest } from '~/pages/auctions/KoiBidding';
+import { Client } from "@stomp/stompjs";
+import { environment } from "~/environments/environment";
+import SockJS from "sockjs-client";
+import { BidRequest } from "~/pages/auctions/KoiBidding";
 
 let stompClient: Client | null = null;
 
 export const connectWebSocket = () => {
-  console.log('Attempting to connect to WebSocket');
-  const socket = new SockJS(environment.ws.baseUrl + environment.ws.apiPrefix, null, {
-    transports: ['websocket'],
-    withCredentials: true
-  });
+  console.log("Attempting to connect to WebSocket");
+  const socket = new SockJS(
+    environment.ws.baseUrl + environment.ws.apiPrefix,
+    null,
+    {
+      transports: ["websocket"],
+      withCredentials: true,
+    },
+  );
 
   socket.onopen = () => {
-    console.log('SockJS connection opened');
+    console.log("SockJS connection opened");
   };
 
   socket.onerror = (error) => {
-    console.error('SockJS error:', error);
+    console.error("SockJS error:", error);
   };
 
   stompClient = new Client({
@@ -26,7 +30,7 @@ export const connectWebSocket = () => {
       // Add any necessary headers here
     },
     debug: (str) => {
-      console.log('STOMP debug:', str);
+      console.log("STOMP debug:", str);
     },
     reconnectDelay: 5000,
     heartbeatIncoming: 4000,
@@ -34,12 +38,12 @@ export const connectWebSocket = () => {
   });
 
   stompClient.onConnect = () => {
-    console.log('STOMP connection established');
+    console.log("STOMP connection established");
   };
 
   stompClient.onStompError = (frame) => {
-    console.error('STOMP error:', frame.headers['message']);
-    console.error('Additional details:', frame.body);
+    console.error("STOMP error:", frame.headers["message"]);
+    console.error("Additional details:", frame.body);
   };
 
   stompClient.activate();
@@ -56,20 +60,23 @@ export function disconnectWebSocket() {
 export function placeBid(bid: BidRequest) {
   if (stompClient && stompClient.active) {
     stompClient.publish({
-      destination: '/app/placeBid',
+      destination: "/app/placeBid",
       body: JSON.stringify(bid),
     });
   } else {
-    console.error('WebSocket connection not established');
+    console.error("WebSocket connection not established");
   }
 }
 
-export function subscribeToAuction(auctionId: number, callback: (message: any) => void) {
+export function subscribeToAuction(
+  auctionId: number,
+  callback: (message: any) => void,
+) {
   if (stompClient && stompClient.active) {
     stompClient.subscribe(`/topic/auction/${auctionId}`, (message) => {
       callback(JSON.parse(message.body));
     });
   } else {
-    console.error('WebSocket connection not established');
+    console.error("WebSocket connection not established");
   }
 }

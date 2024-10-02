@@ -8,7 +8,10 @@ interface AuctionCartProps {
 }
 
 const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
-  // useRedirectIfEmpty(items)
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleString(); // This will format the date according to the user's locale
+  };
 
   return (
     <div className="koi-container m-10 grid grid-cols-1 gap-4 p-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

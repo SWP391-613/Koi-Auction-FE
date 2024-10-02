@@ -92,14 +92,14 @@ const AuctionDetail: React.FC = () => {
             <div className="mb-4 flex flex-col">
               <h3 className="text-sm text-gray-500">Start Time:</h3>
               <p className="text-lg font-medium text-gray-700">
-                {new Date(auction.start_time).toLocaleString()}
+                {new Date(auction.start_time).toUTCString()}
               </p>
             </div>
 
             <div className="mb-4 flex flex-col">
               <h3 className="text-sm text-gray-500">End Time:</h3>
               <p className="text-lg font-medium text-gray-700">
-                {new Date(auction.end_time).toLocaleString()}
+                {new Date(auction.end_time).toUTCString()}
               </p>
             </div>
 

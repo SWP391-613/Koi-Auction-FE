@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { fetchBiddingHistory } from "../utils/apiUtils";
+import { fetchBidHistory } from "../utils/apiUtils";
+import { connectWebSocket } from "../utils/websocket";
 
 interface BiddingHistoryProps {
   auctionKoiId: number;
+  isAuctionOngoing: boolean;
+  isConnected: boolean;
 }
 
 export interface Bid {
-  auctionKoiId: number;
-  bidderId: number;
-  bidAmount: number;
-  bidTime: number[];
-  bidderName: string;
+  auction_koi_id: number;
+  bidder_id: number;
+  bid_amount: number;
+  bid_time: string;
+  bidder_name: string;
 }
 
-const BiddingHistory: React.FC<BiddingHistoryProps> = ({ auctionKoiId }) => {
+const BiddingHistory: React.FC<BiddingHistoryProps> = ({
+  auctionKoiId,
+  isAuctionOngoing,
+  isConnected,
+}) => {
   const [bidHistory, setBidHistory] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,8 +28,8 @@ const BiddingHistory: React.FC<BiddingHistoryProps> = ({ auctionKoiId }) => {
   useEffect(() => {
     const loadBiddingHistory = async () => {
       try {
-        const history = await fetchBiddingHistory(auctionKoiId);
-        setBidHistory(history.sort((a, b) => b.bidAmount - a.bidAmount)); // Sort bids in descending order
+        const history = await fetchBidHistory(auctionKoiId);
+        setBidHistory(history.sort((a, b) => b.bid_amount - a.bid_amount));
         setLoading(false);
       } catch (err) {
         setError("Failed to fetch bidding history");
@@ -33,16 +40,36 @@ const BiddingHistory: React.FC<BiddingHistoryProps> = ({ auctionKoiId }) => {
     loadBiddingHistory();
   }, [auctionKoiId]);
 
-  const formatDate = (dateArray: number[]): string => {
-    const [year, month, day, hour, minute, second] = dateArray;
-    return new Date(
-      year,
-      month - 1,
-      day,
-      hour,
-      minute,
-      second,
-    ).toLocaleString();
+  useEffect(() => {
+    let client: WebSocket | null = null;
+
+    if (isAuctionOngoing && isConnected) {
+      client = connectWebSocket();
+
+      client.onmessage = (event) => {
+        try {
+          const newBid = JSON.parse(event.data);
+          if (newBid.auction_koi_id === auctionKoiId) {
+            setBidHistory((prevHistory) => {
+              const updatedHistory = [newBid, ...prevHistory];
+              return updatedHistory.sort((a, b) => b.bid_amount - a.bid_amount);
+            });
+          }
+        } catch (err) {
+          console.error("Error processing WebSocket message:", err);
+        }
+      };
+    }
+
+    return () => {
+      if (client) {
+        client = null;
+      }
+    };
+  }, [isAuctionOngoing, isConnected, auctionKoiId]);
+
+  const formatDate = (dateString: string): string => {
+    return new Date(dateString).toLocaleString();
   };
 
   if (loading)
@@ -53,27 +80,37 @@ const BiddingHistory: React.FC<BiddingHistoryProps> = ({ auctionKoiId }) => {
   return (
     <div className="bidding-history">
       <h3 className="text-2xl font-semibold mb-4">Past Bids</h3>
+      {isAuctionOngoing && (
+        <p
+          className={`text-sm ${isConnected ? "text-green-500" : "text-red-500"}`}
+        >
+          {isConnected
+            ? "Connected to live updates"
+            : "Not connected to live updates"}
+        </p>
+      )}
       {bidHistory.length === 0 ? (
         <p className="text-gray-500">No bids yet</p>
       ) : (
         <div className="space-y-4">
           {bidHistory.map((bid, index) => (
             <div
-              key={index}
+              key={`${bid.bidder_id}-${bid.bid_amount}-${bid.bid_time}`}
               className={`rounded-lg p-4 shadow-md ${index === 0 ? "bg-green-400" : "bg-gray-200"}`}
             >
               <div className="flex justify-between items-center">
                 <span
                   className={`text-2xl font-bold ${index === 0 ? "text-white" : "text-gray-800"}`}
                 >
-                  ${bid.bidAmount.toLocaleString()}
+                  ${bid.bid_amount.toLocaleString()}
                 </span>
-                <span className="text-gray-600">{bid.bidderName}</span>
+                <span className="text-gray-600">{bid.bidder_name}</span>
+
               </div>
               <div
                 className={`${index === 0 ? "text-white" : "text-gray-600"}`}
               >
-                {formatDate(bid.bidTime)}
+                {formatDate(bid.bid_time)}
               </div>
             </div>
           ))}

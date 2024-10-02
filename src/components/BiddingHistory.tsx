@@ -105,6 +105,7 @@ const BiddingHistory: React.FC<BiddingHistoryProps> = ({
                   ${bid.bid_amount.toLocaleString()}
                 </span>
                 <span className="text-gray-600">{bid.bidder_name}</span>
+
               </div>
               <div
                 className={`${index === 0 ? "text-white" : "text-gray-600"}`}

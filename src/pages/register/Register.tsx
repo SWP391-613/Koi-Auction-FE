@@ -68,9 +68,15 @@ const Register = () => {
   const onSubmit = async (data: RegisterDTO) => {
     try {
       const response = await register(data);
-      console.log("Registration successful:", response);
+      console.log("Data ne: " + JSON.stringify(response));
       toast.success("Registered successfully");
-      setTimeout(() => navigate("/"), 3000);
+      navigate("/otp-verification", {
+        state: {
+          email: data.email,
+          from: "register",
+          statusCode: 200,
+        },
+      });
     } catch (error) {
       toast.error(error?.message || "An error occurred during registration");
     }

@@ -19,7 +19,7 @@ const Home = () => {
           Top <span className="text-red-500">Japanese</span> Koi Breeders
         </p>
       </div>
-      <div className="mb-20 flex h-20 w-3/6 items-center justify-center">
+      <div className="mb-20 flex h-20 w-5/6 items-center justify-center">
         <NavigateButton
           text="Register"
           to="/register"
@@ -28,7 +28,7 @@ const Home = () => {
         <NavigateButton
           text="View Auction"
           to="/auctions"
-          className="mt-10 flex h-[4rem] w-full max-w-[300px] items-center justify-center rounded-2xl bg-blue-500 px-4 py-2 text-2xl font-semibold text-white"
+          className="mt-10 flex h-[4rem] w-full max-w-[300px] items-center justify-center rounded-2xl bg-blue-500 px-4 py-2 text-2xl font-semibold text-white hover:bg-blue-600"
         />
       </div>
 

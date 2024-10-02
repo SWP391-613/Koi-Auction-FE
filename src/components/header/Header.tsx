@@ -107,18 +107,16 @@ const Header = () => {
             ))
           ) : (
             <>
-              <button
-                onClick={() => navigate("/login")}
-                className="text-gray-600 bg-gray-100 rounded-2xl hover:bg-green-200 hover:text-white"
-              >
-                Login
-              </button>
-              <button
-                onClick={() => navigate("/register")}
-                className="text-white text-lg font-bold bg-red-500 rounded-2xl hover:bg-red-400"
-              >
-                Register
-              </button>
+              <NavigateButton
+                text="Login"
+                to="/login"
+                className="text-gray-600 bg-gray-100 rounded-2xl ml-5 hover:bg-green-200 hover:text-white"
+              />
+              <NavigateButton
+                text="Register"
+                to="/register"
+                className="text-white text-lg font-bold bg-red-500 rounded-2xl hover:bg-red-600"
+              />
             </>
           )}
         </div>

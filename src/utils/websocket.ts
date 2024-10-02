@@ -49,6 +49,7 @@ export const connectWebSocket = () => {
   stompClient.activate();
 
   return stompClient;
+
 };
 
 export function disconnectWebSocket() {

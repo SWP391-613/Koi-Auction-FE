@@ -41,6 +41,8 @@ export const register = async (payload: RegisterDTO) => {
   };
   try {
     const response = await axios.post(`${API_URL}/users/register`, fullData);
+    console.log("Data ne: " + JSON.stringify(response));
+
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {

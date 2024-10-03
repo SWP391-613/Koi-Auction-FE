@@ -358,8 +358,8 @@ const KoiList = () => {
             value={newKoi.age}
             onChange={handleInputChange}
           />
-          <label 
-            htmlFor="koiImageUpload" 
+          <label
+            htmlFor="koiImageUpload"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
             Upload Koi Image

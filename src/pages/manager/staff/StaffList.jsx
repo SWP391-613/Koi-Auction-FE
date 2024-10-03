@@ -1,13 +1,27 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, CircularProgress, Alert, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from "@mui/material";
+import {
+  Container,
+  CircularProgress,
+  Alert,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+} from "@mui/material";
 
 const StaffList = () => {
   const [staffs, setStaffs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
-  const [newStaff, setNewStaff] = useState({ full_name: "", email: "", address: "" });
+  const [newStaff, setNewStaff] = useState({
+    full_name: "",
+    email: "",
+    address: "",
+  });
 
   useEffect(() => {
     const fetchStaffs = async () => {
@@ -56,7 +70,10 @@ const StaffList = () => {
 
   const handleCreateStaff = async () => {
     try {
-      const response = await axios.post("http://localhost:4000/api/v1/staffs", newStaff);
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/staffs",
+        newStaff,
+      );
       setStaffs([...staffs, response.data]);
       handleCloseCreateDialog();
     } catch (err) {
@@ -82,7 +99,12 @@ const StaffList = () => {
 
   return (
     <div className="w-full overflow-x-auto">
-      <Button variant="contained" color="primary" onClick={handleOpenCreateDialog} className="mb-4">
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleOpenCreateDialog}
+        className="mb-4"
+      >
         Create New Staff
       </Button>
 

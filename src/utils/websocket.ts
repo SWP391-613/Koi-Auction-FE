@@ -24,8 +24,8 @@ export const connectWebSocket = () => {
 
   stompClient.onConnect = (frame) => {
     console.log("STOMP connection established");
-    console.log("Connected to:", frame.headers['server']);
-    console.log("Session ID:", frame.headers['session-id']);
+    console.log("Connected to:", frame.headers["server"]);
+    console.log("Session ID:", frame.headers["session-id"]);
     // You can add more relevant information here
   };
 

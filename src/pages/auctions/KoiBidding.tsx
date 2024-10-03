@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getKoiById, fetchAuctionKoiDetails, fetchBidHistory, fetchAuctionById, } from "~/utils/apiUtils";
+import {
+  getKoiById,
+  fetchAuctionKoiDetails,
+  fetchBidHistory,
+  fetchAuctionById,
+} from "~/utils/apiUtils";
 import { useAuth } from "~/AuthContext";
 import { KoiDetailModel } from "../kois/Kois";
 import { Bid } from "~/components/BiddingHistory";
@@ -8,7 +13,15 @@ import BiddingHistory from "../../components/BiddingHistory";
 import NavigateButton from "../../components/shared/NavigateButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { faFish, faRuler, faCalendarDays, faVenusMars, faDollarSign, faGavel, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFish,
+  faRuler,
+  faCalendarDays,
+  faVenusMars,
+  faDollarSign,
+  faGavel,
+  faArrowLeft,
+} from "@fortawesome/free-solid-svg-icons";
 import { placeBid, subscribeToAuction } from "~/utils/websocket";
 import { connectWebSocket, disconnectWebSocket } from "~/utils/websocket";
 import { Auction } from "./Auctions";
@@ -88,7 +101,6 @@ const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
   );
 };
 
-
 const KoiBidding: React.FC = () => {
   const { auctionId, koiId } = useParams<{
     auctionId: string;
@@ -101,7 +113,8 @@ const KoiBidding: React.FC = () => {
   const [bidHistory, setBidHistory] = useState<Bid[]>([]); // State for bid history
   const [bidAmount, setBidAmount] = useState<string>(""); // State for bid amount
 
-  const isAuctionOngoing = () => { // Function to check if the auction is ongoing
+  const isAuctionOngoing = () => {
+    // Function to check if the auction is ongoing
     if (!auction) return false;
     const now = new Date();
     //time and date of auction checked later

@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { fetchBidHistory } from "../utils/apiUtils";
 import { connectWebSocket } from "../utils/websocket";
 
+// Define the interface for checking AuctionKoi is On-going
 interface BiddingHistoryProps {
   auctionKoiId: number;
   isAuctionOngoing: boolean;
   isConnected: boolean;
 }
-
+// Define the interface for the bid history
 export interface Bid {
   auction_koi_id: number;
   bidder_id: number;

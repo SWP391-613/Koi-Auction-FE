@@ -7,22 +7,7 @@ let stompClient: Client | null = null;
 
 export const connectWebSocket = () => {
   console.log("Attempting to connect to WebSocket");
-  const socket = new SockJS(
-    environment.ws.baseUrl + environment.ws.apiPrefix,
-    null,
-    {
-      transports: ["websocket"],
-      withCredentials: true,
-    },
-  );
-
-  socket.onopen = () => {
-    console.log("SockJS connection opened");
-  };
-
-  socket.onerror = (error) => {
-    console.error("SockJS error:", error);
-  };
+  const socket = new SockJS(`${environment.ws.baseUrl}/auction-websocket`);
 
   stompClient = new Client({
     webSocketFactory: () => socket,
@@ -37,8 +22,11 @@ export const connectWebSocket = () => {
     heartbeatOutgoing: 4000,
   });
 
-  stompClient.onConnect = () => {
+  stompClient.onConnect = (frame) => {
     console.log("STOMP connection established");
+    console.log("Connected to:", frame.headers['server']);
+    console.log("Session ID:", frame.headers['session-id']);
+    // You can add more relevant information here
   };
 
   stompClient.onStompError = (frame) => {
@@ -49,7 +37,6 @@ export const connectWebSocket = () => {
   stompClient.activate();
 
   return stompClient;
-
 };
 
 export function disconnectWebSocket() {

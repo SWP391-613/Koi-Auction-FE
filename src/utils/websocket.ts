@@ -7,7 +7,9 @@ let stompClient: Client | null = null;
 
 export const connectWebSocket = () => {
   console.log("Attempting to connect to WebSocket");
-  const socket = new SockJS(`${environment.ws.baseUrl}/auction-websocket`);
+  const socket = new SockJS(
+    `${environment.be.baseUrl}/${environment.be.endpoint.socket}`,
+  );
 
   stompClient = new Client({
     webSocketFactory: () => socket,

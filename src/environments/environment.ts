@@ -8,11 +8,7 @@ export const environment: any = {
       register: "/register",
       auctions: "/auctions",
       kois: "/kois",
+      socket: "/auction-websocket",
     },
-  },
-  //websocket
-  ws: {
-    baseUrl: "http://localhost:4000",
-    apiPrefix: "/auction-websocket",
   },
 };

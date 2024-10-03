@@ -36,7 +36,7 @@ interface CombinedKoiData extends KoiDetailModel {
 }
 
 const AuctionDetail: React.FC = () => {
-  const { isLoggedIn } = useAuth();
+  // const { isLoggedIn } = useAuth();
   const { id } = useParams<{ id: string }>();
   const [auction, setAuction] = useState<Auction | null>(null);
   const [combinedKoiData, setCombinedKoiData] = useState<CombinedKoiData[]>([]);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchAuctions } from "~/utils/apiUtils";
+import { fetchAuctions, fetchAuctionKoi } from "~/utils/apiUtils";
 import PaginationComponent from "~/components/pagination/Pagination";
 import {
   Button,
@@ -15,6 +15,8 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -28,11 +30,19 @@ export interface Auction {
   status: string;
 }
 
+interface Koi {
+  id: number;
+  name: string;
+  thumbnail: string;
+  base_price: number;
+  current_bid: number;
+}
+
 const Auctions: React.FC = () => {
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true);
-  const itemsPerPage = 10;
+  const itemsPerPage = 9;
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [newAuction, setNewAuction] = useState({
@@ -41,11 +51,12 @@ const Auctions: React.FC = () => {
     end_time: "",
   });
   const [editingAuction, setEditingAuction] = useState<Auction | null>(null);
+  const [auctionKois, setAuctionKois] = useState<Koi[]>([]);
 
   const formatDateForInput = (date: Date | null | undefined): string => {
     if (!date) return "";
     const d = new Date(date);
-    if (isNaN(d.getTime())) return ""; // Trả về chuỗi rỗng nếu ngày không hợp lệ
+    if (isNaN(d.getTime())) return "";
     return d.toISOString().slice(0, 16);
   };
 
@@ -95,14 +106,28 @@ const Auctions: React.FC = () => {
     handleCloseAddDialog();
   };
 
-  const handleEditAuction = (auction: Auction) => {
+  const handleEditAuction = async (auction: Auction) => {
     setEditingAuction(auction);
+    try {
+      const kois = await fetchAuctionKoi(auction.id);
+      setAuctionKois(
+        kois.map((auctionKoi) => ({
+          ...auctionKoi,
+          name: "", // Provide a default value or fetch from somewhere
+          thumbnail: "", // Provide a default value or fetch from somewhere
+        })),
+      );
+    } catch (error) {
+      console.error("Error fetching auction kois:", error);
+      setAuctionKois([]);
+    }
     setOpenEditDialog(true);
   };
 
   const handleCloseEditDialog = () => {
     setOpenEditDialog(false);
     setEditingAuction(null);
+    setAuctionKois([]);
   };
 
   const handleEditInputChange = (
@@ -122,6 +147,12 @@ const Auctions: React.FC = () => {
 
   const handleDeleteAuction = (id: number) => {
     console.log("Delete auction", id);
+  };
+
+  const handleDeleteKoi = (koiId: number) => {
+    // Xử lý logic xóa Koi ở đây
+    console.log(`Deleting Koi with ID: ${koiId}`);
+    // Sau khi xóa, cập nhật lại state auctionKois
   };
 
   return (
@@ -184,6 +215,63 @@ const Auctions: React.FC = () => {
       </TableContainer>
 
       <div className="mt-4">
+        <h3 className="text-lg font-semibold mb-2">Kois in Auction</h3>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Image
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Base Price
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Current Bid
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {auctionKois.map((koi) => (
+                <tr key={koi.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <img
+                      src={koi.thumbnail}
+                      alt={koi.name}
+                      className="w-16 h-16 object-cover rounded-full"
+                    />
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <p className="font-semibold">{koi.name}</p>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    ${koi.base_price}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    ${koi.current_bid}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <button
+                      onClick={() => handleDeleteKoi(koi.id)}
+                      className="text-white hover:text-gray-300"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div className="mt-4">
         <PaginationComponent
           totalPages={hasMorePages ? currentPage + 1 : currentPage}
           currentPage={currentPage}
@@ -240,7 +328,12 @@ const Auctions: React.FC = () => {
       </Dialog>
 
       {/* Edit Auction Dialog */}
-      <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
+      <Dialog
+        open={openEditDialog}
+        onClose={handleCloseEditDialog}
+        maxWidth="md"
+        fullWidth
+      >
         <DialogTitle>Edit Auction</DialogTitle>
         <DialogContent>
           {editingAuction && (
@@ -282,6 +375,62 @@ const Auctions: React.FC = () => {
                 value={formatDateForInput(editingAuction.end_time)}
                 onChange={handleEditInputChange}
               />
+              <div className="mt-4">
+                <h3 className="text-lg font-semibold mb-2">Kois in Auction</h3>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Image
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Name
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Base Price
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Current Bid
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {auctionKois.map((koi) => (
+                        <tr key={koi.id}>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <img
+                              src={koi.thumbnail}
+                              alt={koi.name}
+                              className="w-16 h-16 object-cover rounded-full"
+                            />
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <p className="font-semibold">{koi.name}</p>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            ${koi.base_price}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            ${koi.current_bid}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <button
+                              onClick={() => handleDeleteKoi(koi.id)}
+                              className="text-red-600 hover:text-red-900"
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </>
           )}
         </DialogContent>

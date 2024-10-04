@@ -17,7 +17,7 @@ import {
   faUser,
   faVenusMars,
 } from "@fortawesome/free-solid-svg-icons";
-import { useAuth } from "~/utils/auth/AuthContext";
+import { useAuth } from "~/contexts/AuthContext";
 
 export interface AuctionKoi {
   id: number;

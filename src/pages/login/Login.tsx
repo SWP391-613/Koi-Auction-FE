@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ThemeContext } from "../theme/ThemeContext";
+import { ThemeContext } from "../../contexts/ThemeContext";
 import { login, fetchGoogleClientId } from "../../utils/apiUtils";
 import {
   CredentialResponse,
@@ -9,7 +9,7 @@ import {
   GoogleOAuthProvider,
 } from "@react-oauth/google";
 import axios from "axios";
-import { useAuth } from "../../utils/auth/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";

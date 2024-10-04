@@ -28,13 +28,13 @@ const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
             <p className="flex justify-between">
               <span>Start time:</span>
               <span className="text-lg text-black">
-                {auction.start_time.toUTCString()}
+                {auction.start_time}
               </span>
             </p>
             <p className="flex justify-between">
               <span>End time:</span>
               <span className="text-lg text-black">
-                {auction.end_time.toUTCString()}
+                {auction.end_time}
               </span>
             </p>
             <p className="flex justify-between">

@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import {
   getKoiById,
   fetchAuctionKoiDetails,
-  fetchBidHistory,
   fetchAuctionById,
 } from "~/utils/apiUtils";
 import { useAuth } from "~/AuthContext";
@@ -25,18 +24,8 @@ import {
 import { placeBid, subscribeToAuction } from "~/utils/websocket";
 import { connectWebSocket, disconnectWebSocket } from "~/utils/websocket";
 import { Auction } from "./Auctions";
+import { AuctionKoi } from "./AuctionDetail";
 
-// Define the AuctionKoiResponse interface
-export interface AuctionKoiResponse {
-  id: number; // The ID of the auction koi
-  auction_id: number; // The ID of the auction
-  koi_id: number; // The ID of the koi
-  base_price: number; // The base price of the koi
-  current_bid: number; // The current bid amount
-  current_bidder_id: number | null; // The ID of the current bidder, or null if no bidder
-  is_sold: boolean; // Whether the koi is sold
-  bid_method: string; // The method of bidding used
-}
 
 // Define the KoiDetail UI component
 interface KoiDetailItemProps {
@@ -67,18 +56,6 @@ export interface BidResponse {
   bidderName: string;
 }
 
-// Define the AuctionKoiResponse interface, the data type for the auction koi details
-export interface AuctionKoiResponse {
-  id: number;
-  auction_id: number;
-  koi_id: number;
-  base_price: number;
-  current_bid: number;
-  current_bidder_id: number | null;
-  is_sold: boolean;
-  bid_method: string;
-}
-
 // Define the KoiDetailItem component, the UI for the koi details
 const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
   icon,
@@ -102,16 +79,15 @@ const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
 };
 
 const KoiBidding: React.FC = () => {
-  const { auctionId, koiId } = useParams<{
+  const { auctionId, auctionKoiId } = useParams<{
     auctionId: string;
-    koiId: string;
+    auctionKoiId: string;
   }>();
   const { isLoggedIn, user } = useAuth(); // Get the user and login status from the auth context
   const [koi, setKoi] = useState<KoiDetailModel | null>(null); // State for koi details
-  const [auctionKoi, setAuctionKoi] = useState<AuctionKoiResponse | null>(null); // State for auction koi details
+  const [bidAmount, setBidAmount] = useState<number>(0); // State for bid amount
+  const [auctionKoi, setAuctionKoi] = useState<AuctionKoi | null>(null); // State for auction koi details
   const [auction, setAuction] = useState<Auction | null>(null); // State for auction details
-  const [bidHistory, setBidHistory] = useState<Bid[]>([]); // State for bid history
-  const [bidAmount, setBidAmount] = useState<string>(""); // State for bid amount
 
   const isAuctionOngoing = () => {
     // Function to check if the auction is ongoing
@@ -126,41 +102,40 @@ const KoiBidding: React.FC = () => {
   useEffect(() => {
     const loadKoiAndBids = async () => {
       try {
-        console.log(
-          "Fetching data for auctionId:",
-          auctionId,
-          "and koiId:",
-          koiId,
-        );
+        console.log("Fetching data for auctionId:", auctionId, "and auctionKoiId:", auctionKoiId);
 
-        const [koiDetails, auctionKoiDetails, bidHistoryData, auctionDetails] =
+        const [auctionKoiDetails, auctionDetails] =
           await Promise.all([
-            getKoiById(Number(koiId)),
-            fetchAuctionKoiDetails(Number(auctionId), Number(koiId)),
-            fetchBidHistory(Number(koiId)),
+            fetchAuctionKoiDetails(Number(auctionId), Number(auctionKoiId)),
             fetchAuctionById(Number(auctionId)),
           ]);
 
         console.log("Fetched auction details:", auctionDetails);
 
-        setKoi(koiDetails);
         setAuctionKoi(auctionKoiDetails);
-        setBidHistory(bidHistoryData);
         setAuction(auctionDetails);
+        setBidAmount((auctionKoiDetails.current_bid + auctionKoiDetails.bid_step) + (auctionKoiDetails.current_bid == 0 ? auctionKoiDetails.base_price : 0));
+
+        const loadKoi = async () => {
+          const koiDetails = await getKoiById(auctionKoiDetails.koi_id);
+          setKoi(koiDetails);
+        };
+        loadKoi();
 
         console.log("Updated auction state:", auctionDetails);
-        // Remove this line: console.log("auction: ", auction);
 
-        // If you need to log the updated auction state, use useEffect
+        // Fetch Koi details after auctionKoi is fetched
+
       } catch (error) {
         console.error("Error loading koi and bids:", error);
       }
     };
 
     loadKoiAndBids();
-  }, [auctionId, koiId]);
+  }, [auctionId, auctionKoiId]);
 
-  // Add this separate useEffect to log the auction state after it updates
+  // Remove the separate useEffect for loading Koi
+
   useEffect(() => {
     console.log("Current auction state:", auction);
     if (isAuctionOngoing()) {
@@ -186,20 +161,20 @@ const KoiBidding: React.FC = () => {
 
   const handlePlaceBid = () => {
     if (!isConnected || !user || !auctionKoi) {
-      console.error("Cannot place bid: not connected or user not logged in");
+      alert("Cannot place bid: not connected or user not logged in");
       return;
     }
 
     const bidRequest: BidRequest = {
-      auctionKoiId: auctionKoi.id,
-      bidderId: user.id,
-      bidAmount: Number(bidAmount),
-      bidTime: new Date(),
-      bidderName: user.username,
+      auction_koi_id: auctionKoi.id,
+      bidder_id: user.id,
+      bid_amount: bidAmount,
+      bid_time: new Date(),
+      bidder_name: user.username,
     };
 
     placeBid(bidRequest);
-    setBidAmount("");
+    setBidAmount(auctionKoi.current_bid + auctionKoi.bid_step);
   };
 
   const isAuctionEnded = () => {
@@ -284,7 +259,7 @@ const KoiBidding: React.FC = () => {
               <input
                 type="number"
                 value={bidAmount}
-                onChange={(e) => setBidAmount(e.target.value)}
+                onChange={(e) => setBidAmount(Number(e.target.value))}
                 className="mr-2 w-full rounded border p-2"
                 placeholder="Enter bid amount"
               />
@@ -302,8 +277,6 @@ const KoiBidding: React.FC = () => {
             <div className="max-h-full overflow-y-auto">
               <BiddingHistory
                 auctionKoiId={auctionKoi.id}
-                isAuctionOngoing={!isAuctionEnded()}
-                isConnected={isConnected}
               />
             </div>
           </div>

@@ -2,7 +2,7 @@ import axios from "axios";
 import { environment } from "../environments/environment";
 import { AuctionKoi } from "~/pages/auctions/AuctionDetail";
 import { RegisterDTO } from "~/dtos/register.dto";
-import { LoginDTO, LoginResponse } from "~/dtos/login.dto";
+import { LoginDTO, UserLoginResponse } from "~/dtos/login.dto";
 import { KoiDetailModel, KoisResponse } from "~/pages/kois/Kois";
 import { Auction } from "~/pages/auctions/Auctions";
 import { Bid } from "~/components/BiddingHistory";
@@ -10,7 +10,7 @@ import { format, isToday, isYesterday, isTomorrow } from "date-fns";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
-export const login = async (payload: LoginDTO): Promise<LoginResponse> => {
+export const login = async (payload: LoginDTO): Promise<UserLoginResponse> => {
   try {
     const response = await axios.post(`${API_URL}/users/login`, payload);
     return response.data;

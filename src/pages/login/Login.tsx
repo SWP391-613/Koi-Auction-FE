@@ -18,6 +18,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./Login.scss";
 import { setCookie } from "../../utils/cookieUtils";
 import { LoginDTO } from "~/dtos/login.dto";
+import { routeUserToEachPage } from "~/components/auth/RoleBasedRoute";
 const schema = yup.object().shape({
   email: yup
     .string()
@@ -50,18 +51,6 @@ const Login: React.FC = () => {
     };
     loadGoogleClientId();
   }, []);
-
-  function routeUserToEachPage(roleName: string): string {
-    let route;
-    if (roleName === "MANAGER") {
-      route = "/manager";
-    } else if (roleName === "STAFF") {
-      route = "/staff";
-    } else {
-      route = "/";
-    }
-    return route;
-  }
 
   const onSubmit = async (data: LoginDTO) => {
     try {

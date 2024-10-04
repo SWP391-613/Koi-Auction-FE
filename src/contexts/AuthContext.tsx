@@ -1,14 +1,16 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
-import { LoginResponse } from "~/dtos/login.dto";
+import { Role, UserLoginResponse } from "~/dtos/login.dto";
 
 // Change this to your API URL
 const API_URL = "http://localhost:4000/api/v1";
 
+type AuthLoginData = Pick<UserLoginResponse, "token" | "roles">;
+
 interface AuthContextType {
   isLoggedIn: boolean;
-  user: LoginResponse | null;
-  authLogin: (userData: any) => void;
+  user: AuthLoginData | null;
+  authLogin: (userData: AuthLoginData) => void;
   authLogout: () => void;
 }
 
@@ -18,21 +20,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState<LoginResponse | null>(null);
+  const [user, setUser] = useState<AuthLoginData | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
-    if (token) {
+    const roles = localStorage.getItem("user_roles");
+
+    if (token && roles) {
       setIsLoggedIn(true);
-      // Optionally, you can also fetch user data here using the token
+      setUser({
+        token: token,
+        roles: JSON.parse(roles), // Parse roles into an array
+      });
     }
   }, []);
 
-  const authLogin = (userData: LoginResponse) => {
+  const authLogin = (userData: AuthLoginData) => {
     setIsLoggedIn(true);
-    setUser(userData);
+    setUser({
+      token: userData.token,
+      roles: userData.roles,
+    });
     localStorage.setItem("access_token", userData.token);
-    console.log("Token saved:", userData.token);
+    localStorage.setItem("user_roles", JSON.stringify(userData.roles));
   };
 
   const authLogout = async () => {
@@ -57,7 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoggedIn(false);
     setUser(null);
     localStorage.removeItem("access_token");
-    console.log("Logged out and token removed.");
+    localStorage.removeItem("user_roles");
   };
 
   return (

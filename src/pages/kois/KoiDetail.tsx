@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../utils/auth/AuthContext";
 import NavigateButton from "../../components/shared/NavigateButton";
 import { getKoiById } from "~/utils/apiUtils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -9,7 +9,7 @@ import {
   GoogleOAuthProvider,
 } from "@react-oauth/google";
 import axios from "axios";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../utils/auth/AuthContext";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
@@ -27,7 +27,7 @@ const schema = yup.object().shape({
 });
 
 const Login: React.FC = () => {
-  const { loginWithGoogle } = useAuth();
+  const { authLogin } = useAuth();
   const { isDarkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
   const [googleClientId, setGoogleClientId] = useState("");
@@ -67,7 +67,14 @@ const Login: React.FC = () => {
     try {
       console.log(data);
       const response = await login({ ...data });
-      setCookie("access_token", response.token, 30); //be must response date
+      
+      // Use authLogin here
+      authLogin({
+        token: response.token,
+        roles: response.roles,
+        // Add any other user data you want to store
+      });
+
       toast.success("Login successful!");
       setTimeout(() => {
         navigate(routeUserToEachPage(response.roles[0]));

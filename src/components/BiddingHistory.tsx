@@ -14,9 +14,7 @@ export interface Bid {
   bidder_name: string;
 }
 
-const BiddingHistory: React.FC<BiddingHistoryProps> = ({
-  auctionKoiId,
-}) => {
+const BiddingHistory: React.FC<BiddingHistoryProps> = ({ auctionKoiId }) => {
   const [bidHistory, setBidHistory] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

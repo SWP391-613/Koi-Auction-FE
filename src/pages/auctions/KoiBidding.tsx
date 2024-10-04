@@ -26,7 +26,6 @@ import { connectWebSocket, disconnectWebSocket } from "~/utils/websocket";
 import { Auction } from "./Auctions";
 import { AuctionKoi } from "./AuctionDetail";
 
-
 // Define the KoiDetail UI component
 interface KoiDetailItemProps {
   icon: IconDefinition;
@@ -102,19 +101,29 @@ const KoiBidding: React.FC = () => {
   useEffect(() => {
     const loadKoiAndBids = async () => {
       try {
-        console.log("Fetching data for auctionId:", auctionId, "and auctionKoiId:", auctionKoiId);
+        console.log(
+          "Fetching data for auctionId:",
+          auctionId,
+          "and auctionKoiId:",
+          auctionKoiId,
+        );
 
-        const [auctionKoiDetails, auctionDetails] =
-          await Promise.all([
-            fetchAuctionKoiDetails(Number(auctionId), Number(auctionKoiId)),
-            fetchAuctionById(Number(auctionId)),
-          ]);
+        const [auctionKoiDetails, auctionDetails] = await Promise.all([
+          fetchAuctionKoiDetails(Number(auctionId), Number(auctionKoiId)),
+          fetchAuctionById(Number(auctionId)),
+        ]);
 
         console.log("Fetched auction details:", auctionDetails);
 
         setAuctionKoi(auctionKoiDetails);
         setAuction(auctionDetails);
-        setBidAmount((auctionKoiDetails.current_bid + auctionKoiDetails.bid_step) + (auctionKoiDetails.current_bid == 0 ? auctionKoiDetails.base_price : 0));
+        setBidAmount(
+          auctionKoiDetails.current_bid +
+            auctionKoiDetails.bid_step +
+            (auctionKoiDetails.current_bid == 0
+              ? auctionKoiDetails.base_price
+              : 0),
+        );
 
         const loadKoi = async () => {
           const koiDetails = await getKoiById(auctionKoiDetails.koi_id);
@@ -125,7 +134,6 @@ const KoiBidding: React.FC = () => {
         console.log("Updated auction state:", auctionDetails);
 
         // Fetch Koi details after auctionKoi is fetched
-
       } catch (error) {
         console.error("Error loading koi and bids:", error);
       }
@@ -275,9 +283,7 @@ const KoiBidding: React.FC = () => {
           <div className="rounded-2xl bg-gray-300 p-4">
             <h3 className="mb-2 text-xl font-semibold">Bid History</h3>
             <div className="max-h-full overflow-y-auto">
-              <BiddingHistory
-                auctionKoiId={auctionKoi.id}
-              />
+              <BiddingHistory auctionKoiId={auctionKoi.id} />
             </div>
           </div>
         </div>

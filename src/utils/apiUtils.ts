@@ -6,7 +6,7 @@ import { LoginDTO, LoginResponse } from "~/dtos/login.dto";
 import { KoiDetailModel, KoisResponse } from "~/pages/kois/Kois";
 import { Auction } from "~/pages/auctions/Auctions";
 import { Bid } from "~/components/BiddingHistory";
-import { format, isToday, isYesterday, isTomorrow } from 'date-fns';
+import { format, isToday, isYesterday, isTomorrow } from "date-fns";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 

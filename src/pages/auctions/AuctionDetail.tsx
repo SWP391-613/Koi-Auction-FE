@@ -40,7 +40,9 @@ const AuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();
   const { id } = useParams<{ id: string }>();
   const [auction, setAuction] = useState<Auction | null>(null);
-  const [koiWithAuctionKoiData, setKoiWithAuctionKoiData] = useState<KoiWithAuctionKoiData[]>([]);
+  const [koiWithAuctionKoiData, setKoiWithAuctionKoiData] = useState<
+    KoiWithAuctionKoiData[]
+  >([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -165,10 +167,11 @@ const AuctionDetail: React.FC = () => {
                     {combinedKoiData.status_name}
                   </span>
                   <span
-                    className={`text-xl font-bold px-2 py-1 rounded-full ${combinedKoiData.auctionKoiData.current_bid
-                      ? "bg-green-500 text-white"
-                      : "bg-gray-500 text-white"
-                      }`}
+                    className={`text-xl font-bold px-2 py-1 rounded-full ${
+                      combinedKoiData.auctionKoiData.current_bid
+                        ? "bg-green-500 text-white"
+                        : "bg-gray-500 text-white"
+                    }`}
                   >
                     $
                     {combinedKoiData.auctionKoiData.current_bid ||

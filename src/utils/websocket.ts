@@ -50,7 +50,7 @@ export function disconnectWebSocket() {
 export function placeBid(bid: BidRequest) {
   if (stompClient && stompClient.active) {
     stompClient.publish({
-      destination: "/app/placeBid",
+      destination: "/topic/placeBid",
       body: JSON.stringify(bid),
     });
   } else {
@@ -58,12 +58,12 @@ export function placeBid(bid: BidRequest) {
   }
 }
 
-export function subscribeToAuction(
-  auctionId: number,
+export function subscribeToAuctionUpdates(
+  auctionKoiId: number,
   callback: (message: any) => void,
 ) {
   if (stompClient && stompClient.active) {
-    stompClient.subscribe(`/topic/auction/${auctionId}`, (message) => {
+    stompClient.subscribe(`/topic/auctionKoi`, (message) => {
       callback(JSON.parse(message.body));
     });
   } else {

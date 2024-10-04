@@ -1,12 +1,13 @@
 import React, { createContext, useState, useContext } from "react";
 import axios from "axios";
+import { LoginResponse } from "~/dtos/login.dto";
 
 // Change this to your API URL
 const API_URL = "http://localhost:4000/api/v1";
 
 interface AuthContextType {
   isLoggedIn: boolean;
-  user: any;
+  user: LoginResponse | null;
   authLogin: (userData: any) => void;
   authLogout: () => void;
 }
@@ -17,9 +18,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState<any>(null);
-
-  const authLogin = (userData: any) => {
+  const [user, setUser] = useState<LoginResponse | null>(null);
+  const authLogin = (userData: LoginResponse) => {
     setIsLoggedIn(true);
     setUser(userData);
     localStorage.setItem("access_token", userData.token);

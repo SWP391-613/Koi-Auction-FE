@@ -21,7 +21,7 @@ import {
   faGavel,
   faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
-import { placeBid, subscribeToAuction } from "~/utils/websocket";
+import { placeBid, subscribeToAuctionUpdates } from "~/utils/websocket";
 import { connectWebSocket, disconnectWebSocket } from "~/utils/websocket";
 import { Auction } from "./Auctions";
 import { AuctionKoi } from "./AuctionDetail";
@@ -39,20 +39,9 @@ interface KoiDetailItemProps {
 // Define the BidRequest interface
 export interface BidRequest {
   auction_koi_id: number; // The ID of the auction koi
-  bidder_id: number; // The ID of the bidder
   bid_amount: number; // The amount of the bid
   bid_time: Date; // The time the bid was placed
-  bidder_name: string; // The name of the bidder
-}
-
-// Define the BidResponse interface
-export interface BidResponse {
-  success: boolean;
-  message: string;
-  currentBid: number;
-  currentBidderId: number;
-  bidTime: Date;
-  bidderName: string;
+  bidder_token: string;
 }
 
 // Define the KoiDetailItem component, the UI for the koi details
@@ -143,7 +132,6 @@ const KoiBidding: React.FC = () => {
   }, [auctionId, auctionKoiId]);
 
   // Remove the separate useEffect for loading Koi
-
   useEffect(() => {
     console.log("Current auction state:", auction);
     if (isAuctionOngoing()) {
@@ -172,14 +160,13 @@ const KoiBidding: React.FC = () => {
       alert("Cannot place bid: not connected or user not logged in");
       return;
     }
-
     const bidRequest: BidRequest = {
       auction_koi_id: auctionKoi.id,
-      bidder_id: user.id,
       bid_amount: bidAmount,
       bid_time: new Date(),
-      bidder_name: user.username,
+      bidder_token: user.token,
     };
+    console.log(bidRequest);
 
     placeBid(bidRequest);
     setBidAmount(auctionKoi.current_bid + auctionKoi.bid_step);

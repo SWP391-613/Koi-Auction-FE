@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import Home from "./pages/home/Home";
@@ -29,13 +29,9 @@ import AuctionDetail from "./pages/auctions/AuctionDetail";
 import { Analytics } from "@vercel/analytics/react";
 import KoiBidding from "./pages/auctions/KoiBidding";
 import OtpVerification from "./components/otp/OtpVeficitaion";
+import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 
 const TITLE = "Auction Koi";
-
-const ProtectedRoute = ({ element }) => {
-  const { isLoggedIn } = useAuth();
-  return isLoggedIn ? element : <Navigate to="/login" />;
-};
 
 function App() {
   return (
@@ -83,44 +79,16 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* <Route
-            path="/manager"
-            element={<ProtectedRoute element={<Manager />} />}
-          >
-            <Route
-              path="member"
-              element={<ProtectedRoute element={<MemberList />} />}
-            />
-            <Route
-              path="breeder"
-              element={<ProtectedRoute element={<BreederList />} />}
-            />
-            <Route
-              path="staff"
-              element={<ProtectedRoute element={<StaffList />} />}
-            />
-            <Route
-              path="setting"
-              element={<ProtectedRoute element={<Settings />} />}
-            />
-            <Route
-              path="koi"
-              element={<ProtectedRoute element={<KoiList />} />}
-            />
-            <Route
-              path="koi-detail"
-              element={<ProtectedRoute element={<KoiDetail />} />}
-            />
-          </Route> */}
-
-          <Route path="/manager" element={<Manager />}>
-            <Route path="auctions" element={<Auction />} />
-            <Route path="member" element={<MemberList />} />
-            <Route path="breeder" element={<BreederList />} />
-            <Route path="staff" element={<StaffList />} />
-            <Route path="setting" element={<Settings />} />
-            <Route path="koi" element={<KoiList />} />
-            <Route path="koi-detail" element={<KoiDetail />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/manager" element={<Manager />}>
+              <Route path="auctions" element={<Auction />} />
+              <Route path="member" element={<MemberList />} />
+              <Route path="breeder" element={<BreederList />} />
+              <Route path="staff" element={<StaffList />} />
+              <Route path="setting" element={<Settings />} />
+              <Route path="koi" element={<KoiList />} />
+              <Route path="koi-detail" element={<KoiDetail />} />
+            </Route>
           </Route>
         </Routes>
         <Footer />

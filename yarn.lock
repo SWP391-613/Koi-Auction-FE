@@ -1279,6 +1279,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-helmet@6.1.11":
+  version "6.1.11"
+  resolved "https://registry.yarnpkg.com/@types/react-helmet/-/react-helmet-6.1.11.tgz#8cafcafff38f75361f451563ba7b406b0c5d3907"
+  integrity sha512-0QcdGLddTERotCXo3VFlUSWO3ztraw8nZ6e3zJSgG7apwV5xt+pJUS8ewPBqT4NYB1optGLprNQzFleIY84u/g==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-transition-group@^4.4.11":
   version "4.4.11"
   resolved "https://registry.npmjs.org/@types/react-transition-group/-/react-transition-group-4.4.11.tgz"
@@ -3316,7 +3323,7 @@ keyv@^4.5.3:
     date-fns "^4.1.0"
     dotenv "^16.4.5"
     husky "^9.1.5"
-    koiproject "file:../../AppData/Local/Yarn/Cache/v6/npm-koiproject-0.0.0-641dd699-2be9-46c8-9105-e81a9ca6085c-1728055391589/node_modules/koiproject"
+    koiproject "file:../../AppData/Local/Yarn/Cache/v6/npm-koiproject-0.0.0-d43286b4-5c82-475f-9a84-e3bce19a4fc0-1728056491612/node_modules/koiproject"
     prop-types "^15.8.1"
     react "^18.3.1"
     react-dom "^18.3.1"

@@ -7,7 +7,6 @@ import {
   getKoiById,
   convertTimeArrayToDate,
 } from "~/utils/apiUtils"; // Assume we have this API function
-import { useAuth } from "~/AuthContext";
 import { KoiDetailModel } from "../kois/Kois";
 import { Auction } from "./Auctions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

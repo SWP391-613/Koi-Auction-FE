@@ -12,7 +12,7 @@ import Manager from "./pages/manager/Manager";
 import MemberList from "./pages/manager/member/MemberList";
 import { Helmet } from "react-helmet";
 import { ThemeProvider } from "./pages/theme/ThemeContext";
-import { AuthProvider, useAuth } from "./AuthContext";
+import { AuthProvider, useAuth } from "./utils/auth/AuthContext";
 import KoiDetail from "./pages/kois/KoiDetail";
 import koi_data from "./utils/data/koi_data.json";
 import user_data from "./utils/data/user_data.json";

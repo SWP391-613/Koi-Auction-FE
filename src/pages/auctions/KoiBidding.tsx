@@ -5,7 +5,7 @@ import {
   fetchAuctionKoiDetails,
   fetchAuctionById,
 } from "~/utils/apiUtils";
-import { useAuth } from "~/AuthContext";
+import { useAuth } from "~/utils/auth/AuthContext";
 import { KoiDetailModel } from "../kois/Kois";
 import { Bid } from "~/components/BiddingHistory";
 import BiddingHistory from "../../components/BiddingHistory";

@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
-import { useAuth } from "../../AuthContext";
+import { useAuth } from "../../utils/auth/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -19,7 +19,7 @@ import NavigateButton from "../shared/NavigateButton";
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoggedIn, user, logout } = useAuth();
+  const { isLoggedIn, user, authLogout } = useAuth();
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   // Button data for navigation
@@ -54,7 +54,7 @@ const Header = () => {
     },
     {
       text: "Log Out",
-      onClick: logout,
+      onClick: authLogout,
       icon: <FontAwesomeIcon icon={faSignOutAlt} />,
     },
   ];

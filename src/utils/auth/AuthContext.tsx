@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             headers: {
               Authorization: `Bearer ${token}`, // Pass token in Authorization header
             },
-          }
+          },
         );
         console.log("Logout successful.");
       } catch (error) {

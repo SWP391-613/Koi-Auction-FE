@@ -5,7 +5,6 @@ import {
   fetchAuctionById,
   fetchAuctionKoi,
   getKoiById,
-  convertTimeArrayToDate,
 } from "~/utils/apiUtils"; // Assume we have this API function
 import { KoiDetailModel } from "../kois/Kois";
 import { Auction } from "./Auctions";
@@ -18,6 +17,7 @@ import {
   faUser,
   faVenusMars,
 } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "~/utils/auth/AuthContext";
 
 export interface AuctionKoi {
   id: number;

@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { fetchBidHistory } from "../utils/apiUtils";
-import { connectWebSocket } from "../utils/websocket";
 
 // Define the interface for checking AuctionKoi is On-going
 interface BiddingHistoryProps {
   auctionKoiId: number;
-  isAuctionOngoing: boolean;
-  isConnected: boolean;
 }
 // Define the interface for the bid history
 export interface Bid {
@@ -17,11 +14,7 @@ export interface Bid {
   bidder_name: string;
 }
 
-const BiddingHistory: React.FC<BiddingHistoryProps> = ({
-  auctionKoiId,
-  isAuctionOngoing,
-  isConnected,
-}) => {
+const BiddingHistory: React.FC<BiddingHistoryProps> = ({ auctionKoiId }) => {
   const [bidHistory, setBidHistory] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,34 +34,6 @@ const BiddingHistory: React.FC<BiddingHistoryProps> = ({
     loadBiddingHistory();
   }, [auctionKoiId]);
 
-  useEffect(() => {
-    let client: WebSocket | null = null;
-
-    if (isAuctionOngoing && isConnected) {
-      client = connectWebSocket();
-
-      client.onmessage = (event) => {
-        try {
-          const newBid = JSON.parse(event.data);
-          if (newBid.auction_koi_id === auctionKoiId) {
-            setBidHistory((prevHistory) => {
-              const updatedHistory = [newBid, ...prevHistory];
-              return updatedHistory.sort((a, b) => b.bid_amount - a.bid_amount);
-            });
-          }
-        } catch (err) {
-          console.error("Error processing WebSocket message:", err);
-        }
-      };
-    }
-
-    return () => {
-      if (client) {
-        client = null;
-      }
-    };
-  }, [isAuctionOngoing, isConnected, auctionKoiId]);
-
   const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleString();
   };
@@ -81,15 +46,6 @@ const BiddingHistory: React.FC<BiddingHistoryProps> = ({
   return (
     <div className="bidding-history">
       <h3 className="text-2xl font-semibold mb-4">Past Bids</h3>
-      {isAuctionOngoing && (
-        <p
-          className={`text-sm ${isConnected ? "text-green-500" : "text-red-500"}`}
-        >
-          {isConnected
-            ? "Connected to live updates"
-            : "Not connected to live updates"}
-        </p>
-      )}
       {bidHistory.length === 0 ? (
         <p className="text-gray-500">No bids yet</p>
       ) : (

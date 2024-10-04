@@ -7,8 +7,8 @@ import PaginationComponent from "~/components/pagination/Pagination";
 export interface Auction {
   id: number;
   title: string;
-  start_time: Date;
-  end_time: Date;
+  start_time: string;
+  end_time: string;
   status: string;
 }
 
@@ -16,7 +16,7 @@ const Auctions: React.FC = () => {
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true); // To track if more pages are available
-  const itemsPerPage = 8; // Number of auctions per page
+  const itemsPerPage = 16; // Number of auctions per page
 
   useEffect(() => {
     const loadAuctions = async () => {

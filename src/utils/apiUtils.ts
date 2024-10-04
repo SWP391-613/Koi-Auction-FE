@@ -5,7 +5,8 @@ import { RegisterDTO } from "~/dtos/register.dto";
 import { LoginDTO, LoginResponse } from "~/dtos/login.dto";
 import { KoiDetailModel, KoisResponse } from "~/pages/kois/Kois";
 import { Auction } from "~/pages/auctions/Auctions";
-import { AuctionKoiResponse } from "~/pages/auctions/KoiBidding";
+import { Bid } from "~/components/BiddingHistory";
+import { format, isToday, isYesterday, isTomorrow } from "date-fns";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -78,18 +79,26 @@ export const fetchGoogleClientId = async () => {
   }
 };
 
-const convertTimeArrayToDate = (
-  timeArray: [number, number, number, number, number, number, number],
-): Date => {
-  return new Date(Date.UTC(...timeArray));
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+
+  if (isToday(date)) {
+    return `Today, ${format(date, "MMM d, yyyy 'at' h:mm a")}`;
+  } else if (isYesterday(date)) {
+    return `Yesterday, ${format(date, "MMM d, yyyy 'at' h:mm a")}`;
+  } else if (isTomorrow(date)) {
+    return `Tomorrow, ${format(date, "MMM d, yyyy 'at' h:mm a")}`;
+  } else {
+    return format(date, "MMM d, yyyy 'at' h:mm a");
+  }
 };
 
 const createAuctionFromApi = (apiData: any): Auction => {
   return {
     id: apiData.id,
     title: apiData.title,
-    start_time: convertTimeArrayToDate(apiData.start_time),
-    end_time: convertTimeArrayToDate(apiData.end_time),
+    start_time: formatDate(apiData.start_time),
+    end_time: formatDate(apiData.end_time),
     status: apiData.status,
   };
 };
@@ -195,11 +204,11 @@ export async function getKoiById(id: number): Promise<KoiDetailModel> {
 
 export const fetchAuctionKoiDetails = async (
   auctionId: number,
-  koiId: number,
-): Promise<AuctionKoiResponse> => {
+  auctionKoiId: number,
+): Promise<AuctionKoi> => {
   try {
     const response = await axios.get(
-      `${API_URL}/auctionkois/${auctionId}/${koiId}`,
+      `${API_URL}/auctionkois/${auctionId}/${auctionKoiId}`,
     );
     return response.data;
   } catch (error) {
@@ -215,7 +224,7 @@ export const fetchAuctionKoiDetails = async (
   }
 };
 
-export const fetchBidHistory = async (auctionKoiId: number): Promise<any[]> => {
+export const fetchBidHistory = async (auctionKoiId: number): Promise<Bid[]> => {
   const response = await fetch(`${API_URL}/auctionkoidetails/${auctionKoiId}`);
   if (!response.ok) {
     throw new Error("Failed to fetch bid history");

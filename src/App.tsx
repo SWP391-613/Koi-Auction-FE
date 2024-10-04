@@ -67,7 +67,7 @@ function App() {
           />
           {/* route for koi bidding */}
           <Route
-            path="/auctionkois/:auctionId/:koiId"
+            path="/auctionkois/:auctionId/:auctionKoiId"
             element={<KoiBidding />}
           />
 

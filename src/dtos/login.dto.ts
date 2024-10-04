@@ -3,7 +3,7 @@ export interface LoginDTO {
   password: string;
 }
 
-export interface LoginResponse {
+export type UserLoginResponse = {
   tokenType: string;
   id: number;
   username: string;
@@ -11,6 +11,6 @@ export interface LoginResponse {
   message: string;
   token: string;
   refresh_token: string;
-}
+};
 
 export type Role = "MEMBER" | "STAFF" | "BREEDER" | "MANAGER";

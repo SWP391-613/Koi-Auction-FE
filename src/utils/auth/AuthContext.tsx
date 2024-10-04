@@ -1,10 +1,10 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState, useContext } from "react";
 import axios from "axios";
 
-// Thay đổi này: thêm giao thức http:// vào trước localhost
+// Change this to your API URL
 const API_URL = "http://localhost:4000/api/v1";
 
-interface AuthContextType { 
+interface AuthContextType {
   isLoggedIn: boolean;
   user: any;
   authLogin: (userData: any) => void;
@@ -17,67 +17,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      verifyToken(token);
-    }
-  }, []);
-
-  const verifyToken = async (token: string) => {
-    try {
-      const response = await axios.post(
-        `${API_URL}/users/verify`,
-        { token }, // Gửi token trong request body
-        {
-          headers: { 
-            'Content-Type': 'application/json'
-          },
-        }
-      );
-      
-      console.log("Verify token response:", response.data);
-      
-      if (response.status === 200) {
-        setIsLoggedIn(true);
-        if (response.data && response.data.user) {
-          setUser(response.data.user);
-        }
-      } else {
-        handleLogout();
-      }
-    } catch (error) {
-      console.error("Error verifying token:", error);
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          console.error("Server response:", error.response.data);
-        } else if (error.request) {
-          console.error("No response received:", error.request);
-        } else {
-          console.error("Error setting up request:", error.message);
-        }
-      }
-      handleLogout();
-    }
-  };
+  const [user, setUser] = useState<any>(null);
 
   const authLogin = (userData: any) => {
     setIsLoggedIn(true);
     setUser(userData);
-    localStorage.setItem("token", userData.token);
+    localStorage.setItem("access_token", userData.token);
     console.log("Token saved:", userData.token);
   };
 
-  const handleLogout = () => {
+  const authLogout = async () => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      try {
+        await axios.post(
+          `${API_URL}/users/logout`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Pass token in Authorization header
+            },
+          }
+        );
+        console.log("Logout successful.");
+      } catch (error) {
+        console.error("Error during logout:", error);
+      }
+    }
+    // Clear the user data and token
     setIsLoggedIn(false);
     setUser(null);
-    localStorage.removeItem("token");
+    localStorage.removeItem("access_token");
+    console.log("Logged out and token removed.");
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, authLogin, authLogout: handleLogout }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, authLogin, authLogout }}>
       {children}
     </AuthContext.Provider>
   );

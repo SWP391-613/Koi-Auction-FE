@@ -214,7 +214,7 @@ const Auctions: React.FC = () => {
         </Table>
       </TableContainer>
 
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <h3 className="text-lg font-semibold mb-2">Kois in Auction</h3>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
@@ -269,7 +269,7 @@ const Auctions: React.FC = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </div> */}
 
       <div className="mt-4">
         <PaginationComponent

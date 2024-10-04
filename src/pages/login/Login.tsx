@@ -67,7 +67,7 @@ const Login: React.FC = () => {
     try {
       console.log(data);
       const response = await login({ ...data });
-      
+
       // Use authLogin here
       authLogin({
         token: response.token,

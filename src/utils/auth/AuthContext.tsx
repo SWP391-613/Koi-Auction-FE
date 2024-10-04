@@ -1,7 +1,10 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import React, { createContext, useState, useContext, useEffect } from "react";
+import axios from "axios";
 
-interface AuthContextType {
+// Thay đổi này: thêm giao thức http:// vào trước localhost
+const API_URL = "http://localhost:4000/api/v1";
+
+interface AuthContextType { 
   isLoggedIn: boolean;
   user: any;
   authLogin: (userData: any) => void;
@@ -10,51 +13,71 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
-      // Verify token and set user data
       verifyToken(token);
     }
   }, []);
 
   const verifyToken = async (token: string) => {
     try {
-      // Replace with your API endpoint to verify token
-      const response = await axios.get('http://your-api-url/verify-token', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (response.data.valid) {
+      const response = await axios.post(
+        `${API_URL}/users/verify`,
+        { token }, // Gửi token trong request body
+        {
+          headers: { 
+            'Content-Type': 'application/json'
+          },
+        }
+      );
+      
+      console.log("Verify token response:", response.data);
+      
+      if (response.status === 200) {
         setIsLoggedIn(true);
-        setUser(response.data.user);
+        if (response.data && response.data.user) {
+          setUser(response.data.user);
+        }
       } else {
-        // Token is invalid, clear it
-        localStorage.removeItem('token');
+        handleLogout();
       }
     } catch (error) {
-      console.error('Error verifying token:', error);
-      localStorage.removeItem('token');
+      console.error("Error verifying token:", error);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          console.error("Server response:", error.response.data);
+        } else if (error.request) {
+          console.error("No response received:", error.request);
+        } else {
+          console.error("Error setting up request:", error.message);
+        }
+      }
+      handleLogout();
     }
   };
 
   const authLogin = (userData: any) => {
     setIsLoggedIn(true);
     setUser(userData);
-    localStorage.setItem('token', userData.token);
+    localStorage.setItem("token", userData.token);
+    console.log("Token saved:", userData.token);
   };
 
-  const authLogout = () => {
+  const handleLogout = () => {
     setIsLoggedIn(false);
     setUser(null);
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, authLogin, authLogout }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, authLogin, authLogout: handleLogout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -63,7 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

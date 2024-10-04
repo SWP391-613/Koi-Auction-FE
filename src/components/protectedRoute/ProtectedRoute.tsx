@@ -1,18 +1,22 @@
 import React from "react";
-import { Redirect, Route } from "react-router-dom";
-import { useAuth } from "../AuthContext";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "~/contexts/AuthContext";
 
-const ProtectedRoute = ({ component: Component, ...rest }) => {
+interface ProtectedRouteProps {
+  redirectPath?: string;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  redirectPath = "/login",
+}) => {
   const { isLoggedIn } = useAuth();
+  const token = localStorage.getItem("access_token");
 
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        isLoggedIn ? <Component {...props} /> : <Redirect to="/login" />
-      }
-    />
-  );
+  if (!isLoggedIn && !token) {
+    return <Navigate to={redirectPath} replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

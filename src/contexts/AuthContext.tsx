@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { LoginResponse } from "~/dtos/login.dto";
 
@@ -19,6 +19,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<LoginResponse | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      setIsLoggedIn(true);
+      // Optionally, you can also fetch user data here using the token
+    }
+  }, []);
+
   const authLogin = (userData: LoginResponse) => {
     setIsLoggedIn(true);
     setUser(userData);

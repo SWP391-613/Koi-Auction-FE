@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { Role, UserLoginResponse } from "~/dtos/login.dto";
+import { eraseCookie, getCookie, setCookie } from "~/utils/cookieUtils";
 
 // Change this to your API URL
 const API_URL = "http://localhost:4000/api/v1";
@@ -23,8 +24,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<AuthLoginData | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    const roles = localStorage.getItem("user_roles");
+    const token = getCookie("access_token");
+    const roles = getCookie("user_roles");
 
     if (token && roles) {
       setIsLoggedIn(true);
@@ -42,12 +43,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       token: userData.token,
       roles: userData.roles,
     });
-    localStorage.setItem("access_token", userData.token);
-    localStorage.setItem("user_roles", JSON.stringify(userData.roles));
+    setCookie("access_token", userData.token, 1);
+    setCookie("user_roles", JSON.stringify(userData.roles), 1);
   };
 
   const authLogout = async () => {
-    const token = localStorage.getItem("access_token");
+    const token = getCookie("access_token");
     if (token) {
       try {
         await axios.post(
@@ -67,8 +68,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     // Clear the user data and token
     setIsLoggedIn(false);
     setUser(null);
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("user_roles");
+    eraseCookie("access_token");
+    eraseCookie("user_roles");
   };
 
   return (

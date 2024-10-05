@@ -18,6 +18,7 @@ interface Koi {
   sex: string;
   length: number;
   age: number;
+  base_price: number;
   status_name: string;
   is_display: number;
   thumbnail: string;

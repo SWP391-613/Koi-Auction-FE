@@ -21,10 +21,15 @@ import {
   faGavel,
   faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
-import { placeBid, subscribeToAuctionUpdates } from "~/utils/websocket";
+import {
+  placeBid,
+  subscribeToAuctionUpdates,
+  unsubscribeFromAuctionUpdates,
+} from "~/utils/websocket";
 import { connectWebSocket, disconnectWebSocket } from "~/utils/websocket";
 import { Auction } from "./Auctions";
 import { AuctionKoi } from "./AuctionDetail";
+import { toast } from "react-toastify";
 
 // Define the KoiDetail UI component
 interface KoiDetailItemProps {
@@ -40,7 +45,6 @@ interface KoiDetailItemProps {
 export interface BidRequest {
   auction_koi_id: number; // The ID of the auction koi
   bid_amount: number; // The amount of the bid
-  bid_time: Date; // The time the bid was placed
   bidder_token: string;
 }
 
@@ -76,6 +80,7 @@ const KoiBidding: React.FC = () => {
   const [bidAmount, setBidAmount] = useState<number>(0); // State for bid amount
   const [auctionKoi, setAuctionKoi] = useState<AuctionKoi | null>(null); // State for auction koi details
   const [auction, setAuction] = useState<Auction | null>(null); // State for auction details
+  const [latestBid, setLatestBid] = useState<Bid | null>(null);
 
   const isAuctionOngoing = () => {
     // Function to check if the auction is ongoing
@@ -131,29 +136,43 @@ const KoiBidding: React.FC = () => {
     loadKoiAndBids();
   }, [auctionId, auctionKoiId]);
 
-  // Remove the separate useEffect for loading Koi
   useEffect(() => {
     console.log("Current auction state:", auction);
     if (isAuctionOngoing()) {
-      connectWebSocket();
-      setIsConnected(true);
+      connectWebSocket(() => {
+        setIsConnected(true);
+        if (auctionKoiId) {
+          const unsubscribe = subscribeToAuctionUpdates(
+            Number(auctionKoiId),
+            (bidResponse) => {
+              console.log("New bid received:", bidResponse);
+              toast.success("New bid received");
+              setLatestBid(bidResponse);
+              if (auctionKoi) {
+                setAuctionKoi({
+                  ...auctionKoi,
+                  current_bid: bidResponse.bid_amount,
+                });
+                setBidAmount(bidResponse.bid_amount + auctionKoi.bid_step);
+              }
+            },
+          );
+
+          return () => {
+            unsubscribe();
+            disconnectWebSocket();
+          };
+        }
+      });
     } else {
       disconnectWebSocket();
       setIsConnected(false);
     }
-  }, [auction]);
 
-  useEffect(() => {
-    if (auctionId && isAuctionOngoing()) {
-      const client = connectWebSocket();
-      setIsConnected(true);
-
-      return () => {
-        disconnectWebSocket();
-        setIsConnected(false);
-      };
-    }
-  }, [auctionId, isAuctionOngoing]);
+    return () => {
+      disconnectWebSocket();
+    };
+  }, [auction, auctionKoiId]);
 
   const handlePlaceBid = () => {
     if (!isConnected || !user || !auctionKoi) {
@@ -163,10 +182,8 @@ const KoiBidding: React.FC = () => {
     const bidRequest: BidRequest = {
       auction_koi_id: auctionKoi.id,
       bid_amount: bidAmount,
-      bid_time: new Date(),
       bidder_token: user.token,
     };
-    console.log(bidRequest);
 
     placeBid(bidRequest);
     setBidAmount(auctionKoi.current_bid + auctionKoi.bid_step);
@@ -270,7 +287,10 @@ const KoiBidding: React.FC = () => {
           <div className="rounded-2xl bg-gray-300 p-4">
             <h3 className="mb-2 text-xl font-semibold">Bid History</h3>
             <div className="max-h-full overflow-y-auto">
-              <BiddingHistory auctionKoiId={auctionKoi.id} />
+              <BiddingHistory
+                auctionKoiId={auctionKoi.id}
+                latestBid={latestBid}
+              />
             </div>
           </div>
         </div>

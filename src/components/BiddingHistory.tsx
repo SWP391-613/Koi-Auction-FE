@@ -4,6 +4,7 @@ import { fetchBidHistory } from "../utils/apiUtils";
 // Define the interface for checking AuctionKoi is On-going
 interface BiddingHistoryProps {
   auctionKoiId: number;
+  latestBid: Bid | null;
 }
 // Define the interface for the bid history
 export interface Bid {
@@ -14,7 +15,10 @@ export interface Bid {
   bidder_name: string;
 }
 
-const BiddingHistory: React.FC<BiddingHistoryProps> = ({ auctionKoiId }) => {
+const BiddingHistory: React.FC<BiddingHistoryProps> = ({
+  auctionKoiId,
+  latestBid,
+}) => {
   const [bidHistory, setBidHistory] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,6 +37,18 @@ const BiddingHistory: React.FC<BiddingHistoryProps> = ({ auctionKoiId }) => {
 
     loadBiddingHistory();
   }, [auctionKoiId]);
+
+  useEffect(() => {
+    if (latestBid) {
+      setBidHistory((prevHistory) => {
+        const updatedHistory = [
+          latestBid,
+          ...prevHistory.filter((bid) => bid.bid_time !== latestBid.bid_time),
+        ];
+        return updatedHistory.sort((a, b) => b.bid_amount - a.bid_amount);
+      });
+    }
+  }, [latestBid]);
 
   const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleString();

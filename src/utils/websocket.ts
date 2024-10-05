@@ -4,8 +4,9 @@ import SockJS from "sockjs-client";
 import { BidRequest } from "~/pages/auctions/KoiBidding";
 
 let stompClient: Client | null = null;
+let subscriptions: { [key: string]: ((message: any) => void)[] } = {};
 
-export const connectWebSocket = () => {
+export const connectWebSocket = (onConnect: () => void) => {
   console.log("Attempting to connect to WebSocket");
   const socket = new SockJS(
     `${environment.be.baseUrl}${environment.be.endPoint.socket}`,
@@ -28,7 +29,7 @@ export const connectWebSocket = () => {
     console.log("STOMP connection established");
     console.log("Connected to:", frame.headers["server"]);
     console.log("Session ID:", frame.headers["session-id"]);
-    // You can add more relevant information here
+    onConnect();
   };
 
   stompClient.onStompError = (frame) => {
@@ -50,7 +51,7 @@ export function disconnectWebSocket() {
 export function placeBid(bid: BidRequest) {
   if (stompClient && stompClient.active) {
     stompClient.publish({
-      destination: "/topic/placeBid",
+      destination: `/app/auctionkoi/${bid.auction_koi_id}/bid`,
       body: JSON.stringify(bid),
     });
   } else {
@@ -63,10 +64,39 @@ export function subscribeToAuctionUpdates(
   callback: (message: any) => void,
 ) {
   if (stompClient && stompClient.active) {
-    stompClient.subscribe(`/topic/auctionKoi`, (message) => {
-      callback(JSON.parse(message.body));
+    const destination = `/topic/auctionkoi/${auctionKoiId}`;
+    const subscription = stompClient.subscribe(destination, (message) => {
+      const parsedMessage = JSON.parse(message.body);
+      if (subscriptions[destination]) {
+        subscriptions[destination].forEach((cb) => cb(parsedMessage));
+      }
     });
+
+    if (!subscriptions[destination]) {
+      subscriptions[destination] = [];
+    }
+    subscriptions[destination].push(callback);
+
+    return () => {
+      subscription.unsubscribe();
+      subscriptions[destination] = subscriptions[destination].filter(
+        (cb) => cb !== callback,
+      );
+    };
   } else {
     console.error("WebSocket connection not established");
+    return () => {};
+  }
+}
+
+export function unsubscribeFromAuctionUpdates(
+  auctionKoiId: number,
+  callback: (message: any) => void,
+) {
+  const destination = `/topic/auctionkoi/${auctionKoiId}`;
+  if (subscriptions[destination]) {
+    subscriptions[destination] = subscriptions[destination].filter(
+      (cb) => cb !== callback,
+    );
   }
 }

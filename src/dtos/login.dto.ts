@@ -13,4 +13,8 @@ export type UserLoginResponse = {
   refresh_token: string;
 };
 
-export type Role = "MEMBER" | "STAFF" | "BREEDER" | "MANAGER";
+export type Role =
+  | "ROLE_MEMBER"
+  | "ROLE_STAFF"
+  | "ROLE_BREEDER"
+  | "ROLE_MANAGER";

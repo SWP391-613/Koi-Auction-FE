@@ -34,14 +34,15 @@ const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
     return <Navigate to={redirectPath} replace />;
   }
 
-  debugger;
+  // debugger;
   console.log("User roles:", user.roles);
-  debugger;
+  // debugger;
   console.log("Allowed roles:", allowedRoles);
-
+  // debugger;
   const hasAllowedRole = user.roles?.some((role) =>
     allowedRoles.includes(role),
   );
+  console.log(hasAllowedRole);
 
   if (!hasAllowedRole) {
     return <Navigate to="/unauthorized" replace />;

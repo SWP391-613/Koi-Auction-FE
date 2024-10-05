@@ -32,6 +32,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         token: token,
         roles: JSON.parse(roles), // Parse roles into an array
       });
+      console.log("User login data: " + JSON.stringify(user));
     }
   }, []);
 

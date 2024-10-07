@@ -21,7 +21,7 @@
     "allowImportingTsExtensions": false,
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node", "vite/client"],
+    "types": ["node", "vite/client"]
   },
   "ts-node": {
     "require": ["tsconfig-paths/register"]

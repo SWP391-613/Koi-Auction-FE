@@ -8,6 +8,7 @@
     "dev:prod": "VITE_API_BASE_URL=http://localhost:8088 vite",
     "build": "vite build",
     "build:dev": "NODE_ENV=development vite build",
+    "build:prod": "NODE_ENV=production vite build",
     "preview": "vite preview",
     "prepare": "husky",
     "lint": "npm run prettier:fix && npm run eslint:check && npm run check-types",

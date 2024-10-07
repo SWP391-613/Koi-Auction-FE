@@ -6,6 +6,8 @@ import axios from "axios";
 import { environment } from "~/environments/environment";
 import { KoiDetailModel } from "../kois/Kois";
 import { fetchKoisOfBreeder } from "~/utils/apiUtils";
+import KoiCart from "../kois/KoiCart";
+import { Typography } from "@mui/material";
 
 interface Status {
   id: number;
@@ -35,6 +37,12 @@ interface User {
   account_balance: number;
 }
 
+export type KoiOfBreederQueryParams = {
+  breeder_id: number;
+  page: number;
+  limit: number;
+};
+
 export type KoiOfBreeder = {
   total_page: number;
   total_item: number;
@@ -44,6 +52,7 @@ export type KoiOfBreeder = {
 const BreederDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<User | null>(null);
+  const [kois, setKois] = useState<KoiDetailModel[]>([]);
   const [updateField, setUpdateField] = useState("");
   const [updateValue, setUpdateValue] = useState("");
   const navigate = useNavigate();
@@ -82,7 +91,9 @@ const BreederDetail: React.FC = () => {
 
         if (userData) {
           const koisOfBreeder = await fetchKoisOfBreeder(userData.id, 0, 15);
-          console.log(koisOfBreeder);
+          if (koisOfBreeder) {
+            setKois(koisOfBreeder.items);
+          }
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -215,6 +226,13 @@ const BreederDetail: React.FC = () => {
             </button>
           </div>
         </div>
+      </div>
+      <div>
+        <Typography variant="h2" className="text-center">
+          My Kois
+        </Typography>
+        {/* Render KoiCart with the fetched koi items */}
+        <KoiCart items={kois} />
       </div>
     </div>
   );

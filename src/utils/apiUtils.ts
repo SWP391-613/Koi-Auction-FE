@@ -179,15 +179,15 @@ export const fetchAuctionKoi = async (
 };
 
 export const fetchKoisOfBreeder = async (
-  breederId: number,
-  limit: number,
+  breeder_id: number,
   page: number,
+  limit: number,
 ): Promise<KoisOfBreeder | null> => {
   try {
     const response = await axios.get<KoisOfBreeder>(
       `${API_URL}/breeders/kois`,
       {
-        params: { breederId, limit, page },
+        params: { breeder_id, page, limit },
       },
     );
     return response.data;

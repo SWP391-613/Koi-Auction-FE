@@ -22,7 +22,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build the project
-        run: yarn run build
+        run: yarn run build:dev
 
       - name: Deploy to Production Repo
         env:

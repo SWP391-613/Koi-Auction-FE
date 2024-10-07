@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCakeCandles,
   faFish,
+  faHandHoldingHeart,
   faRuler,
   faTicketSimple,
   faUser,
@@ -145,16 +146,12 @@ const AuctionDetail: React.FC = () => {
                   <FontAwesomeIcon icon={faTicketSimple} className="mr-1" />
                   {combinedKoiData.id}
                 </div>
-                <div className="absolute bottom-2 right-2 flex">
-                  {[...Array(5)].map((_, i) => (
-                    <svg
-                      key={i}
-                      className="w-4 h-4 text-yellow-400 fill-current"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                    </svg>
-                  ))}
+                <div
+                  className="absolute bottom-2 right-2
+                text-white rounded-full p-1 text-xs"
+                >
+                  <FontAwesomeIcon icon={faHandHoldingHeart} className="mr-1" />
+                  {combinedKoiData.auctionKoiData.bid_method}
                 </div>
               </div>
               <div className="p-4 bg-gray-200 rounded-b-lg">

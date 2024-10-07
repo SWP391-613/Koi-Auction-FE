@@ -20,6 +20,7 @@ import {
   faDollarSign,
   faGavel,
   faArrowLeft,
+  faHandHoldingHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   placeBid,
@@ -30,6 +31,7 @@ import { connectWebSocket, disconnectWebSocket } from "~/utils/websocket";
 import { Auction } from "./Auctions";
 import { AuctionKoi } from "./AuctionDetail";
 import { toast } from "react-toastify";
+import Sold from "../../assets/Sold.png";
 
 // Define the KoiDetail UI component
 interface KoiDetailItemProps {
@@ -81,6 +83,7 @@ const KoiBidding: React.FC = () => {
   const [auctionKoi, setAuctionKoi] = useState<AuctionKoi | null>(null); // State for auction koi details
   const [auction, setAuction] = useState<Auction | null>(null); // State for auction details
   const [latestBid, setLatestBid] = useState<Bid | null>(null);
+  const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
 
   const isAuctionOngoing = () => {
     // Function to check if the auction is ongoing
@@ -211,14 +214,69 @@ const KoiBidding: React.FC = () => {
         />
       </div>
       <div className="m-5 flex flex-col gap-6 p-4 sm:flex-col md:flex-row">
-        {/* Koi Image */}
-        <div className="relative h-96 w-full rounded-xl bg-[#4086c7] sm:h-128 md:h-144 md:w-128 lg:h-192">
-          <img
-            className="absolute inset-0 h-full w-full rounded-xl object-contain shadow-md transition duration-300 hover:shadow-2xl hover:ring-4 hover:ring-blue-400"
-            src={koi.thumbnail}
-            alt={koi.name}
-          />
+        {/* Koi Image and Media Gallery */}
+        <div className="w-full md:w-128">
+          <div className="relative h-96 w-full rounded-xl bg-[#4086c7] sm:h-128 md:h-144 lg:h-192">
+            {selectedMedia ? (
+              selectedMedia.includes("youtube") ? (
+                <iframe
+                  className="absolute inset-0 h-full w-full rounded-xl"
+                  src={selectedMedia}
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              ) : (
+                <img
+                  className="absolute inset-0 h-full w-full rounded-xl object-contain shadow-md transition duration-300 hover:shadow-2xl hover:ring-4 hover:ring-blue-400"
+                  src={selectedMedia}
+                  alt={koi.name}
+                />
+              )
+            ) : (
+              <img
+                className="absolute inset-0 h-full w-full rounded-xl object-contain shadow-md transition duration-300 hover:shadow-2xl hover:ring-4 hover:ring-blue-400"
+                src={koi.thumbnail}
+                alt={koi.name}
+              />
+            )}
+            {auctionKoi.is_sold && (
+              <div className="absolute -left-4 -top-4 z-10">
+                <img
+                  src={Sold}
+                  alt="Sold"
+                  className="h-[10rem] w-[10rem] transform rotate-[-20deg]"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Media Gallery */}
+          <div className="mt-4 flex space-x-2 overflow-x-auto">
+            <img
+              src={koi.thumbnail}
+              alt="Main"
+              className="h-20 w-20 cursor-pointer rounded-md object-cover"
+              onClick={() => setSelectedMedia(koi.thumbnail)}
+            />
+            {/* {koi.additional_images?.map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt={`Additional ${index + 1}`}
+                className="h-20 w-20 cursor-pointer rounded-md object-cover"
+                onClick={() => setSelectedMedia(img)}
+              />
+            ))} */}
+            <div
+              className="flex h-20 w-20 cursor-pointer items-center justify-center rounded-md bg-gray-200"
+              onClick={() =>
+                setSelectedMedia("https://www.youtube.com/embed/your-video-id")
+              }
+            ></div>
+          </div>
         </div>
+
         {/* Koi Info and Bidding */}
         <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-4 text-lg">
           <div className="mb-4 items-center rounded-2xl">
@@ -262,6 +320,12 @@ const KoiBidding: React.FC = () => {
                 value={auctionKoi.current_bid}
                 bgColor="bg-green-200"
               />
+              <KoiDetailItem
+                icon={faHandHoldingHeart}
+                label="Bid Method"
+                value={auctionKoi.bid_method}
+                bgColor="bg-blue-200"
+              />
             </div>
           </div>
 
@@ -283,10 +347,9 @@ const KoiBidding: React.FC = () => {
               </button>
             </div>
           )}
-
-          <div className="rounded-2xl bg-gray-300 p-4">
-            <h3 className="mb-2 text-xl font-semibold">Bid History</h3>
-            <div className="max-h-full overflow-y-auto">
+          <h3 className="mb-2 text-xl font-semibold">Bid History</h3>
+          <div className="rounded-2xl bg-gray-300 p-4 max-h-[50rem] overflow-auto">
+            <div className="max-h-full overflow-auto">
               <BiddingHistory
                 auctionKoiId={auctionKoi.id}
                 latestBid={latestBid}

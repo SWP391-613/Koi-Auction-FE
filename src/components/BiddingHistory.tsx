@@ -61,7 +61,6 @@ const BiddingHistory: React.FC<BiddingHistoryProps> = ({
 
   return (
     <div className="bidding-history">
-      <h3 className="text-2xl font-semibold mb-4">Past Bids</h3>
       {bidHistory.length === 0 ? (
         <p className="text-gray-500">No bids yet</p>
       ) : (

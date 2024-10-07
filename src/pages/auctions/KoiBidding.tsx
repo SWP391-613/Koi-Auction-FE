@@ -141,45 +141,63 @@ const KoiBidding: React.FC = () => {
 
   useEffect(() => {
     console.log("Current auction state:", auction);
+    let unsubscribe: (() => void) | undefined;
+
+    const handleBeforeUnload = () => {
+      if (unsubscribe) unsubscribe();
+      disconnectWebSocket();
+    };
+
     if (isAuctionOngoing()) {
       connectWebSocket(() => {
         setIsConnected(true);
         if (auctionKoiId) {
-          const unsubscribe = subscribeToAuctionUpdates(
+          unsubscribe = subscribeToAuctionUpdates(
             Number(auctionKoiId),
             (bidResponse) => {
               console.log("New bid received:", bidResponse);
-              toast.success("New bid received");
-              setLatestBid(bidResponse);
-              if (auctionKoi) {
-                setAuctionKoi({
-                  ...auctionKoi,
-                  current_bid: bidResponse.bid_amount,
-                });
-                setBidAmount(bidResponse.bid_amount + auctionKoi.bid_step);
+              // Only update state and show toast if it's a new highest bid
+              if (
+                !auctionKoi ||
+                bidResponse.bid_amount > auctionKoi.current_bid
+              ) {
+                toast.success("New highest bid received!");
               }
+              setLatestBid(bidResponse);
+              setAuctionKoi((prevAuctionKoi) => {
+                if (prevAuctionKoi) {
+                  return {
+                    ...prevAuctionKoi,
+                    current_bid: bidResponse.bid_amount,
+                  };
+                }
+                return prevAuctionKoi;
+              });
+              setBidAmount(
+                (prevBidAmount) =>
+                  bidResponse.bid_amount + (auctionKoi?.bid_step || 0),
+              );
             },
           );
-
-          return () => {
-            unsubscribe();
-            disconnectWebSocket();
-          };
         }
       });
+
+      window.addEventListener("beforeunload", handleBeforeUnload);
     } else {
       disconnectWebSocket();
       setIsConnected(false);
     }
 
     return () => {
+      if (unsubscribe) unsubscribe();
       disconnectWebSocket();
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [auction, auctionKoiId]);
+  }, [auction, auctionKoiId, auctionKoi]);
 
   const handlePlaceBid = () => {
     if (!isConnected || !user || !auctionKoi) {
-      alert("Cannot place bid: not connected or user not logged in");
+      toast("Login Before Place Bid!");
       return;
     }
     const bidRequest: BidRequest = {
@@ -195,7 +213,6 @@ const KoiBidding: React.FC = () => {
   const isAuctionEnded = () => {
     if (!auction) return false;
     //time and date of auction checked later
-    const now = new Date();
     return auction.status !== "ACTIVE";
   };
 

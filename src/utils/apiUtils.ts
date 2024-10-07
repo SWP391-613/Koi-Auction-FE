@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { environment } from "../environments/environment";
 import { AuctionKoi } from "~/pages/auctions/AuctionDetail";
 import { RegisterDTO } from "~/dtos/register.dto";
@@ -7,6 +7,7 @@ import { KoiDetailModel, KoisResponse } from "~/pages/kois/Kois";
 import { Auction } from "~/pages/auctions/Auctions";
 import { Bid } from "~/components/BiddingHistory";
 import { format, isToday, isYesterday, isTomorrow } from "date-fns";
+import { KoiOfBreeder as KoisOfBreeder } from "~/pages/breeder/BreederDetail";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -173,6 +174,30 @@ export const fetchAuctionKoi = async (
     return response.data;
   } catch (error) {
     console.error("Error fetching auction koi data:", error);
+    throw error;
+  }
+};
+
+export const fetchKoisOfBreeder = async (
+  breederId: number,
+  limit: number,
+  page: number,
+): Promise<KoisOfBreeder | null> => {
+  try {
+    const response = await axios.get<KoisOfBreeder>(
+      `${API_URL}/breeders/kois`,
+      {
+        params: { breederId, limit, page },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.error(
+        "Error fetching koi's breeder data:",
+        error.response?.data?.message || error.message,
+      );
+    }
     throw error;
   }
 };

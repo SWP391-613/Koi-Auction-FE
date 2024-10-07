@@ -4,6 +4,8 @@ import "./BreederDetail.scss";
 import { getCookie } from "~/utils/cookieUtils";
 import axios from "axios";
 import { environment } from "~/environments/environment";
+import { KoiDetailModel } from "../kois/Kois";
+import { fetchKoisOfBreeder } from "~/utils/apiUtils";
 
 interface Status {
   id: number;
@@ -32,6 +34,12 @@ interface User {
   role_name: string;
   account_balance: number;
 }
+
+export type KoiOfBreeder = {
+  total_page: number;
+  total_item: number;
+  items: KoiDetailModel[];
+};
 
 const BreederDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -71,6 +79,11 @@ const BreederDetail: React.FC = () => {
         const userData: User = response.data;
         console.log(userData);
         setUser(userData);
+
+        if (userData) {
+          const koisOfBreeder = await fetchKoisOfBreeder(userData.id, 0, 15);
+          console.log(koisOfBreeder);
+        }
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error("Error response:", error.response?.data);

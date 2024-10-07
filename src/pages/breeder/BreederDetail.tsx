@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./BreederDetail.scss";
 import { getCookie } from "~/utils/cookieUtils";
-import { log } from "console";
 import axios from "axios";
+import { environment } from "~/environments/environment";
 
 interface Status {
   id: number;
@@ -52,7 +52,8 @@ const BreederDetail: React.FC = () => {
       }
 
       try {
-        const API_URL = "http://localhost:4000/api/v1";
+        const API_URL =
+          import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
         const response = await axios.post(
           `${API_URL}/users/details`,
           {},
@@ -93,7 +94,8 @@ const BreederDetail: React.FC = () => {
     }
 
     try {
-      const API_URL = "http://localhost:4000/api/v1";
+      const API_URL =
+        import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
       const response = await axios.put(
         `${API_URL}/users/${user.id}`,
         { [updateField]: updateValue },
@@ -154,7 +156,7 @@ const BreederDetail: React.FC = () => {
           <div className="user-info-grid">
             <div className="info-item">
               <p className="info-label">Email</p>
-              <p className="info-value">{user.emails}</p>
+              <p className="info-value">{user.email}</p>
             </div>
             <div className="info-item">
               <p className="info-label">Phone</p>

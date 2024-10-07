@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { Role, UserLoginResponse } from "~/dtos/login.dto";
 import { eraseCookie, getCookie, setCookie } from "~/utils/cookieUtils";
+import { useNavigate } from "react-router-dom";
 
 // Change this to your API URL
 const API_URL = "http://localhost:4000/api/v1";
@@ -22,6 +23,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<AuthLoginData | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = getCookie("access_token");
@@ -73,6 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setUser(null);
     eraseCookie("access_token");
     eraseCookie("user_roles");
+    navigate("/");
   };
 
   return (

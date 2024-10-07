@@ -33,7 +33,7 @@ import RoleBasedRoute from "./components/auth/RoleBasedRoute";
 import { Role } from "./dtos/login.dto";
 import Unauthorized from "./components/unauthorized/Unauthorized";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
-import BreederDashboard from "./pages/breeder/BreederDashboard";
+import BreederDetail from "./pages/breeder/BreederDetail";
 
 const TITLE = "Auction Koi";
 
@@ -103,7 +103,7 @@ function App() {
           <Route
             element={<RoleBasedRoute allowedRoles={["ROLE_BREEDER" as Role]} />}
           >
-            <Route path="/breeder" element={<BreederDashboard />} />
+            <Route path="/breeder" element={<BreederDetail />} />
             {/* Add more breeder-specific routes here */}
           </Route>
 

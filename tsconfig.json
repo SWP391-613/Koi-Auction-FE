@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "CommonJS", // Quy định output module được sử dụng
+    "module": "ESNext", // Quy định output module được sử dụng
     "moduleResolution": "node", //
     "target": "ES2020", // Target ouput cho code
     "allowJs": true,
@@ -19,7 +19,9 @@
       "type": ["jest"]
     },
     "allowImportingTsExtensions": false,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node", "vite/client"],
   },
   "ts-node": {
     "require": ["tsconfig-paths/register"]

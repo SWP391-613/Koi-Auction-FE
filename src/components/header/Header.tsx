@@ -49,7 +49,7 @@ const Header = () => {
   const accountButtons = [
     {
       text: "My Account",
-      to: "/users/:id",
+      to: user ? `/users/${user.id}` : "/login",
       icon: <FontAwesomeIcon icon={faUser} />,
     },
     {

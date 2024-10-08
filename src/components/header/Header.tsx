@@ -1,6 +1,5 @@
-import React from "react";
-import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useMemo } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { useAuth } from "../../contexts/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,7 +13,59 @@ import {
   faSignOutAlt,
   faFish,
 } from "@fortawesome/free-solid-svg-icons";
-import NavigateButton from "../shared/NavigateButton";
+import classNames from "classnames"; // Install this package for easier class management
+
+// Define interfaces for navigation and account buttons
+interface NavButton {
+  text: string;
+  to?: string;
+  onClick?: () => void;
+  icon?: JSX.Element;
+}
+
+interface HeaderButtonProps {
+  button: NavButton;
+  isActive: boolean;
+  onClick?: () => void;
+}
+
+const HeaderButton: React.FC<HeaderButtonProps> = ({
+  button,
+  isActive,
+  onClick,
+}) => {
+  const baseClasses =
+    "flex items-center rounded-full font-bold px-4 py-2 transition duration-300 ease-in-out";
+  const activeClasses = "bg-[#4f92d1] text-white";
+  const inactiveClasses =
+    "text-gray-600 bg-gray-200 hover:bg-[#4f92d1] hover:text-white";
+
+  if (button.to) {
+    return (
+      <Link
+        to={button.to}
+        className={classNames(
+          baseClasses,
+          isActive ? activeClasses : inactiveClasses,
+        )}
+        onClick={onClick}
+      >
+        {button.icon}
+        <span className="ml-2">{button.text}</span>
+      </Link>
+    );
+  }
+
+  return (
+    <button
+      onClick={button.onClick}
+      className={classNames(baseClasses, inactiveClasses)}
+    >
+      {button.icon}
+      <span className="ml-2">{button.text}</span>
+    </button>
+  );
+};
 
 const Header = () => {
   const navigate = useNavigate();
@@ -22,48 +73,77 @@ const Header = () => {
   const { isLoggedIn, user, authLogout } = useAuth();
   const [isNavOpen, setIsNavOpen] = useState(false);
 
-  // Button data for navigation
-  const navButtons = [
-    {
-      text: "Home",
-      to: "/",
-      icon: <FontAwesomeIcon icon={faHouse} />,
-    },
-    {
-      text: "Auctions",
-      to: "/auctions",
-      icon: <FontAwesomeIcon icon={faFire} />,
-    },
-    // {
-    //   text: "Koi",
-    //   to: "/kois",
-    //   icon: <FontAwesomeIcon icon={faFish} />,
-    // },
-    {
-      text: "About",
-      to: "/about",
-      icon: <FontAwesomeIcon icon={faQuestion} />,
-    },
-  ];
+  // Define navigation and account buttons
+  const navButtons: NavButton[] = useMemo(
+    () => [
+      {
+        text: "Home",
+        to: "/",
+        icon: <FontAwesomeIcon icon={faHouse} />,
+      },
+      {
+        text: "Auctions",
+        to: "/auctions",
+        icon: <FontAwesomeIcon icon={faFire} />,
+      },
+      // Uncomment if needed
+      // {
+      //   text: "Koi",
+      //   to: "/kois",
+      //   icon: <FontAwesomeIcon icon={faFish} />,
+      // },
+      {
+        text: "About",
+        to: "/about",
+        icon: <FontAwesomeIcon icon={faQuestion} />,
+      },
+    ],
+    [],
+  );
 
-  const accountButtons = [
-    {
-      text: "My Account",
-      to: user ? `/users/${user.id}` : "/login",
-      icon: <FontAwesomeIcon icon={faUser} />,
-    },
-    {
-      text: "Log Out",
-      onClick: authLogout,
-      icon: <FontAwesomeIcon icon={faSignOutAlt} />,
-    },
-  ];
+  const accountButtons: NavButton[] = useMemo(() => {
+    if (isLoggedIn && user) {
+      return [
+        {
+          text: "My Account",
+          to: `/users/${user.id}`,
+          icon: <FontAwesomeIcon icon={faUser} />,
+        },
+        {
+          text: "Log Out",
+          onClick: () => {
+            authLogout();
+            navigate("/");
+          },
+          icon: <FontAwesomeIcon icon={faSignOutAlt} />,
+        },
+      ];
+    } else {
+      return [
+        {
+          text: "Sign up",
+          to: "/register",
+        },
+        {
+          text: "Login",
+          to: "/login",
+          icon: <FontAwesomeIcon icon={faUser} />,
+        },
+      ];
+    }
+  }, [isLoggedIn, user, authLogout, navigate]);
 
+  // Determine if a path is active
   const isActive = (path: string) => location.pathname === path;
 
+  // Toggle navigation menu
+  const toggleNav = () => setIsNavOpen(!isNavOpen);
+  const closeNav = () => setIsNavOpen(false);
+
   return (
-    <header className="bg-gray-50 px-4 py-2 shadow-md transition-all duration-300">
+    <header className="bg-gray-200 px-4 py-2 shadow-md transition-all duration-300 box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;">
       <div className="mx-auto flex max-w-7xl items-center justify-between">
+        {/* Logo and Title */}
         <button
           onClick={() => navigate("/")}
           id="home"
@@ -77,70 +157,59 @@ const Header = () => {
           <h1 className="ml-2 text-2xl font-bold text-red-500">Koi Auction</h1>
         </button>
 
-        {/* Desktop navigation */}
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex md:gap-6">
           {navButtons.map((button, index) => (
-            <NavigateButton
+            <HeaderButton
               key={index}
-              text={button.text}
-              to={button.to}
-              icon={button.icon}
-              className={`text-gray-600 bg-gray-100 hover:bg-[#4f92d1] hover:text-white
-                ${isActive(button.to) ? "bg-[#4f92d1] text-white" : ""}`}
+              button={button}
+              isActive={button.to ? isActive(button.to) : false}
             />
           ))}
         </nav>
-        {/* Account buttons */}
+
+        {/* Desktop Account Buttons */}
         <div className="hidden md:flex md:gap-6">
-          {isLoggedIn ? (
-            accountButtons.map((button, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  button.onClick ? button.onClick() : navigate(button.to);
-                }}
-                className="text-gray-600 bg-gray-100 hover:bg-[#4f92d1] hover:text-white"
-              >
-                {button.icon}
-                <span className="ml-2">{button.text}</span>
-              </button>
-            ))
-          ) : (
-            <>
-              <NavigateButton
-                text="Login"
-                to="/login"
-                className="text-gray-600 bg-gray-100 rounded-2xl ml-5 hover:bg-green-200 hover:text-white"
-              />
-              <NavigateButton
-                text="Register"
-                to="/register"
-                className="text-white text-lg font-bold bg-red-500 rounded-2xl hover:bg-red-600"
-              />
-            </>
-          )}
+          {accountButtons.map((button, index) => (
+            <HeaderButton
+              key={index}
+              button={button}
+              isActive={false}
+              onClick={() => {
+                if (button.onClick) {
+                  button.onClick();
+                }
+                closeNav();
+              }}
+            />
+          ))}
         </div>
 
-        {/* Mobile menu button */}
+        {/* Mobile Menu Button */}
         <button
-          className="md:hidden bg-gray-100 rounded-2xl"
-          onClick={() => setIsNavOpen(!isNavOpen)}
+          className="md:hidden bg-gray-200 rounded-2xl p-2"
+          onClick={toggleNav}
           aria-label="Toggle navigation menu"
         >
-          <FontAwesomeIcon icon={faBars} className="h-6 w-6 text-gray-600" />
+          <FontAwesomeIcon
+            icon={isNavOpen ? faTimes : faBars}
+            className="h-6 w-6 text-gray-600"
+          />
         </button>
       </div>
 
-      {/* Mobile slide-out menu */}
+      {/* Mobile Slide-Out Menu */}
       <div
-        className={`fixed inset-y-0 right-0 z-50 w-64 bg-white shadow-lg transform
-        ${isNavOpen ? "translate-x-0" : "translate-x-full"} transition-transform duration-300 ease-in-out md:hidden`}
+        className={classNames(
+          "fixed inset-y-0 right-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out md:hidden",
+          { "translate-x-0": isNavOpen, "translate-x-full": !isNavOpen },
+        )}
       >
         <div className="flex justify-end p-4">
           <button
-            onClick={() => setIsNavOpen(false)}
+            onClick={closeNav}
             aria-label="Close navigation menu"
-            className="bg-gray-100 rounded-2xl"
+            className="bg-gray-200 rounded-2xl p-2"
           >
             <FontAwesomeIcon icon={faTimes} className="h-6 w-6 text-gray-600" />
           </button>
@@ -148,54 +217,22 @@ const Header = () => {
         <div className="px-4 py-2">
           <h2 className="text-lg font-semibold mb-4">Navigation</h2>
           {navButtons.map((button, index) => (
-            <NavigateButton
+            <HeaderButton
               key={index}
-              text={button.text}
-              to={button.to}
-              icon={button.icon}
-              className={`block w-full text-left py-2 px-4 text-gray-600 bg-gray-100 m-2
-                ${isActive(button.to) ? "bg-[#4f92d1] text-white" : ""}`}
+              button={button}
+              isActive={button.to ? isActive(button.to) : false}
+              onClick={closeNav}
             />
           ))}
           <h2 className="text-lg font-semibold mt-6 mb-4">Account</h2>
-          {isLoggedIn ? (
-            accountButtons.map((button, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setIsNavOpen(false);
-                  button.onClick ? button.onClick() : navigate(button.to);
-                }}
-                className="block w-full text-left py-2 px-4 text-gray-600 hover:bg-gray-100"
-              >
-                {button.icon}
-                <span className="ml-2">{button.text}</span>
-              </button>
-            ))
-          ) : (
-            <>
-              <button
-                onClick={() => {
-                  setIsNavOpen(false);
-                  navigate("/login");
-                }}
-                className="block w-full text-center py-2 px-4 bg-gray-100 rounded-2xl
-                hover:bg-green-200 text-black font-bold"
-              >
-                Login
-              </button>
-              <button
-                onClick={() => {
-                  setIsNavOpen(false);
-                  navigate("/register");
-                }}
-                className="block w-full text-center py-2 px-4 bg-red-500 rounded-2xl
-                hover:bg-red-400 text-white font-bold mt-2"
-              >
-                Register
-              </button>
-            </>
-          )}
+          {accountButtons.map((button, index) => (
+            <HeaderButton
+              key={index}
+              button={button}
+              isActive={false}
+              onClick={closeNav}
+            />
+          ))}
         </div>
       </div>
     </header>

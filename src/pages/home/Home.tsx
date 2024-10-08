@@ -1,14 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { koiBreeders } from "../../utils/data/koibreeders";
-import NavigateButton from "../../components/shared/NavigateButton.tsx";
+import NavigateButton from "../../components/shared/NavigateButton";
 import SearchBar from "~/components/shared/SearchBar";
 
 const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center bg-red">
       <img
         src="/breeders-transparent.png"
         alt="Breeders"
@@ -47,10 +47,6 @@ const Home = () => {
             />
           </div>
         ))}
-      </div>
-      <div>
-        Search ne
-        <SearchBar placeholder="Type to search..." debounceTime={500} />
       </div>
     </div>
   );

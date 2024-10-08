@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ThemeContext } from "../../contexts/ThemeContext";
-import { login, fetchGoogleClientId } from "../../utils/apiUtils";
+import { login } from "../../utils/apiUtils";
 import {
   CredentialResponse,
   GoogleLogin,
@@ -19,6 +19,8 @@ import "./Login.scss";
 import { setCookie } from "../../utils/cookieUtils";
 import { LoginDTO } from "~/dtos/login.dto";
 import { routeUserToEachPage } from "~/components/auth/RoleBasedRoute";
+import { Typography } from "@mui/material";
+import NavigateButton from "~/components/shared/NavigateButton";
 const schema = yup.object().shape({
   email: yup
     .string()
@@ -29,9 +31,7 @@ const schema = yup.object().shape({
 
 const Login: React.FC = () => {
   const { authLogin } = useAuth();
-  const { isDarkMode } = useContext(ThemeContext);
   const navigate = useNavigate();
-  const [googleClientId, setGoogleClientId] = useState("");
 
   const {
     control,
@@ -41,16 +41,6 @@ const Login: React.FC = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
-
-  useEffect(() => {
-    const loadGoogleClientId = async () => {
-      const clientId = await fetchGoogleClientId();
-      if (clientId) {
-        setGoogleClientId(clientId);
-      }
-    };
-    loadGoogleClientId();
-  }, []);
 
   const onSubmit = async (data: LoginDTO) => {
     try {
@@ -76,38 +66,9 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleGoogleSuccess = async (
-    credentialResponse: CredentialResponse,
-  ) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:4000/api/v1/oauth2/google",
-        {
-          token: credentialResponse.credential,
-        },
-      );
-
-      if (response.status === 200) {
-        localStorage.setItem("token", response.data.token);
-        toast.success("Google login successful!");
-        navigate("/");
-      } else {
-        toast.error("Google login failed");
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message ||
-            "An error occurred during Google login",
-        );
-      }
-      toast.error("An error occurred during Google login");
-    }
-  };
-
   return (
     <div
-      className={`login-container flex h-screen items-center justify-center bg-gray-100 ${isDarkMode ? "dark-mode" : ""}`}
+      className={`login-container flex h-screen items-center justify-center bg-gray-100`}
     >
       <form
         className="form flex flex-col gap-4 rounded-lg bg-white p-9 shadow-md"
@@ -158,27 +119,20 @@ const Login: React.FC = () => {
         >
           Log In
         </button>
-        {googleClientId && (
-          <GoogleOAuthProvider clientId={googleClientId}>
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={() => toast.error("Google login failed")}
-              useOneTap
-              shape={"square"}
-              size={"large"}
-              width={390}
-            />
-          </GoogleOAuthProvider>
-        )}
-        <p className="p mb-2 mt-4 text-base leading-relaxed text-gray-700">
-          Don&apos;t have an account?{" "}
-          <Link
-            to="/register"
-            className="ml-2 rounded bg-pink-500 px-4 py-2 font-bold text-white hover:bg-pink-600"
+        <div className="flex justify-center items-center">
+          <Typography
+            variant="h6"
+            sx={{ fontSize: "15px", textAlign: "center" }}
           >
-            Register here
-          </Link>
-        </p>
+            Don&apos;t have an account?
+          </Typography>
+
+          <NavigateButton
+            text="Register here"
+            to="/register"
+            className="ml-2 rounded px-4 py-2 font-bold text-blue-500 bg-white hover:bg-white"
+          />
+        </div>
       </form>
       <ToastContainer />
     </div>

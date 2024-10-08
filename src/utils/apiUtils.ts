@@ -60,26 +60,6 @@ export const register = async (payload: RegisterDTO) => {
   }
 };
 
-export const fetchGoogleClientId = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/oauth2/google-client-id`);
-    return response.data.clientId;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error(
-        "Error fetching Google client ID:",
-        error.response?.data?.message || error.message,
-      );
-    } else {
-      console.error(
-        "Error fetching Google client ID:",
-        "An unexpected error occurred",
-      );
-    }
-    return null;
-  }
-};
-
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
 

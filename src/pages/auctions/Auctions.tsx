@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import AuctionCart from "./AuctionCart";
 import { fetchAuctions } from "~/utils/apiUtils";
 import PaginationComponent from "~/components/pagination/Pagination";
+import SearchBar from "~/components/shared/SearchBar";
 
 export interface Auction {
   id: number;
@@ -49,6 +50,9 @@ const Auctions: React.FC = () => {
 
   return (
     <div>
+      <div className="d-flex justify-center items-center">
+        <SearchBar placeholder="Type to search..." debounceTime={500} />
+      </div>
       <AuctionCart items={auctions} />
       <PaginationComponent
         totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages

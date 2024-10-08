@@ -31,6 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     if (debouncedQuery.trim()) {
       // Call your API here with the debouncedQuery
       console.log(`Searching for: ${debouncedQuery}`);
+      alert(`Searching for: ${debouncedQuery}`);
 
       // Example API call (replace with your actual API logic)
       // fetch(`https://api.example.com/search?q=${debouncedQuery}`)
@@ -61,7 +62,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
+    <div className="mt-10 d-flex justify-center items-center w-[80%]">
       <TextField
         value={query}
         onChange={(e) => setQuery(e.target.value)}

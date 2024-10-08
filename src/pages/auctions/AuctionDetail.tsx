@@ -19,6 +19,7 @@ import {
   faVenusMars,
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "~/contexts/AuthContext";
+import SearchBar from "~/components/shared/SearchBar";
 
 export interface AuctionKoi {
   id: number;
@@ -113,6 +114,7 @@ const AuctionDetail: React.FC = () => {
               </span>
             </div>
           </div>
+          <SearchBar placeholder="Type to search..." debounceTime={500} />
         </div>
         <div className="grid grid-cols-1 p-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {koiWithAuctionKoiData.map((combinedKoiData) => (

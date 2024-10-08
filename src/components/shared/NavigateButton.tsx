@@ -17,7 +17,7 @@ const NavigateButton = ({
   return (
     <button
       onClick={() => navigate(to)}
-      className={`flex items-center justify-center rounded-xl px-4 py-2 font-bold focus:outline-none ${className}`}
+      className={`flex items-center justify-center rounded-md px-4 py-2 font-bold focus:outline-none ${className}`}
     >
       {icon && <span className="mr-2">{icon}</span>}{" "}
       {/* Render icon if provided */}

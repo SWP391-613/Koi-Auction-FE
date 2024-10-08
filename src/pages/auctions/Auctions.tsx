@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import AuctionCart from "./AuctionCart";
 import { fetchAuctions } from "~/utils/apiUtils";
 import PaginationComponent from "~/components/pagination/Pagination";
+import SearchBar from "~/components/shared/SearchBar";
 
 export interface Auction {
   id: number;
@@ -16,7 +17,7 @@ const Auctions: React.FC = () => {
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true); // To track if more pages are available
-  const itemsPerPage = 16; // Number of auctions per page
+  const itemsPerPage = 18; // Number of auctions per page
 
   useEffect(() => {
     const loadAuctions = async () => {
@@ -48,7 +49,10 @@ const Auctions: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="container mx-auto">
+      <div className="flex justify-center items-center">
+        <SearchBar placeholder="Type to search..." debounceTime={500} />
+      </div>
       <AuctionCart items={auctions} />
       <PaginationComponent
         totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages

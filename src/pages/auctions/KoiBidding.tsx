@@ -32,6 +32,7 @@ import { Auction } from "./Auctions";
 import { AuctionKoi } from "./AuctionDetail";
 import { toast } from "react-toastify";
 import Sold from "../../assets/Sold.png";
+import { useCallback } from "react";
 
 // Define the KoiDetail UI component
 interface KoiDetailItemProps {
@@ -77,145 +78,98 @@ const KoiBidding: React.FC = () => {
     auctionId: string;
     auctionKoiId: string;
   }>();
-  const { isLoggedIn, user } = useAuth(); // Get the user and login status from the auth context
-  const [koi, setKoi] = useState<KoiDetailModel | null>(null); // State for koi details
-  const [bidAmount, setBidAmount] = useState<number>(0); // State for bid amount
-  const [auctionKoi, setAuctionKoi] = useState<AuctionKoi | null>(null); // State for auction koi details
-  const [auction, setAuction] = useState<Auction | null>(null); // State for auction details
+  const { user } = useAuth();
+  const [koi, setKoi] = useState<KoiDetailModel | null>(null);
+  const [bidAmount, setBidAmount] = useState<number>(0);
+  const [auctionKoi, setAuctionKoi] = useState<AuctionKoi | null>(null);
+  const [auction, setAuction] = useState<Auction | null>(null);
   const [latestBid, setLatestBid] = useState<Bid | null>(null);
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
 
-  const isAuctionOngoing = () => {
-    // Function to check if the auction is ongoing
-    if (!auction) return false;
-    const now = new Date();
-    //time and date of auction checked later
-    return auction.status === "ACTIVE";
-  };
-
-  const [isConnected, setIsConnected] = useState(false); // State for connection status
+  const isAuctionOngoing = useCallback(
+    () => auction?.status === "ACTIVE",
+    [auction],
+  );
+  const isAuctionEnded = useCallback(
+    () => !isAuctionOngoing(),
+    [isAuctionOngoing],
+  );
 
   useEffect(() => {
-    const loadKoiAndBids = async () => {
+    const loadData = async () => {
       try {
         const [auctionKoiDetails, auctionDetails] = await Promise.all([
           fetchAuctionKoiDetails(Number(auctionId), Number(auctionKoiId)),
           fetchAuctionById(Number(auctionId)),
         ]);
-
         setAuctionKoi(auctionKoiDetails);
         setAuction(auctionDetails);
         setBidAmount(
           auctionKoiDetails.current_bid +
             auctionKoiDetails.bid_step +
-            (auctionKoiDetails.current_bid == 0
+            (auctionKoiDetails.current_bid === 0
               ? auctionKoiDetails.base_price
               : 0),
         );
-
-        const loadKoi = async () => {
-          const koiDetails = await getKoiById(auctionKoiDetails.koi_id);
-          setKoi(koiDetails);
-        };
-        loadKoi();
+        setKoi(await getKoiById(auctionKoiDetails.koi_id));
       } catch (error) {
-        console.error("Error loading koi and bids:", error);
+        console.error("Error loading data:", error);
+        toast.error("Failed to load auction details. Please try again.");
       }
     };
-
-    loadKoiAndBids();
+    loadData();
   }, [auctionId, auctionKoiId]);
 
   useEffect(() => {
-    console.log("Current auction state:", auction);
     let unsubscribe: (() => void) | undefined;
-
-    const handleBeforeUnload = () => {
-      if (unsubscribe) unsubscribe();
-      disconnectWebSocket();
-    };
-
-    if (isAuctionOngoing()) {
+    if (isAuctionOngoing() && auctionKoiId && !auctionKoi?.is_sold) {
       connectWebSocket(() => {
         setIsConnected(true);
-        if (auctionKoiId) {
-          unsubscribe = subscribeToAuctionUpdates(
-            Number(auctionKoiId),
-            (bidResponse) => {
-              if (
-                !auctionKoi ||
-                bidResponse.bid_amount > auctionKoi.current_bid
-              ) {
-                toast.success("New highest bid received!");
-              }
-              setLatestBid(bidResponse);
-              setAuctionKoi((prevAuctionKoi) => {
-                if (prevAuctionKoi) {
-                  return {
-                    ...prevAuctionKoi,
-                    current_bid: bidResponse.bid_amount,
-                  };
-                }
-                return prevAuctionKoi;
-              });
-              setBidAmount(bidResponse.bid_amount + auctionKoi?.bid_step || 0);
-            },
-          );
-        }
+        unsubscribe = subscribeToAuctionUpdates(
+          Number(auctionKoiId),
+          (bidResponse: Bid) => {
+            if (!auctionKoi || bidResponse.bid_amount > auctionKoi.current_bid)
+              toast.success("New highest bid received!");
+            setLatestBid(bidResponse);
+            setAuctionKoi((prev) =>
+              prev ? { ...prev, current_bid: bidResponse.bid_amount } : null,
+            );
+            setBidAmount(bidResponse.bid_amount + (auctionKoi?.bid_step || 0));
+          },
+        );
       });
-
-      window.addEventListener("beforeunload", handleBeforeUnload);
     } else {
       disconnectWebSocket();
       setIsConnected(false);
     }
-
     return () => {
       if (unsubscribe) unsubscribe();
       disconnectWebSocket();
-      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [auction, auctionKoiId, auctionKoi]);
+  }, [auction, auctionKoiId, isAuctionOngoing, auctionKoi]);
 
-  const handlePlaceBid = () => {
-    if (!isConnected || !user || !auctionKoi) {
-      toast("Login Before Place Bid!");
-      return;
-    }
-    const bidRequest: BidRequest = {
+  const handlePlaceBid = useCallback(() => {
+    if (!isConnected || !user || !auctionKoi)
+      return toast.error("Please log in before placing a bid.");
+    if (auctionKoi.is_sold)
+      return toast.info("Auction has ended. Please reload the page.");
+    if (bidAmount < auctionKoi.base_price)
+      return toast.error("Bid amount must be greater than the base price.");
+    if (bidAmount < auctionKoi.current_bid + auctionKoi.bid_step)
+      return toast.error(
+        "Bid amount must be greater than the current bid plus the bid step.",
+      );
+
+    placeBid({
       auction_koi_id: auctionKoi.id,
       bid_amount: bidAmount,
       bidder_token: user.token,
-    };
-    if (bidAmount < auctionKoi.base_price) {
-      toast.error("Bid amount must be greater than the base price!");
-      return;
-    }
-    if (bidAmount < auctionKoi.current_bid + auctionKoi.bid_step) {
-      toast.error(
-        "Bid amount must be greater than the current bid and bid step!",
-      );
-      return;
-    }
-    if (auctionKoi.is_sold) {
-      toast.info("Sold price: " + auctionKoi.current_bid);
-      toast.info("Auction is already ended!\n Please reload the page.");
-      return;
-    }
-
-    placeBid(bidRequest);
+    });
     setBidAmount(auctionKoi.current_bid + auctionKoi.bid_step);
-  };
+  }, [isConnected, user, auctionKoi, bidAmount]);
 
-  const isAuctionEnded = () => {
-    if (!auction) return false;
-    //time and date of auction checked later
-    return auction.status !== "ACTIVE";
-  };
-
-  if (!koi || !auctionKoi || !auction) {
-    return <div>Loading...</div>;
-  }
+  if (!koi || !auctionKoi || !auction) return <div>Loading...</div>;
 
   return (
     <div className="container mx-auto">

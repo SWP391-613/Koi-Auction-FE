@@ -20,6 +20,7 @@ import {
   faVenusMars,
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "~/contexts/AuthContext";
+import SearchBar from "~/components/shared/SearchBar";
 import NavigateButton from "~/components/shared/NavigateButton";
 
 export interface AuctionKoi {
@@ -87,11 +88,11 @@ const AuctionDetail: React.FC = () => {
             />
           </div>
           <div
-            className="m-2 flex max-h-30 flex-col items-start justify-between gap-4
+            className="m-2 flex max-h-30 flex-col items-center justify-between gap-4
         rounded-lg bg-transparent p-6 shadow-lg transition-all duration-300 ease-in-out
         hover:border-blue-500 hover:shadow-xl hover:ring-2 hover:ring-blue-300"
           >
-            <div className="flex flex-col gap-4 md:flex-row">
+            <div className="flex flex-col gap-4 md:flex-row items-center">
               <div className="mb-4 flex flex-col items-center">
                 {/* <h1 className="text-2xl font-bold text-gray-800">
             Auction #{auction.id}
@@ -124,8 +125,10 @@ const AuctionDetail: React.FC = () => {
                 </span>
               </div>
             </div>
+            <SearchBar placeholder="Type to search..." debounceTime={500} />
           </div>
         </div>
+
         <div className="grid grid-cols-1 p-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {koiWithAuctionKoiData.map((combinedKoiData) => (
             <Link

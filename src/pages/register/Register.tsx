@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { register } from "../../utils/apiUtils";
 import { RegisterDTO } from "~/dtos/register.dto";
+import NavigateButton from "~/components/shared/NavigateButton";
+import { Button, Typography } from "@mui/material";
 
 interface FormFieldProps {
   name: string;
@@ -147,19 +149,28 @@ const Register = () => {
           errors={errors}
         />
 
-        <button
+        <Button
           type="submit"
-          className="w-full bg-pink-500 text-white py-2 px-4 rounded-md hover:bg-pink-600 transition duration-300"
+          variant="contained"
+          className="w-full py-2 px-4 hover:bg-blue-500 transition duration-300"
         >
           Submit
-        </button>
+        </Button>
 
-        <p className="text-sm text-center">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 hover:underline">
-            Login here
-          </Link>
-        </p>
+        <div className="flex justify-center items-center">
+          <Typography
+            variant="h6"
+            sx={{ fontSize: "15px", textAlign: "center" }}
+          >
+            Already have an account?
+          </Typography>
+
+          <NavigateButton
+            text="Login here"
+            to="/login"
+            className="ml-2 rounded px-4 py-2 font-bold text-blue-500 bg-white hover:bg-white"
+          />
+        </div>
       </form>
     </div>
   );

@@ -1,65 +1,74 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Auction } from "./Auctions";
+import { getAuctionStatus } from "~/utils/dateTimeUtils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircleArrowRight,
+  faMoneyCheckDollar,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface AuctionCartProps {
   items: Auction[];
 }
 
 const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
-  const getStatusBadge = (status: string) => {
-    if (status.toLowerCase() === "in-house") {
-      return (
-        <span className="rounded-full bg-gray-200 px-2 py-1 text-xs font-semibold text-gray-700">
-          🇺🇸 In-House
-        </span>
-      );
-    }
-    return null;
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null); // Track the hovered item
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleString(); // This will format the date according to the user's locale
   };
 
   return (
-    <div className="container mx-auto flex flex-col sm:flex-row gap-2 p-4 bg-gray-100">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
-        {items.map((auction) => (
-          <Link
-            to={`/auctions/${auction.id}`}
-            key={auction.id}
-            className="auction-item flex flex-col justify-between rounded-[30px] bg-white p-4 hover:bg-red-200"
-          >
-            <div className="flex items-center gap-3 mb-2">
-              <div className="text-gray-400">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="h-6 w-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M8.25 4.5l7.5 7.5-7.5 7.5"
-                  />
-                </svg>
+    <div className="koi-container m-5 grid grid-cols-1 gap-4 p-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+      {items.map((auction) => (
+        <Link
+          to={`/auctions/${auction.id}`}
+          key={auction.id}
+          className="auction-card transform overflow-hidden rounded-2xl p-5 bg-white hover:bg-red-100 transition duration-300 ease-in-out"
+          onMouseEnter={() => setHoveredItem(auction.id)} // Set hovered item on mouse enter
+          onMouseLeave={() => setHoveredItem(null)} // Reset on mouse leave
+        >
+          <div className="flex justify-start items-center">
+            <FontAwesomeIcon
+              icon={faCircleArrowRight}
+              className="text-black text-3xl mr-2 hidden sm:block"
+            />
+            <div className="">
+              <div className="info p-4">
+                <h2 className="text-blue-600 text-2xl font-semibold">
+                  {auction.title}
+                </h2>
               </div>
-              <h2 className="text-lg font-semibold text-gray-800">
-                Auction #{auction.id}
-              </h2>
+              <div className="details p-2 text-sm text-gray-600">
+                {/* Conditionally render start time or status based on hover */}
+                {hoveredItem === auction.id ? (
+                  <div className="flex flex-col lg:flex-row lg:space-x-4">
+                    <p className="flex justify-between">
+                      <span className="text-md text-black glow-text">
+                        {formatDate(auction.start_time)}
+                      </span>
+                    </p>
+                    <p className="flex justify-between">
+                      <span className="text-md text-black glow-text">
+                        {formatDate(auction.end_time)}
+                      </span>
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <span className="text-lg text-black glow-text">
+                      {getAuctionStatus(auction.start_time, auction.end_time)}
+                    </span>
+                  </>
+                )}
+              </div>
             </div>
-            <div className="text-sm text-gray-600">
-              <p>Start: {auction.start_time}</p>
-              <p>End: {auction.end_time}</p>
-              <p>Status: {auction.status}</p>
-            </div>
-            <div className="mt-2 self-end">
-              {getStatusBadge(auction.status)}
-            </div>
-          </Link>
-        ))}
-      </div>
+          </div>
+        </Link>
+      ))}
     </div>
   );
 };

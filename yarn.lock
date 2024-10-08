@@ -1790,6 +1790,11 @@ ci-info@^3.2.0:
   resolved "https://registry.npmjs.org/ci-info/-/ci-info-3.9.0.tgz"
   integrity sha512-NIxF55hv4nSqQswkAeiOi1r83xy8JldOFDTWiug55KBu9Jnblncd2U6ViHmYgHf01TPZS77NJBhBMKdWj9HQMQ==
 
+classnames@^2.3.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.5.1.tgz#ba774c614be0f016da105c858e7159eae8e7687b"
+  integrity sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==
+
 clsx@^2.1.0, clsx@^2.1.1:
   version "2.1.1"
   resolved "https://registry.npmjs.org/clsx/-/clsx-2.1.1.tgz"
@@ -3320,10 +3325,11 @@ keyv@^4.5.3:
     "@vercel/speed-insights" "^1.0.12"
     axios "^1.7.7"
     bootstrap "^5.3.3"
+    classnames "^2.3.1"
     date-fns "^4.1.0"
     dotenv "^16.4.5"
     husky "^9.1.5"
-    koiproject "file:../../AppData/Local/Yarn/Cache/v6/npm-koiproject-0.0.0-d43286b4-5c82-475f-9a84-e3bce19a4fc0-1728056491612/node_modules/koiproject"
+    koiproject "file:../../../../../../home/lcaohoanq/.cache/yarn/v6/npm-koiproject-0.0.0-53a2efee-cf14-48d5-808b-e9a97df66b68-1728356372193/node_modules/koiproject"
     prop-types "^15.8.1"
     react "^18.3.1"
     react-dom "^18.3.1"

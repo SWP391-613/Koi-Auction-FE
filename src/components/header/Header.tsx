@@ -74,8 +74,8 @@ const Header = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   // Define navigation and account buttons
-  const navButtons: NavButton[] = useMemo(
-    () => [
+  const navButtons: NavButton[] = useMemo(() => {
+    const baseButtons = [
       {
         text: "Home",
         to: "/",
@@ -97,9 +97,32 @@ const Header = () => {
         to: "/about",
         icon: <FontAwesomeIcon icon={faQuestion} />,
       },
-    ],
-    [],
-  );
+    ];
+
+    if (isLoggedIn && user) {
+      const role = user.roles[0]; // Assuming the first role is the primary role
+      switch (role) {
+        case "ROLE_MANAGER":
+        case "ROLE_STAFF":
+          baseButtons.push({
+            text: "Manager",
+            to: "/manager",
+            icon: <FontAwesomeIcon icon={faUser} />,
+          });
+          break;
+        case "ROLE_BREEDER":
+          baseButtons.push({
+            text: "Breeder",
+            to: "/breeder",
+            icon: <FontAwesomeIcon icon={faFish} />,
+          });
+          break;
+        // Add more cases for other roles if needed
+      }
+    }
+
+    return baseButtons;
+  }, [isLoggedIn, user]);
 
   const accountButtons: NavButton[] = useMemo(() => {
     if (isLoggedIn && user) {

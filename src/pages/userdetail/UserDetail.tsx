@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./UserDetail.scss";
 import { getCookie } from "~/utils/cookieUtils";
 import axios from "axios";
@@ -7,86 +7,17 @@ import Alert from '@mui/material/Alert'; // Thêm import này
 import AlertTitle from '@mui/material/AlertTitle'; // Thêm import này nếu bạn muốn sử dụng tiêu đề
 import DepositComponent from "~/components/shared/DepositComponent";
 import { formatDate } from "~/utils/apiUtils";
-
-interface Status {
-  id: number;
-  name: string;
-}
-
-interface Role {
-  id: number;
-  name: string;
-}
-
-interface User {
-  id: number;
-  first_name: string;
-  last_name: string;
-  phone_number: string | null;
-  email: string;
-  address: string;
-  password: string | null;
-  is_active: number;
-  is_subscription: number;
-  status_name: string;
-  date_of_birth: string | null;
-  avatar_url: string;
-  google_account_id: number;
-  role_name: string;
-  account_balance: number;
-  created_at: string | null;
-  updated_at: string | null;
-}
+import { useUserData } from '~/contexts/useUserData';
 
 const UserDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const [user, setUser] = useState<User | null>(null);
+  const { user, loading, error, setUser } = useUserData();
   const [updateField, setUpdateField] = useState("");
   const [updateValue, setUpdateValue] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      // Lấy access_token từ cookie
-      const accessToken = getCookie("access_token");
-
-      // Nếu không có access_token thì điều hướng đến trang /notfound
-      if (!accessToken) {
-        navigate("/notfound");
-        return;
-      }
-
-      try {
-        const API_URL = "http://localhost:4000/api/v1";
-        const response = await axios.post(
-          `${API_URL}/users/details`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          },
-        );
-
-        if (response.status !== 200) {
-          throw new Error("Network response was not ok");
-        }
-
-        const userData: User = response.data;
-        console.log(userData);
-        setUser(userData);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error("Error response:", error.response?.data);
-          console.error("Error status:", error.response?.status);
-        }
-        console.error("Failed to fetch user data:", error);
-        navigate("/notfound");
-      }
-    };
-
-    fetchUser();
-  }, [navigate]);
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!user) return <div>No user data found</div>;
 
   const handleUpdate = async () => {
     if (!user || !updateField || !updateValue) return;

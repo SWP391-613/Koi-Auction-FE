@@ -33,6 +33,7 @@ import { AuctionKoi } from "./AuctionDetail";
 import { toast } from "react-toastify";
 import Sold from "../../assets/Sold.png";
 import { useCallback } from "react";
+import { useUserData } from '~/contexts/useUserData';
 
 // Define the KoiDetail UI component
 interface KoiDetailItemProps {
@@ -78,7 +79,7 @@ const KoiBidding: React.FC = () => {
     auctionId: string;
     auctionKoiId: string;
   }>();
-  const { user } = useAuth();
+  const { user, loading, error } = useUserData();
   const [koi, setKoi] = useState<KoiDetailModel | null>(null);
   const [bidAmount, setBidAmount] = useState<number>(0);
   const [auctionKoi, setAuctionKoi] = useState<AuctionKoi | null>(null);
@@ -169,6 +170,8 @@ const KoiBidding: React.FC = () => {
     setBidAmount(auctionKoi.current_bid + auctionKoi.bid_step);
   }, [isConnected, user, auctionKoi, bidAmount]);
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
   if (!koi || !auctionKoi || !auction) return <div>Loading...</div>;
 
   return (
@@ -338,6 +341,11 @@ const KoiBidding: React.FC = () => {
           {isConnected
             ? "Connected to live updates"
             : "Not connected to live updates"}
+        </div>
+      )}
+      {user && (
+        <div className="user-balance">
+          <p>Your Balance: ${user.account_balance.toFixed(2)}</p>
         </div>
       )}
     </div>

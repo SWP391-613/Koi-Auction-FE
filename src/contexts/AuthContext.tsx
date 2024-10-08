@@ -3,6 +3,7 @@ import axios from "axios";
 import { Role, UserLoginResponse } from "~/dtos/login.dto";
 import { eraseCookie, getCookie, setCookie } from "~/utils/cookieUtils";
 import { useNavigate } from "react-router-dom";
+import { doLogout } from "~/utils/apiUtils";
 
 // Change this to your API URL
 const API_URL = "http://localhost:4000/api/v1";
@@ -55,20 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const authLogout = async () => {
     const token = getCookie("access_token");
     if (token) {
-      try {
-        await axios.post(
-          `${API_URL}/users/logout`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Pass token in Authorization header
-            },
-          },
-        );
-        console.log("Logout successful.");
-      } catch (error) {
-        console.error("Error during logout:", error);
-      }
+      doLogout(token);
     }
     // Clear the user data and token
     setIsLoggedIn(false);

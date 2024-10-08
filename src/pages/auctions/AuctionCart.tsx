@@ -8,38 +8,45 @@ interface AuctionCartProps {
 }
 
 const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    return date.toLocaleString(); // This will format the date according to the user's locale
+  const getStatusBadge = (status: string) => {
+    if (status.toLowerCase() === "in-house") {
+      return (
+        <span className="rounded-full bg-gray-200 px-2 py-1 text-xs font-semibold text-gray-700">
+          🇺🇸 In-House
+        </span>
+      );
+    }
+    return null;
   };
 
   return (
-    <div className="koi-container m-10 grid grid-cols-1 gap-4 p-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {items.map((auction) => (
-        <Link
-          to={`/auctions/${auction.id}`}
-          key={auction.id}
-          className="auction-card transform overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:scale-105"
-        >
-          <div className="info p-4">
-            <h2 className="title text-2xl font-semibold">{auction.title}</h2>
-          </div>
-          <div className="details p-2 text-sm text-gray-600">
-            <p className="flex justify-between">
-              <span>Start time:</span>
-              <span className="text-lg text-black">{auction.start_time}</span>
-            </p>
-            <p className="flex justify-between">
-              <span>End time:</span>
-              <span className="text-lg text-black">{auction.end_time}</span>
-            </p>
-            <p className="flex justify-between">
-              <span>Status:</span>
-              <span className="text-lg text-black">{auction.status}</span>
-            </p>
-          </div>
-        </Link>
-      ))}
+    <div className="container mx-auto flex flex-col sm:flex-row gap-2 p-4 bg-gray-100">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+        {items.map((auction) => (
+          <Link
+            to={`/auctions/${auction.id}`}
+            key={auction.id}
+            className="auction-item flex flex-col justify-between rounded-[30px] bg-white p-4 hover:bg-red-200"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <div className="text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-6 w-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800">Auction #{auction.id}</h2>
+            </div>
+            <div className="text-sm text-gray-600">
+              <p>Start: {auction.start_time}</p>
+              <p>End: {auction.end_time}</p>
+              <p>Status: {auction.status}</p>
+            </div>
+            <div className="mt-2 self-end">
+              {getStatusBadge(auction.status)}
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };

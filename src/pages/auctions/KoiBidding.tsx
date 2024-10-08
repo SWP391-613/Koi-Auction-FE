@@ -98,28 +98,19 @@ const KoiBidding: React.FC = () => {
   useEffect(() => {
     const loadKoiAndBids = async () => {
       try {
-        console.log(
-          "Fetching data for auctionId:",
-          auctionId,
-          "and auctionKoiId:",
-          auctionKoiId,
-        );
-
         const [auctionKoiDetails, auctionDetails] = await Promise.all([
           fetchAuctionKoiDetails(Number(auctionId), Number(auctionKoiId)),
           fetchAuctionById(Number(auctionId)),
         ]);
 
-        console.log("Fetched auction details:", auctionDetails);
-
         setAuctionKoi(auctionKoiDetails);
         setAuction(auctionDetails);
         setBidAmount(
           auctionKoiDetails.current_bid +
-            auctionKoiDetails.bid_step +
-            (auctionKoiDetails.current_bid == 0
-              ? auctionKoiDetails.base_price
-              : 0),
+          auctionKoiDetails.bid_step +
+          (auctionKoiDetails.current_bid == 0
+            ? auctionKoiDetails.base_price
+            : 0),
         );
 
         const loadKoi = async () => {
@@ -128,9 +119,6 @@ const KoiBidding: React.FC = () => {
         };
         loadKoi();
 
-        console.log("Updated auction state:", auctionDetails);
-
-        // Fetch Koi details after auctionKoi is fetched
       } catch (error) {
         console.error("Error loading koi and bids:", error);
       }
@@ -155,8 +143,6 @@ const KoiBidding: React.FC = () => {
           unsubscribe = subscribeToAuctionUpdates(
             Number(auctionKoiId),
             (bidResponse) => {
-              console.log("New bid received:", bidResponse);
-              // Only update state and show toast if it's a new highest bid
               if (
                 !auctionKoi ||
                 bidResponse.bid_amount > auctionKoi.current_bid
@@ -173,10 +159,7 @@ const KoiBidding: React.FC = () => {
                 }
                 return prevAuctionKoi;
               });
-              setBidAmount(
-                (prevBidAmount) =>
-                  bidResponse.bid_amount + (auctionKoi?.bid_step || 0),
-              );
+              setBidAmount(bidResponse.bid_amount + auctionKoi?.bid_step || 0);
             },
           );
         }
@@ -205,6 +188,19 @@ const KoiBidding: React.FC = () => {
       bid_amount: bidAmount,
       bidder_token: user.token,
     };
+    if (bidAmount < auctionKoi.base_price) {
+      toast.error("Bid amount must be greater than the base price!");
+      return;
+    }
+    if (bidAmount < auctionKoi.current_bid + auctionKoi.bid_step) {
+      toast.error("Bid amount must be greater than the current bid and bid step!");
+      return;
+    }
+    if (auctionKoi.is_sold) {
+      toast.info("Sold price: " + auctionKoi.current_bid);
+      toast.info("Auction is already ended!\n Please reload the page.");
+      return;
+    }
 
     placeBid(bidRequest);
     setBidAmount(auctionKoi.current_bid + auctionKoi.bid_step);
@@ -346,7 +342,7 @@ const KoiBidding: React.FC = () => {
             </div>
           </div>
 
-          {!isAuctionEnded() && !auctionKoi.is_sold && (
+          {!isAuctionEnded() && !auctionKoi.is_sold ? (
             <div className="mb-4 rounded-2xl bg-gray-300 p-4">
               <h3 className="mb-2 text-xl font-semibold">Place Your Bid</h3>
               <input
@@ -362,6 +358,11 @@ const KoiBidding: React.FC = () => {
               >
                 Place Bid
               </button>
+            </div>
+          ) : (
+            <div className="mb-4 rounded-2xl bg-gray-300 p-4">
+              <h3 className="mb-2 text-xl font-semibold">Auction Ended</h3>
+              <p>This koi has been sold for {auctionKoi.current_bid}</p>
             </div>
           )}
           <h3 className="mb-2 text-xl font-semibold">Bid History</h3>

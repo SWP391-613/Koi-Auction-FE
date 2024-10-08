@@ -28,10 +28,10 @@ const KoiCart: React.FC<KoiCartProps> = ({ items }) => {
 
   return (
     <div className="koi-container m-3 grid h-full grid-cols-1 gap-4 p-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      {items.map((koi) => (
+      {items.map((koi, index) => (
         <Link
           to={`/koi/${koi.id}`}
-          key={koi.id}
+          key={`${koi.id}-${index}`}
           className="koi-card m-2 transform overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:scale-105"
         >
           <div className="flex flex-row">

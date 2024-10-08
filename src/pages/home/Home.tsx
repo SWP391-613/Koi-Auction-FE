@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { koiBreeders } from "../../utils/data/koibreeders";
 import NavigateButton from "../../components/shared/NavigateButton.tsx";
+import SearchBar from "~/components/shared/SearchBar";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -46,6 +47,10 @@ const Home = () => {
             />
           </div>
         ))}
+      </div>
+      <div>
+        Search ne
+        <SearchBar placeholder="Type to search..." debounceTime={500} />
       </div>
     </div>
   );

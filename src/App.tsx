@@ -60,11 +60,6 @@ function App() {
             path="/auctionkois/:auctionId/:auctionKoiId"
             element={<KoiBidding />}
           />
-          <Route path="/kois" element={<Kois />} />
-          <Route
-            path="/koi/:id"
-            element={<KoiDetail koiData={koi_data.items} />}
-          />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

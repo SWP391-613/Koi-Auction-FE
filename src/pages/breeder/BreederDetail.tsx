@@ -8,6 +8,8 @@ import { KoiDetailModel } from "../kois/Kois";
 import { fetchKoisOfBreeder } from "~/utils/apiUtils";
 import KoiCart from "../kois/KoiCart";
 import { Typography } from "@mui/material";
+import PaginationComponent from "~/components/pagination/Pagination";
+import { useAuth } from "~/contexts/AuthContext";
 
 interface Status {
   id: number;
@@ -53,13 +55,19 @@ const BreederDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<User | null>(null);
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMorePages, setHasMorePages] = useState(true); // To track if more pages are available
+  const itemsPerPage = 16; // Number of koi per page
   const [updateField, setUpdateField] = useState("");
   const [updateValue, setUpdateValue] = useState("");
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchBreederAndKoi = async () => {
       // Lấy access_token từ cookie
+
       const accessToken = getCookie("access_token");
 
       // Nếu không có access_token thì điều hướng đến trang /notfound
@@ -90,9 +98,20 @@ const BreederDetail: React.FC = () => {
         setUser(userData);
 
         if (userData) {
-          const koisOfBreeder = await fetchKoisOfBreeder(userData.id, 0, 15);
-          if (koisOfBreeder) {
-            setKois(koisOfBreeder.items);
+          const koisOfBreederData = await fetchKoisOfBreeder(
+            userData.id,
+            currentPage - 1,
+            itemsPerPage,
+          );
+
+          if (koisOfBreederData) {
+            // Check if there are more pages
+            if (koisOfBreederData.items.length < itemsPerPage) {
+              setHasMorePages(false);
+            }
+
+            // Append the new koi data to the current list of kois
+            setKois((prevKois) => [...prevKois, ...koisOfBreederData.items]);
           }
         }
       } catch (error) {
@@ -105,8 +124,10 @@ const BreederDetail: React.FC = () => {
       }
     };
 
-    fetchUser();
-  }, [navigate]);
+    if (isLoggedIn) {
+      fetchBreederAndKoi();
+    }
+  }, [currentPage, navigate]);
 
   const handleUpdate = async () => {
     if (!user || !updateField || !updateValue) return;
@@ -153,6 +174,13 @@ const BreederDetail: React.FC = () => {
     });
   };
 
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number,
+  ) => {
+    setCurrentPage(page); // Update the current page when pagination changes
+  };
+
   if (!user) {
     return <div>Loading...</div>;
   }
@@ -197,10 +225,10 @@ const BreederDetail: React.FC = () => {
               <p className="info-value">{user.status_name}</p>
             </div>
           </div>
-          <div className="account-balance">
-            <p className="balance-label">Account Balance</p>
-            <p className="balance-value">${user.account_balance.toFixed(2)}</p>
-          </div>
+          {/* <div className="account-balance">
+            <p className="balance-label">Total Koi</p>
+            <p className="balance-value">Hehe {koisOfBreeder?.total_item.toFixed(2)}</p>
+          </div> */}
           <div className="update-field">
             <select
               value={updateField}
@@ -234,6 +262,11 @@ const BreederDetail: React.FC = () => {
         {/* Render KoiCart with the fetched koi items */}
         <KoiCart items={kois} />
       </div>
+      <PaginationComponent
+        totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

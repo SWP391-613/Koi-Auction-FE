@@ -30,11 +30,24 @@ const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
           >
             <div className="flex items-center gap-3 mb-2">
               <div className="text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-6 w-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="h-6 w-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                  />
                 </svg>
               </div>
-              <h2 className="text-lg font-semibold text-gray-800">Auction #{auction.id}</h2>
+              <h2 className="text-lg font-semibold text-gray-800">
+                Auction #{auction.id}
+              </h2>
             </div>
             <div className="text-sm text-gray-600">
               <p>Start: {auction.start_time}</p>

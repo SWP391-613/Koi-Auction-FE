@@ -175,10 +175,11 @@ const AuctionDetail: React.FC = () => {
                     {combinedKoiData.status_name}
                   </span>
                   <span
-                    className={`text-xl font-bold px-2 py-1 rounded-full ${combinedKoiData.auctionKoiData.current_bid
-                      ? "bg-green-500 text-white"
-                      : "bg-gray-500 text-white"
-                      }`}
+                    className={`text-xl font-bold px-2 py-1 rounded-full ${
+                      combinedKoiData.auctionKoiData.current_bid
+                        ? "bg-green-500 text-white"
+                        : "bg-gray-500 text-white"
+                    }`}
                   >
                     $
                     {combinedKoiData.auctionKoiData.current_bid ||

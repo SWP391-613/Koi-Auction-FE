@@ -107,10 +107,10 @@ const KoiBidding: React.FC = () => {
         setAuction(auctionDetails);
         setBidAmount(
           auctionKoiDetails.current_bid +
-          auctionKoiDetails.bid_step +
-          (auctionKoiDetails.current_bid == 0
-            ? auctionKoiDetails.base_price
-            : 0),
+            auctionKoiDetails.bid_step +
+            (auctionKoiDetails.current_bid == 0
+              ? auctionKoiDetails.base_price
+              : 0),
         );
 
         const loadKoi = async () => {
@@ -118,7 +118,6 @@ const KoiBidding: React.FC = () => {
           setKoi(koiDetails);
         };
         loadKoi();
-
       } catch (error) {
         console.error("Error loading koi and bids:", error);
       }
@@ -193,7 +192,9 @@ const KoiBidding: React.FC = () => {
       return;
     }
     if (bidAmount < auctionKoi.current_bid + auctionKoi.bid_step) {
-      toast.error("Bid amount must be greater than the current bid and bid step!");
+      toast.error(
+        "Bid amount must be greater than the current bid and bid step!",
+      );
       return;
     }
     if (auctionKoi.is_sold) {

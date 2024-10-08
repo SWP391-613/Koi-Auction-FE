@@ -98,7 +98,7 @@ export const fetchAuctions = async (
     });
 
     // Map the response data to Auction model
-    const auctions: Auction[] = response.data.map(createAuctionFromApi);
+    const auctions: Auction[] = response.data; //need raw data to calculate the time range of the auction
     return auctions;
   } catch (error) {
     if (axios.isAxiosError(error)) {

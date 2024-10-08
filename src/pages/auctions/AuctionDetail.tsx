@@ -10,6 +10,7 @@ import { KoiDetailModel } from "../kois/Kois";
 import { Auction } from "./Auctions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faArrowLeft,
   faCakeCandles,
   faFish,
   faHandHoldingHeart,
@@ -20,6 +21,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "~/contexts/AuthContext";
 import SearchBar from "~/components/shared/SearchBar";
+import NavigateButton from "~/components/shared/NavigateButton";
 
 export interface AuctionKoi {
   id: number;
@@ -75,47 +77,58 @@ const AuctionDetail: React.FC = () => {
 
   return (
     <>
-      <div className="mx-auto flex flex-col">
-        <div
-          className="m-2 flex max-h-30 flex-col items-start justify-between gap-4
+      <div className="mx-auto flex flex-col mt-6 mb-6 ">
+        <div className="flex flex-col sm:flex-row items-center justify-between">
+          <div className="hover:cursor-pointer transform hover:scale-105">
+            <NavigateButton
+              to={`/auctions`}
+              icon={<FontAwesomeIcon icon={faArrowLeft} />}
+              text="Back to Auction"
+              className="rounded bg-gray-200 px-5 py-3 text-lg text-black transition hover:bg-gray-200"
+            />
+          </div>
+          <div
+            className="m-2 flex max-h-30 flex-col items-center justify-between gap-4
         rounded-lg bg-transparent p-6 shadow-lg transition-all duration-300 ease-in-out
         hover:border-blue-500 hover:shadow-xl hover:ring-2 hover:ring-blue-300"
-        >
-          <div className="flex flex-col gap-4 md:flex-row">
-            <div className="mb-4 flex flex-col">
-              {/* <h1 className="text-2xl font-bold text-gray-800">
+          >
+            <div className="flex flex-col gap-4 md:flex-row items-center">
+              <div className="mb-4 flex flex-col items-center">
+                {/* <h1 className="text-2xl font-bold text-gray-800">
             Auction #{auction.id}
           </h1> */}
-              <h2 className="text-3xl font-semibold text-black">
-                {auction.title}
-              </h2>
-            </div>
+                <h2 className="text-3xl font-semibold text-black">
+                  {auction.title}
+                </h2>
+              </div>
 
-            <div className="mb-4 flex flex-col">
-              <h3 className="text-sm text-gray-500">Start Time:</h3>
-              <p className="text-lg font-medium text-gray-700">
-                {auction.start_time}
-              </p>
-            </div>
+              <div className="mb-4 flex flex-col items-center">
+                <h3 className="text-sm text-gray-500">Start Time:</h3>
+                <p className="text-lg font-medium text-gray-700">
+                  {auction.start_time}
+                </p>
+              </div>
 
-            <div className="mb-4 flex flex-col">
-              <h3 className="text-sm text-gray-500">End Time:</h3>
-              <p className="text-lg font-medium text-gray-700">
-                {auction.end_time}
-              </p>
-            </div>
+              <div className="mb-4 flex flex-col items-center">
+                <h3 className="text-sm text-gray-500">End Time:</h3>
+                <p className="text-lg font-medium text-gray-700">
+                  {auction.end_time}
+                </p>
+              </div>
 
-            <div className="flex flex-row items-center">
-              <span
-                className={`rounded-lg px-4 py-2 text-lg font-bold
+              <div className="flex flex-row items-center">
+                <span
+                  className={`rounded-lg px-4 py-2 text-lg font-bold
                   ${auction.status === "On-going" ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}
-              >
-                {auction.status}
-              </span>
+                >
+                  {auction.status}
+                </span>
+              </div>
             </div>
+            <SearchBar placeholder="Type to search..." debounceTime={500} />
           </div>
-          <SearchBar placeholder="Type to search..." debounceTime={500} />
         </div>
+
         <div className="grid grid-cols-1 p-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {koiWithAuctionKoiData.map((combinedKoiData) => (
             <Link

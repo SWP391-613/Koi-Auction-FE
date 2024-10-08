@@ -5,73 +5,40 @@ import { BidRequest } from "~/pages/auctions/KoiBidding";
 
 let stompClient: Client | null = null;
 let subscriptions: { [key: string]: any } = {};
-let reconnectTimeout: NodeJS.Timeout | null = null;
 
 export const connectWebSocket = (onConnect: () => void) => {
-  console.log("Attempting to connect to WebSocket");
   const socket = new SockJS(
-    `${environment.be.baseUrl}${environment.be.endPoint.socket}`,
+    `${environment.be.baseUrl}${environment.be.apiPrefix}${environment.be.endPoint.socket}`,
   );
 
   stompClient = new Client({
     webSocketFactory: () => socket,
-    connectHeaders: {
-      // Add any necessary headers here
-    },
-    debug: (str) => {
-      console.log("STOMP debug:", str);
-    },
+    debug: (str) => console.log("STOMP debug:", str),
     reconnectDelay: 5000,
     heartbeatIncoming: 4000,
     heartbeatOutgoing: 4000,
   });
 
-  stompClient.onConnect = (frame) => {
+  stompClient.onConnect = () => {
     console.log("STOMP connection established");
-    console.log("Connected to:", frame.headers["server"]);
-    console.log("Session ID:", frame.headers["session-id"]);
-    if (reconnectTimeout) {
-      clearTimeout(reconnectTimeout);
-      reconnectTimeout = null;
-    }
     onConnect();
   };
 
   stompClient.onStompError = (frame) => {
     console.error("STOMP error:", frame.headers["message"]);
-    console.error("Additional details:", frame.body);
-    reconnect();
+    stompClient?.deactivate();
+    setTimeout(() => stompClient?.activate(), 5000);
   };
 
   stompClient.activate();
-
   return stompClient;
 };
 
-function reconnect() {
-  if (reconnectTimeout) return;
-  reconnectTimeout = setTimeout(() => {
-    console.log("Attempting to reconnect...");
-    if (stompClient) {
-      stompClient.deactivate();
-      stompClient.activate();
-    }
-    reconnectTimeout = null;
-  }, 5000);
-}
+export const disconnectWebSocket = () =>
+  stompClient?.active && stompClient.deactivate();
 
-export function disconnectWebSocket() {
-  if (stompClient && stompClient.active) {
-    stompClient.deactivate();
-  }
-  if (reconnectTimeout) {
-    clearTimeout(reconnectTimeout);
-    reconnectTimeout = null;
-  }
-}
-
-export function placeBid(bid: BidRequest) {
-  if (stompClient && stompClient.active) {
+export const placeBid = (bid: BidRequest) => {
+  if (stompClient?.active) {
     stompClient.publish({
       destination: `/app/auctionkoi/${bid.auction_koi_id}/bid`,
       body: JSON.stringify(bid),
@@ -79,43 +46,35 @@ export function placeBid(bid: BidRequest) {
   } else {
     console.error("WebSocket connection not established");
   }
-}
+};
 
-export function subscribeToAuctionUpdates(
+export const subscribeToAuctionUpdates = (
   auctionKoiId: number,
   callback: (message: any) => void,
-) {
-  if (stompClient && stompClient.active) {
+) => {
+  if (stompClient?.active) {
     const destination = `/topic/auctionkoi/${auctionKoiId}`;
+    subscriptions[destination]?.unsubscribe();
 
-    // Unsubscribe from existing subscription if it exists
-    if (subscriptions[destination]) {
-      subscriptions[destination].unsubscribe();
-    }
-
-    const subscription = stompClient.subscribe(destination, (message) => {
-      const parsedMessage = JSON.parse(message.body);
-      callback(parsedMessage);
-    });
-
-    subscriptions[destination] = subscription;
+    subscriptions[destination] = stompClient.subscribe(
+      destination,
+      (message) => {
+        callback(JSON.parse(message.body));
+      },
+    );
 
     return () => {
-      if (subscriptions[destination]) {
-        subscriptions[destination].unsubscribe();
-        delete subscriptions[destination];
-      }
+      subscriptions[destination]?.unsubscribe();
+      delete subscriptions[destination];
     };
   } else {
     console.error("WebSocket connection not established");
     return () => {};
   }
-}
+};
 
-export function unsubscribeFromAuctionUpdates(auctionKoiId: number) {
+export const unsubscribeFromAuctionUpdates = (auctionKoiId: number) => {
   const destination = `/topic/auctionkoi/${auctionKoiId}`;
-  if (subscriptions[destination]) {
-    subscriptions[destination].unsubscribe();
-    delete subscriptions[destination];
-  }
-}
+  subscriptions[destination]?.unsubscribe();
+  delete subscriptions[destination];
+};

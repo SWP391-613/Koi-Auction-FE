@@ -22,23 +22,23 @@ const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
   };
 
   return (
-    <div className="koi-container m-10 grid grid-cols-1 gap-4 p-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+    <div className="koi-container m-5 grid grid-cols-1 gap-4 p-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
       {items.map((auction) => (
         <Link
           to={`/auctions/${auction.id}`}
           key={auction.id}
-          className="auction-card transform overflow-hidden rounded-2xl p-5 bg-transparent hover:bg-red-100 transition duration-300 ease-in-out"
+          className="auction-card transform overflow-hidden rounded-2xl p-5 bg-white hover:bg-red-100 transition duration-300 ease-in-out"
           onMouseEnter={() => setHoveredItem(auction.id)} // Set hovered item on mouse enter
           onMouseLeave={() => setHoveredItem(null)} // Reset on mouse leave
         >
           <div className="flex justify-start items-center">
             <FontAwesomeIcon
               icon={faCircleArrowRight}
-              className="text-black text-3xl  mr-2"
+              className="text-black text-3xl mr-2 hidden sm:block"
             />
-            <div>
+            <div className="">
               <div className="info p-4">
-                <h2 className="title text-blue-600 text-2xl font-semibold">
+                <h2 className="text-blue-600 text-2xl font-semibold">
                   {auction.title}
                 </h2>
               </div>
@@ -47,12 +47,12 @@ const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
                 {hoveredItem === auction.id ? (
                   <div className="flex flex-col lg:flex-row lg:space-x-4">
                     <p className="flex justify-between">
-                      <span className="text-lg text-black glow-text">
+                      <span className="text-md text-black glow-text">
                         {formatDate(auction.start_time)}
                       </span>
                     </p>
                     <p className="flex justify-between">
-                      <span className="text-lg text-black glow-text">
+                      <span className="text-md text-black glow-text">
                         {formatDate(auction.end_time)}
                       </span>
                     </p>

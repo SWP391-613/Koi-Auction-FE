@@ -8,6 +8,7 @@ import { Auction } from "~/pages/auctions/Auctions";
 import { Bid } from "~/components/BiddingHistory";
 import { format, isToday, isYesterday, isTomorrow } from "date-fns";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/breeder/BreederDetail";
+import { toast } from "react-toastify";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -60,7 +61,7 @@ export const register = async (payload: RegisterDTO) => {
   }
 };
 
-const formatDate = (dateString: string): string => {
+export const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
 
   if (isToday(date)) {
@@ -235,4 +236,52 @@ export const fetchBidHistory = async (auctionKoiId: number): Promise<Bid[]> => {
     throw new Error("Failed to fetch bid history");
   }
   return response.json();
+};
+
+export const doLogout = async (token: string) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/users/logout`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Pass token in Authorization header
+        },
+      },
+    );
+
+    if (response.status === 200) {
+      console.log("Logout successful.");
+    }
+  } catch (error) {
+    console.error("Error during logout:", error);
+  }
+};
+
+export const updateAccountBalance = async (
+  userId: number,
+  payment: number,
+  token: string,
+) => {
+  try {
+    const response = await axios.put(
+      `${API_URL}/users/${userId}/deposit/${payment}`,
+      {}, // If your API expects a body, add it here
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response;
+  } catch (err: any) {
+    //check the where error from and throw the error
+    if (axios.isAxiosError(err)) {
+      throw new Error(
+        err.response?.data?.message || "An error occurred during deposit",
+      );
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
+  }
 };

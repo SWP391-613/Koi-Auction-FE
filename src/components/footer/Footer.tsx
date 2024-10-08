@@ -30,8 +30,8 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="bg-[#CACBCF] p-8 text-white shadow-lg">
-      <div className="mx-auto flex flex-col md:flex-row gap-12 mb-[6rem]">
-        <Link to="/" className="md:mb-0 flex items-center">
+      <div className="mx-auto flex justify-start gap-5 flex-col md:flex-row mb-[6rem]">
+        <Link to="/" className="md:mb-0 flex items-center justify-center">
           <img
             src="/koi-svgrepo-com.svg"
             alt="Koi Auction Logo"

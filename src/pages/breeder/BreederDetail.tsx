@@ -10,6 +10,7 @@ import KoiCart from "../kois/KoiCart";
 import { Typography } from "@mui/material";
 import PaginationComponent from "~/components/pagination/Pagination";
 import { useAuth } from "~/contexts/AuthContext";
+import DepositComponent from "~/components/shared/DepositComponent";
 
 interface Status {
   id: number;
@@ -55,6 +56,7 @@ const BreederDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState<User | null>(null);
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
+  const [totalKoi, setTotalKoi] = useState(0); // State to hold total koi count
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true); // To track if more pages are available
   const itemsPerPage = 16; // Number of koi per page
@@ -109,6 +111,9 @@ const BreederDetail: React.FC = () => {
             if (koisOfBreederData.items.length < itemsPerPage) {
               setHasMorePages(false);
             }
+
+            // Set the total koi from the API response
+            setTotalKoi(koisOfBreederData.total_item);
 
             // Append the new koi data to the current list of kois
             setKois((prevKois) => [...prevKois, ...koisOfBreederData.items]);
@@ -185,6 +190,11 @@ const BreederDetail: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  const accessToken = getCookie("access_token");
+  if (!accessToken) {
+    navigate("/notfound");
+  }
+
   return (
     <div className="user-detail-page">
       <div className="user-detail-content">
@@ -208,7 +218,7 @@ const BreederDetail: React.FC = () => {
           <div className="user-info-grid">
             <div className="info-item">
               <p className="info-label">Email</p>
-              <p className="info-value">{user.email}</p>
+              <p className="info-value">{user.email || "Not provided"}</p>
             </div>
             <div className="info-item">
               <p className="info-label">Phone</p>
@@ -221,9 +231,15 @@ const BreederDetail: React.FC = () => {
               <p className="info-value">{user.address || "Not provided"}</p>
             </div>
             <div className="info-item">
-              <p className="info-label">Status</p>
-              <p className="info-value">{user.status_name}</p>
+              <p className="info-label">Total Koi</p>
+              <p className="info-value">{totalKoi}</p>{" "}
+              {/* Display total number of koi */}
             </div>
+          </div>
+          <div className="account-balance">
+            <p className="balance-label">Account Balance</p>
+            <p className="balance-value">${user.account_balance.toFixed(2)}</p>
+            <DepositComponent userId={user.id} token={accessToken || ""} />
           </div>
           {/* <div className="account-balance">
             <p className="balance-label">Total Koi</p>

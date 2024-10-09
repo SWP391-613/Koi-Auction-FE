@@ -80,7 +80,7 @@ const Register = () => {
         },
       });
     } catch (error) {
-      toast.error(error || "An error occurred during registration");
+      toast.error(error?.message || "An error occurred during registration");
     }
   };
 

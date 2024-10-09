@@ -6,8 +6,6 @@ import {
   fetchAuctionKoi,
   getKoiById,
 } from "~/utils/apiUtils"; // Assume we have this API function
-import { KoiDetailModel } from "../kois/Kois";
-import { Auction } from "./Auctions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
@@ -22,22 +20,9 @@ import {
 import { useAuth } from "~/contexts/AuthContext";
 import SearchBar from "~/components/shared/SearchBar";
 import NavigateButton from "~/components/shared/NavigateButton";
-
-export interface AuctionKoi {
-  id: number;
-  auction_id: number;
-  koi_id: number;
-  base_price: number;
-  current_bid: number;
-  current_bidder_id: number | null;
-  is_sold: boolean;
-  bid_method: string;
-  bid_step: number;
-}
-
-interface KoiWithAuctionKoiData extends KoiDetailModel {
-  auctionKoiData: AuctionKoi;
-}
+import { KoiDetailModel } from "~/types/kois.type";
+import { AuctionKoi, KoiWithAuctionKoiData } from "~/types/auctionkois.type";
+import { Auction } from "~/types/auctions.type";
 
 const AuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();

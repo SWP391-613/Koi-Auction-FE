@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { environment } from "../environments/environment";
 import { AuctionKoi } from "~/pages/auctions/AuctionDetail";
-import { KoiDetailModel, KoisResponse } from "~/pages/kois/Kois";
+import { KoiDetailModel, KoisResponse } from "~/types/kois.type";
 import { Auction } from "~/pages/auctions/Auctions";
 import { Bid } from "~/components/BiddingHistory";
 import { format, isToday, isYesterday, isTomorrow } from "date-fns";

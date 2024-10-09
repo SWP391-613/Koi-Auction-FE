@@ -1,6 +1,4 @@
-import {
-  faArrowLeft
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
@@ -27,9 +25,9 @@ import {
 import Sold from "../../assets/Sold.png";
 import BiddingHistory from "../../components/BiddingHistory";
 import NavigateButton from "../../components/shared/NavigateButton";
-import { KoiDetailModel } from "../kois/Kois";
-import { AuctionKoi } from "./AuctionDetail";
-import { Auction } from "./Auctions";
+import { KoiDetailModel } from "~/types/kois.type";
+import { Auction } from "~/types/auctions.type";
+import { AuctionKoi } from "~/types/auctionkois.type";
 
 // Define the BidRequest interface
 export type BidRequest = {

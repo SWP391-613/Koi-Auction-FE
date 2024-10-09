@@ -62,7 +62,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div className="mt-10 d-flex justify-center items-center w-[80%]">
+    <div className="mt-10 bg-white d-flex justify-center items-center w-[80%]">
       <TextField
         value={query}
         onChange={(e) => setQuery(e.target.value)}

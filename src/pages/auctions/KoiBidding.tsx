@@ -23,7 +23,6 @@ import {
   faHandHoldingHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import {
-  placeBid,
   subscribeToAuctionUpdates,
   unsubscribeFromAuctionUpdates,
 } from "~/utils/websocket";
@@ -33,7 +32,8 @@ import { AuctionKoi } from "./AuctionDetail";
 import { toast } from "react-toastify";
 import Sold from "../../assets/Sold.png";
 import { useCallback } from "react";
-import { useUserData } from '~/contexts/useUserData';
+import { useUserData } from "~/contexts/useUserData";
+import { placeBid } from "~/utils/apiUtils";
 
 // Define the KoiDetail UI component
 interface KoiDetailItemProps {
@@ -49,7 +49,7 @@ interface KoiDetailItemProps {
 export interface BidRequest {
   auction_koi_id: number; // The ID of the auction koi
   bid_amount: number; // The amount of the bid
-  bidder_token: string;
+  bidder_id: number;
 }
 
 // Define the KoiDetailItem component, the UI for the koi details
@@ -130,8 +130,9 @@ const KoiBidding: React.FC = () => {
         unsubscribe = subscribeToAuctionUpdates(
           Number(auctionKoiId),
           (bidResponse: Bid) => {
-            if (!auctionKoi || bidResponse.bid_amount > auctionKoi.current_bid)
+            if (auctionKoi && bidResponse.bid_amount > auctionKoi.current_bid) {
               toast.success("New highest bid received!");
+            }
             setLatestBid(bidResponse);
             setAuctionKoi((prev) =>
               prev ? { ...prev, current_bid: bidResponse.bid_amount } : null,
@@ -150,25 +151,25 @@ const KoiBidding: React.FC = () => {
     };
   }, [auction, auctionKoiId, isAuctionOngoing, auctionKoi]);
 
-  const handlePlaceBid = useCallback(() => {
-    if (!isConnected || !user || !auctionKoi)
+  const handlePlaceBid = useCallback(async () => {
+    if (!user || !auctionKoi)
       return toast.error("Please log in before placing a bid.");
-    if (auctionKoi.is_sold)
-      return toast.info("Auction has ended. Please reload the page.");
-    if (bidAmount < auctionKoi.base_price)
-      return toast.error("Bid amount must be greater than the base price.");
-    if (bidAmount < auctionKoi.current_bid + auctionKoi.bid_step)
-      return toast.error(
-        "Bid amount must be greater than the current bid plus the bid step.",
-      );
-
-    placeBid({
-      auction_koi_id: auctionKoi.id,
-      bid_amount: bidAmount,
-      bidder_token: user.token,
-    });
-    setBidAmount(auctionKoi.current_bid + auctionKoi.bid_step);
-  }, [isConnected, user, auctionKoi, bidAmount]);
+    try {
+      await placeBid({
+        auction_koi_id: auctionKoi.id,
+        bid_amount: bidAmount,
+        bidder_id: user.id,
+      });
+      toast.success("Bid placed successfully!");
+      // The WebSocket will handle updating the UI
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred while placing your bid.");
+      }
+    }
+  }, [user, auctionKoi, bidAmount]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;

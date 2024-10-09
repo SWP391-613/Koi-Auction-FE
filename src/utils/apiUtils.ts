@@ -9,6 +9,7 @@ import { Bid } from "~/components/BiddingHistory";
 import { format, isToday, isYesterday, isTomorrow } from "date-fns";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/breeder/BreederDetail";
 import { toast } from "react-toastify";
+import { BidRequest } from "~/pages/auctions/KoiBidding";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -231,7 +232,7 @@ export const fetchAuctionKoiDetails = async (
 };
 
 export const fetchBidHistory = async (auctionKoiId: number): Promise<Bid[]> => {
-  const response = await fetch(`${API_URL}/auctionkoidetails/${auctionKoiId}`);
+  const response = await fetch(`${API_URL}/bidding/${auctionKoiId}`);
   if (!response.ok) {
     throw new Error("Failed to fetch bid history");
   }
@@ -283,5 +284,33 @@ export const updateAccountBalance = async (
     } else {
       throw new Error("An unexpected error occurred");
     }
+  }
+};
+
+export const placeBid = async (bid: BidRequest): Promise<void> => {
+  try {
+    await axios.post(
+      `${environment.be.baseUrl}${environment.be.apiPrefix}${environment.be.endPoint.bidding}/bid/${bid.auction_koi_id}`.trim(),
+      bid,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Add this line
+        },
+      },
+    );
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      if (error.response.status === 401) {
+        throw new Error("Unauthorized. Please log in again.");
+      }
+      if (error.response.data.reason === "BiddingRuleException") {
+        throw new Error(
+          error.response.data.message || "Bidding rule violation",
+        );
+      }
+      throw new Error("Failed to place bid");
+    }
+    throw new Error("Network error");
   }
 };

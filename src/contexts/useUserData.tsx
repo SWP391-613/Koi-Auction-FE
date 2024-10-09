@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { getCookie } from '~/utils/cookieUtils';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { getCookie } from "~/utils/cookieUtils";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   id: number;
@@ -48,7 +48,7 @@ export const useUserData = () => {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
-          }
+          },
         );
 
         if (response.status === 200) {

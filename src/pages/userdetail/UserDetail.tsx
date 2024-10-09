@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import "./UserDetail.scss";
 import { getCookie } from "~/utils/cookieUtils";
 import axios from "axios";
-import Alert from '@mui/material/Alert'; // Thêm import này
-import AlertTitle from '@mui/material/AlertTitle'; // Thêm import này nếu bạn muốn sử dụng tiêu đề
+import Alert from "@mui/material/Alert"; // Thêm import này
+import AlertTitle from "@mui/material/AlertTitle"; // Thêm import này nếu bạn muốn sử dụng tiêu đề
 import DepositComponent from "~/components/shared/DepositComponent";
 import { formatDate } from "~/utils/apiUtils";
-import { useUserData } from '~/contexts/useUserData';
+import { useUserData } from "~/contexts/useUserData";
 
 const UserDetail: React.FC = () => {
   const { user, loading, error, setUser } = useUserData();
@@ -77,7 +77,8 @@ const UserDetail: React.FC = () => {
       {user && user.status_name !== "VERIFIED" && (
         <Alert severity="warning" className="verify-alert">
           <AlertTitle>Account Not Verified</AlertTitle>
-          Your account is not verified. Please verify your account to access all features.
+          Your account is not verified. Please verify your account to access all
+          features.
         </Alert>
       )}
       <div className="user-detail-content">

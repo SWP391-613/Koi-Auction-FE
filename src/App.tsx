@@ -4,7 +4,7 @@ import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import Home from "./pages/home/Home";
 import Auctions from "./pages/auctions/Auctions";
-import Auction from "./pages/manager/auctions/Auctions";
+import Auction from "./pages/manager/auctions/AuctionsManagement";
 import About from "./pages/about/About";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
@@ -81,7 +81,6 @@ function App() {
             }
           >
             <Route path="/managers" element={<Manager />}>
-              <Route path="auctions" element={<Auction />} />
               <Route path="member" element={<MemberList />} />
               <Route path="breeder" element={<BreederList />} />
               <Route path="staff" element={<StaffList />} />
@@ -102,7 +101,7 @@ function App() {
           <Route
             element={<RoleBasedRoute allowedRoles={["ROLE_STAFF" as Role]} />}
           >
-            <Route path="/staffs" element={<StaffDetail />} />
+            <Route path="/staffs" element={<StaffDetail />}></Route>
           </Route>
 
           {/* Route for unauthorized access */}

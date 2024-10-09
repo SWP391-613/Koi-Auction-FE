@@ -6,64 +6,21 @@ import axios from "axios";
 import { environment } from "~/environments/environment";
 import { fetchKoisOfBreeder } from "~/utils/apiUtils";
 import KoiCart from "../kois/KoiCart";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import PaginationComponent from "~/components/pagination/Pagination";
 import { useAuth } from "~/contexts/AuthContext";
 import { useUserData } from "~/contexts/useUserData";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import { KoiDetailModel } from "~/types/kois.type";
-
-// export type KoiOfBreederQueryParams = {
-//   breeder_id: number;
-//   page: number;
-//   limit: number;
-// };
-
-// export type KoiOfBreeder = {
-//   total_page: number;
-//   total_item: number;
-//   items: KoiDetailModel[];
-// };
+import { AuctionsManagement } from "../manager/auctions/AuctionsManagement";
+import SearchBar from "~/components/shared/SearchBar";
 
 const StaffDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [kois, setKois] = useState<KoiDetailModel[]>([]);
-  const [totalKoi, setTotalKoi] = useState(0); // State to hold total koi count
-  const [currentPage, setCurrentPage] = useState(1);
-  const [hasMorePages, setHasMorePages] = useState(true); // To track if more pages are available
-  const itemsPerPage = 16; // Number of koi per page
   const [updateField, setUpdateField] = useState("");
   const [updateValue, setUpdateValue] = useState("");
   const navigate = useNavigate();
-  const { isLoggedIn } = useAuth();
   const { user, loading, error, setUser } = useUserData();
-
-  useEffect(() => {
-    const fetchBreederAndKoi = async () => {
-      if (!user) return;
-
-      try {
-        const koisOfBreederData = await fetchKoisOfBreeder(
-          user.id,
-          currentPage - 1,
-          itemsPerPage,
-        );
-
-        if (koisOfBreederData) {
-          if (koisOfBreederData.items.length < itemsPerPage) {
-            setHasMorePages(false);
-          }
-          setKois((prevKois) => [...prevKois, ...koisOfBreederData.items]);
-        }
-      } catch (error) {
-        console.error("Failed to fetch koi data:", error);
-      }
-    };
-
-    if (isLoggedIn && user) {
-      fetchBreederAndKoi();
-    }
-  }, [currentPage, isLoggedIn, user]);
 
   const handleUpdate = async () => {
     if (!user || !updateField || !updateValue) return;
@@ -110,13 +67,6 @@ const StaffDetail: React.FC = () => {
     });
   };
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    page: number,
-  ) => {
-    setCurrentPage(page); // Update the current page when pagination changes
-  };
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
@@ -127,7 +77,7 @@ const StaffDetail: React.FC = () => {
   }
 
   return (
-    <div className="user-detail-page">
+    <div className="flex flex-col justify-around m-10">
       <AccountVerificationAlert user={user} />
       <div className="user-detail-content">
         <div className="user-sidebar">
@@ -162,11 +112,6 @@ const StaffDetail: React.FC = () => {
               <p className="info-label">Address</p>
               <p className="info-value">{user.address || "Not provided"}</p>
             </div>
-            <div className="info-item">
-              <p className="info-label">Total Koi</p>
-              <p className="info-value">{totalKoi}</p>{" "}
-              {/* Display total number of koi */}
-            </div>
           </div>
           <div className="update-field">
             <select
@@ -188,24 +133,16 @@ const StaffDetail: React.FC = () => {
               placeholder="Enter new value"
               className="update-input"
             />
-            <button onClick={handleUpdate} className="update-button">
+            <Button onClick={handleUpdate} variant="contained" color="primary">
               Update
-            </button>
+            </Button>
           </div>
         </div>
       </div>
-      <div>
-        <Typography variant="h2" className="text-center">
-          List Auctions
-        </Typography>
-        {/* Render KoiCart with the fetched koi items */}
-        {/* <KoiCart items={kois} /> */}
-      </div>
-      {/* <PaginationComponent
-        totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      /> */}
+
+      <SearchBar />
+
+      <AuctionsManagement />
     </div>
   );
 };

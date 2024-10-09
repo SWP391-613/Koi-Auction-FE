@@ -7,10 +7,10 @@ import {
   faCircleArrowRight,
   faMoneyCheckDollar,
 } from "@fortawesome/free-solid-svg-icons";
-import { Auction } from "~/types/auctions.type";
+import { AuctionModel } from "~/types/auctions.type";
 
 interface AuctionCartProps {
-  items: Auction[];
+  items: AuctionModel[];
 }
 
 const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {

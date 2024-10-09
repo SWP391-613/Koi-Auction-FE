@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { TextField, Button, InputAdornment } from "@mui/material";
+import {
+  TextField,
+  Button,
+  InputAdornment,
+  CircularProgress,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 interface SearchBarProps {
-  // Add any props you need, e.g., placeholder, debounceTime, etc.
   placeholder?: string;
-  debounceTime?: number; // Optional: Delay for debouncing the search input
+  debounceTime?: number;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -14,8 +18,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   const [query, setQuery] = useState<string>("");
   const [debouncedQuery, setDebouncedQuery] = useState<string>(query);
+  const [loading, setLoading] = useState<boolean>(false); // New loading state
 
-  // Debounce the search query to avoid unnecessary API calls on every keystroke
+  // Debounce the search query
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(query);
@@ -26,31 +31,34 @@ const SearchBar: React.FC<SearchBarProps> = ({
     };
   }, [query, debounceTime]);
 
-  // This effect will run when `debouncedQuery` changes (i.e., after the debounce delay)
+  // This effect will run when `debouncedQuery` changes
   useEffect(() => {
     if (debouncedQuery.trim()) {
-      // Call your API here with the debouncedQuery
-      console.log(`Searching for: ${debouncedQuery}`);
-      alert(`Searching for: ${debouncedQuery}`);
+      setLoading(true); // Start loading when a search is triggered
 
-      // Example API call (replace with your actual API logic)
-      // fetch(`https://api.example.com/search?q=${debouncedQuery}`)
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     console.log(data);
-      //   });
+      // Simulate an API call or replace with your actual logic
+      setTimeout(() => {
+        setLoading(false); // Stop loading when API call finishes
+        console.log(`Searching for: ${debouncedQuery}`);
+        // Example API call:
+        // fetch(`https://api.example.com/search?q=${debouncedQuery}`)
+        //   .then(response => response.json())
+        //   .then(data => {
+        //     console.log(data);
+        //   });
+      }, 500); // Simulated delay for API call
     }
   }, [debouncedQuery]);
 
+  // This function is triggered by the search button or Enter key
   const handleSearch = () => {
     if (debouncedQuery.trim()) {
+      setLoading(true);
       console.log(`Searching for: ${debouncedQuery}`);
-      // Replace with your API call logic
-      // fetch(`https://api.example.com/search?q=${debouncedQuery}`)
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     console.log(data);
-      //   });
+      // Add your API call logic here
+      setTimeout(() => {
+        setLoading(false);
+      }, 500); // Simulated API delay
     }
   };
 
@@ -62,7 +70,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div className="mt-10 bg-white d-flex justify-center items-center w-[80%]">
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        background: "white",
+        marginTop: "2rem",
+      }}
+    >
       <TextField
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -77,9 +92,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 variant="contained"
                 color="primary"
                 onClick={handleSearch}
-                startIcon={<SearchIcon />}
+                startIcon={
+                  loading ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : (
+                    <SearchIcon />
+                  )
+                }
+                disabled={loading} // Disable the button while loading
               >
-                Search
+                {loading ? "Searching..." : "Search"}
               </Button>
             </InputAdornment>
           ),

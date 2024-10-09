@@ -1,5 +1,11 @@
 import React, { ReactNode } from "react";
-import { Box, List, ListItem, ListItemText, ListItemButton } from "@mui/material";
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemButton,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import { ROUTING_PATH } from "~/constants/endPoints";
 
@@ -21,9 +27,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             </ListItemButton>
           </ListItem>
           <ListItem>
-            <ListItemButton component={Link} to={ROUTING_PATH.MANAGERS_AUCTIONS}>
+            {/* <ListItemButton
+              component={Link}
+              to={ROUTING_PATH.MANAGERS_AUCTIONS}
+            >
               <ListItemText primary="Auctions" />
-            </ListItemButton>
+            </ListItemButton> */}
           </ListItem>
           <ListItem>
             <ListItemButton component={Link} to={ROUTING_PATH.MANAGERS_BREEDER}>

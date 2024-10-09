@@ -4,10 +4,10 @@ import AuctionCart from "./AuctionCart";
 import { fetchAuctions } from "~/utils/apiUtils";
 import PaginationComponent from "~/components/pagination/Pagination";
 import SearchBar from "~/components/shared/SearchBar";
-import { Auction } from "~/types/auctions.type";
+import { AuctionModel } from "~/types/auctions.type";
 
 const Auctions: React.FC = () => {
-  const [auctions, setAuctions] = useState<Auction[]>([]);
+  const [auctions, setAuctions] = useState<AuctionModel[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true); // To track if more pages are available
   const itemsPerPage = 18; // Number of auctions per page

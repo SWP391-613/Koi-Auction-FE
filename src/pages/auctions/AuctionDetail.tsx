@@ -22,12 +22,12 @@ import SearchBar from "~/components/shared/SearchBar";
 import NavigateButton from "~/components/shared/NavigateButton";
 import { KoiDetailModel } from "~/types/kois.type";
 import { AuctionKoi, KoiWithAuctionKoiData } from "~/types/auctionkois.type";
-import { Auction } from "~/types/auctions.type";
+import { AuctionModel } from "~/types/auctions.type";
 
 const AuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();
   const { id } = useParams<{ id: string }>();
-  const [auction, setAuction] = useState<Auction | null>(null);
+  const [auction, setAuction] = useState<AuctionModel | null>(null);
   const [koiWithAuctionKoiData, setKoiWithAuctionKoiData] = useState<
     KoiWithAuctionKoiData[]
   >([]);

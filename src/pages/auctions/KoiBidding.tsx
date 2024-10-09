@@ -21,6 +21,7 @@ import {
   faGavel,
   faArrowLeft,
   faHandHoldingHeart,
+  faWallet,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   placeBid,
@@ -33,7 +34,7 @@ import { AuctionKoi } from "./AuctionDetail";
 import { toast } from "react-toastify";
 import Sold from "../../assets/Sold.png";
 import { useCallback } from "react";
-import { useUserData } from '~/contexts/useUserData';
+import { useUserData } from "~/contexts/useUserData";
 
 // Define the KoiDetail UI component
 interface KoiDetailItemProps {
@@ -297,6 +298,15 @@ const KoiBidding: React.FC = () => {
                 value={auctionKoi.bid_method}
                 bgColor="bg-blue-200"
               />
+              {user && (
+                <KoiDetailItem
+                  icon={faWallet}
+                  label="Your Balance"
+                  value={`$${user.account_balance.toFixed(2)}`}
+                  bgColor="bg-yellow-200"
+                  textColor="text-green-700"
+                />
+              )}
             </div>
           </div>
 
@@ -341,11 +351,6 @@ const KoiBidding: React.FC = () => {
           {isConnected
             ? "Connected to live updates"
             : "Not connected to live updates"}
-        </div>
-      )}
-      {user && (
-        <div className="user-balance">
-          <p>Your Balance: ${user.account_balance.toFixed(2)}</p>
         </div>
       )}
     </div>

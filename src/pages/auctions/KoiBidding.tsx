@@ -36,7 +36,6 @@ import { useCallback } from "react";
 import { useUserData } from "~/contexts/useUserData";
 import { placeBid } from "~/utils/apiUtils";
 
-
 // Define the KoiDetail UI component
 interface KoiDetailItemProps {
   icon: IconDefinition;

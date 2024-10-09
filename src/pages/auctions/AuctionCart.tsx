@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { Auction } from "./Auctions";
 import { getAuctionStatus } from "~/utils/dateTimeUtils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleArrowRight,
   faMoneyCheckDollar,
 } from "@fortawesome/free-solid-svg-icons";
+import { Auction } from "~/types/auctions.type";
 
 interface AuctionCartProps {
   items: Auction[];

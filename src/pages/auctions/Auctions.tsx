@@ -4,14 +4,7 @@ import AuctionCart from "./AuctionCart";
 import { fetchAuctions } from "~/utils/apiUtils";
 import PaginationComponent from "~/components/pagination/Pagination";
 import SearchBar from "~/components/shared/SearchBar";
-
-export interface Auction {
-  id: number;
-  title: string;
-  start_time: string;
-  end_time: string;
-  status: string;
-}
+import { Auction } from "~/types/auctions.type";
 
 const Auctions: React.FC = () => {
   const [auctions, setAuctions] = useState<Auction[]>([]);

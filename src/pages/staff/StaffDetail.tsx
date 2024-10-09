@@ -4,7 +4,6 @@ import "./StaffDetail.scss";
 import { getCookie } from "~/utils/cookieUtils";
 import axios from "axios";
 import { environment } from "~/environments/environment";
-import { KoiDetailModel } from "../kois/Kois";
 import { fetchKoisOfBreeder } from "~/utils/apiUtils";
 import KoiCart from "../kois/KoiCart";
 import { Typography } from "@mui/material";
@@ -12,6 +11,7 @@ import PaginationComponent from "~/components/pagination/Pagination";
 import { useAuth } from "~/contexts/AuthContext";
 import { useUserData } from "~/contexts/useUserData";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
+import { KoiDetailModel } from "~/types/kois.type";
 
 // export type KoiOfBreederQueryParams = {
 //   breeder_id: number;

@@ -10,11 +10,11 @@ import {
   faHandHoldingHeart,
   faWallet,
 } from "@fortawesome/free-solid-svg-icons";
-import { KoiDetailModel } from "~/pages/kois/Kois";
-import { AuctionKoi } from "~/pages/auctions/AuctionDetail";
 import { KoiDetailItem } from "./KoiBiddingDetailComponent";
 import { UserDetailsResponse } from "~/types/users.type";
 import { convertBidMethodToReadable } from "~/utils/dataConverter";
+import { KoiDetailModel } from "~/types/kois.type";
+import { AuctionKoi } from "~/types/auctionkois.type";
 
 interface KoiInfoGridProps {
   koi: KoiDetailModel;
@@ -22,15 +22,49 @@ interface KoiInfoGridProps {
   user: UserDetailsResponse | null;
 }
 
-export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({ koi, auctionKoi, user }) => {
+export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
+  koi,
+  auctionKoi,
+  user,
+}) => {
   const koiInfoItems = [
     { icon: faVenusMars, label: "Sex", value: koi.sex, bgColor: "bg-gray-300" },
-    { icon: faRuler, label: "Length", value: koi.length, bgColor: "bg-gray-300" },
-    { icon: faCalendarDays, label: "Age", value: koi.age, bgColor: "bg-gray-300" },
-    { icon: faFish, label: "Category ID", value: koi.category_id, bgColor: "bg-gray-300" },
-    { icon: faDollarSign, label: "Base Price", value: auctionKoi.base_price, bgColor: "bg-blue-200" },
-    { icon: faGavel, label: "Current Bid", value: auctionKoi.current_bid, bgColor: "bg-green-200" },
-    { icon: faHandHoldingHeart, label: "Bid Method", value: convertBidMethodToReadable(auctionKoi.bid_method), bgColor: "bg-blue-200" },
+    {
+      icon: faRuler,
+      label: "Length",
+      value: koi.length,
+      bgColor: "bg-gray-300",
+    },
+    {
+      icon: faCalendarDays,
+      label: "Age",
+      value: koi.age,
+      bgColor: "bg-gray-300",
+    },
+    {
+      icon: faFish,
+      label: "Category ID",
+      value: koi.category_id,
+      bgColor: "bg-gray-300",
+    },
+    {
+      icon: faDollarSign,
+      label: "Base Price",
+      value: auctionKoi.base_price,
+      bgColor: "bg-blue-200",
+    },
+    {
+      icon: faGavel,
+      label: "Current Bid",
+      value: auctionKoi.current_bid,
+      bgColor: "bg-green-200",
+    },
+    {
+      icon: faHandHoldingHeart,
+      label: "Bid Method",
+      value: convertBidMethodToReadable(auctionKoi.bid_method),
+      bgColor: "bg-blue-200",
+    },
   ];
 
   return (

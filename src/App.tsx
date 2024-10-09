@@ -36,6 +36,7 @@ import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import BreederDetail from "./pages/breeder/BreederDetail";
 import Privacy from "./pages/privacy/Privacy";
 import Terms from "./pages/terms/Terms";
+import StaffDetail from "./pages/staff/StaffDetail";
 
 const TITLE = "Auction Koi";
 
@@ -85,7 +86,7 @@ function App() {
               />
             }
           >
-            <Route path="/manager" element={<Manager />}>
+            <Route path="/managers" element={<Manager />}>
               <Route path="auctions" element={<Auction />} />
               <Route path="member" element={<MemberList />} />
               <Route path="breeder" element={<BreederList />} />
@@ -103,8 +104,14 @@ function App() {
           <Route
             element={<RoleBasedRoute allowedRoles={["ROLE_BREEDER" as Role]} />}
           >
-            <Route path="/breeder" element={<BreederDetail />} />
+            <Route path="/breeders" element={<BreederDetail />} />
             {/* Add more breeder-specific routes here */}
+          </Route>
+
+          <Route
+            element={<RoleBasedRoute allowedRoles={["ROLE_STAFF" as Role]} />}
+          >
+            <Route path="/staffs" element={<StaffDetail />} />
           </Route>
 
           {/* Route for unauthorized access */}

@@ -13,6 +13,8 @@ import {
   faUser,
   faSignOutAlt,
   faFish,
+  faScrewdriver,
+  faLock,
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames"; // Install this package for easier class management
 
@@ -36,8 +38,8 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
   onClick,
 }) => {
   const baseClasses =
-    "flex items-center rounded-full font-bold px-4 py-2 transition duration-300 ease-in-out";
-  const activeClasses = "bg-[#4f92d1] text-white";
+    "flex items-center rounded-full font-bold px-4 py-2 hover:text-white transition duration-300 ease-in-out";
+  const activeClasses = "bg-[#4f92d1] text-white hover:text-white";
   const inactiveClasses =
     "text-gray-600 bg-gray-200 hover:bg-[#4f92d1] hover:text-white";
 
@@ -105,17 +107,23 @@ const Header = () => {
       const role = user.role_name; // Assuming the first role is the primary role
       switch (role) {
         case "manager":
-        case "staff":
           baseButtons.push({
             text: "Manager",
-            to: "/manager",
-            icon: <FontAwesomeIcon icon={faUser} />,
+            to: "/managers",
+            icon: <FontAwesomeIcon icon={faLock} />,
+          });
+          break;
+        case "staff":
+          baseButtons.push({
+            text: "Staff",
+            to: "/staffs",
+            icon: <FontAwesomeIcon icon={faScrewdriver} />,
           });
           break;
         case "breeder":
           baseButtons.push({
             text: "Breeder",
-            to: "/breeder",
+            to: "/breeders",
             icon: <FontAwesomeIcon icon={faFish} />,
           });
           break;
@@ -128,11 +136,25 @@ const Header = () => {
 
   const accountButtons: NavButton[] = useMemo(() => {
     if (isLoggedIn && user) {
+
+      const getMyAccountUrl = () => {
+        switch (user.role_name) {
+          case 'breeder':
+            return '/breeders';
+          case 'staff':
+            return '/staffs'; //notice the s at the end
+          case 'manager':
+            return '/managers';
+          default:
+            return `/users/${user.id}`;
+        }
+      };
+
       return [
         {
           // do like switch case
           text: "My Account",
-          to: user.role_name === "breeder" ? `/breeder/` : `/users/${user.id}`,
+          to: getMyAccountUrl(),
           icon: <FontAwesomeIcon icon={faUser} />,
         },
         {

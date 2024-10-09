@@ -11,11 +11,11 @@ interface RoleBasedRouteProps {
 export function routeUserToEachPage(roleName: string): string {
   let route;
   if (roleName === "ROLE_MANAGER") {
-    route = "/manager";
+    route = "/managers";
   } else if (roleName === "ROLE_STAFF") {
-    route = "/staff";
+    route = "/staffs";
   } else if (roleName === "ROLE_BREEDER") {
-    route = "/breeder";
+    route = "/breeders";
   } else if (roleName === "ROLE_MEMBER") {
     route = "/";
   } else {

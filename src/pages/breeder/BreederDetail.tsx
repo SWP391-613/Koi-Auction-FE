@@ -12,6 +12,7 @@ import PaginationComponent from "~/components/pagination/Pagination";
 import { useAuth } from "~/contexts/AuthContext";
 import { useUserData } from "~/contexts/useUserData";
 import DepositComponent from "~/components/shared/DepositComponent";
+import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -128,6 +129,7 @@ const BreederDetail: React.FC = () => {
 
   return (
     <div className="user-detail-page">
+      <AccountVerificationAlert user={user} />
       <div className="user-detail-content">
         <div className="user-sidebar">
           <img

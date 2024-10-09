@@ -34,6 +34,8 @@ import { Role } from "./dtos/login.dto";
 import Unauthorized from "./components/unauthorized/Unauthorized";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import BreederDetail from "./pages/breeder/BreederDetail";
+import Privacy from "./pages/privacy/Privacy";
+import Terms from "./pages/terms/Terms";
 
 const TITLE = "Auction Koi";
 
@@ -50,6 +52,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/notfound" element={<NotFound />} />
           <Route path="/otp-verification" element={<OtpVerification />} />
+          {/* privacy, terms */}
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
 
           <Route path="/auctions" element={<Auctions />} />
           <Route

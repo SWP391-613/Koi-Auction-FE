@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { getCookie } from "~/utils/cookieUtils";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-interface User {
+export interface User {
   id: number;
   first_name: string;
   last_name: string;
   phone_number: string | null;
-  email: string;
+  emails: string;
   address: string;
   is_active: number;
   is_subscription: number;
@@ -35,7 +36,7 @@ export const useUserData = () => {
       const accessToken = getCookie("access_token");
 
       if (!accessToken) {
-        setError("No access token found");
+        // Allow viewing without login
         setLoading(false);
         return;
       }

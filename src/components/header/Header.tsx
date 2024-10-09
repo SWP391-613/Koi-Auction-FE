@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { useAuth } from "../../contexts/AuthContext";
+import { useUserData } from "../../contexts/useUserData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
@@ -70,8 +71,9 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoggedIn, user, authLogout } = useAuth();
+  const { isLoggedIn, authLogout } = useAuth();
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const { user, loading, error } = useUserData();
 
   // Define navigation and account buttons
   const navButtons: NavButton[] = useMemo(() => {
@@ -100,17 +102,17 @@ const Header = () => {
     ];
 
     if (isLoggedIn && user) {
-      const role = user.roles[0]; // Assuming the first role is the primary role
+      const role = user.role_name; // Assuming the first role is the primary role
       switch (role) {
-        case "ROLE_MANAGER":
-        case "ROLE_STAFF":
+        case "manager":
+        case "staff":
           baseButtons.push({
             text: "Manager",
             to: "/manager",
             icon: <FontAwesomeIcon icon={faUser} />,
           });
           break;
-        case "ROLE_BREEDER":
+        case "breeder":
           baseButtons.push({
             text: "Breeder",
             to: "/breeder",
@@ -128,8 +130,9 @@ const Header = () => {
     if (isLoggedIn && user) {
       return [
         {
+          // do like switch case
           text: "My Account",
-          to: `/users/${user.id}`,
+          to: user.role_name === "breeder" ? `/breeder/` : `/users/${user.id}`,
           icon: <FontAwesomeIcon icon={faUser} />,
         },
         {

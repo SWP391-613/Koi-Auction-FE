@@ -26,7 +26,7 @@ import Sold from "../../assets/Sold.png";
 import BiddingHistory from "../../components/BiddingHistory";
 import NavigateButton from "../../components/shared/NavigateButton";
 import { KoiDetailModel } from "~/types/kois.type";
-import { Auction } from "~/types/auctions.type";
+import { AuctionModel } from "~/types/auctions.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
 
 // Define the BidRequest interface
@@ -45,7 +45,7 @@ const KoiBidding: React.FC = () => {
   const [koi, setKoi] = useState<KoiDetailModel | null>(null);
   const [bidAmount, setBidAmount] = useState<number>(0);
   const [auctionKoi, setAuctionKoi] = useState<AuctionKoi | null>(null);
-  const [auction, setAuction] = useState<Auction | null>(null);
+  const [auction, setAuction] = useState<AuctionModel | null>(null);
   const [latestBid, setLatestBid] = useState<Bid | null>(null);
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);

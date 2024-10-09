@@ -1,8 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { environment } from "../environments/environment";
-import { AuctionKoi } from "~/pages/auctions/AuctionDetail";
 import { KoiDetailModel, KoisResponse } from "~/types/kois.type";
-import { Auction } from "~/pages/auctions/Auctions";
 import { Bid } from "~/components/BiddingHistory";
 import { format, isToday, isYesterday, isTomorrow } from "date-fns";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/breeder/BreederDetail";
@@ -13,6 +11,8 @@ import {
   UserRegisterDTO,
   UserLoginResponse,
 } from "~/types/users.type";
+import { AuctionDTO, AuctionModel } from "~/types/auctions.type";
+import { AuctionKoi } from "~/types/auctionkois.type";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -79,7 +79,7 @@ export const formatDate = (dateString: string): string => {
   }
 };
 
-const createAuctionFromApi = (apiData: any): Auction => {
+export const createAuctionFromApi = (apiData: AuctionDTO): AuctionDTO => {
   return {
     id: apiData.id,
     title: apiData.title,
@@ -89,10 +89,40 @@ const createAuctionFromApi = (apiData: any): Auction => {
   };
 };
 
+export const createNewAuction = async (
+  newAuction: AuctionModel,
+): Promise<AuctionModel> => {
+  try {
+    const response = await axios.post(`${API_URL}/auctions`, newAuction);
+
+    if (response.status !== 201) {
+      throw new Error("Failed to create new auction");
+    }
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Error creating new auction:",
+        error.response?.data?.message || error.message,
+      );
+    } else {
+      if (error instanceof Error) {
+        console.error("Error creating new auction:", error.message);
+      } else {
+        console.error(
+          "Error creating new auction:",
+          "An unexpected error occurred",
+        );
+      }
+    }
+    throw error;
+  }
+};
+
 export const fetchAuctions = async (
   page: number,
   limit: number,
-): Promise<Auction[]> => {
+): Promise<AuctionModel[]> => {
   try {
     // if (getCookie("access_token") === null) {
     //   throw new Error("You are not logged in");
@@ -103,7 +133,7 @@ export const fetchAuctions = async (
     });
 
     // Map the response data to Auction model
-    const auctions: Auction[] = response.data; //need raw data to calculate the time range of the auction
+    const auctions: AuctionModel[] = response.data; //need raw data to calculate the time range of the auction
     return auctions;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -125,7 +155,9 @@ export const fetchAuctions = async (
   }
 };
 
-export const fetchAuctionById = async (id: number): Promise<Auction | null> => {
+export const fetchAuctionById = async (
+  id: number,
+): Promise<AuctionModel | null> => {
   try {
     const response = await axios.get(`${API_URL}/auctions/${id}`);
     return createAuctionFromApi(response.data);

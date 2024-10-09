@@ -39,3 +39,10 @@ export const getAuctionStatus = (
     }
   }
 };
+
+export const convertToJavaLocalDateTime = (date: Date | string): string => {
+  if (date instanceof Date) {
+    return date.toString().replace("T", " ") + ":00.000000";
+  }
+  return date.replace("T", " ") + ":00.000000";
+};

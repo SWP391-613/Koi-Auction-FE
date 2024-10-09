@@ -128,7 +128,7 @@ const BreederDetail: React.FC = () => {
   }
 
   return (
-    <div className="user-detail-page">
+    <div className="flex flex-col justify-around m-10">
       <AccountVerificationAlert user={user} />
       <div className="user-detail-content">
         <div className="user-sidebar">

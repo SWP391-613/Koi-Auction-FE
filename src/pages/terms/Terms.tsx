@@ -133,18 +133,18 @@ const Terms: React.FC = () => {
             please contact us at:
           </p>
           <address className="mb-6">
-          fkoi88.me
-          <br />
-          Select Koi Inc.
-          <br />
-          FPTU Ho Chi Minh City
-          <br />
-          Viet Nam
-          <br />
-          +1 (123)-345-1231
-          <br />
-          contact@fkoi88.me
-        </address>
+            fkoi88.me
+            <br />
+            Select Koi Inc.
+            <br />
+            FPTU Ho Chi Minh City
+            <br />
+            Viet Nam
+            <br />
+            +1 (123)-345-1231
+            <br />
+            contact@fkoi88.me
+          </address>
         </section>
       </div>
     </div>

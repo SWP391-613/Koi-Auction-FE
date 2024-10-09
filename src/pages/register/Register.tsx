@@ -5,9 +5,9 @@ import * as yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { register } from "../../utils/apiUtils";
-import { RegisterDTO } from "~/dtos/register.dto";
 import NavigateButton from "~/components/shared/NavigateButton";
 import { Button, Typography } from "@mui/material";
+import { UserRegisterDTO } from "~/types/users.type";
 
 interface FormFieldProps {
   name: string;
@@ -67,7 +67,7 @@ const Register = () => {
     },
   });
 
-  const onSubmit = async (data: RegisterDTO) => {
+  const onSubmit = async (data: UserRegisterDTO) => {
     try {
       const response = await register(data);
       console.log("Data ne: " + JSON.stringify(response));
@@ -80,7 +80,7 @@ const Register = () => {
         },
       });
     } catch (error) {
-      toast.error(error?.message || "An error occurred during registration");
+      toast.error(error || "An error occurred during registration");
     }
   };
 

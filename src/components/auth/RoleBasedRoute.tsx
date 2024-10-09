@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "~/contexts/AuthContext";
-import { Role } from "~/dtos/login.dto";
+import { Role } from "~/types/roles.type";
 
 interface RoleBasedRouteProps {
   allowedRoles: Role[];
@@ -39,7 +39,7 @@ const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
   // debugger;
   console.log("Allowed roles:", allowedRoles);
   // debugger;
-  const hasAllowedRole = user.roles?.some((role) =>
+  const hasAllowedRole = user.roles?.some((role: Role) =>
     allowedRoles.includes(role),
   );
   console.log(hasAllowedRole);

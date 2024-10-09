@@ -35,23 +35,27 @@ import Sold from "../../assets/Sold.png";
 import { useCallback } from "react";
 import { useUserData } from "~/contexts/useUserData";
 import { placeBid } from "~/utils/apiUtils";
+import { ERROR_MESSAGE } from "~/constants/errorMessages";
+import { SUCCESS_MESSAGE } from "~/constants/successMessage";
+import { WEB_SOCKET_MESSAGE } from "~/constants/webSocketMessages";
+import { AUCTION_STATUS } from "~/constants/auctionStatus";
 
 // Define the KoiDetail UI component
-interface KoiDetailItemProps {
+type KoiDetailItemProps = {
   icon: IconDefinition;
   label: string;
   value: string | number;
   fontSize?: string;
   bgColor?: string;
   textColor?: string;
-}
+};
 
 // Define the BidRequest interface
-export interface BidRequest {
+export type BidRequest = {
   auction_koi_id: number; // The ID of the auction koi
   bid_amount: number; // The amount of the bid
   bidder_id: number;
-}
+};
 
 // Define the KoiDetailItem component, the UI for the koi details
 const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
@@ -90,7 +94,7 @@ const KoiBidding: React.FC = () => {
   const [isConnected, setIsConnected] = useState(false);
 
   const isAuctionOngoing = useCallback(
-    () => auction?.status === "ACTIVE",
+    () => auction?.status === AUCTION_STATUS.ACTIVE,
     [auction],
   );
   const isAuctionEnded = useCallback(
@@ -154,20 +158,20 @@ const KoiBidding: React.FC = () => {
 
   const handlePlaceBid = useCallback(async () => {
     if (!user || !auctionKoi)
-      return toast.error("Please log in before placing a bid.");
+      return toast.error(ERROR_MESSAGE.REQUIRED_LOGIN_TO_BID);
     try {
       await placeBid({
         auction_koi_id: auctionKoi.id,
         bid_amount: bidAmount,
         bidder_id: user.id,
       });
-      toast.success("Bid placed successfully!");
+      toast.success(SUCCESS_MESSAGE.BID_PLACED);
       // The WebSocket will handle updating the UI
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("An unexpected error occurred while placing your bid.");
+        toast.error(ERROR_MESSAGE.UNEXPECTED_ERROR_BID);
       }
     }
   }, [user, auctionKoi, bidAmount]);
@@ -350,8 +354,8 @@ const KoiBidding: React.FC = () => {
           className={`text-sm ${isConnected ? "text-green-500" : "text-red-500"}`}
         >
           {isConnected
-            ? "Connected to live updates"
-            : "Not connected to live updates"}
+            ? WEB_SOCKET_MESSAGE.CONNECTED
+            : WEB_SOCKET_MESSAGE.DISCONNECTED}
         </div>
       )}
     </div>

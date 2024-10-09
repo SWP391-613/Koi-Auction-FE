@@ -30,13 +30,13 @@ import { Analytics } from "@vercel/analytics/react";
 import KoiBidding from "./pages/auctions/KoiBidding";
 import OtpVerification from "./components/otp/OtpVeficitaion";
 import RoleBasedRoute from "./components/auth/RoleBasedRoute";
-import { Role } from "./dtos/login.dto";
 import Unauthorized from "./components/unauthorized/Unauthorized";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import BreederDetail from "./pages/breeder/BreederDetail";
 import Privacy from "./pages/privacy/Privacy";
 import Terms from "./pages/terms/Terms";
 import StaffDetail from "./pages/staff/StaffDetail";
+import { Role } from "./types/roles.type";
 
 const TITLE = "Auction Koi";
 
@@ -58,10 +58,7 @@ function App() {
           <Route path="/terms" element={<Terms />} />
 
           <Route path="/auctions" element={<Auctions />} />
-          <Route
-            path="/auctions/:id"
-            element={<AuctionDetail auctionData={koi_data.items} />}
-          />
+          <Route path="/auctions/:id" element={<AuctionDetail />} />
           <Route
             path="/auctionkois/:auctionId/:auctionKoiId"
             element={<KoiBidding />}
@@ -72,10 +69,7 @@ function App() {
 
           {/* Route required user is logged in */}
           <Route element={<ProtectedRoute />}>
-            <Route
-              path="/users/:id"
-              element={<UserDetail userData={user_data.items} />}
-            />
+            <Route path="/users/:id" element={<UserDetail />} />
           </Route>
 
           {/* Protected routes for MANAGER and STAFF */}
@@ -93,10 +87,7 @@ function App() {
               <Route path="staff" element={<StaffList />} />
               <Route path="setting" element={<Settings />} />
               <Route path="koi" element={<KoiList />} />
-              <Route
-                path="koi-detail"
-                element={<KoiDetail koiData={koi_data.items} />}
-              />
+              <Route path="koi-detail" element={<KoiDetail />} />
             </Route>
           </Route>
 

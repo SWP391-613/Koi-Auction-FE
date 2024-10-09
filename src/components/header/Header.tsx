@@ -136,15 +136,14 @@ const Header = () => {
 
   const accountButtons: NavButton[] = useMemo(() => {
     if (isLoggedIn && user) {
-
       const getMyAccountUrl = () => {
         switch (user.role_name) {
-          case 'breeder':
-            return '/breeders';
-          case 'staff':
-            return '/staffs'; //notice the s at the end
-          case 'manager':
-            return '/managers';
+          case "breeder":
+            return "/breeders";
+          case "staff":
+            return "/staffs"; //notice the s at the end
+          case "manager":
+            return "/managers";
           default:
             return `/users/${user.id}`;
         }

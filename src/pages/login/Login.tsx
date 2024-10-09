@@ -17,10 +17,10 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Login.scss";
 import { setCookie } from "../../utils/cookieUtils";
-import { LoginDTO } from "~/dtos/login.dto";
 import { routeUserToEachPage } from "~/components/auth/RoleBasedRoute";
 import { Typography } from "@mui/material";
 import NavigateButton from "~/components/shared/NavigateButton";
+import { LoginDTO } from "~/types/users.type";
 const schema = yup.object().shape({
   email: yup
     .string()

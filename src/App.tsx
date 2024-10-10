@@ -1,5 +1,10 @@
 import React from "react";
-import { Routes, Route, Navigate, BrowserRouter as Router } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Navigate,
+  BrowserRouter as Router,
+} from "react-router-dom";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import Home from "./pages/home/Home";
@@ -34,7 +39,7 @@ import Unauthorized from "./components/unauthorized/Unauthorized";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import BreederDetail from "./pages/breeder/BreederDetail";
 import StaffLayout from "./pages/staff/Staff";
-import StaffAuctions  from "./pages/staff/auctions/Auctions";
+import StaffAuctions from "./pages/staff/auctions/Auctions";
 import SendNotifications from "./pages/staff/notifications/SendNotifications";
 import Privacy from "./pages/privacy/Privacy";
 import Terms from "./pages/terms/Terms";

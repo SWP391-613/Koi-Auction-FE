@@ -1,25 +1,35 @@
-import React, { useState } from 'react';
-import { TextField, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import React, { useState } from "react";
+import {
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 
 const SendNotifications: React.FC = () => {
   const [notification, setNotification] = useState({
-    title: '',
-    message: '',
-    recipientType: 'all',
+    title: "",
+    message: "",
+    recipientType: "all",
   });
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setNotification(prev => ({ ...prev, [name]: value }));
+    setNotification((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setNotification(prev => ({ ...prev, recipientType: event.target.value as string }));
+    setNotification((prev) => ({
+      ...prev,
+      recipientType: event.target.value as string,
+    }));
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log('Sending notification:', notification);
+    console.log("Sending notification:", notification);
     // Implement the actual send notification logic here
   };
 

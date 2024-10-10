@@ -1,5 +1,5 @@
 export const AUCTION_STATUS = {
-  ACTIVE: "ACTIVE",
+  UPCOMING: "UPCOMING",
   ONGOING: "ONGOING",
   ENDED: "ENDED",
 } as const;

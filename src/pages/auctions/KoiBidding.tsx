@@ -51,7 +51,7 @@ const KoiBidding: React.FC = () => {
   const [isConnected, setIsConnected] = useState(false);
 
   const isAuctionOngoing = useCallback(
-    () => auction?.status === AUCTION_STATUS.ACTIVE,
+    () => auction?.status === AUCTION_STATUS.ONGOING,
     [auction],
   );
   const isAuctionEnded = useCallback(

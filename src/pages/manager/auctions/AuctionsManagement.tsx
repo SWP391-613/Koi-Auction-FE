@@ -30,6 +30,8 @@ import { AuctionModel } from "~/types/auctions.type";
 import { format, set } from "date-fns";
 import axios from "axios";
 import { convertToJavaLocalDateTime } from "~/utils/dateTimeUtils";
+import AuctionTable from "~/editkoiinauction/EditAuction";
+import { AuctionKoi } from "~/types/auctionkois.type";
 
 interface Koi {
   id: number;
@@ -55,7 +57,7 @@ export const AuctionsManagement: React.FC = () => {
   const [editingAuction, setEditingAuction] = useState<AuctionModel | null>(
     null,
   );
-  const [auctionKois, setAuctionKois] = useState<Koi[]>([]);
+  const [auctionKois, setAuctionKois] = useState<AuctionKoi[]>([]);
 
   const formatDateForInput = (date: Date): string => {
     if (!date) return "";
@@ -208,6 +210,14 @@ export const AuctionsManagement: React.FC = () => {
     }
   };
 
+  const handleEdit = (koiId: number) => {
+    alert(`Edit Koi ${koiId}`);
+  };
+
+  const handleDelete = (koiId: number) => {
+    confirm(`Delete Koi ${koiId}`);
+  };
+
   return (
     <div className="mt-3">
       <div className="flex justify-between items-center mb-6">
@@ -340,7 +350,7 @@ export const AuctionsManagement: React.FC = () => {
       <Dialog
         open={openEditDialog}
         onClose={handleCloseEditDialog}
-        maxWidth="md"
+        maxWidth="xl"
         fullWidth
       >
         <DialogTitle>Edit Auction</DialogTitle>
@@ -386,50 +396,16 @@ export const AuctionsManagement: React.FC = () => {
               />
               <div className="mt-4">
                 <h3 className="text-lg font-semibold mb-2">Kois in Auction</h3>
+                <Button
+                  startIcon={<AddIcon />}
+                  onClick={() => alert("Add Koi")}
+                />
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Image
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Name
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Base Price
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Current Bid
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {auctionKois.map((koi) => (
-                        <tr key={koi.id}>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <img
-                              src={koi.thumbnail}
-                              alt={koi.name}
-                              className="w-16 h-16 object-cover rounded-full"
-                            />
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <p className="font-semibold">{koi.name}</p>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            ${koi.base_price}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            ${koi.current_bid}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <AuctionTable
+                    auctionKois={auctionKois}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                  />
                 </div>
               </div>
             </>

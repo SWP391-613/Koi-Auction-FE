@@ -92,14 +92,6 @@ const KoiDetail: React.FC = () => {
 
   return (
     <div className="container mx-auto">
-      <div className="ml-10 mt-6">
-        <NavigateButton
-          to="/kois"
-          icon={<FontAwesomeIcon icon={faArrowLeft} />}
-          text="Back to Koi List"
-          className="rounded bg-gray-200 px-5 py-3 text-lg text-black transition hover:bg-gray-200"
-        />
-      </div>
       <div className="m-5 flex flex-col gap-6 p-4 sm:flex-col md:flex-row">
         {/* Koi Image */}
         <>

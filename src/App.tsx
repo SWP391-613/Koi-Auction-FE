@@ -9,7 +9,7 @@ import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import Home from "./pages/home/Home";
 import Auctions from "./pages/auctions/Auctions";
-import Auction from "./pages/manager/auctions/AuctionsManagement";
+import Auction, { AuctionsManagement } from "./pages/manager/auctions/AuctionsManagement";
 import About from "./pages/about/About";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
@@ -43,7 +43,7 @@ import StaffAuctions from "./pages/staff/auctions/Auctions";
 import SendNotifications from "./pages/staff/notifications/SendNotifications";
 import Privacy from "./pages/privacy/Privacy";
 import Terms from "./pages/terms/Terms";
-import StaffDetail from "./pages/staff/StaffDetail";
+import StaffDetail from "./pages/staff/detail/StaffDetail";
 import { Role } from "./types/roles.type";
 
 const TITLE = "Auction Koi";
@@ -109,15 +109,15 @@ function App() {
           <Route
             element={<RoleBasedRoute allowedRoles={["ROLE_STAFF" as Role]} />}
           >
-            <Route path="/staffs" element={<StaffDetail />}></Route>
+            <Route path="/staffs" element={<StaffLayout />}>
+             <Route path="" element={<StaffDetail />}></Route>
+              <Route path="auctions" element={<AuctionsManagement />} />
+              <Route path="kois" element={<KoiList />} />
+              <Route path="send-notifications" element={<SendNotifications />}
+              />
+            </Route>
           </Route>
 
-          {/* Route for unauthorized access */}
-          <Route path="/unauthorized" element={<Unauthorized />} />
-          <Route path="/staff" element={<StaffLayout />}>
-            <Route path="auctions" element={<StaffAuctions />} />
-            <Route path="send-notifications" element={<SendNotifications />} />
-          </Route>
         </Routes>
         <Footer />
         <ToastContainer />

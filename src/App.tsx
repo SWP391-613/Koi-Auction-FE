@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, BrowserRouter as Router } from "react-router-dom";
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import Home from "./pages/home/Home";
@@ -34,6 +34,9 @@ import { Role } from "./dtos/login.dto";
 import Unauthorized from "./components/unauthorized/Unauthorized";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import BreederDetail from "./pages/breeder/BreederDetail";
+import StaffLayout from "./pages/staff/Staff";
+import StaffAuctions  from "./pages/staff/auctions/Auctions";
+import SendNotifications from "./pages/staff/notifications/SendNotifications";
 
 const TITLE = "Auction Koi";
 
@@ -104,6 +107,10 @@ function App() {
 
           {/* Route for unauthorized access */}
           <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="/staff" element={<StaffLayout />}>
+            <Route path="auctions" element={<StaffAuctions />} />
+            <Route path="send-notifications" element={<SendNotifications />} />
+          </Route>
         </Routes>
         <Footer />
         <ToastContainer />

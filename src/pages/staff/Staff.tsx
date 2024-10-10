@@ -1,5 +1,5 @@
-import React from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import React from "react";
+import { Outlet, Link } from "react-router-dom";
 
 const StaffLayout: React.FC = () => {
   return (
@@ -7,7 +7,9 @@ const StaffLayout: React.FC = () => {
       {/* Sidebar */}
       <div className="w-64 bg-white shadow-md">
         <div className="p-4">
-          <h2 className="text-2xl font-semibold text-gray-800">Staff Dashboard</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">
+            Staff Dashboard
+          </h2>
         </div>
         <nav className="mt-4">
           <Link to="/staffs/auctions" className="block py-2 px-4 text-gray-700 hover:bg-gray-200">

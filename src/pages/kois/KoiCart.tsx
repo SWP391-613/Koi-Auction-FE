@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { KoiDetailModel } from "./Kois";
+import { KoiDetailModel } from "~/types/kois.type";
 
 interface KoiCartProps {
   items: KoiDetailModel[];

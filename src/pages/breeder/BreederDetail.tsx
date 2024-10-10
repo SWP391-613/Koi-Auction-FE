@@ -13,6 +13,7 @@ import { useUserData } from "~/contexts/useUserData";
 import DepositComponent from "~/components/shared/DepositComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import { KoiDetailModel } from "~/types/kois.type";
+import KoiList from "../manager/koi/KoiList";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -127,6 +128,18 @@ const BreederDetail: React.FC = () => {
     navigate("/notfound");
   }
 
+  const handleView = (id: number) => {
+    navigate(`/kois/${id}`);
+  };
+
+  const handleEdit = (id: number) => {
+    alert(`Edit koi ${id}`);
+  };
+
+  const handleDelete = (id: number) => {
+    alert(`Delete koi ${id}`);
+  };
+
   return (
     <div className="flex flex-col justify-around m-10">
       <AccountVerificationAlert user={user} />
@@ -205,11 +218,13 @@ const BreederDetail: React.FC = () => {
         </div>
       </div>
       <div>
-        <Typography variant="h2" className="text-center">
-          My Kois
-        </Typography>
         {/* Render KoiCart with the fetched koi items */}
-        <KoiCart items={kois} />
+        <KoiCart
+          items={kois}
+          onView={handleView}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
       </div>
       <PaginationComponent
         totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages

@@ -15,7 +15,7 @@ import {
   faUser,
   faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
-import { KoiDetailModel } from "./Kois";
+import { KoiDetailModel } from "~/types/kois.type";
 
 interface KoiDetailItemProps {
   icon: IconDefinition;

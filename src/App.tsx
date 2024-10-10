@@ -64,6 +64,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/kois/:id" element={<KoiDetail />} />
 
           {/* Route required user is logged in */}
           <Route element={<ProtectedRoute />}>

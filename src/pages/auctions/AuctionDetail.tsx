@@ -23,6 +23,7 @@ import NavigateButton from "~/components/shared/NavigateButton";
 import { KoiDetailModel } from "~/types/kois.type";
 import { AuctionKoi, KoiWithAuctionKoiData } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
+import { AUCTION_STATUS } from "~/constants/auctionStatus";
 
 const AuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();
@@ -39,7 +40,7 @@ const AuctionDetail: React.FC = () => {
       setAuction(auctionData);
 
       if (auctionData) {
-        const auctionKoiData = await fetchAuctionKoi(auctionData.id);
+        const auctionKoiData = await fetchAuctionKoi(auctionData.id!);
         const koiDetailsPromises = auctionKoiData.map(
           (auctionKoi: AuctionKoi) => getKoiById(auctionKoi.koi_id),
         );
@@ -90,21 +91,21 @@ const AuctionDetail: React.FC = () => {
               <div className="mb-4 flex flex-col items-center">
                 <h3 className="text-sm text-gray-500">Start Time:</h3>
                 <p className="text-lg font-medium text-gray-700">
-                  {auction.start_time}
+                  {auction.start_time.toLocaleString()}
                 </p>
               </div>
 
               <div className="mb-4 flex flex-col items-center">
                 <h3 className="text-sm text-gray-500">End Time:</h3>
                 <p className="text-lg font-medium text-gray-700">
-                  {auction.end_time}
+                  {auction.end_time.toLocaleString()}
                 </p>
               </div>
 
               <div className="flex flex-row items-center">
                 <span
                   className={`rounded-lg px-4 py-2 text-lg font-bold
-                  ${auction.status === "On-going" ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}
+                  ${auction.status === AUCTION_STATUS.ONGOING ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}
                 >
                   {auction.status}
                 </span>

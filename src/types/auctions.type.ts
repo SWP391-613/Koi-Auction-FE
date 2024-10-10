@@ -11,5 +11,8 @@ export type AuctionModel = {
   title: string;
   start_time: Date | string;
   end_time: Date | string;
-  status: string;
+  status: AUCTION_STATUS;
 };
+
+export type AUCTION_STATUS = "UPCOMING" | "ONGOING" | "ENDED";
+

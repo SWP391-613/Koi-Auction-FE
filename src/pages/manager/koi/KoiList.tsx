@@ -1,77 +1,58 @@
-import React from "react";
-import { useEffect, useState, useCallback } from "react";
-import axios from "axios";
-import { Container, Typography, CircularProgress, Alert } from "@mui/material";
 import {
+  Alert,
   Button,
+  CircularProgress,
+  Container,
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
+  DialogContent,
+  DialogTitle,
   TextField,
+  Typography,
 } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import PaginationComponent from "../../../components/pagination/Pagination";
-
-interface Koi {
-  id: number;
-  name: string;
-  sex: string;
-  length: number;
-  age: number;
-  base_price: number;
-  status_name: string;
-  is_display: number;
-  thumbnail: string;
-  description: string;
-  owner_id: number;
-  category_id: number;
-}
-
-interface KoiApiResponse {
-  total_page: number;
-  total_item: number;
-  items: Koi[];
-}
+import { KoiApiResponse, KoiDetailModel } from "~/types/kois.type";
 
 const KoiList = () => {
-  const [kois, setKois] = useState<Koi[]>([]);
+  const [kois, setKois] = useState<KoiDetailModel[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const itemsPerPage = 3; // Adjusted to match the API limit parameter
 
-  const fetchKois = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get<KoiApiResponse>(
-        "http://localhost:4000/api/v1/kois",
-        {
-          params: {
-            page: page - 1, // Assuming the API is zero-based
-            limit: itemsPerPage,
-          },
-        },
-      );
-
-      const data = response.data;
-
-      if (data && Array.isArray(data.items)) {
-        setKois(data.items);
-        setTotalPages(data.total_page);
-      } else {
-        setError("Unexpected data structure from API");
-      }
-    } catch (err: any) {
-      setError("Error fetching kois: " + (err.message || "Unknown error"));
-    } finally {
-      setLoading(false);
-    }
-  }, [page, itemsPerPage]);
-
   useEffect(() => {
+    const fetchKois = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get<KoiApiResponse>(
+          "http://localhost:4000/api/v1/kois",
+          {
+            params: {
+              page: page - 1, // Assuming the API is zero-based
+              limit: itemsPerPage,
+            },
+          },
+        );
+
+        const data = response.data;
+
+        if (data && Array.isArray(data.item)) {
+          setKois(data.item);
+          setTotalPages(data.total_page);
+        } else {
+          setError("Unexpected data structure from API");
+        }
+      } catch (err: any) {
+        setError("Error fetching kois: " + (err.message || "Unknown error"));
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchKois();
-  }, [fetchKois]);
+  }, [page, itemsPerPage]);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -96,7 +77,7 @@ const KoiList = () => {
   };
 
   const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false);
-  const [newKoi, setNewKoi] = useState<Partial<Koi>>({
+  const [newKoi, setNewKoi] = useState<Partial<KoiDetailModel>>({
     name: "",
     sex: "",
     length: 0,
@@ -122,14 +103,14 @@ const KoiList = () => {
       Object.keys(newKoi).forEach((key) => {
         formData.append(
           key,
-          newKoi[key as keyof Partial<Koi>]?.toString() || "",
+          newKoi[key as keyof Partial<KoiDetailModel>]?.toString() || "",
         );
       });
       if (koiImage) {
         formData.append("image", koiImage);
       }
 
-      const response = await axios.post<Koi>(
+      const response = await axios.post<KoiDetailModel>(
         "http://localhost:4000/api/v1/kois",
         formData,
         {

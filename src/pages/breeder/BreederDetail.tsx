@@ -23,7 +23,7 @@ export type KoiOfBreederQueryParams = {
 export type KoiOfBreeder = {
   total_page: number;
   total_item: number;
-  items: KoiDetailModel[];
+  item: KoiDetailModel[];
 };
 
 const BreederDetail: React.FC = () => {
@@ -51,10 +51,10 @@ const BreederDetail: React.FC = () => {
         );
 
         if (koisOfBreederData) {
-          if (koisOfBreederData.items.length < itemsPerPage) {
+          if (koisOfBreederData.item.length < itemsPerPage) {
             setHasMorePages(false);
           }
-          setKois((prevKois) => [...prevKois, ...koisOfBreederData.items]);
+          setKois((prevKois) => [...prevKois, ...koisOfBreederData.item]);
         }
       } catch (error) {
         console.error("Failed to fetch koi data:", error);
@@ -104,7 +104,7 @@ const BreederDetail: React.FC = () => {
     if (!user) return;
     navigate("/otp-verification", {
       state: {
-        email: user.emails,
+        email: user.email,
         from: "userDetail",
         statusCode: 200,
       },
@@ -151,7 +151,7 @@ const BreederDetail: React.FC = () => {
           <div className="user-info-grid">
             <div className="info-item">
               <p className="info-label">Email</p>
-              <p className="info-value">{user.emails}</p>
+              <p className="info-value">{user.email}</p>
             </div>
             <div className="info-item">
               <p className="info-label">Phone</p>

@@ -27,12 +27,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             </ListItemButton>
           </ListItem>
           <ListItem>
-            {/* <ListItemButton
+            <ListItemButton
               component={Link}
               to={ROUTING_PATH.MANAGERS_AUCTIONS}
             >
               <ListItemText primary="Auctions" />
-            </ListItemButton> */}
+            </ListItemButton>
           </ListItem>
           <ListItem>
             <ListItemButton component={Link} to={ROUTING_PATH.MANAGERS_BREEDER}>

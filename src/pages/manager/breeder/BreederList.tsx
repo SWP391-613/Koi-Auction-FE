@@ -1,34 +1,17 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import { Alert, Button, CircularProgress, Container } from "@mui/material";
 import axios from "axios";
-import { Container, CircularProgress, Alert } from "@mui/material";
-
-interface Breeder {
-  id: number;
-  first_name: string;
-  last_name: string;
-  phone_number: string | null;
-  email: string;
-  address: string;
-  password: string | null;
-  status_name: string;
-  date_of_birth: number;
-  avatar_url: string;
-  google_account_id: number;
-  role_name: string;
-  account_balance: number;
-}
-
-interface BreedersResponse {
-  total_page: number;
-  total_item: number;
-  item: Breeder[];
-}
+import React, { useEffect, useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
+import PaginationComponent from "~/components/pagination/Pagination";
+import { Breeder, BreedersResponse } from "~/types/users.type";
 
 const BreederList = () => {
   const [breeders, setBreeders] = useState<Breeder[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const itemsPerPage = 8; // Adjusted to match the API limit parameter
 
   useEffect(() => {
     const fetchBreeders = async () => {
@@ -37,39 +20,51 @@ const BreederList = () => {
           "http://localhost:4000/api/v1/breeders",
           {
             params: {
-              page: 0,
-              limit: 5,
+              page: page - 1,
+              limit: itemsPerPage,
             },
           },
         );
-        setBreeders(response.data.item);
-        setLoading(false);
+
+        const data = response.data;
+
+        if (data && Array.isArray(data.item)) {
+          setBreeders(data.item);
+          setTotalPages(data.total_page);
+        } else {
+          setError("Error fetching breeders");
+        }
       } catch (err) {
         setError("Error fetching breeders");
+      } finally {
         setLoading(false);
       }
     };
 
     fetchBreeders();
-  }, []);
+  }, [page, itemsPerPage]);
 
-  if (!Array.isArray(breeders)) {
-    return <div>Error: Breeders data is not an array</div>;
-  }
-
-  const handleView = (id) => {
-    // Implement view logic
-    console.log("View breeder", id);
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setPage(value);
   };
 
-  const handleEdit = (id) => {
-    // Implement edit logic
-    console.log("Edit breeder", id);
+  const handleCreate = (breeder: Breeder) => {
+    alert("Create new breeder");
   };
 
-  const handleDelete = (id) => {
-    // Implement delete logic
-    console.log("Delete breeder", id);
+  const handleView = (id: number) => {
+    alert(`View breeder ${id}`);
+  };
+
+  const handleEdit = (id: number) => {
+    alert(`Edit breeder ${id}`);
+  };
+
+  const handleDelete = (id: number) => {
+    alert(`Delete breeder ${id}`);
   };
 
   if (loading) {
@@ -90,6 +85,18 @@ const BreederList = () => {
 
   return (
     <div className="w-full overflow-x-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Breeder Management</h1>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleCreate}
+        >
+          Add New Breeder
+        </Button>
+      </div>
+
       <table className="whitespace-no-wrap w-full">
         <thead>
           <tr className="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
@@ -184,6 +191,13 @@ const BreederList = () => {
           ))}
         </tbody>
       </table>
+      <div className="xs:flex-row xs:justify-between flex flex-col items-center border-t bg-white px-5 py-5">
+        <PaginationComponent
+          totalPages={totalPages}
+          currentPage={page}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

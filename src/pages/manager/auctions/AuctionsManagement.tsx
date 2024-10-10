@@ -32,6 +32,7 @@ import axios from "axios";
 import { convertToJavaLocalDateTime } from "~/utils/dateTimeUtils";
 import AuctionTable from "~/editkoiinauction/EditAuction";
 import { AuctionKoi } from "~/types/auctionkois.type";
+import SearchBar from "~/components/shared/SearchBar";
 
 interface Koi {
   id: number;
@@ -219,203 +220,208 @@ export const AuctionsManagement: React.FC = () => {
   };
 
   return (
-    <div className="mt-3">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Auctions Management</h1>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={handleAddAuction}
-        >
-          Add New Auction
-        </Button>
-      </div>
+    <div>
+      <SearchBar />
+      <div className="mt-3">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Auctions Management</h1>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={handleAddAuction}
+          >
+            Add New Auction
+          </Button>
+        </div>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Title</TableCell>
-              <TableCell>Start Time</TableCell>
-              <TableCell>End Time</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {auctions.map((auction) => (
-              <TableRow key={auction.id}>
-                <TableCell>{auction.id}</TableCell>
-                <TableCell>{auction.title}</TableCell>
-                <TableCell>
-                  {new Date(auction.start_time).toLocaleString()}
-                </TableCell>
-                <TableCell>
-                  {new Date(auction.end_time).toLocaleString()}
-                </TableCell>
-                <TableCell>{auction.status}</TableCell>
-                <TableCell>
-                  <Button
-                    startIcon={<EditIcon />}
-                    onClick={() => handleEditAuction(auction)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    startIcon={<DeleteIcon />}
-                    color="error"
-                    onClick={() => handleDeleteAuction(auction.id!)}
-                  >
-                    Delete
-                  </Button>
-                </TableCell>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Start Time</TableCell>
+                <TableCell>End Time</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {auctions.map((auction) => (
+                <TableRow key={auction.id}>
+                  <TableCell>{auction.id}</TableCell>
+                  <TableCell>{auction.title}</TableCell>
+                  <TableCell>
+                    {new Date(auction.start_time).toLocaleString()}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(auction.end_time).toLocaleString()}
+                  </TableCell>
+                  <TableCell>{auction.status}</TableCell>
+                  <TableCell>
+                    <Button
+                      startIcon={<EditIcon />}
+                      onClick={() => handleEditAuction(auction)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      startIcon={<DeleteIcon />}
+                      color="error"
+                      onClick={() => handleDeleteAuction(auction.id!)}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-      <div className="mt-4">
-        <PaginationComponent
-          totalPages={hasMorePages ? currentPage + 1 : currentPage}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-      </div>
+        <div className="mt-4">
+          <PaginationComponent
+            totalPages={hasMorePages ? currentPage + 1 : currentPage}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
 
-      {/* Add Auction Dialog */}
-      <Dialog open={openAddDialog} onClose={handleCloseAddDialog}>
-        <DialogTitle>Add New Auction</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="title"
-            label="Auction Title"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={newAuction.title}
-            onChange={handleInputChange}
-          />
-          <TextField
-            margin="dense"
-            name="start_time"
-            label="Start Time"
-            type="datetime-local"
-            fullWidth
-            variant="standard"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            value={newAuction.start_time}
-            onChange={handleInputChange}
-          />
-          <TextField
-            margin="dense"
-            name="end_time"
-            label="End Time"
-            type="datetime-local"
-            fullWidth
-            variant="standard"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            value={newAuction.end_time}
-            onChange={handleInputChange}
-          />
-          <TextField
-            margin="dense"
-            name="status"
-            label="Status"
-            type="text"
-            fullWidth
-            variant="standard"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            value={newAuction.status}
-            onChange={handleInputChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseAddDialog}>Cancel</Button>
-          <Button onClick={handleSubmitNewAuction}>Add</Button>
-        </DialogActions>
-      </Dialog>
+        {/* Add Auction Dialog */}
+        <Dialog open={openAddDialog} onClose={handleCloseAddDialog}>
+          <DialogTitle>Add New Auction</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              name="title"
+              label="Auction Title"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={newAuction.title}
+              onChange={handleInputChange}
+            />
+            <TextField
+              margin="dense"
+              name="start_time"
+              label="Start Time"
+              type="datetime-local"
+              fullWidth
+              variant="standard"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={newAuction.start_time}
+              onChange={handleInputChange}
+            />
+            <TextField
+              margin="dense"
+              name="end_time"
+              label="End Time"
+              type="datetime-local"
+              fullWidth
+              variant="standard"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={newAuction.end_time}
+              onChange={handleInputChange}
+            />
+            <TextField
+              margin="dense"
+              name="status"
+              label="Status"
+              type="text"
+              fullWidth
+              variant="standard"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={newAuction.status}
+              onChange={handleInputChange}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseAddDialog}>Cancel</Button>
+            <Button onClick={handleSubmitNewAuction}>Add</Button>
+          </DialogActions>
+        </Dialog>
 
-      {/* Edit Auction Dialog */}
-      <Dialog
-        open={openEditDialog}
-        onClose={handleCloseEditDialog}
-        maxWidth="xl"
-        fullWidth
-      >
-        <DialogTitle>Edit Auction</DialogTitle>
-        <DialogContent>
-          {editingAuction && (
-            <>
-              <TextField
-                autoFocus
-                margin="dense"
-                name="title"
-                label="Auction Title"
-                type="text"
-                fullWidth
-                variant="standard"
-                value={editingAuction.title}
-                onChange={handleEditInputChange}
-              />
-              <TextField
-                margin="dense"
-                name="start_time"
-                label="Start Time"
-                type="datetime-local"
-                fullWidth
-                variant="standard"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={formatDateForInput(editingAuction.start_time as Date)}
-                onChange={handleEditInputChange}
-              />
-              <TextField
-                margin="dense"
-                name="end_time"
-                label="End Time"
-                type="datetime-local"
-                fullWidth
-                variant="standard"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={formatDateForInput(editingAuction.end_time as Date)}
-                onChange={handleEditInputChange}
-              />
-              <div className="mt-4">
-                <h3 className="text-lg font-semibold mb-2">Kois in Auction</h3>
-                <Button
-                  startIcon={<AddIcon />}
-                  onClick={() => alert("Add Koi")}
+        {/* Edit Auction Dialog */}
+        <Dialog
+          open={openEditDialog}
+          onClose={handleCloseEditDialog}
+          maxWidth="xl"
+          fullWidth
+        >
+          <DialogTitle>Edit Auction</DialogTitle>
+          <DialogContent>
+            {editingAuction && (
+              <>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  name="title"
+                  label="Auction Title"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={editingAuction.title}
+                  onChange={handleEditInputChange}
                 />
-                <div className="overflow-x-auto">
-                  <AuctionTable
-                    auctionKois={auctionKois}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
+                <TextField
+                  margin="dense"
+                  name="start_time"
+                  label="Start Time"
+                  type="datetime-local"
+                  fullWidth
+                  variant="standard"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={formatDateForInput(editingAuction.start_time as Date)}
+                  onChange={handleEditInputChange}
+                />
+                <TextField
+                  margin="dense"
+                  name="end_time"
+                  label="End Time"
+                  type="datetime-local"
+                  fullWidth
+                  variant="standard"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={formatDateForInput(editingAuction.end_time as Date)}
+                  onChange={handleEditInputChange}
+                />
+                <div className="mt-4">
+                  <h3 className="text-lg font-semibold mb-2">
+                    Kois in Auction
+                  </h3>
+                  <Button
+                    startIcon={<AddIcon />}
+                    onClick={() => alert("Add Koi")}
                   />
+                  <div className="overflow-x-auto">
+                    <AuctionTable
+                      auctionKois={auctionKois}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                    />
+                  </div>
                 </div>
-              </div>
-            </>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseEditDialog}>Cancel</Button>
-          <Button onClick={handleSubmitEditAuction}>Save</Button>
-        </DialogActions>
-      </Dialog>
+              </>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseEditDialog}>Cancel</Button>
+            <Button onClick={handleSubmitEditAuction}>Save</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </div>
   );
 };

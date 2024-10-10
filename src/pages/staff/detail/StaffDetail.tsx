@@ -5,14 +5,14 @@ import { getCookie } from "~/utils/cookieUtils";
 import axios from "axios";
 import { environment } from "~/environments/environment";
 import { fetchKoisOfBreeder } from "~/utils/apiUtils";
-import KoiCart from "../kois/KoiCart";
+import KoiCart from "../../kois/KoiCart";
 import { Button, Typography } from "@mui/material";
 import PaginationComponent from "~/components/pagination/Pagination";
 import { useAuth } from "~/contexts/AuthContext";
 import { useUserData } from "~/contexts/useUserData";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import { KoiDetailModel } from "~/types/kois.type";
-import { AuctionsManagement } from "../manager/auctions/AuctionsManagement";
+import { AuctionsManagement } from "../../manager/auctions/AuctionsManagement";
 import SearchBar from "~/components/shared/SearchBar";
 
 const StaffDetail: React.FC = () => {
@@ -140,9 +140,6 @@ const StaffDetail: React.FC = () => {
         </div>
       </div>
 
-      <SearchBar />
-
-      <AuctionsManagement />
     </div>
   );
 };

@@ -12,13 +12,22 @@ const StaffLayout: React.FC = () => {
           </h2>
         </div>
         <nav className="mt-4">
-          <Link to="/staffs/auctions" className="block py-2 px-4 text-gray-700 hover:bg-gray-200">
+          <Link
+            to="/staffs/auctions"
+            className="block py-2 px-4 text-gray-700 hover:bg-gray-200"
+          >
             Auctions
           </Link>
-          <Link to="/staffs/kois" className="block py-2 px-4 text-gray-700 hover:bg-gray-200">
+          <Link
+            to="/staffs/kois"
+            className="block py-2 px-4 text-gray-700 hover:bg-gray-200"
+          >
             Kois
           </Link>
-          <Link to="/staffs/send-notifications" className="block py-2 px-4 text-gray-700 hover:bg-gray-200">
+          <Link
+            to="/staffs/send-notifications"
+            className="block py-2 px-4 text-gray-700 hover:bg-gray-200"
+          >
             Send Notifications
           </Link>
         </nav>

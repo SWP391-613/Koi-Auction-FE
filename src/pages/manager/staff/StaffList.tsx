@@ -1,70 +1,89 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import AddIcon from "@mui/icons-material/Add";
 import {
-  Container,
-  CircularProgress,
-  Alert,
   Button,
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
+  DialogContent,
+  DialogTitle,
   TextField,
 } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import PaginationComponent from "~/components/pagination/Pagination";
+import { Staff, StaffsResponse } from "~/types/users.type";
 
 const StaffList = () => {
-  const [staffs, setStaffs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [staffs, setStaffs] = useState<Staff[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [newStaff, setNewStaff] = useState({
     full_name: "",
     email: "",
     address: "",
   });
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const itemsPerPage = 5; // Adjusted to match the API limit parameter
 
   useEffect(() => {
     const fetchStaffs = async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.get<StaffsResponse>(
           "http://localhost:4000/api/v1/staffs",
           {
             params: {
-              page: 0,
-              limit: 10,
+              page: page - 1,
+              limit: itemsPerPage,
             },
           },
         );
-        setStaffs(response.data);
-        setLoading(false);
+
+        const data = response.data;
+
+        if (data && Array.isArray(data.item)) {
+          setStaffs(data.item);
+          setTotalPages(data.total_page);
+        } else {
+          setError("Error fetching staffs");
+        }
       } catch (err) {
         setError("Error fetching staffs");
+      } finally {
         setLoading(false);
       }
     };
 
     fetchStaffs();
-  }, []);
+  }, [page, itemsPerPage]);
 
-  const handleView = (id) => {
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setPage(value);
+  };
+
+  const handleView = (id: number) => {
     // Implement view logic
-    console.log("View staff", id);
+    //use template string
+    alert(`View staff: ${id}`);
   };
 
-  const handleEdit = (id) => {
+  const handleEdit = (id: number) => {
     // Implement edit logic
-    console.log("Edit staff", id);
+    alert(`Edit staff: ${id}`);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: number) => {
     // Implement delete logic
-    console.log("Delete staff", id);
+    alert(`Delete staff: ${id}`);
   };
 
   const handleOpenCreateDialog = () => setOpenCreateDialog(true);
   const handleCloseCreateDialog = () => setOpenCreateDialog(false);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     setNewStaff({ ...newStaff, [e.target.name]: e.target.value });
   };
 
@@ -81,32 +100,19 @@ const StaffList = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <Container>
-        <CircularProgress />
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container>
-        <Alert severity="error">{error}</Alert>
-      </Container>
-    );
-  }
-
   return (
     <div className="w-full overflow-x-auto">
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleOpenCreateDialog}
-        className="mb-4"
-      >
-        Create New Staff
-      </Button>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Staffs Management</h1>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleOpenCreateDialog}
+        >
+          Add New STAFF
+        </Button>
+      </div>
 
       <Dialog open={openCreateDialog} onClose={handleCloseCreateDialog}>
         <DialogTitle>Create New Staff</DialogTitle>
@@ -176,7 +182,7 @@ const StaffList = () => {
                     ></div>
                   </div>
                   <div>
-                    <p className="font-semibold">{staff.full_name}</p>
+                    <p className="font-semibold">{staff.first_name}</p>
                     <p className="text-xs text-gray-600 dark:text-gray-400">
                       Staff
                     </p>
@@ -243,6 +249,13 @@ const StaffList = () => {
           ))}
         </tbody>
       </table>
+      <div className="xs:flex-row xs:justify-between flex flex-col items-center border-t bg-white px-5 py-5">
+        <PaginationComponent
+          totalPages={totalPages}
+          currentPage={page}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

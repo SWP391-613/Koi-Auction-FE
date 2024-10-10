@@ -8,9 +8,10 @@ export interface KoisResponse {
 export type KoiDetailModel = {
   id: number;
   name: string;
-  sex: KoiGender;
+  sex: KoiGender | "";
   length: number;
   age: number;
+  base_price: number;
   status_name: KoiTrackingStatus | "UNVERIFIED"; //if not any of the status, then default is unverified
   is_display: number; //0, 1
   thumbnail: string;
@@ -26,3 +27,9 @@ export type KoiModel = Omit<KoiDetailModel, "sex"> & { gender: string };
 export type KoiTrackingStatus = "VERIFIED" | "REJECTED" | "PENDING" | "SOLD";
 
 export type KoiGender = "Male" | "Female" | "Unknown";
+
+export type KoiApiResponse = {
+  total_page: number;
+  total_item: number;
+  item: KoiDetailModel[];
+};

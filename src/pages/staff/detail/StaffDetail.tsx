@@ -139,7 +139,6 @@ const StaffDetail: React.FC = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };

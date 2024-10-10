@@ -1,49 +1,74 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
+import { Alert, Button, CircularProgress, Container } from "@mui/material";
 import axios from "axios";
-import { Container, CircularProgress, Alert } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import PaginationComponent from "~/components/pagination/Pagination";
+import { Member, MembersResponse } from "~/types/users.type";
 
 const MemberList = () => {
-  const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [members, setMembers] = useState<Member[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const itemsPerPage = 8; // A
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.get<MembersResponse>(
           "http://localhost:4000/api/v1/members",
           {
             params: {
-              page: 0,
-              limit: 10,
+              page: page - 1,
+              limit: itemsPerPage,
             },
           },
         );
-        setMembers(response.data);
-        setLoading(false);
+
+        const data = response.data;
+
+        if (data && Array.isArray(data.item)) {
+          setMembers(data.item);
+          setTotalPages(data.total_page);
+        } else {
+          setError("Error fetching members");
+        }
       } catch (err) {
         setError("Error fetching members");
+      } finally {
         setLoading(false);
       }
     };
 
     fetchMembers();
-  }, []);
+  }, [page, itemsPerPage]);
 
-  const handleView = (id) => {
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setPage(value);
+  };
+
+  const handleCreate = () => {
+    alert("Create new member");
+  };
+
+  const handleView = (id: number) => {
     // Implement view logic
-    console.log("View member", id);
+    //template string
+    alert(`View member ${id}`);
   };
 
-  const handleEdit = (id) => {
+  const handleEdit = (id: number) => {
     // Implement edit logic
-    console.log("Edit member", id);
+    alert(`Edit member ${id}`);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: number) => {
     // Implement delete logic
-    console.log("Delete member", id);
+    alert(`Delete member ${id}`);
   };
 
   if (loading) {
@@ -64,6 +89,18 @@ const MemberList = () => {
 
   return (
     <div className="w-full overflow-x-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Member Management</h1>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleCreate}
+        >
+          Add New Member
+        </Button>
+      </div>
+
       <table className="whitespace-no-wrap w-full">
         <thead>
           <tr className="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
@@ -91,7 +128,7 @@ const MemberList = () => {
                     ></div>
                   </div>
                   <div>
-                    <p className="font-semibold">{member.full_name}</p>
+                    <p className="font-semibold">{member.first_name}</p>
                     <p className="text-xs text-gray-600 dark:text-gray-400">
                       Member
                     </p>
@@ -158,6 +195,13 @@ const MemberList = () => {
           ))}
         </tbody>
       </table>
+      <div className="xs:flex-row xs:justify-between flex flex-col items-center border-t bg-white px-5 py-5">
+        <PaginationComponent
+          totalPages={totalPages}
+          currentPage={page}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };

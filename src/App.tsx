@@ -1,49 +1,39 @@
-import React from "react";
-import {
-  Routes,
-  Route,
-  Navigate,
-  BrowserRouter as Router,
-} from "react-router-dom";
-import Header from "./components/header/Header";
-import Footer from "./components/footer/Footer";
-import Home from "./pages/home/Home";
-import Auctions from "./pages/auctions/Auctions";
-import Auction, { AuctionsManagement } from "./pages/manager/auctions/AuctionsManagement";
-import About from "./pages/about/About";
-import Login from "./pages/login/Login";
-import Register from "./pages/register/Register";
-import Manager from "./pages/manager/Manager";
-import MemberList from "./pages/manager/member/MemberList";
-import { Helmet } from "react-helmet";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import { AuthProvider } from "./contexts/AuthContext";
-import KoiDetail from "./pages/kois/KoiDetail";
-import koi_data from "./utils/data/koi_data.json";
-import user_data from "./utils/data/user_data.json";
-import KoiList from "./pages/manager/koi/KoiList";
-import BreederList from "./pages/manager/breeder/BreederList";
-import StaffList from "./pages/manager/staff/StaffList";
-import Settings from "./pages/manager/settings/Settings";
-import { ToastContainer } from "react-toastify";
-import UserDetail from "./pages/userdetail/UserDetail";
-import { SpeedInsights } from "@vercel/speed-insights/react";
-import Kois from "./pages/kois/Kois";
-import NotFound from "./components/error/NotFound";
-import AuctionDetail from "./pages/auctions/AuctionDetail";
 import { Analytics } from "@vercel/analytics/react";
-import KoiBidding from "./pages/auctions/KoiBidding";
-import OtpVerification from "./components/otp/OtpVeficitaion";
+import { SpeedInsights } from "@vercel/speed-insights/react";
+import React from "react";
+import { Helmet } from "react-helmet";
+import { Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import RoleBasedRoute from "./components/auth/RoleBasedRoute";
-import Unauthorized from "./components/unauthorized/Unauthorized";
+import NotFound from "./components/error/NotFound";
+import Footer from "./components/footer/Footer";
+import Header from "./components/header/Header";
+import OtpVerification from "./components/otp/OtpVeficitaion";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import About from "./pages/about/About";
+import AuctionDetail from "./pages/auctions/AuctionDetail";
+import Auctions from "./pages/auctions/Auctions";
+import KoiBidding from "./pages/auctions/KoiBidding";
 import BreederDetail from "./pages/breeder/BreederDetail";
-import StaffLayout from "./pages/staff/Staff";
-import StaffAuctions from "./pages/staff/auctions/Auctions";
-import SendNotifications from "./pages/staff/notifications/SendNotifications";
+import Home from "./pages/home/Home";
+import KoiDetail from "./pages/kois/KoiDetail";
+import Login from "./pages/login/Login";
+import Manager from "./pages/manager/Manager";
+import { AuctionsManagement } from "./pages/manager/auctions/AuctionsManagement";
+import BreederList from "./pages/manager/breeder/BreederList";
+import KoiList from "./pages/manager/koi/KoiList";
+import MemberList from "./pages/manager/member/MemberList";
+import Settings from "./pages/manager/settings/Settings";
+import StaffList from "./pages/manager/staff/StaffList";
 import Privacy from "./pages/privacy/Privacy";
-import Terms from "./pages/terms/Terms";
+import Register from "./pages/register/Register";
+import StaffLayout from "./pages/staff/Staff";
 import StaffDetail from "./pages/staff/detail/StaffDetail";
+import SendNotifications from "./pages/staff/notifications/SendNotifications";
+import Terms from "./pages/terms/Terms";
+import UserDetail from "./pages/userdetail/UserDetail";
 import { Role } from "./types/roles.type";
 
 const TITLE = "Auction Koi";
@@ -89,6 +79,7 @@ function App() {
             }
           >
             <Route path="/managers" element={<Manager />}>
+              <Route path="auctions" element={<AuctionsManagement />} />
               <Route path="member" element={<MemberList />} />
               <Route path="breeder" element={<BreederList />} />
               <Route path="staff" element={<StaffList />} />
@@ -110,14 +101,15 @@ function App() {
             element={<RoleBasedRoute allowedRoles={["ROLE_STAFF" as Role]} />}
           >
             <Route path="/staffs" element={<StaffLayout />}>
-             <Route path="" element={<StaffDetail />}></Route>
+              <Route path="" element={<StaffDetail />}></Route>
               <Route path="auctions" element={<AuctionsManagement />} />
               <Route path="kois" element={<KoiList />} />
-              <Route path="send-notifications" element={<SendNotifications />}
+              <Route
+                path="send-notifications"
+                element={<SendNotifications />}
               />
             </Route>
           </Route>
-
         </Routes>
         <Footer />
         <ToastContainer />

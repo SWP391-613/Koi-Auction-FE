@@ -1,22 +1,21 @@
+import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
-import DepositComponent from "~/components/shared/DepositComponent";
+import SearchBar from "~/components/shared/SearchBar";
 import { useUserData } from "~/contexts/useUserData";
-import { formatDate } from "~/utils/apiUtils";
+import { environment } from "~/environments/environment";
 import { getCookie } from "~/utils/cookieUtils";
-import "./UserDetail.scss";
+import { AuctionsManagement } from "../manager/auctions/AuctionsManagement";
+import "./StaffDetail.scss";
 
-const UserDetail: React.FC = () => {
-  const { user, loading, error, setUser } = useUserData();
+const StaffDetail: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const [updateField, setUpdateField] = useState("");
   const [updateValue, setUpdateValue] = useState("");
   const navigate = useNavigate();
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!user) return <div>No user data found</div>;
+  const { user, loading, error, setUser } = useUserData();
 
   const handleUpdate = async () => {
     if (!user || !updateField || !updateValue) return;
@@ -28,7 +27,8 @@ const UserDetail: React.FC = () => {
     }
 
     try {
-      const API_URL = "http://localhost:4000/api/v1";
+      const API_URL =
+        import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
       const response = await axios.put(
         `${API_URL}/users/${user.id}`,
         { [updateField]: updateValue },
@@ -62,9 +62,9 @@ const UserDetail: React.FC = () => {
     });
   };
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!user) return <div>No user data found</div>;
 
   const accessToken = getCookie("access_token");
   if (!accessToken) {
@@ -84,46 +84,29 @@ const UserDetail: React.FC = () => {
           <h1 className="user-name">
             {user.first_name} {user.last_name}
           </h1>
-          <p className="user-status">Status: {user.status_name}</p>
+          <p className="user-status">{user.status_name}</p>
           {user.status_name !== "VERIFIED" && (
             <button onClick={handleVerify} className="verify-button">
-              User need to Verify!
+              Verify User
             </button>
           )}
         </div>
         <div className="user-main">
           <div className="user-info-grid">
-            <div>
+            <div className="info-item">
               <p className="info-label">Email</p>
               <p className="info-value">{user.email}</p>
             </div>
-            <div>
-              <p className="info-label">Phone Number</p>
+            <div className="info-item">
+              <p className="info-label">Phone</p>
               <p className="info-value">
                 {user.phone_number || "Not provided"}
               </p>
             </div>
-            <div>
+            <div className="info-item">
               <p className="info-label">Address</p>
               <p className="info-value">{user.address || "Not provided"}</p>
             </div>
-            <div>
-              <p className="info-label">Date of Birth</p>
-              <p className="info-value">{user.date_of_birth}</p>
-            </div>
-            <div>
-              <p className="info-label">Created At</p>
-              <p className="info-value">{formatDate(user.created_at || "")}</p>
-            </div>
-            <div>
-              <p className="info-label">Updated At</p>
-              <p className="info-value">{formatDate(user.updated_at || "")}</p>
-            </div>
-          </div>
-          <div className="account-balance">
-            <p className="balance-label">Account Balance</p>
-            <p className="balance-value">${user.account_balance.toFixed(2)}</p>
-            <DepositComponent userId={user.id} token={accessToken || ""} />
           </div>
           <div className="update-field">
             <select
@@ -145,14 +128,18 @@ const UserDetail: React.FC = () => {
               placeholder="Enter new value"
               className="update-input"
             />
-            <button onClick={handleUpdate} className="update-button">
+            <Button onClick={handleUpdate} variant="contained" color="primary">
               Update
-            </button>
+            </Button>
           </div>
         </div>
       </div>
+
+      <SearchBar />
+
+      <AuctionsManagement />
     </div>
   );
 };
 
-export default UserDetail;
+export default StaffDetail;

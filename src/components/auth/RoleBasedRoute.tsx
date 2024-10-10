@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "~/contexts/AuthContext";
-import { Role } from "~/dtos/login.dto";
+import { Role } from "~/types/roles.type";
 
 interface RoleBasedRouteProps {
   allowedRoles: Role[];
@@ -11,11 +11,11 @@ interface RoleBasedRouteProps {
 export function routeUserToEachPage(roleName: string): string {
   let route;
   if (roleName === "ROLE_MANAGER") {
-    route = "/manager";
+    route = "/managers";
   } else if (roleName === "ROLE_STAFF") {
-    route = "/staff";
+    route = "/staffs";
   } else if (roleName === "ROLE_BREEDER") {
-    route = "/breeder";
+    route = "/breeders";
   } else if (roleName === "ROLE_MEMBER") {
     route = "/";
   } else {
@@ -39,7 +39,7 @@ const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
   // debugger;
   console.log("Allowed roles:", allowedRoles);
   // debugger;
-  const hasAllowedRole = user.roles?.some((role) =>
+  const hasAllowedRole = user.roles?.some((role: Role) =>
     allowedRoles.includes(role),
   );
   console.log(hasAllowedRole);

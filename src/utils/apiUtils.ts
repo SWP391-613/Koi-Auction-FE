@@ -1,14 +1,18 @@
 import axios, { AxiosError } from "axios";
 import { environment } from "../environments/environment";
-import { AuctionKoi } from "~/pages/auctions/AuctionDetail";
-import { RegisterDTO } from "~/dtos/register.dto";
-import { LoginDTO, UserLoginResponse } from "~/dtos/login.dto";
-import { KoiDetailModel, KoisResponse } from "~/pages/kois/Kois";
-import { Auction } from "~/pages/auctions/Auctions";
+import { KoiDetailModel, KoisResponse } from "~/types/kois.type";
 import { Bid } from "~/components/BiddingHistory";
 import { format, isToday, isYesterday, isTomorrow } from "date-fns";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/breeder/BreederDetail";
 import { toast } from "react-toastify";
+import { BidRequest } from "~/pages/auctions/KoiBidding";
+import {
+  LoginDTO,
+  UserRegisterDTO,
+  UserLoginResponse,
+} from "~/types/users.type";
+import { AuctionDTO, AuctionModel } from "~/types/auctions.type";
+import { AuctionKoi } from "~/types/auctionkois.type";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -29,8 +33,8 @@ export const login = async (payload: LoginDTO): Promise<UserLoginResponse> => {
   }
 };
 
-export const register = async (payload: RegisterDTO) => {
-  const fullData: RegisterDTO = {
+export const register = async (payload: UserRegisterDTO) => {
+  const fullData: UserRegisterDTO = {
     first_name: payload.first_name || "",
     last_name: payload.last_name || "",
     email: payload.email || "",
@@ -75,7 +79,7 @@ export const formatDate = (dateString: string): string => {
   }
 };
 
-const createAuctionFromApi = (apiData: any): Auction => {
+export const createAuctionFromApi = (apiData: AuctionDTO): AuctionDTO => {
   return {
     id: apiData.id,
     title: apiData.title,
@@ -85,10 +89,40 @@ const createAuctionFromApi = (apiData: any): Auction => {
   };
 };
 
+export const createNewAuction = async (
+  newAuction: AuctionModel,
+): Promise<AuctionModel> => {
+  try {
+    const response = await axios.post(`${API_URL}/auctions`, newAuction);
+
+    if (response.status !== 201) {
+      throw new Error("Failed to create new auction");
+    }
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Error creating new auction:",
+        error.response?.data?.message || error.message,
+      );
+    } else {
+      if (error instanceof Error) {
+        console.error("Error creating new auction:", error.message);
+      } else {
+        console.error(
+          "Error creating new auction:",
+          "An unexpected error occurred",
+        );
+      }
+    }
+    throw error;
+  }
+};
+
 export const fetchAuctions = async (
   page: number,
   limit: number,
-): Promise<Auction[]> => {
+): Promise<AuctionModel[]> => {
   try {
     // if (getCookie("access_token") === null) {
     //   throw new Error("You are not logged in");
@@ -99,7 +133,7 @@ export const fetchAuctions = async (
     });
 
     // Map the response data to Auction model
-    const auctions: Auction[] = response.data; //need raw data to calculate the time range of the auction
+    const auctions: AuctionModel[] = response.data; //need raw data to calculate the time range of the auction
     return auctions;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -121,7 +155,9 @@ export const fetchAuctions = async (
   }
 };
 
-export const fetchAuctionById = async (id: number): Promise<Auction | null> => {
+export const fetchAuctionById = async (
+  id: number,
+): Promise<AuctionModel | null> => {
   try {
     const response = await axios.get(`${API_URL}/auctions/${id}`);
     return createAuctionFromApi(response.data);
@@ -231,7 +267,7 @@ export const fetchAuctionKoiDetails = async (
 };
 
 export const fetchBidHistory = async (auctionKoiId: number): Promise<Bid[]> => {
-  const response = await fetch(`${API_URL}/auctionkoidetails/${auctionKoiId}`);
+  const response = await fetch(`${API_URL}/bidding/${auctionKoiId}`);
   if (!response.ok) {
     throw new Error("Failed to fetch bid history");
   }
@@ -283,5 +319,33 @@ export const updateAccountBalance = async (
     } else {
       throw new Error("An unexpected error occurred");
     }
+  }
+};
+
+export const placeBid = async (bid: BidRequest): Promise<void> => {
+  try {
+    await axios.post(
+      `${environment.be.baseUrl}${environment.be.apiPrefix}${environment.be.endPoint.bidding}/bid/${bid.auction_koi_id}`.trim(),
+      bid,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Add this line
+        },
+      },
+    );
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      if (error.response.status === 401) {
+        throw new Error("Unauthorized. Please log in again.");
+      }
+      if (error.response.data.reason === "BiddingRuleException") {
+        throw new Error(
+          error.response.data.message || "Bidding rule violation",
+        );
+      }
+      throw new Error("Failed to place bid");
+    }
+    throw new Error("Network error");
   }
 };

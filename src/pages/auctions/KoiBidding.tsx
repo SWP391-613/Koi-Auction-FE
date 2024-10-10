@@ -1,78 +1,39 @@
-import React, { useState, useEffect } from "react";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Typography } from "@mui/material";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  getKoiById,
-  fetchAuctionKoiDetails,
-  fetchAuctionById,
-} from "~/utils/apiUtils";
-import { useAuth } from "~/contexts/AuthContext";
-import { KoiDetailModel } from "../kois/Kois";
+import { toast } from "react-toastify";
 import { Bid } from "~/components/BiddingHistory";
+import { KoiInfoGridComponent } from "~/components/koibiddingdetail/KoiInfoGridComponent";
+import { AUCTION_STATUS } from "~/constants/auctionStatus";
+import { ERROR_MESSAGE } from "~/constants/errorMessages";
+import { SUCCESS_MESSAGE } from "~/constants/successMessage";
+import { WEB_SOCKET_MESSAGE } from "~/constants/webSocketMessages";
+import { useUserData } from "~/contexts/useUserData";
+import {
+  fetchAuctionById,
+  fetchAuctionKoiDetails,
+  getKoiById,
+  placeBid,
+} from "~/utils/apiUtils";
+import {
+  connectWebSocket,
+  disconnectWebSocket,
+  subscribeToAuctionUpdates,
+} from "~/utils/websocket";
+import Sold from "../../assets/Sold.png";
 import BiddingHistory from "../../components/BiddingHistory";
 import NavigateButton from "../../components/shared/NavigateButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import {
-  faFish,
-  faRuler,
-  faCalendarDays,
-  faVenusMars,
-  faDollarSign,
-  faGavel,
-  faArrowLeft,
-  faHandHoldingHeart,
-  faWallet,
-} from "@fortawesome/free-solid-svg-icons";
-import {
-  placeBid,
-  subscribeToAuctionUpdates,
-  unsubscribeFromAuctionUpdates,
-} from "~/utils/websocket";
-import { connectWebSocket, disconnectWebSocket } from "~/utils/websocket";
-import { Auction } from "./Auctions";
-import { AuctionKoi } from "./AuctionDetail";
-import { toast } from "react-toastify";
-import Sold from "../../assets/Sold.png";
-import { useCallback } from "react";
-import { useUserData } from "~/contexts/useUserData";
-
-// Define the KoiDetail UI component
-interface KoiDetailItemProps {
-  icon: IconDefinition;
-  label: string;
-  value: string | number;
-  fontSize?: string;
-  bgColor?: string;
-  textColor?: string;
-}
+import { KoiDetailModel } from "~/types/kois.type";
+import { AuctionModel } from "~/types/auctions.type";
+import { AuctionKoi } from "~/types/auctionkois.type";
 
 // Define the BidRequest interface
-export interface BidRequest {
+export type BidRequest = {
   auction_koi_id: number; // The ID of the auction koi
   bid_amount: number; // The amount of the bid
-  bidder_token: string;
-}
-
-// Define the KoiDetailItem component, the UI for the koi details
-const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
-  icon,
-  label,
-  value,
-  fontSize = "text-2xl",
-  bgColor = "bg-gray-100",
-  textColor = "text-black",
-}) => {
-  return (
-    <div
-      className={`${bgColor} m-2 grid grid-cols-2 rounded-3xl border border-gray-300 p-3`}
-    >
-      <div className="flex items-center">
-        <FontAwesomeIcon icon={icon as IconDefinition} color="#d66b56" />
-        <p className={`ml-2 text-lg`}>{label}</p>
-      </div>
-      <p className={`${fontSize} text-end ${textColor}`}>{value}</p>
-    </div>
-  );
+  bidder_id: number;
 };
 
 const KoiBidding: React.FC = () => {
@@ -84,13 +45,13 @@ const KoiBidding: React.FC = () => {
   const [koi, setKoi] = useState<KoiDetailModel | null>(null);
   const [bidAmount, setBidAmount] = useState<number>(0);
   const [auctionKoi, setAuctionKoi] = useState<AuctionKoi | null>(null);
-  const [auction, setAuction] = useState<Auction | null>(null);
+  const [auction, setAuction] = useState<AuctionModel | null>(null);
   const [latestBid, setLatestBid] = useState<Bid | null>(null);
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
   const isAuctionOngoing = useCallback(
-    () => auction?.status === "ACTIVE",
+    () => auction?.status === AUCTION_STATUS.ACTIVE,
     [auction],
   );
   const isAuctionEnded = useCallback(
@@ -131,8 +92,9 @@ const KoiBidding: React.FC = () => {
         unsubscribe = subscribeToAuctionUpdates(
           Number(auctionKoiId),
           (bidResponse: Bid) => {
-            if (!auctionKoi || bidResponse.bid_amount > auctionKoi.current_bid)
+            if (auctionKoi && bidResponse.bid_amount > auctionKoi.current_bid) {
               toast.success("New highest bid received!");
+            }
             setLatestBid(bidResponse);
             setAuctionKoi((prev) =>
               prev ? { ...prev, current_bid: bidResponse.bid_amount } : null,
@@ -151,25 +113,25 @@ const KoiBidding: React.FC = () => {
     };
   }, [auction, auctionKoiId, isAuctionOngoing, auctionKoi]);
 
-  const handlePlaceBid = useCallback(() => {
-    if (!isConnected || !user || !auctionKoi)
-      return toast.error("Please log in before placing a bid.");
-    if (auctionKoi.is_sold)
-      return toast.info("Auction has ended. Please reload the page.");
-    if (bidAmount < auctionKoi.base_price)
-      return toast.error("Bid amount must be greater than the base price.");
-    if (bidAmount < auctionKoi.current_bid + auctionKoi.bid_step)
-      return toast.error(
-        "Bid amount must be greater than the current bid plus the bid step.",
-      );
-
-    placeBid({
-      auction_koi_id: auctionKoi.id,
-      bid_amount: bidAmount,
-      bidder_token: user.token,
-    });
-    setBidAmount(auctionKoi.current_bid + auctionKoi.bid_step);
-  }, [isConnected, user, auctionKoi, bidAmount]);
+  const handlePlaceBid = useCallback(async () => {
+    if (!user || !auctionKoi)
+      return toast.error(ERROR_MESSAGE.REQUIRED_LOGIN_TO_BID);
+    try {
+      await placeBid({
+        auction_koi_id: auctionKoi.id,
+        bid_amount: bidAmount,
+        bidder_id: user.id,
+      });
+      toast.success(SUCCESS_MESSAGE.BID_PLACED);
+      // The WebSocket will handle updating the UI
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error(ERROR_MESSAGE.UNEXPECTED_ERROR_BID);
+      }
+    }
+  }, [user, auctionKoi, bidAmount]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -251,64 +213,7 @@ const KoiBidding: React.FC = () => {
 
         {/* Koi Info and Bidding */}
         <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-4 text-lg">
-          <div className="mb-4 items-center rounded-2xl">
-            <div className="grid w-full grid-cols-1 xl:grid-cols-2">
-              <h2 className="col-span-1 m-4 text-4xl font-bold xl:col-span-2">
-                {koi.name}
-              </h2>
-              <KoiDetailItem
-                icon={faVenusMars}
-                label="Sex"
-                value={koi.sex}
-                bgColor="bg-gray-300"
-              />
-              <KoiDetailItem
-                icon={faRuler}
-                label="Length"
-                value={koi.length}
-                bgColor="bg-gray-300"
-              />
-              <KoiDetailItem
-                icon={faCalendarDays}
-                label="Age"
-                value={koi.age}
-                bgColor="bg-gray-300"
-              />
-              <KoiDetailItem
-                icon={faFish}
-                label="Category ID"
-                value={koi.category_id}
-                bgColor="bg-gray-300"
-              />
-              <KoiDetailItem
-                icon={faDollarSign}
-                label="Base Price"
-                value={auctionKoi.base_price}
-                bgColor="bg-blue-200"
-              />
-              <KoiDetailItem
-                icon={faGavel}
-                label="Current Bid"
-                value={auctionKoi.current_bid}
-                bgColor="bg-green-200"
-              />
-              <KoiDetailItem
-                icon={faHandHoldingHeart}
-                label="Bid Method"
-                value={auctionKoi.bid_method}
-                bgColor="bg-blue-200"
-              />
-              {user && (
-                <KoiDetailItem
-                  icon={faWallet}
-                  label="Your Balance"
-                  value={`$${user.account_balance.toFixed(2)}`}
-                  bgColor="bg-yellow-200"
-                  textColor="text-green-700"
-                />
-              )}
-            </div>
-          </div>
+          <KoiInfoGridComponent koi={koi} auctionKoi={auctionKoi} user={user} />
 
           {!isAuctionEnded() && !auctionKoi.is_sold ? (
             <div className="mb-4 rounded-2xl bg-gray-300 p-4">
@@ -345,13 +250,13 @@ const KoiBidding: React.FC = () => {
         </div>
       </div>
       {!isAuctionEnded() && (
-        <div
-          className={`text-sm ${isConnected ? "text-green-500" : "text-red-500"}`}
+        <Typography
+          className={`text-lg ${isConnected ? "text-green-500" : "text-red-500"}`}
         >
           {isConnected
-            ? "Connected to live updates"
-            : "Not connected to live updates"}
-        </div>
+            ? WEB_SOCKET_MESSAGE.CONNECTED
+            : WEB_SOCKET_MESSAGE.DISCONNECTED}
+        </Typography>
       )}
     </div>
   );

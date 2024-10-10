@@ -4,7 +4,7 @@ import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import Home from "./pages/home/Home";
 import Auctions from "./pages/auctions/Auctions";
-import Auction from "./pages/manager/auctions/Auctions";
+import Auction from "./pages/manager/auctions/AuctionsManagement";
 import About from "./pages/about/About";
 import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
@@ -30,13 +30,16 @@ import { Analytics } from "@vercel/analytics/react";
 import KoiBidding from "./pages/auctions/KoiBidding";
 import OtpVerification from "./components/otp/OtpVeficitaion";
 import RoleBasedRoute from "./components/auth/RoleBasedRoute";
-import { Role } from "./dtos/login.dto";
 import Unauthorized from "./components/unauthorized/Unauthorized";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 import BreederDetail from "./pages/breeder/BreederDetail";
 import StaffLayout from "./pages/staff/Staff";
 import StaffAuctions  from "./pages/staff/auctions/Auctions";
 import SendNotifications from "./pages/staff/notifications/SendNotifications";
+import Privacy from "./pages/privacy/Privacy";
+import Terms from "./pages/terms/Terms";
+import StaffDetail from "./pages/staff/StaffDetail";
+import { Role } from "./types/roles.type";
 
 const TITLE = "Auction Koi";
 
@@ -53,12 +56,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/notfound" element={<NotFound />} />
           <Route path="/otp-verification" element={<OtpVerification />} />
+          {/* privacy, terms */}
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
 
           <Route path="/auctions" element={<Auctions />} />
-          <Route
-            path="/auctions/:id"
-            element={<AuctionDetail auctionData={koi_data.items} />}
-          />
+          <Route path="/auctions/:id" element={<AuctionDetail />} />
           <Route
             path="/auctionkois/:auctionId/:auctionKoiId"
             element={<KoiBidding />}
@@ -69,10 +72,7 @@ function App() {
 
           {/* Route required user is logged in */}
           <Route element={<ProtectedRoute />}>
-            <Route
-              path="/users/:id"
-              element={<UserDetail userData={user_data.items} />}
-            />
+            <Route path="/users/:id" element={<UserDetail />} />
           </Route>
 
           {/* Protected routes for MANAGER and STAFF */}
@@ -83,17 +83,13 @@ function App() {
               />
             }
           >
-            <Route path="/manager" element={<Manager />}>
-              <Route path="auctions" element={<Auction />} />
+            <Route path="/managers" element={<Manager />}>
               <Route path="member" element={<MemberList />} />
               <Route path="breeder" element={<BreederList />} />
               <Route path="staff" element={<StaffList />} />
               <Route path="setting" element={<Settings />} />
               <Route path="koi" element={<KoiList />} />
-              <Route
-                path="koi-detail"
-                element={<KoiDetail koiData={koi_data.items} />}
-              />
+              <Route path="koi-detail" element={<KoiDetail />} />
             </Route>
           </Route>
 
@@ -101,8 +97,14 @@ function App() {
           <Route
             element={<RoleBasedRoute allowedRoles={["ROLE_BREEDER" as Role]} />}
           >
-            <Route path="/breeder" element={<BreederDetail />} />
+            <Route path="/breeders" element={<BreederDetail />} />
             {/* Add more breeder-specific routes here */}
+          </Route>
+
+          <Route
+            element={<RoleBasedRoute allowedRoles={["ROLE_STAFF" as Role]} />}
+          >
+            <Route path="/staffs" element={<StaffDetail />}></Route>
           </Route>
 
           {/* Route for unauthorized access */}

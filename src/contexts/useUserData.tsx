@@ -2,30 +2,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { getCookie } from "~/utils/cookieUtils";
 import { useNavigate } from "react-router-dom";
-
-interface User {
-  id: number;
-  first_name: string;
-  last_name: string;
-  phone_number: string | null;
-  email: string;
-  address: string;
-  is_active: number;
-  is_subscription: number;
-  status_name: string;
-  date_of_birth: string | null;
-  avatar_url: string;
-  google_account_id: number;
-  role_name: string;
-  account_balance: number;
-  created_at: string | null;
-  updated_at: string | null;
-}
-
-const API_URL = "http://localhost:4000/api/v1";
+import { UserDetailsResponse } from "~/types/users.type";
+import { API_URL } from "~/constants/endPoints";
 
 export const useUserData = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserDetailsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -35,7 +16,7 @@ export const useUserData = () => {
       const accessToken = getCookie("access_token");
 
       if (!accessToken) {
-        setError("No access token found");
+        // Allow viewing without login
         setLoading(false);
         return;
       }

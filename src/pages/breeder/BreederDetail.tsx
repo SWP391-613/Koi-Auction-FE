@@ -4,40 +4,15 @@ import "./BreederDetail.scss";
 import { getCookie } from "~/utils/cookieUtils";
 import axios from "axios";
 import { environment } from "~/environments/environment";
-import { KoiDetailModel } from "../kois/Kois";
 import { fetchKoisOfBreeder } from "~/utils/apiUtils";
 import KoiCart from "../kois/KoiCart";
 import { Typography } from "@mui/material";
 import PaginationComponent from "~/components/pagination/Pagination";
 import { useAuth } from "~/contexts/AuthContext";
-
-interface Status {
-  id: number;
-  name: string;
-}
-
-interface Role {
-  id: number;
-  name: string;
-}
-
-interface User {
-  id: number;
-  first_name: string;
-  last_name: string;
-  phone_number: string | null;
-  email: string;
-  address: string;
-  password: string | null;
-  is_active: number;
-  is_subscription: number;
-  status_name: string;
-  date_of_birth: string | null;
-  avatar_url: string;
-  google_account_id: number;
-  role_name: string;
-  account_balance: number;
-}
+import { useUserData } from "~/contexts/useUserData";
+import DepositComponent from "~/components/shared/DepositComponent";
+import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
+import { KoiDetailModel } from "~/types/kois.type";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -53,81 +28,43 @@ export type KoiOfBreeder = {
 
 const BreederDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [user, setUser] = useState<User | null>(null);
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
+  const [totalKoi, setTotalKoi] = useState(0); // State to hold total koi count
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true); // To track if more pages are available
   const itemsPerPage = 16; // Number of koi per page
   const [updateField, setUpdateField] = useState("");
   const [updateValue, setUpdateValue] = useState("");
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
   const { isLoggedIn } = useAuth();
+  const { user, loading, error, setUser } = useUserData();
 
   useEffect(() => {
     const fetchBreederAndKoi = async () => {
-      // Lấy access_token từ cookie
-
-      const accessToken = getCookie("access_token");
-
-      // Nếu không có access_token thì điều hướng đến trang /notfound
-      if (!accessToken) {
-        navigate("/notfound");
-        return;
-      }
+      if (!user) return;
 
       try {
-        const API_URL =
-          import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
-        const response = await axios.post(
-          `${API_URL}/users/details`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          },
+        const koisOfBreederData = await fetchKoisOfBreeder(
+          user.id,
+          currentPage - 1,
+          itemsPerPage,
         );
 
-        if (response.status !== 200) {
-          throw new Error("Network response was not ok");
-        }
-
-        const userData: User = response.data;
-        console.log(userData);
-        setUser(userData);
-
-        if (userData) {
-          const koisOfBreederData = await fetchKoisOfBreeder(
-            userData.id,
-            currentPage - 1,
-            itemsPerPage,
-          );
-
-          if (koisOfBreederData) {
-            // Check if there are more pages
-            if (koisOfBreederData.items.length < itemsPerPage) {
-              setHasMorePages(false);
-            }
-
-            // Append the new koi data to the current list of kois
-            setKois((prevKois) => [...prevKois, ...koisOfBreederData.items]);
+        if (koisOfBreederData) {
+          if (koisOfBreederData.items.length < itemsPerPage) {
+            setHasMorePages(false);
           }
+          setKois((prevKois) => [...prevKois, ...koisOfBreederData.items]);
         }
       } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error("Error response:", error.response?.data);
-          console.error("Error status:", error.response?.status);
-        }
-        console.error("Failed to fetch user data:", error);
-        navigate("/notfound");
+        console.error("Failed to fetch koi data:", error);
       }
     };
 
-    if (isLoggedIn) {
+    if (isLoggedIn && user) {
       fetchBreederAndKoi();
     }
-  }, [currentPage, navigate]);
+  }, [currentPage, isLoggedIn, user]);
 
   const handleUpdate = async () => {
     if (!user || !updateField || !updateValue) return;
@@ -167,7 +104,7 @@ const BreederDetail: React.FC = () => {
     if (!user) return;
     navigate("/otp-verification", {
       state: {
-        email: user.email,
+        email: user.emails,
         from: "userDetail",
         statusCode: 200,
       },
@@ -181,12 +118,18 @@ const BreederDetail: React.FC = () => {
     setCurrentPage(page); // Update the current page when pagination changes
   };
 
-  if (!user) {
-    return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!user) return <div>No user data found</div>;
+
+  const accessToken = getCookie("access_token");
+  if (!accessToken) {
+    navigate("/notfound");
   }
 
   return (
-    <div className="user-detail-page">
+    <div className="flex flex-col justify-around m-10">
+      <AccountVerificationAlert user={user} />
       <div className="user-detail-content">
         <div className="user-sidebar">
           <img
@@ -208,7 +151,7 @@ const BreederDetail: React.FC = () => {
           <div className="user-info-grid">
             <div className="info-item">
               <p className="info-label">Email</p>
-              <p className="info-value">{user.email}</p>
+              <p className="info-value">{user.emails}</p>
             </div>
             <div className="info-item">
               <p className="info-label">Phone</p>
@@ -221,13 +164,19 @@ const BreederDetail: React.FC = () => {
               <p className="info-value">{user.address || "Not provided"}</p>
             </div>
             <div className="info-item">
-              <p className="info-label">Status</p>
-              <p className="info-value">{user.status_name}</p>
+              <p className="info-label">Total Koi</p>
+              <p className="info-value">{totalKoi}</p>{" "}
+              {/* Display total number of koi */}
             </div>
+          </div>
+          <div className="account-balance">
+            <p className="balance-label">Account Balance</p>
+            <p className="balance-value">${user.account_balance.toFixed(2)}</p>
+            <DepositComponent userId={user.id} token={accessToken || ""} />
           </div>
           {/* <div className="account-balance">
             <p className="balance-label">Total Koi</p>
-            <p className="balance-value">Hehe {koisOfBreeder?.total_item.toFixed(2)}</p>
+            <p className="balance-value">Hehe {koisOfBreed  er?.total_item.toFixed(2)}</p>
           </div> */}
           <div className="update-field">
             <select

@@ -14,6 +14,7 @@ import { fetchUserOrders, fetchOrderDetails } from "../../utils/apiUtils";
 import { useUserData } from "~/contexts/useUserData";
 import PaginationComponent from "~/components/pagination/Pagination";
 import UserOrderDetail from "./UserOrderDetail";
+import { OrderDetail } from "./UserOrderDetail";
 
 export type Order = {
   id: number;
@@ -27,6 +28,7 @@ export type Order = {
   shippingDate: string;
   status: string;
   trackingNumber: string;
+  orderDetails: OrderDetail[];
 };
 
 const UserOrder = () => {
@@ -38,7 +40,7 @@ const UserOrder = () => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const itemsPerPage = 8;
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -69,19 +71,14 @@ const UserOrder = () => {
     setPage(value);
   };
 
-  const handleOrderClick = async (orderId: number) => {
-    try {
-      const orderDetails = await fetchOrderDetails(orderId);
-      setSelectedOrder(orderDetails);
-      setDialogOpen(true);
-    } catch (err) {
-      setError("Error fetching order details");
-    }
+  const handleOrderClick = (orderId: number) => {
+    setSelectedOrderId(orderId);
+    setDialogOpen(true);
   };
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
-    setSelectedOrder(null);
+    setSelectedOrderId(null);
   };
 
   if (userLoading || loading) {
@@ -160,8 +157,11 @@ const UserOrder = () => {
         maxWidth="md"
         fullWidth
       >
-        {selectedOrder && (
-          <UserOrderDetail order={selectedOrder} onClose={handleCloseDialog} />
+        {selectedOrderId && (
+          <UserOrderDetail
+            orderId={selectedOrderId}
+            onClose={handleCloseDialog}
+          />
         )}
       </Dialog>
     </Container>

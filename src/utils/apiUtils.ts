@@ -12,7 +12,8 @@ import {
 } from "~/types/users.type";
 import { AuctionDTO, AuctionModel } from "~/types/auctions.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
-import { Order, OrderDetail } from "~/pages/user/UserOrder";
+import { OrderDetail } from "~/pages/user/UserOrderDetail";
+import { Order } from "~/pages/user/UserOrder";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -366,7 +367,9 @@ export const fetchOrderDetails = async (
   orderId: number,
 ): Promise<OrderDetail[]> => {
   try {
-    const response = await axios.get(`${API_URL}/orders_details/${orderId}`);
+    const response = await axios.get(
+      `${API_URL}/orders_details/order/${orderId}`,
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching order details:", error);

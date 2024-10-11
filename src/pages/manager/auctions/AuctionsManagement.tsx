@@ -32,14 +32,6 @@ import {
 } from "~/utils/apiUtils";
 import { convertToJavaLocalDateTime } from "~/utils/dateTimeUtils";
 
-interface Koi {
-  id: number;
-  name: string;
-  thumbnail: string;
-  base_price: number;
-  current_bid: number;
-}
-
 export const AuctionsManagement: React.FC = () => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);
   const [currentPage, setCurrentPage] = useState(1);

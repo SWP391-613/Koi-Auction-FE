@@ -4,7 +4,6 @@ import { KoiDetailModel, KoisResponse } from "~/types/kois.type";
 import { Bid } from "~/components/BiddingHistory";
 import { format, isToday, isYesterday, isTomorrow } from "date-fns";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/breeder/BreederDetail";
-import { toast } from "react-toastify";
 import { BidRequest } from "~/pages/auctions/KoiBidding";
 import {
   LoginDTO,
@@ -13,6 +12,7 @@ import {
 } from "~/types/users.type";
 import { AuctionDTO, AuctionModel } from "~/types/auctions.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
+import { Order, OrderDetail } from "~/pages/user/UserOrder";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -347,5 +347,29 @@ export const placeBid = async (bid: BidRequest): Promise<void> => {
       throw new Error("Failed to place bid");
     }
     throw new Error("Network error");
+  }
+};
+
+export const fetchUserOrders = async (userId: number): Promise<Order[]> => {
+  try {
+    const response = await axios.get(
+      `${API_URL}${environment.be.endPoint.orders}/user/${userId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+    throw error;
+  }
+};
+
+export const fetchOrderDetails = async (
+  orderId: number,
+): Promise<OrderDetail[]> => {
+  try {
+    const response = await axios.get(`${API_URL}/orders_details/${orderId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching order details:", error);
+    throw error;
   }
 };

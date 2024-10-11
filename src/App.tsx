@@ -34,9 +34,10 @@ import StaffLayout from "./pages/staff/Staff";
 import StaffDetail from "./pages/staff/detail/StaffDetail";
 import SendNotifications from "./pages/staff/notifications/SendNotifications";
 import Terms from "./pages/terms/Terms";
-import UserDetail from "./pages/userdetail/UserDetail";
+import UserDetail from "./pages/user/UserDetail";
 import { Role } from "./types/roles.type";
 import "react-toastify/dist/ReactToastify.css";
+import UserOrder from "./pages/user/UserOrder";
 
 const TITLE = "Auction Koi";
 
@@ -112,6 +113,12 @@ function App() {
                 element={<SendNotifications />}
               />
             </Route>
+          </Route>
+          {/* Protected routes for USER */}
+          <Route
+            element={<RoleBasedRoute allowedRoles={["ROLE_MEMBER" as Role]} />}
+          >
+            <Route path="/orders" element={<UserOrder />} />
           </Route>
         </Routes>
         <Footer />

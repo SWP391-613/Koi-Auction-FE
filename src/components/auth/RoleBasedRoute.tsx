@@ -2,26 +2,21 @@ import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "~/contexts/AuthContext";
 import { Role } from "~/types/roles.type";
+import { getCookie, parseRoles } from "~/utils/cookieUtils";
 
 interface RoleBasedRouteProps {
   allowedRoles: Role[];
   redirectPath?: string;
 }
 
-export function routeUserToEachPage(roleName: string): string {
-  let route;
-  if (roleName === "ROLE_MANAGER") {
-    route = "/managers";
-  } else if (roleName === "ROLE_STAFF") {
-    route = "/staffs";
-  } else if (roleName === "ROLE_BREEDER") {
-    route = "/breeders";
-  } else if (roleName === "ROLE_MEMBER") {
-    route = "/";
-  } else {
-    route = "/";
+export function routeUserToEachPage(roleName: Role): string {
+  switch (roleName) {
+    case "ROLE_MANAGER": return "/managers";
+    case "ROLE_STAFF": return "/staffs";
+    case "ROLE_BREEDER": return "/breeders";
+    case "ROLE_MEMBER":
+    default: return "/";
   }
-  return route;
 }
 
 const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
@@ -29,20 +24,22 @@ const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
   redirectPath = "/login",
 }) => {
   const { isLoggedIn, user } = useAuth();
+  const token = getCookie("access_token");
+  const storedRoles = getCookie("user_roles");
 
-  if (!isLoggedIn || !user) {
+  if (!isLoggedIn || !token) {
     return <Navigate to={redirectPath} replace />;
   }
 
-  // debugger;
-  console.log("User roles:", user.roles);
-  // debugger;
+  const roles = user?.roles || parseRoles(storedRoles) as Role[];
+
+  console.log("User roles:", roles);
   console.log("Allowed roles:", allowedRoles);
-  // debugger;
-  const hasAllowedRole = user.roles?.some((role: Role) =>
-    allowedRoles.includes(role),
+
+  const hasAllowedRole = roles.some((role: Role) =>
+    allowedRoles.includes(role)
   );
-  console.log(hasAllowedRole);
+  console.log("Has allowed role:", hasAllowedRole);
 
   if (!hasAllowedRole) {
     return <Navigate to="/unauthorized" replace />;

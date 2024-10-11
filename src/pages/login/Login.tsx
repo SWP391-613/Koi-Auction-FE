@@ -44,7 +44,9 @@ const Login: React.FC = () => {
       authLogin({
         token: response.token,
         roles: response.roles,
-        // Add any other user data you want to store
+        id: response.id,
+        username: response.username,
+        refresh_token: response.refresh_token,
       });
 
       toast.success("Login successful!");

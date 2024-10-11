@@ -31,7 +31,6 @@ import Login from "./pages/login/Login";
 import Privacy from "./pages/privacy/Privacy";
 import Register from "./pages/register/Register";
 import Terms from "./pages/terms/Terms";
-import UserDetail from "./pages/userdetail/UserDetail";
 
 // Manager pages
 import Manager from "./pages/manager/Manager";
@@ -46,7 +45,6 @@ import BreederDetail from "./pages/breeder/BreederDetail";
 import StaffLayout from "./pages/staff/Staff";
 import StaffDetail from "./pages/staff/detail/StaffDetail";
 import SendNotifications from "./pages/staff/notifications/SendNotifications";
-
 
 import UserDetail from "./pages/user/UserDetail";
 import UserOrder from "./pages/user/UserOrder";
@@ -91,13 +89,7 @@ function App() {
           </Route>
 
           {/* Manager and Staff protected routes */}
-          <Route
-            element={
-              <RoleBasedRoute
-                allowedRoles={["ROLE_MANAGER", "ROLE_STAFF"] as Role[]}
-              />
-            }
-          >
+          <Route element={<ProtectedRoute />}>
             <Route path="/managers" element={<Manager />}>
               <Route path="auctions" element={<AuctionsManagement />} />
               <Route path="member" element={<MemberManagement />} />
@@ -110,17 +102,13 @@ function App() {
           </Route>
 
           {/* Breeder protected routes */}
-          <Route
-            element={
-              <RoleBasedRoute allowedRoles={["ROLE_BREEDER"] as Role[]} />
-            }
-          >
+          <Route element={<ProtectedRoute />}>
             <Route path="/breeders" element={<BreederDetail />} />
           </Route>
 
           {/* Staff protected routes */}
           <Route
-            element={<RoleBasedRoute allowedRoles={["ROLE_STAFF"] as Role[]} />}
+            element={<ProtectedRoute />}
           >
             <Route path="/staffs" element={<StaffLayout />}>
               <Route path="" element={<StaffDetail />} />
@@ -134,7 +122,7 @@ function App() {
           </Route>
           {/* Protected routes for USER */}
           <Route
-            element={<RoleBasedRoute allowedRoles={["ROLE_MEMBER" as Role]} />}
+            element={<ProtectedRoute/>}
           >
             <Route path="/orders" element={<UserOrder />} />
           </Route>

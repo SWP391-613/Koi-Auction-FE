@@ -1,19 +1,15 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import axios from "axios";
-import { Role, UserLoginResponse } from "~/dtos/login.dto";
-import { eraseCookie, getCookie, setCookie } from "~/utils/cookieUtils";
 import { useNavigate } from "react-router-dom";
+import { setCookie, getCookie, eraseCookie, parseRoles } from "~/utils/cookieUtils";
 import { doLogout } from "~/utils/apiUtils";
+import { UserLoginResponse } from "~/types/users.type";
 
-// Change this to your API URL
-const API_URL = "http://localhost:4000/api/v1";
-
-type AuthLoginData = Pick<UserLoginResponse, "token" | "roles">;
+type AuthLoginData = Pick<UserLoginResponse, "token" | "roles" | "id" | "username">;
 
 interface AuthContextType {
   isLoggedIn: boolean;
   user: AuthLoginData | null;
-  authLogin: (userData: AuthLoginData) => void;
+  authLogin: (userData: Partial<UserLoginResponse>) => void;
   authLogout: () => void;
   getToken: () => string | null;
 }
@@ -29,47 +25,58 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const token = getCookie("access_token");
-    const roles = getCookie("user_roles");
+    const roles = parseRoles(getCookie("user_roles"));
+    const id = getCookie("user_id");
+    const username = getCookie("username");
 
-    if (token && roles) {
+    if (token && roles.length > 0 && id && username) {
       setIsLoggedIn(true);
       setUser({
-        token: token,
-        roles: JSON.parse(roles), // Parse roles into an array
+        token,
+        roles,
+        id: parseInt(id, 10),
+        username
       });
     }
   }, []);
 
-  useEffect(() => {
-    console.log("User login data: " + JSON.stringify(user));
-  }, [user]);
+  const authLogin = (userData: Partial<UserLoginResponse>) => {
+    if (!userData.token || !userData.roles) {
+      console.error("Invalid login data");
+      return;
+    }
 
-  const authLogin = (userData: AuthLoginData) => {
     setIsLoggedIn(true);
-    setUser({
+    const authData: AuthLoginData = {
       token: userData.token,
       roles: userData.roles,
-    });
-    setCookie("access_token", userData.token, 1);
+      id: userData.id || 0,
+      username: userData.username || ''
+    };
+    setUser(authData);
+    setCookie("access_token", userData.token, 1); // Set to expire in 1 day
     setCookie("user_roles", JSON.stringify(userData.roles), 1);
+    if (userData.id) setCookie("user_id", userData.id.toString(), 1);
+    if (userData.username) setCookie("username", userData.username, 1);
+    if (userData.refresh_token) setCookie("refresh_token", userData.refresh_token, 7); // Set refresh token to expire in 7 days
   };
 
   const authLogout = async () => {
     const token = getCookie("access_token");
     if (token) {
-      doLogout(token);
+      await doLogout(token);
     }
-    // Clear the user data and token
     setIsLoggedIn(false);
     setUser(null);
     eraseCookie("access_token");
     eraseCookie("user_roles");
+    eraseCookie("user_id");
+    eraseCookie("username");
+    eraseCookie("refresh_token");
     navigate("/");
   };
 
-  const getToken = () => {
-    return getCookie("access_token");
-  };
+  const getToken = () => getCookie("access_token");
 
   return (
     <AuthContext.Provider

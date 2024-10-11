@@ -196,11 +196,7 @@ const Header = () => {
           id="home"
           className="bg-transparent hover:bg-transparent flex items-center"
         >
-          <img
-            src="/favicon.svg"
-            alt="Koi Auction Logo"
-            className="w-8"
-          />
+          <img src="/favicon.svg" alt="Koi Auction Logo" className="w-8" />
           <h1 className="ml-2 text-2xl font-bold text-red-500">Koi Auction</h1>
         </button>
 

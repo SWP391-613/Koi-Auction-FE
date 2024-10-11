@@ -8,7 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import axios, { Axios } from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PaginationComponent from "~/components/pagination/Pagination";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
@@ -18,12 +18,14 @@ import CreateStaffDialog from "./CreateStaffDialog";
 import EditStaffDialog from "./EditStaffDialog";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
+import usePagination from "~/hooks/usePagination";
+import { ENDPOINT_STAFFS } from "~/constants/endPoints";
 
 const StaffList = () => {
-  const [staffs, setStaffs] = useState<Staff[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [selectedStaffId, setSelectedStaffId] = useState<number | null>(null);
+  const navigate = useNavigate();
   const [newStaff, setNewStaff] = useState<StaffRegisterDTO>({
     first_name: "",
     last_name: "",
@@ -36,140 +38,107 @@ const StaffList = () => {
     date_of_birth: "",
     avatar_url: "",
   });
-  const [page, setPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(0);
-  const itemsPerPage = 8; // Adjusted to match the API limit parameter
-  const navigate = useNavigate();
-  const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [selectedStaffId, setSelectedStaffId] = useState<number | null>(null);
 
   const accessToken = getCookie("access_token");
-  if (!accessToken) {
-    navigate("/notfound");
-    return;
-  }
-
+  // Handle access token early return
   useEffect(() => {
-    const fetchStaffs = async () => {
-      try {
-        const response = await axios.get<StaffsResponse>(
-          "http://localhost:4000/api/v1/staffs",
-          {
-            params: {
-              page: page - 1,
-              limit: itemsPerPage,
-            },
-            headers: {
-              Authorization: `Bearer ${accessToken}`, // Pass token in Authorization header
-            },
-          },
-        );
-
-        const data = response.data;
-
-        if (data && Array.isArray(data.item)) {
-          setStaffs(data.item);
-          setTotalPages(data.total_page);
-        } else {
-          setError("Error fetching staffs");
-        }
-      } catch (err) {
-        setError("Error fetching staffs");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStaffs();
-  }, [page, itemsPerPage]);
-
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number,
-  ) => {
-    setPage(value);
-  };
-
-  const handleDelete = (id: number) => {
-    const confirmed = confirm(`Are you sure you want to delete staff: ${id}?`);
-
-    if (confirmed) {
-      // Implement delete logic here if confirmed
-      console.log(`Deleting staff with ID: ${id}`);
-      //call this api , with header bearer token
-      //{{API_PREFIX}}/staffs/21
-      //delete staff with id 21
-      axios
-        .delete(`http://localhost:4000/api/v1/staffs/${id}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            alert("Staff deleted successfully!");
-            // Remove the deleted staff from the list
-            // setStaffs(staffs.filter((staff) => staff.id !== id));
-          }
-        })
-        .catch((error) => {
-          console.error("Failed to delete staff:", error);
-          alert("Failed to delete staff. Please try again.");
-        });
+    if (!accessToken) {
+      navigate("/notfound");
     }
-  };
+  }, [accessToken, navigate]);
 
-  const handleEdit = (id: number) => {
+  const {
+    items: staffs,
+    loading,
+    error,
+    page,
+    totalPages,
+    handlePageChange,
+    refetch,
+  } = usePagination<Staff>({
+    apiUrl: ENDPOINT_STAFFS.BASE,
+    itemsPerPage: 8,
+    accessToken,
+  });
+
+  if (!accessToken) return null;
+
+  const handleDelete = useCallback(
+    async (id: number) => {
+      const confirmed = window.confirm(
+        `Are you sure you want to delete staff: ${id}?`,
+      );
+      if (!confirmed) return;
+
+      try {
+        await axios.delete(`http://localhost:4000/api/v1/staffs/${id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        toast.success("Staff deleted successfully!");
+        refetch(); // Refetch the data after successful deletion
+      } catch (error) {
+        console.error("Failed to delete staff:", error);
+        toast.error("Failed to delete staff. Please try again.");
+      }
+    },
+    [accessToken, refetch],
+  );
+
+  const handleEdit = useCallback((id: number) => {
     setSelectedStaffId(id);
     setOpenEditDialog(true);
-  };
+  }, []);
 
-  const handleCloseEditDialog = () => {
+  const handleCloseEditDialog = useCallback(() => {
     setOpenEditDialog(false);
     setSelectedStaffId(null);
-  };
+  }, []);
 
-  const handleOpenCreateDialog = () => setOpenCreateDialog(true);
-  const handleCloseCreateDialog = () => setOpenCreateDialog(false);
+  const handleOpenCreateDialog = useCallback(
+    () => setOpenCreateDialog(true),
+    [],
+  );
+  const handleCloseCreateDialog = useCallback(
+    () => setOpenCreateDialog(false),
+    [],
+  );
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewStaff((prevStaff) => ({
-      ...prevStaff,
-      [name]: value,
-    }));
-  };
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setNewStaff((prevStaff) => ({
+        ...prevStaff,
+        [name]: value,
+      }));
+    },
+    [],
+  );
 
-  const handleCreateStaff = async () => {
+  const handleCreateStaff = useCallback(async () => {
     try {
       const response = await axios.post(
         "http://localhost:4000/api/v1/staffs",
         newStaff,
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`, // required Manager token
+            Authorization: `Bearer ${accessToken}`,
           },
         },
       );
-
-      console.log("Data: ", newStaff);
       toast.success("Staff created successfully!");
-
-      setStaffs([...staffs, response.data]);
       handleCloseCreateDialog();
+      refetch(); // Refetch the data after successful creation
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const errorMessage =
           error.response?.data?.reason ||
-          "An error occurred during create staff";
+          "An error occurred during staff creation";
         toast.error(errorMessage);
       } else {
-        toast.error("An error occurred during create staff");
+        toast.error("An error occurred during staff creation");
       }
-
-      setError("Error creating staff");
     }
-  };
+  }, [newStaff, accessToken, handleCloseCreateDialog, refetch]);
 
   return (
     <div className="w-full overflow-x-auto">

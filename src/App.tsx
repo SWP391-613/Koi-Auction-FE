@@ -76,7 +76,10 @@ function App() {
           <Route path="/otp-verification" element={<OtpVerification />} />
           <Route path="/auctions" element={<Auctions />} />
           <Route path="/auctions/:id" element={<AuctionDetail />} />
-          <Route path="/auctionkois/:auctionId/:auctionKoiId" element={<KoiBidding />} />
+          <Route
+            path="/auctionkois/:auctionId/:auctionKoiId"
+            element={<KoiBidding />}
+          />
           <Route path="/kois/:id" element={<KoiDetail />} />
 
           {/* Protected routes for logged-in users */}
@@ -85,7 +88,13 @@ function App() {
           </Route>
 
           {/* Manager and Staff protected routes */}
-          <Route element={<RoleBasedRoute allowedRoles={["ROLE_MANAGER", "ROLE_STAFF"] as Role[]} />}>
+          <Route
+            element={
+              <RoleBasedRoute
+                allowedRoles={["ROLE_MANAGER", "ROLE_STAFF"] as Role[]}
+              />
+            }
+          >
             <Route path="/managers" element={<Manager />}>
               <Route path="auctions" element={<AuctionsManagement />} />
               <Route path="member" element={<MemberList />} />
@@ -98,17 +107,26 @@ function App() {
           </Route>
 
           {/* Breeder protected routes */}
-          <Route element={<RoleBasedRoute allowedRoles={["ROLE_BREEDER"] as Role[]} />}>
+          <Route
+            element={
+              <RoleBasedRoute allowedRoles={["ROLE_BREEDER"] as Role[]} />
+            }
+          >
             <Route path="/breeders" element={<BreederDetail />} />
           </Route>
 
           {/* Staff protected routes */}
-          <Route element={<RoleBasedRoute allowedRoles={["ROLE_STAFF"] as Role[]} />}>
+          <Route
+            element={<RoleBasedRoute allowedRoles={["ROLE_STAFF"] as Role[]} />}
+          >
             <Route path="/staffs" element={<StaffLayout />}>
               <Route path="" element={<StaffDetail />} />
               <Route path="auctions" element={<AuctionsManagement />} />
               <Route path="kois" element={<KoiList />} />
-              <Route path="send-notifications" element={<SendNotifications />} />
+              <Route
+                path="send-notifications"
+                element={<SendNotifications />}
+              />
             </Route>
           </Route>
         </Routes>

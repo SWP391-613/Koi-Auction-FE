@@ -36,7 +36,7 @@ import UserDetail from "./pages/userdetail/UserDetail";
 
 // Manager pages
 import Manager from "./pages/manager/Manager";
-import BreederList from "./pages/manager/breeder/BreederList";
+import BreederList from "./pages/manager/breeder/BreederManagement";
 import KoiList from "./pages/manager/koi/KoiList";
 import MemberList from "./pages/manager/member/MemberList";
 import Settings from "./pages/manager/settings/Settings";
@@ -54,6 +54,7 @@ import SendNotifications from "./pages/staff/notifications/SendNotifications";
 // Types
 import { Role } from "./types/roles.type";
 import StaffManagement from "./pages/manager/staff/StaffManagement";
+import BreederManagement from "./pages/manager/breeder/BreederManagement";
 
 const TITLE = "Auction Koi";
 
@@ -99,7 +100,7 @@ function App() {
             <Route path="/managers" element={<Manager />}>
               <Route path="auctions" element={<AuctionsManagement />} />
               <Route path="member" element={<MemberList />} />
-              <Route path="breeder" element={<BreederList />} />
+              <Route path="breeder" element={<BreederManagement />} />
               <Route path="staff" element={<StaffManagement />} />
               <Route path="setting" element={<Settings />} />
               <Route path="koi" element={<KoiList />} />

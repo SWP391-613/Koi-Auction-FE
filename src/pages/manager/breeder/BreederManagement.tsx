@@ -5,7 +5,7 @@ import AddIcon from "@mui/icons-material/Add";
 import PaginationComponent from "~/components/pagination/Pagination";
 import { Breeder, BreedersResponse } from "~/types/users.type";
 
-const BreederList = () => {
+const BreederManagement = () => {
   const [breeders, setBreeders] = useState<Breeder[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -102,7 +102,12 @@ const BreederList = () => {
           <tr className="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
             <th className="px-4 py-3">Breeder</th>
             <th className="px-4 py-3">Email</th>
+            <th className="px-4 py-3">Phone Number</th>
             <th className="px-4 py-3">Address</th>
+            <th className="px-4 py-3">Status</th>
+            <th className="px-4 py-3">Active</th>
+            <th className="px-4 py-3">Subscription</th>
+            <th className="px-4 py-3">Balance</th>
             <th className="px-4 py-3">Actions</th>
           </tr>
         </thead>
@@ -132,7 +137,16 @@ const BreederList = () => {
                 </div>
               </td>
               <td className="px-4 py-3 text-sm">{breeder.email}</td>
+              <td className="px-4 py-3 text-sm">
+                {breeder?.phone_number || "Not provided"}
+              </td>
               <td className="px-4 py-3 text-sm">{breeder.address}</td>
+              <td className="px-4 py-3 text-sm">{breeder.status_name}</td>
+              <td className="px-4 py-3 text-sm">
+                {breeder.is_active ? "Yes" : "No"}
+              </td>
+              <td className="px-4 py-3 text-sm">{breeder.is_subscription}</td>
+              <td className="px-4 py-3 text-sm">{breeder.account_balance}</td>
               <td className="px-4 py-3 text-sm">
                 <div className="flex items-center space-x-4 text-sm">
                   <button
@@ -202,4 +216,4 @@ const BreederList = () => {
   );
 };
 
-export default BreederList;
+export default BreederManagement;

@@ -5,13 +5,14 @@ import {
   DialogActions,
   Button,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Order } from "./UserOrder";
 import { fetchOrderDetails } from "~/utils/apiUtils";
 
 interface UserOrderDetailProps {
-  order: Order;
+  orderId: number;
   onClose: () => void;
 }
 
@@ -26,13 +27,31 @@ export type OrderDetail = {
 };
 
 const UserOrderDetail: React.FC<UserOrderDetailProps> = ({
-  order,
+  orderId,
   onClose,
 }) => {
   const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    fetchOrderDetails(order.id).then(setOrderDetails);
-  }, [order.id]);
+    setLoading(true);
+    fetchOrderDetails(orderId)
+      .then((details) => {
+        if (Array.isArray(details)) {
+          setOrderDetails(details);
+        } else {
+          console.error("Received non-array orderDetails:", details);
+          setError("Invalid order details format");
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching order details:", err);
+        setError("Failed to fetch order details");
+      })
+      .finally(() => setLoading(false));
+  }, [orderId]);
+
   return (
     <>
       <DialogTitle>
@@ -45,9 +64,29 @@ const UserOrderDetail: React.FC<UserOrderDetailProps> = ({
       </DialogTitle>
       <DialogContent dividers>
         <div className="mb-4">
-          <h2 className="text-xl font-bold">Order #{order.id}</h2>
+          <h2 className="text-xl font-bold">Order #{orderId}</h2>
         </div>
-        <div className="flex flex-col gap-4"></div>
+        {loading ? (
+          <CircularProgress />
+        ) : error ? (
+          <div className="text-red-500">{error}</div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {orderDetails.length > 0 ? (
+              orderDetails.map((detail) => (
+                <div key={detail.id} className="border p-2 rounded">
+                  <p>Product ID: {detail.product_id}</p>
+                  <p>Color: {detail.color || "N/A"}</p>
+                  <p>Price: ${detail.price}</p>
+                  <p>Quantity: {detail.number_of_products}</p>
+                  <p>Total: ${detail.total_money}</p>
+                </div>
+              ))
+            ) : (
+              <p>No order details available.</p>
+            )}
+          </div>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">

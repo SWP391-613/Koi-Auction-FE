@@ -1,6 +1,7 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { Route, Routes } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css"; // import first
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import CSS once
 
@@ -40,6 +41,7 @@ import KoiList from "./pages/manager/koi/KoiList";
 import MemberList from "./pages/manager/member/MemberList";
 import Settings from "./pages/manager/settings/Settings";
 import StaffList from "./pages/manager/staff/StaffList";
+import { AuctionsManagement } from "./pages/manager/auctions/AuctionsManagement";
 
 // Breeder pages
 import BreederDetail from "./pages/breeder/BreederDetail";
@@ -51,7 +53,6 @@ import SendNotifications from "./pages/staff/notifications/SendNotifications";
 
 // Types
 import { Role } from "./types/roles.type";
-import { AuctionsManagement } from "./pages/manager/auctions/AuctionsManagement";
 
 const TITLE = "Auction Koi";
 

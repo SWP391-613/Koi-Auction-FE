@@ -1,26 +1,19 @@
-import React from "react";
-import { useState, useContext, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ThemeContext } from "../../contexts/ThemeContext";
-import { login } from "../../utils/apiUtils";
-import {
-  CredentialResponse,
-  GoogleLogin,
-  GoogleOAuthProvider,
-} from "@react-oauth/google";
-import axios from "axios";
-import { useAuth } from "../../contexts/AuthContext";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, Controller } from "react-hook-form";
+import { Typography } from "@mui/material";
+import axios from "axios";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./Login.scss";
-import { setCookie } from "../../utils/cookieUtils";
+import * as yup from "yup";
 import { routeUserToEachPage } from "~/components/auth/RoleBasedRoute";
-import { Typography } from "@mui/material";
 import NavigateButton from "~/components/shared/NavigateButton";
 import { LoginDTO } from "~/types/users.type";
+import { useAuth } from "../../contexts/AuthContext";
+import { login } from "../../utils/apiUtils";
+import "react-toastify/dist/ReactToastify.css";
+import "./Login.scss";
 const schema = yup.object().shape({
   email: yup
     .string()

@@ -1,47 +1,36 @@
-import React, { useState, useEffect } from "react";
-import {
-  fetchAuctions,
-  fetchAuctionKoi,
-  createNewAuction,
-} from "~/utils/apiUtils";
-import PaginationComponent from "~/components/pagination/Pagination";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   TextField,
-  Checkbox,
-  FormControlLabel,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import "react-toastify/dist/ReactToastify.css";
-import { toast, ToastContainer } from "react-toastify";
-import { AuctionModel } from "~/types/auctions.type";
-import { format, set } from "date-fns";
 import axios from "axios";
-import { convertToJavaLocalDateTime } from "~/utils/dateTimeUtils";
+import React, { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import PaginationComponent from "~/components/pagination/Pagination";
+import SearchBar from "~/components/shared/SearchBar";
 import AuctionTable from "~/editkoiinauction/EditAuction";
 import { AuctionKoi } from "~/types/auctionkois.type";
-import SearchBar from "~/components/shared/SearchBar";
-
-interface Koi {
-  id: number;
-  name: string;
-  thumbnail: string;
-  base_price: number;
-  current_bid: number;
-}
+import { AuctionModel } from "~/types/auctions.type";
+import {
+  createNewAuction,
+  fetchAuctionKoi,
+  fetchAuctions,
+} from "~/utils/apiUtils";
+import { convertToJavaLocalDateTime } from "~/utils/dateTimeUtils";
 
 export const AuctionsManagement: React.FC = () => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);
@@ -242,6 +231,7 @@ export const AuctionsManagement: React.FC = () => {
               <TableRow>
                 <TableCell>ID</TableCell>
                 <TableCell>Title</TableCell>
+                <TableCell>Auctioneer ID</TableCell>
                 <TableCell>Start Time</TableCell>
                 <TableCell>End Time</TableCell>
                 <TableCell>Status</TableCell>
@@ -253,6 +243,7 @@ export const AuctionsManagement: React.FC = () => {
                 <TableRow key={auction.id}>
                   <TableCell>{auction.id}</TableCell>
                   <TableCell>{auction.title}</TableCell>
+                  <TableCell>{auction.auctioneer_id}</TableCell>
                   <TableCell>
                     {new Date(auction.start_time).toLocaleString()}
                   </TableCell>

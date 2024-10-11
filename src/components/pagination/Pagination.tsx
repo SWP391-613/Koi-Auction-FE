@@ -1,6 +1,17 @@
+import React from "react";
 import { Box, Pagination } from "@mui/material";
 
-const PaginationComponent = ({ totalPages, currentPage, onPageChange }) => {
+interface PaginationProps {
+  totalPages: number;
+  currentPage: number;
+  onPageChange: (event: React.ChangeEvent<unknown>, value: number) => void;
+}
+
+const PaginationComponent: React.FC<PaginationProps> = ({
+  totalPages,
+  currentPage,
+  onPageChange,
+}) => {
   return (
     <Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 2 }}>
       <Pagination

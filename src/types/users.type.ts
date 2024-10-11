@@ -117,7 +117,9 @@ export type Breeder = {
   email: string;
   address: string;
   password: string | null;
-  status_name: string;
+  is_active: number;
+  is_subscription: number;
+  status_name: UserStatus;
   date_of_birth: number;
   avatar_url: string;
   google_account_id: number;

@@ -197,7 +197,7 @@ const Header = () => {
           className="bg-transparent hover:bg-transparent flex items-center"
         >
           <img
-            src="/koi-svgrepo-com.svg"
+            src="/favicon.svg"
             alt="Koi Auction Logo"
             className="w-8"
           />

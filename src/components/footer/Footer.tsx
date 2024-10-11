@@ -33,7 +33,7 @@ const Footer: React.FC = () => {
       <div className="mx-auto flex justify-start gap-5 flex-col md:flex-row mb-[6rem]">
         <Link to="/" className="md:mb-0 flex items-center justify-center">
           <img
-            src="/koi-svgrepo-com.svg"
+            src="/favicon.svg"
             alt="Koi Auction Logo"
             className="w-24 max-w-full"
           />

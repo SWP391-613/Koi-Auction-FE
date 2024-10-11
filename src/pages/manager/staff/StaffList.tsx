@@ -38,7 +38,7 @@ const StaffList = () => {
   });
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const itemsPerPage = 5; // Adjusted to match the API limit parameter
+  const itemsPerPage = 8; // Adjusted to match the API limit parameter
   const navigate = useNavigate();
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [selectedStaffId, setSelectedStaffId] = useState<number | null>(null);

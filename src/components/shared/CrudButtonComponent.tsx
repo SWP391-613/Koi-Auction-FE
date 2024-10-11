@@ -4,7 +4,7 @@ type CrudButtonProps = {
   onClick: () => void;
   ariaLabel: string;
   svgPath: string; // Accepting a string path to the SVG file (relative to /public/icons)
-  size?: number;   // Optional size for the icon
+  size?: number; // Optional size for the icon
 };
 
 export const CrudButton: React.FC<CrudButtonProps> = ({

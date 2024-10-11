@@ -1,12 +1,3 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import {
-  fetchAuctionById,
-  fetchAuctionKoi,
-  getKoiById,
-} from "~/utils/apiUtils"; // Assume we have this API function
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
   faCakeCandles,
@@ -17,13 +8,19 @@ import {
   faUser,
   faVenusMars,
 } from "@fortawesome/free-solid-svg-icons";
-import { useAuth } from "~/contexts/AuthContext";
-import SearchBar from "~/components/shared/SearchBar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import NavigateButton from "~/components/shared/NavigateButton";
-import { KoiDetailModel } from "~/types/kois.type";
+import { AUCTION_STATUS } from "~/constants/auctionStatus";
+import { useAuth } from "~/contexts/AuthContext";
 import { AuctionKoi, KoiWithAuctionKoiData } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
-import { AUCTION_STATUS } from "~/constants/auctionStatus";
+import {
+  fetchAuctionById,
+  fetchAuctionKoi,
+  getKoiById,
+} from "~/utils/apiUtils"; // Assume we have this API function
 
 const AuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();
@@ -111,7 +108,7 @@ const AuctionDetail: React.FC = () => {
                 </span>
               </div>
             </div>
-            <SearchBar placeholder="Type to search..." debounceTime={500} />
+            {/* <SearchBar placeholder="Type to search..." debounceTime={500} /> */}
           </div>
         </div>
 

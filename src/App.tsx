@@ -107,9 +107,7 @@ function App() {
           </Route>
 
           {/* Staff protected routes */}
-          <Route
-            element={<ProtectedRoute />}
-          >
+          <Route element={<ProtectedRoute />}>
             <Route path="/staffs" element={<StaffLayout />}>
               <Route path="" element={<StaffDetail />} />
               <Route path="auctions" element={<AuctionsManagement />} />
@@ -121,9 +119,7 @@ function App() {
             </Route>
           </Route>
           {/* Protected routes for USER */}
-          <Route
-            element={<ProtectedRoute/>}
-          >
+          <Route element={<ProtectedRoute />}>
             <Route path="/orders" element={<UserOrder />} />
           </Route>
         </Routes>

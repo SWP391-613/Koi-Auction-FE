@@ -135,7 +135,7 @@ const StaffDetail: React.FC = () => {
         </div>
       </div>
 
-      <SearchBar />
+      {/* <SearchBar /> */}
 
       <AuctionsManagement />
     </div>

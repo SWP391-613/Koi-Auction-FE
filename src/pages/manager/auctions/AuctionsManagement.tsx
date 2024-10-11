@@ -211,7 +211,7 @@ export const AuctionsManagement: React.FC = () => {
 
   return (
     <div>
-      <SearchBar />
+      {/* <SearchBar /> */}
       <div className="mt-3">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Auctions Management</h1>

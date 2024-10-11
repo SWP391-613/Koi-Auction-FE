@@ -11,11 +11,15 @@ interface RoleBasedRouteProps {
 
 export function routeUserToEachPage(roleName: Role): string {
   switch (roleName) {
-    case "ROLE_MANAGER": return "/managers";
-    case "ROLE_STAFF": return "/staffs";
-    case "ROLE_BREEDER": return "/breeders";
+    case "ROLE_MANAGER":
+      return "/managers";
+    case "ROLE_STAFF":
+      return "/staffs";
+    case "ROLE_BREEDER":
+      return "/breeders";
     case "ROLE_MEMBER":
-    default: return "/";
+    default:
+      return "/";
   }
 }
 
@@ -31,13 +35,13 @@ const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
     return <Navigate to={redirectPath} replace />;
   }
 
-  const roles = user?.roles || parseRoles(storedRoles) as Role[];
+  const roles = user?.roles || (parseRoles(storedRoles) as Role[]);
 
   console.log("User roles:", roles);
   console.log("Allowed roles:", allowedRoles);
 
   const hasAllowedRole = roles.some((role: Role) =>
-    allowedRoles.includes(role)
+    allowedRoles.includes(role),
   );
   console.log("Has allowed role:", hasAllowedRole);
 

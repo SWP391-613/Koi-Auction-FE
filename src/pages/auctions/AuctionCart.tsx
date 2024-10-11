@@ -22,27 +22,27 @@ const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
   };
 
   return (
-    <div className="koi-container m-5 grid grid-cols-1 gap-4 p-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+    <div className="koi-container grid grid-cols-1 gap-3 p-5 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3">
       {items.map((auction) => (
         <Link
           to={`/auctions/${auction.id}`}
           key={auction.id}
-          className="auction-card transform overflow-hidden rounded-2xl p-5 bg-white hover:bg-red-100 transition duration-300 ease-in-out"
+          className="auction-card transform overflow-hidden rounded-[2.5rem] p-2 bg-transparent hover:bg-red-100 transition duration-300 ease-in-out"
           onMouseEnter={() => setHoveredItem(auction.id)} // Set hovered item on mouse enter
           onMouseLeave={() => setHoveredItem(null)} // Reset on mouse leave
         >
-          <div className="flex justify-start items-center">
+          <div className="flex justify-start items-center ml-3">
             <FontAwesomeIcon
               icon={faCircleArrowRight}
-              className="text-black text-3xl mr-2 hidden sm:block"
+              className="text-black text-3xl mr-5 hidden sm:block"
             />
             <div className="">
-              <div className="info p-4">
-                <h2 className="text-blue-600 text-2xl font-semibold">
+              <div className="info">
+                <h2 className="text-black text-2xl font-semibold mt-3">
                   {auction.title}
                 </h2>
               </div>
-              <div className="details p-2 text-sm text-gray-600">
+              <div className="details text-sm text-gray-600">
                 {/* Conditionally render start time or status based on hover */}
                 {hoveredItem === auction.id ? (
                   <div className="flex flex-col lg:flex-row lg:space-x-4">
@@ -59,7 +59,7 @@ const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
                   </div>
                 ) : (
                   <>
-                    <span className="text-lg text-black glow-text">
+                    <span className="text-2xl text-black glow-text">
                       {getAuctionStatus(auction.start_time, auction.end_time)}
                     </span>
                   </>

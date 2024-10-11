@@ -1,10 +1,18 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { setCookie, getCookie, eraseCookie, parseRoles } from "~/utils/cookieUtils";
+import {
+  setCookie,
+  getCookie,
+  eraseCookie,
+  parseRoles,
+} from "~/utils/cookieUtils";
 import { doLogout } from "~/utils/apiUtils";
 import { UserLoginResponse } from "~/types/users.type";
 
-type AuthLoginData = Pick<UserLoginResponse, "token" | "roles" | "id" | "username">;
+type AuthLoginData = Pick<
+  UserLoginResponse,
+  "token" | "roles" | "id" | "username"
+>;
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -35,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         token,
         roles,
         id: parseInt(id, 10),
-        username
+        username,
       });
     }
   }, []);
@@ -51,14 +59,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       token: userData.token,
       roles: userData.roles,
       id: userData.id || 0,
-      username: userData.username || ''
+      username: userData.username || "",
     };
     setUser(authData);
     setCookie("access_token", userData.token, 1); // Set to expire in 1 day
     setCookie("user_roles", JSON.stringify(userData.roles), 1);
     if (userData.id) setCookie("user_id", userData.id.toString(), 1);
     if (userData.username) setCookie("username", userData.username, 1);
-    if (userData.refresh_token) setCookie("refresh_token", userData.refresh_token, 7); // Set refresh token to expire in 7 days
+    if (userData.refresh_token)
+      setCookie("refresh_token", userData.refresh_token, 7); // Set refresh token to expire in 7 days
   };
 
   const authLogout = async () => {

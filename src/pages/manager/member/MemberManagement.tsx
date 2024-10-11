@@ -140,7 +140,6 @@ const MemberManagement = () => {
               <td className="px-4 py-3 text-sm">{member.address}</td>
               <td className="px-4 py-3 text-sm">
                 <div className="flex items-center space-x-4 text-sm">
-
                   <CrudButton
                     onClick={() => handleView(member.id)}
                     ariaLabel="View Member"
@@ -151,7 +150,6 @@ const MemberManagement = () => {
                     onClick={() => handleEdit(member.id)}
                     ariaLabel="Edit Member"
                     svgPath="edit.svg"
-
                   />
 
                   <CrudButton
@@ -159,7 +157,6 @@ const MemberManagement = () => {
                     ariaLabel="Delete Member"
                     svgPath="delete.svg"
                   />
-
                 </div>
               </td>
             </tr>

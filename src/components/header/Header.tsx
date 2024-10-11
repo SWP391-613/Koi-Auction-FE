@@ -196,8 +196,8 @@ const Header = () => {
   const closeNav = () => setIsNavOpen(false);
 
   return (
-    <header className="bg-gray-200 px-4 py-2 shadow-md transition-all duration-300 box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;">
-      <div className="mx-auto flex max-w-7xl items-center justify-between">
+    <header className="bg-gray-200 px-4 py-1 shadow-md transition-all duration-300 box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;">
+      <div className="mx-auto flex max-w-8xl items-center justify-between">
         {/* Logo and Title */}
         <button
           onClick={() => navigate("/")}

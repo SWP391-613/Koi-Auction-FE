@@ -43,9 +43,9 @@ const Auctions: React.FC = () => {
 
   return (
     <div className="container mx-auto">
-      <div className="flex justify-center items-center">
+      {/* <div className="flex justify-center items-center">
         <SearchBar placeholder="Type to search..." debounceTime={500} />
-      </div>
+      </div> */}
       <AuctionCart items={auctions} />
       <PaginationComponent
         totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages

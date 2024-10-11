@@ -10,7 +10,7 @@ function Manager() {
       <Typography variant="h4" gutterBottom>
         Manager Dashboard
       </Typography>
-      <SearchBar />
+      {/* <SearchBar /> */}
       <Box sx={{ height: "calc(100vh - 64px)", width: "100%", p: 2 }}>
         {/* The content from nested routes will be rendered here */}
         <Outlet />

@@ -187,11 +187,17 @@ const KoiBidding: React.FC = () => {
           </div>
 
           {/* Media Gallery */}
-          <div className="mt-4 flex space-x-2 overflow-x-auto">
+          <div className="mt-4 h-30 flex space-x-2 overflow-x-auto">
             <img
               src={koi.thumbnail}
               alt="Main"
-              className="h-20 w-20 cursor-pointer rounded-md object-cover"
+              className="w-20 cursor-pointer rounded-md object-cover"
+              onClick={() => setSelectedMedia(koi.thumbnail)}
+            />
+            <img
+              src={koi.thumbnail}
+              alt="Main"
+              className="w-20 cursor-pointer rounded-md object-cover"
               onClick={() => setSelectedMedia(koi.thumbnail)}
             />
             {/* {koi.additional_images?.map((img, index) => (
@@ -204,7 +210,7 @@ const KoiBidding: React.FC = () => {
               />
             ))} */}
             <div
-              className="flex h-20 w-20 cursor-pointer items-center justify-center rounded-md bg-gray-200"
+              className="flex w-20 cursor-pointer items-center justify-center rounded-md bg-gray-200"
               onClick={() =>
                 setSelectedMedia("https://www.youtube.com/embed/your-video-id")
               }

@@ -1,9 +1,12 @@
 import {
   faArrowLeft,
   faCakeCandles,
+  faEarthAsia,
   faFish,
   faHandHoldingHeart,
   faRuler,
+  faStar,
+  faTag,
   faTicketSimple,
   faUser,
   faVenusMars,
@@ -21,6 +24,8 @@ import {
   fetchAuctionKoi,
   getKoiById,
 } from "~/utils/apiUtils"; // Assume we have this API function
+import { convertBidMethodToReadable } from "~/utils/dataConverter";
+import { getAuctionStatus, getAuctionStatusV2 } from "~/utils/dateTimeUtils";
 
 const AuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();
@@ -60,68 +65,41 @@ const AuctionDetail: React.FC = () => {
 
   return (
     <>
-      <div className="mx-auto flex flex-col mt-6 mb-6 ">
-        <div className="flex flex-col sm:flex-row items-center justify-between">
-          <div className="hover:cursor-pointer transform hover:scale-105">
-            <NavigateButton
-              to={`/auctions`}
-              icon={<FontAwesomeIcon icon={faArrowLeft} />}
-              text="Back to Auction"
-              className="rounded bg-gray-200 px-5 py-3 text-lg text-black transition hover:bg-gray-200"
-            />
-          </div>
-          <div
-            className="m-2 flex max-h-30 flex-col items-center justify-between gap-4
-        rounded-lg bg-transparent p-6 shadow-lg transition-all duration-300 ease-in-out
-        hover:border-blue-500 hover:shadow-xl hover:ring-2 hover:ring-blue-300"
-          >
-            <div className="flex flex-col gap-4 md:flex-row items-center">
-              <div className="mb-4 flex flex-col items-center">
-                {/* <h1 className="text-2xl font-bold text-gray-800">
-            Auction #{auction.id}
-          </h1> */}
-                <h2 className="text-3xl font-semibold text-black">
-                  {auction.title}
-                </h2>
-              </div>
-
-              <div className="mb-4 flex flex-col items-center">
-                <h3 className="text-sm text-gray-500">Start Time:</h3>
-                <p className="text-lg font-medium text-gray-700">
-                  {auction.start_time.toLocaleString()}
-                </p>
-              </div>
-
-              <div className="mb-4 flex flex-col items-center">
-                <h3 className="text-sm text-gray-500">End Time:</h3>
-                <p className="text-lg font-medium text-gray-700">
-                  {auction.end_time.toLocaleString()}
-                </p>
-              </div>
-
-              <div className="flex flex-row items-center">
-                <span
-                  className={`rounded-lg px-4 py-2 text-lg font-bold
-                  ${auction.status === AUCTION_STATUS.ONGOING ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}
-                >
-                  {auction.status}
-                </span>
-              </div>
+      <div className="flex flex-col mt-2">
+        <div className="flex flex-col sm:flex-row items-center justify-between pl-6 ml-5 mt-5">
+          <div className="">
+            <div className="mb-4 flex flex-col items-center">
+              <h2 className="text-2xl font-semibold text-black">
+                {auction.title}
+              </h2>
             </div>
-            {/* <SearchBar placeholder="Type to search..." debounceTime={500} /> */}
+            <div className="">
+              <span
+                className={`rounded-lg px-4 py-2 text-lg font-bold
+                  ${auction.status === AUCTION_STATUS.ONGOING ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}
+              >
+                {auction.status}
+              </span>
+            </div>
+            <div className=" mt-5">
+              <span className="text-xl text-black glow-text">
+                {getAuctionStatusV2(auction.start_time, auction.end_time)}
+              </span>
+            </div>
           </div>
+          {/* <SearchBar placeholder="Type to search..." debounceTime={500} /> */}
         </div>
 
-        <div className="grid grid-cols-1 p-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="ml-20 mr-20 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {koiWithAuctionKoiData.map((combinedKoiData) => (
             <Link
               to={`/auctionkois/${auction.id}/${combinedKoiData.auctionKoiData.id}`}
               key={combinedKoiData.auctionKoiData.id}
               className="transform overflow-hidden m-5
-              rounded-lg bg-white shadow-md transition-transform hover:scale-105"
+              rounded-[2rem] bg-white shadow-md transition-transform hover:scale-102"
             >
-              <div className="relative flex items-center justify-center bg-[#4086c7]">
-                <div className="h-112 w-72 md:h-112 md:w-72">
+              <div className="relative flex items-center justify-center bg-[#4086c7] hover:bg-[#418dd4] transition-colors duration-300 ease-in-out">
+                <div className="h-112 w-76 md:h-112 md:w-72">
                   <div className="relative w-full h-full">
                     <img
                       src={combinedKoiData.thumbnail}
@@ -131,29 +109,42 @@ const AuctionDetail: React.FC = () => {
                   </div>
                 </div>
                 <div
-                  className="absolute top-2 left-2 bg-black bg-opacity-50
-                text-white rounded-full p-1 text-xs flex items-center"
+                  className="absolute top-3 left-3 bg-black bg-opacity-50
+                text-white rounded-full p-3 text-lg flex items-center"
                 >
                   <FontAwesomeIcon icon={faUser} className="mr-1" />
                   {combinedKoiData.owner_id}
                 </div>
                 <div
-                  className="absolute bottom-2 left-2
-                text-white rounded-full p-1 text-xs"
+                  className="absolute bottom-2 left-3
+                text-white rounded-full p-1 text-md font-bold"
                 >
-                  <FontAwesomeIcon icon={faTicketSimple} className="mr-1" />
+                  <FontAwesomeIcon icon={faTag} className="mr-1" />
                   {combinedKoiData.id}
                 </div>
                 <div
-                  className="absolute bottom-2 right-2
-                text-white rounded-full p-1 text-xs"
+                  className="absolute top-3 right-3
+                text-white rounded-full p-1 text-md font-bold"
                 >
-                  <FontAwesomeIcon icon={faHandHoldingHeart} className="mr-1" />
-                  {combinedKoiData.auctionKoiData.bid_method}
+                  {combinedKoiData.auctionKoiData.bid_method
+                    ? convertBidMethodToReadable(
+                        combinedKoiData.auctionKoiData.bid_method,
+                      )
+                    : "Buy Now"}
+                </div>
+                <div
+                  className="absolute bottom-3 right-3
+                text-white rounded-full p-1 text-md font-bold"
+                >
+                  <FontAwesomeIcon icon={faStar} className="mr-1" />
+                  <FontAwesomeIcon icon={faStar} className="mr-1" />
+                  <FontAwesomeIcon icon={faStar} className="mr-1" />
+                  <FontAwesomeIcon icon={faStar} className="mr-1" />
+                  <FontAwesomeIcon icon={faStar} className="mr-1" />
                 </div>
               </div>
-              <div className="p-4 bg-gray-200 rounded-b-lg">
-                <h2 className="text-xl text-black font-semibold mb-2">
+              <div className="pl-4 pr-4 py-2 bg-gray-200">
+                <h2 className="text-xl text-black font-semibold">
                   {combinedKoiData.name}
                 </h2>
                 <div className="flex justify-between items-center mb-2">
@@ -172,51 +163,65 @@ const AuctionDetail: React.FC = () => {
                       combinedKoiData.auctionKoiData.base_price}
                   </span>
                 </div>
-                <hr className="border-t border-gray-400 my-2" />
-                <div className="grid grid-cols-2 lg:grid-cols-2 gap-2 text-sm">
-                  <div className="flex items-center">
+              </div>
+              <div className="bg-gray-200">
+                <hr className="border-t border-gray-400 " />
+              </div>
+              <div className="pl-4 pr-4 py-2 bg-gray-200 rounded-b-lg">
+                <div className="flex flex-col">
+                  <div className="flex mb-3 justify-start items-center flex-row">
                     <FontAwesomeIcon
-                      icon={faFish}
-                      className="mr-2 text-gray-500 hidden sm:block"
+                      icon={faEarthAsia}
+                      className="mr-6 ml-4 text-[#4086c7] hidden sm:block"
                     />
-                    <label className="text-gray-500 text-xl ">Category: </label>
-                    <span className="text-gray-500 text-xl">
-                      {" "}
-                      {combinedKoiData.category_id || "Unknown"}
-                    </span>
+                    <div className="flex flex-col">
+                      <label className="text-gray-500 temd-xl ">
+                        Category{" "}
+                      </label>
+                      <span className="text-black text-xl">
+                        {" "}
+                        {combinedKoiData.category_id || "Unknown"}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center lg:justify-end">
+                  <div className="flex mb-3 justify-start items-center flex-row">
                     <FontAwesomeIcon
                       icon={faVenusMars}
-                      className="mr-2 text-gray-500 hidden sm:block"
+                      className="mr-6 ml-4 text-[#4086c7] hidden sm:block"
                     />
-                    <label className="text-gray-500 text-xl ">Sex: </label>
-                    <span className="text-gray-500 text-xl">
-                      {" "}
-                      {combinedKoiData.sex || "Unknown"}
-                    </span>
+                    <div className="flex flex-col">
+                      <label className="text-gray-500 text-md ">Sex</label>
+                      <span className="text-black text-xl">
+                        {" "}
+                        {combinedKoiData.sex || "Unknown"}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center">
+                  <div className="flex mb-3 justify-start items-center flex-row">
                     <FontAwesomeIcon
                       icon={faRuler}
-                      className="mr-2 text-gray-500 hidden sm:block"
+                      className="mr-6 ml-4 text-[#4086c7] hidden sm:block"
                     />
-                    <label className="text-gray-500 text-xl ">Length: </label>
-                    <span className="text-gray-500 text-xl">
-                      {" "}
-                      {combinedKoiData.length}cm
-                    </span>
+                    <div className="flex flex-col">
+                      <label className="text-gray-500 text-md ">Length</label>
+                      <span className="text-black text-xl">
+                        {" "}
+                        {combinedKoiData.length}cm
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center lg:justify-end">
+                  <div className="flex mb-3 justify-start items-center flex-row">
                     <FontAwesomeIcon
                       icon={faCakeCandles}
-                      className="mr-2 text-gray-500 hidden sm:block"
+                      className="mr-6 ml-4 text-[#4086c7] hidden sm:block"
                     />
-                    <label className="text-gray-500 text-xl ">Age: </label>
-                    <span className="text-gray-500 text-xl">
-                      {" "}
-                      {combinedKoiData.age || "Unknown"}
-                    </span>
+                    <div className="flex flex-col">
+                      <label className="text-gray-500 text-md ">Ages</label>
+                      <span className="text-black text-xl">
+                        {" "}
+                        {combinedKoiData.age || "Unknown"}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>

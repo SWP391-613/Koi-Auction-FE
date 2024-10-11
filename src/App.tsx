@@ -37,7 +37,6 @@ import UserDetail from "./pages/userdetail/UserDetail";
 import Manager from "./pages/manager/Manager";
 import { AuctionsManagement } from "./pages/manager/auctions/AuctionsManagement";
 import KoiList from "./pages/manager/koi/KoiManagement";
-import MemberList from "./pages/manager/member/MemberList";
 import Settings from "./pages/manager/settings/Settings";
 
 // Breeder pages
@@ -51,6 +50,7 @@ import SendNotifications from "./pages/staff/notifications/SendNotifications";
 // Types
 import BreederManagement from "./pages/manager/breeder/BreederManagement";
 import KoiManagement from "./pages/manager/koi/KoiManagement";
+import MemberManagement from "./pages/manager/member/MemberManagement";
 import StaffManagement from "./pages/manager/staff/StaffManagement";
 import { Role } from "./types/roles.type";
 
@@ -97,7 +97,7 @@ function App() {
           >
             <Route path="/managers" element={<Manager />}>
               <Route path="auctions" element={<AuctionsManagement />} />
-              <Route path="member" element={<MemberList />} />
+              <Route path="member" element={<MemberManagement />} />
               <Route path="breeder" element={<BreederManagement />} />
               <Route path="staff" element={<StaffManagement />} />
               <Route path="setting" element={<Settings />} />

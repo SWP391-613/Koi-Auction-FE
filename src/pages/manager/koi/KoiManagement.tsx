@@ -21,6 +21,9 @@ import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import { KoiApiResponse, KoiDetailModel } from "~/types/kois.type";
 import PaginationComponent from "../../../components/pagination/Pagination";
 import EditKoiDialog from "./EditKoiDialog";
+import { getCookie } from "~/utils/cookieUtils";
+import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
+import { KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 
 const KoiManagement = () => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
@@ -40,6 +43,16 @@ const KoiManagement = () => {
     age: 0,
   });
   const [koiImage, setKoiImage] = useState<File | null>(null);
+
+  const accessToken = getCookie("access_token");
+  // Handle access token early return
+  useEffect(() => {
+    if (!accessToken) {
+      navigate("/notfound");
+    }
+  }, [accessToken, navigate]);
+
+  if (!accessToken) return null;
 
   useEffect(() => {
     const fetchKois = async () => {
@@ -90,7 +103,11 @@ const KoiManagement = () => {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`http://localhost:4000/api/v1/kois/${id}`);
+      await axios.delete(`http://localhost:4000/api/v1/kois/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       toast.success("Koi deleted successfully!");
       setKois(kois.filter((koi) => koi.id !== id));
     } catch (err: any) {
@@ -198,47 +215,7 @@ const KoiManagement = () => {
         <div className="-mx-4 overflow-hidden px-4 py-4 sm:-mx-8 sm:px-8">
           <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
             <table className="min-w-full leading-normal">
-              <thead>
-                <tr>
-                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Id
-                  </th>
-                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Name
-                  </th>
-                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Sex
-                  </th>
-                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Length (cm)
-                  </th>
-                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Age
-                  </th>
-                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Koi
-                  </th>
-                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Base Price
-                  </th>
-                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Status
-                  </th>
-                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Display
-                  </th>
-
-                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Owner ID
-                  </th>
-                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Category ID
-                  </th>
-                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
+              <TableHeaderComponent headers={KOI_MANAGEMENT_HEADER} />
               <tbody>
                 {kois.length > 0 ? (
                   kois.map((koi) => (
@@ -311,17 +288,17 @@ const KoiManagement = () => {
                           <CrudButton
                             onClick={() => handleView(koi.id)}
                             ariaLabel="View"
-                            svg={<ViewIcon size={20} />}
+                            svgPath="view.svg"
                           />
                           <CrudButton
                             onClick={() => handleEdit(koi.id)}
                             ariaLabel="Edit"
-                            svg={<EditIcon size={20} />}
+                            svgPath="edit.svg"
                           />
                           <CrudButton
                             onClick={() => handleDelete(koi.id)}
                             ariaLabel="Delete"
-                            svg={<DeleteIcon size={20} />}
+                            svgPath="delete.svg"
                           />
                         </div>
                       </td>

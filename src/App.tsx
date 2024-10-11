@@ -1,9 +1,8 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { Route, Routes } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css"; // import first
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import CSS once
+import "react-toastify/dist/ReactToastify.css"; // import first
 
 // Vercel integrations
 import { Analytics } from "@vercel/analytics/react";
@@ -14,34 +13,32 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
 // Components
-import Header from "./components/header/Header";
-import Footer from "./components/footer/Footer";
 import RoleBasedRoute from "./components/auth/RoleBasedRoute";
+import Footer from "./components/footer/Footer";
+import Header from "./components/header/Header";
 import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 
 // Pages
-import Home from "./pages/home/Home";
-import About from "./pages/about/About";
-import Privacy from "./pages/privacy/Privacy";
-import Terms from "./pages/terms/Terms";
-import Login from "./pages/login/Login";
-import Register from "./pages/register/Register";
 import NotFound from "./components/error/NotFound";
 import OtpVerification from "./components/otp/OtpVeficitaion";
-import Auctions from "./pages/auctions/Auctions";
+import About from "./pages/about/About";
 import AuctionDetail from "./pages/auctions/AuctionDetail";
+import Auctions from "./pages/auctions/Auctions";
 import KoiBidding from "./pages/auctions/KoiBidding";
+import Home from "./pages/home/Home";
 import KoiDetail from "./pages/kois/KoiDetail";
+import Login from "./pages/login/Login";
+import Privacy from "./pages/privacy/Privacy";
+import Register from "./pages/register/Register";
+import Terms from "./pages/terms/Terms";
 import UserDetail from "./pages/userdetail/UserDetail";
 
 // Manager pages
 import Manager from "./pages/manager/Manager";
-import BreederList from "./pages/manager/breeder/BreederManagement";
-import KoiList from "./pages/manager/koi/KoiList";
+import { AuctionsManagement } from "./pages/manager/auctions/AuctionsManagement";
+import KoiList from "./pages/manager/koi/KoiManagement";
 import MemberList from "./pages/manager/member/MemberList";
 import Settings from "./pages/manager/settings/Settings";
-import StaffList from "./pages/manager/staff/StaffManagement";
-import { AuctionsManagement } from "./pages/manager/auctions/AuctionsManagement";
 
 // Breeder pages
 import BreederDetail from "./pages/breeder/BreederDetail";
@@ -52,9 +49,10 @@ import StaffDetail from "./pages/staff/detail/StaffDetail";
 import SendNotifications from "./pages/staff/notifications/SendNotifications";
 
 // Types
-import { Role } from "./types/roles.type";
-import StaffManagement from "./pages/manager/staff/StaffManagement";
 import BreederManagement from "./pages/manager/breeder/BreederManagement";
+import KoiManagement from "./pages/manager/koi/KoiManagement";
+import StaffManagement from "./pages/manager/staff/StaffManagement";
+import { Role } from "./types/roles.type";
 
 const TITLE = "Auction Koi";
 
@@ -103,7 +101,7 @@ function App() {
               <Route path="breeder" element={<BreederManagement />} />
               <Route path="staff" element={<StaffManagement />} />
               <Route path="setting" element={<Settings />} />
-              <Route path="koi" element={<KoiList />} />
+              <Route path="koi" element={<KoiManagement />} />
               <Route path="koi-detail" element={<KoiDetail />} />
             </Route>
           </Route>

@@ -13,7 +13,7 @@ import { useUserData } from "~/contexts/useUserData";
 import DepositComponent from "~/components/shared/DepositComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import { KoiDetailModel } from "~/types/kois.type";
-import KoiList from "../manager/koi/KoiList";
+import KoiList from "../manager/koi/KoiManagement";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;

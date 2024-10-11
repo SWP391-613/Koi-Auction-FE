@@ -15,7 +15,7 @@ import React, { useEffect, useState } from "react";
 import PaginationComponent from "../../../components/pagination/Pagination";
 import { KoiApiResponse, KoiDetailModel } from "~/types/kois.type";
 
-const KoiList = () => {
+const KoiManagement = () => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -384,4 +384,4 @@ const KoiList = () => {
   );
 };
 
-export default KoiList;
+export default KoiManagement;

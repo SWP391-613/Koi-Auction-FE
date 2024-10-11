@@ -3,7 +3,8 @@ import { useForm, Controller, Control, FieldErrors } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 import { register } from "../../utils/apiUtils";
 import NavigateButton from "~/components/shared/NavigateButton";
 import { Button, Typography } from "@mui/material";
@@ -172,6 +173,7 @@ const Register = () => {
           />
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 };

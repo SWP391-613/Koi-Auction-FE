@@ -71,8 +71,6 @@ const DepositComponent: React.FC<DepositComponentProps> = ({
           </Button>
         </Box>
       </form>
-
-      {/* Toast notification container */}
       <ToastContainer />
     </Box>
   );

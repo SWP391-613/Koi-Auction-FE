@@ -3,7 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 import { Bid } from "~/components/BiddingHistory";
 import { KoiInfoGridComponent } from "~/components/koibiddingdetail/KoiInfoGridComponent";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
@@ -258,6 +259,7 @@ const KoiBidding: React.FC = () => {
             : WEB_SOCKET_MESSAGE.DISCONNECTED}
         </Typography>
       )}
+      <ToastContainer />
     </div>
   );
 };

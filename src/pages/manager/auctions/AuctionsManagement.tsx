@@ -25,7 +25,8 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 import { AuctionModel } from "~/types/auctions.type";
 import { format, set } from "date-fns";
 import axios from "axios";
@@ -422,6 +423,7 @@ export const AuctionsManagement: React.FC = () => {
           </DialogActions>
         </Dialog>
       </div>
+      <ToastContainer />
     </div>
   );
 };

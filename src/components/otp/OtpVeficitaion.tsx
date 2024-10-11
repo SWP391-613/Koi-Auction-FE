@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
 const OtpVerification: React.FC = () => {
@@ -92,6 +93,7 @@ const OtpVerification: React.FC = () => {
       >
         Verify OTP
       </button>
+      <ToastContainer />
     </div>
   );
 };

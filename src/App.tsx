@@ -3,6 +3,7 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import React from "react";
 import { Helmet } from "react-helmet";
 import { Route, Routes } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css"; // import first
 import { ToastContainer } from "react-toastify";
 import RoleBasedRoute from "./components/auth/RoleBasedRoute";
 import NotFound from "./components/error/NotFound";
@@ -35,6 +36,7 @@ import SendNotifications from "./pages/staff/notifications/SendNotifications";
 import Terms from "./pages/terms/Terms";
 import UserDetail from "./pages/userdetail/UserDetail";
 import { Role } from "./types/roles.type";
+import "react-toastify/dist/ReactToastify.css";
 
 const TITLE = "Auction Koi";
 

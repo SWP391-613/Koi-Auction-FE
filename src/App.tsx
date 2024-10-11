@@ -47,6 +47,9 @@ import StaffLayout from "./pages/staff/Staff";
 import StaffDetail from "./pages/staff/detail/StaffDetail";
 import SendNotifications from "./pages/staff/notifications/SendNotifications";
 
+
+import UserDetail from "./pages/user/UserDetail";
+import UserOrder from "./pages/user/UserOrder";
 // Types
 import BreederManagement from "./pages/manager/breeder/BreederManagement";
 import KoiManagement from "./pages/manager/koi/KoiManagement";
@@ -128,6 +131,12 @@ function App() {
                 element={<SendNotifications />}
               />
             </Route>
+          </Route>
+          {/* Protected routes for USER */}
+          <Route
+            element={<RoleBasedRoute allowedRoles={["ROLE_MEMBER" as Role]} />}
+          >
+            <Route path="/orders" element={<UserOrder />} />
           </Route>
         </Routes>
         <Footer />

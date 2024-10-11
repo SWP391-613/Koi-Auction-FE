@@ -9,6 +9,7 @@ export const environment: any = {
       auctions: "/auctions",
       kois: "/kois",
       bidding: "/bidding",
+      orders: "/orders",
       socket: "/auction-websocket",
     },
   },

@@ -15,6 +15,7 @@ import {
   faFish,
   faScrewdriver,
   faLock,
+  faCartShopping,
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames"; // Install this package for easier class management
 
@@ -125,6 +126,13 @@ const Header = () => {
             text: "Breeder",
             to: "/breeders",
             icon: <FontAwesomeIcon icon={faFish} />,
+          });
+          break;
+        case "member":
+          baseButtons.push({
+            text: "Orders",
+            to: "/orders",
+            icon: <FontAwesomeIcon icon={faCartShopping} />,
           });
           break;
         // Add more cases for other roles if needed

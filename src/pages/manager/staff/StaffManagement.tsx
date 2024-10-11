@@ -21,7 +21,7 @@ import { toast, ToastContainer } from "react-toastify";
 import usePagination from "~/hooks/usePagination";
 import { ENDPOINT_STAFFS } from "~/constants/endPoints";
 
-const StaffList = () => {
+const StaffManagement = () => {
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [selectedStaffId, setSelectedStaffId] = useState<number | null>(null);
@@ -253,4 +253,4 @@ const StaffList = () => {
   );
 };
 
-export default StaffList;
+export default StaffManagement;

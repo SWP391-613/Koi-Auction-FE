@@ -6,9 +6,17 @@ import {
   Button,
   IconButton,
   CircularProgress,
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
+  Typography,
+  Box,
+  Divider,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { Order } from "./UserOrder";
 import { fetchOrderDetails } from "~/utils/apiUtils";
 
 interface UserOrderDetailProps {
@@ -26,13 +34,22 @@ export type OrderDetail = {
   total_money: number;
 };
 
+export type OrderDetailWithKoi = OrderDetail & {
+  koi: {
+    name: string;
+    image_url: string;
+  };
+};
+
 const UserOrderDetail: React.FC<UserOrderDetailProps> = ({
   orderId,
   onClose,
 }) => {
-  const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
+  const [orderDetails, setOrderDetails] = useState<OrderDetailWithKoi[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     setLoading(true);
@@ -52,44 +69,91 @@ const UserOrderDetail: React.FC<UserOrderDetailProps> = ({
       .finally(() => setLoading(false));
   }, [orderId]);
 
+  const totalOrderAmount = orderDetails.reduce(
+    (sum, detail) => sum + detail.total_money,
+    0,
+  );
+
   return (
     <>
       <DialogTitle>
-        <div className="flex justify-between items-center">
-          <span>Order Details</span>
-          <IconButton onClick={onClose}>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h6">Order Details</Typography>
+          <IconButton onClick={onClose} size="small">
             <CloseIcon />
           </IconButton>
-        </div>
+        </Box>
       </DialogTitle>
       <DialogContent dividers>
-        <div className="mb-4">
-          <h2 className="text-xl font-bold">Order #{orderId}</h2>
-        </div>
+        <Box mb={3}>
+          <Typography variant="h5" gutterBottom>
+            Order #{orderId}
+          </Typography>
+          <Typography variant="subtitle1" color="text.secondary">
+            Total Amount: ${totalOrderAmount.toFixed(2)}
+          </Typography>
+        </Box>
         {loading ? (
-          <CircularProgress />
+          <Box display="flex" justifyContent="center" my={4}>
+            <CircularProgress />
+          </Box>
         ) : error ? (
-          <div className="text-red-500">{error}</div>
+          <Typography color="error">{error}</Typography>
         ) : (
-          <div className="flex flex-col gap-4">
+          <Grid container spacing={3}>
             {orderDetails.length > 0 ? (
               orderDetails.map((detail) => (
-                <div key={detail.id} className="border p-2 rounded">
-                  <p>Product ID: {detail.product_id}</p>
-                  <p>Color: {detail.color || "N/A"}</p>
-                  <p>Price: ${detail.price}</p>
-                  <p>Quantity: {detail.number_of_products}</p>
-                  <p>Total: ${detail.total_money}</p>
-                </div>
+                <Grid item xs={12} sm={6} md={4} key={detail.id}>
+                  <Card elevation={3}>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image={detail.koi.image_url}
+                      alt={detail.koi.name}
+                    />
+                    <CardContent>
+                      <Typography variant="h6" gutterBottom noWrap>
+                        {detail.koi.name}
+                      </Typography>
+                      <Box display="flex" justifyContent="space-between" mb={1}>
+                        <Typography variant="body2" color="text.secondary">
+                          Price:
+                        </Typography>
+                        <Typography variant="body2">
+                          ${detail.price.toFixed(2)}
+                        </Typography>
+                      </Box>
+                      <Box display="flex" justifyContent="space-between" mb={1}>
+                        <Typography variant="body2" color="text.secondary">
+                          Quantity:
+                        </Typography>
+                        <Typography variant="body2">
+                          {detail.number_of_products}
+                        </Typography>
+                      </Box>
+                      <Divider sx={{ my: 1 }} />
+                      <Box display="flex" justifyContent="space-between">
+                        <Typography variant="subtitle2">Total:</Typography>
+                        <Typography variant="subtitle2" fontWeight="bold">
+                          ${detail.total_money.toFixed(2)}
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
               ))
             ) : (
-              <p>No order details available.</p>
+              <Grid item xs={12}>
+                <Typography align="center">
+                  No order details available.
+                </Typography>
+              </Grid>
             )}
-          </div>
+          </Grid>
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={onClose} color="primary" variant="contained">
           Close
         </Button>
       </DialogActions>

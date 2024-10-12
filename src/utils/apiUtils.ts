@@ -14,6 +14,7 @@ import { AuctionDTO, AuctionModel } from "~/types/auctions.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
 import { OrderDetail } from "~/pages/user/UserOrderDetail";
 import { Order } from "~/pages/user/UserOrder";
+import { OrderDetailWithKoi } from "~/pages/user/UserOrderDetail";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -366,12 +367,28 @@ export const fetchUserOrders = async (userId: number): Promise<Order[]> => {
 
 export const fetchOrderDetails = async (
   orderId: number,
-): Promise<OrderDetail[]> => {
+): Promise<OrderDetailWithKoi[]> => {
   try {
     const response = await axios.get(
       `${API_URL}/orders_details/order/${orderId}`,
     );
-    return response.data;
+    const orderDetails: OrderDetail[] = response.data;
+
+    // Fetch Koi data for each order detail
+    const orderDetailsWithKoi = await Promise.all(
+      orderDetails.map(async (detail) => {
+        const koiData = await getKoiById(detail.product_id);
+        return {
+          ...detail,
+          koi: {
+            name: koiData.name,
+            image_url: koiData.thumbnail,
+          },
+        };
+      }),
+    );
+
+    return orderDetailsWithKoi;
   } catch (error) {
     console.error("Error fetching order details:", error);
     throw error;

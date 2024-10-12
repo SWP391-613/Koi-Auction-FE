@@ -73,7 +73,7 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
 
   return (
     <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-4 text-lg">
-      <div className="mb-4 items-center rounded-2xl">
+      <div className="mb-2 items-center rounded-2xl">
         <div className="grid w-full grid-cols-1 xl:grid-cols-2">
           <h2 className="col-span-1 m-4 text-4xl font-bold xl:col-span-2">
             {koi.name}

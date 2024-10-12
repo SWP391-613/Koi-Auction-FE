@@ -30,6 +30,7 @@ import { KoiDetailModel } from "~/types/kois.type";
 import { AuctionModel } from "~/types/auctions.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
 import Loading from "~/components/loading/Loading";
+import { formatCurrency } from "~/utils/currencyUtils";
 
 // Define the BidRequest interface
 export type BidRequest = {
@@ -151,7 +152,7 @@ const KoiBidding: React.FC = () => {
       </div>
       <div className="m-5 flex flex-col gap-6 p-4 sm:flex-col md:flex-row">
         {/* Koi Image and Media Gallery */}
-        <div className="w-full md:w-128">
+        <div className="w-full md:w-150">
           <div className="relative h-96 w-full rounded-xl bg-[#4086c7] sm:h-128 md:h-144 lg:h-192">
             {selectedMedia ? (
               selectedMedia.includes("youtube") ? (
@@ -243,7 +244,10 @@ const KoiBidding: React.FC = () => {
           ) : (
             <div className="mb-4 rounded-2xl bg-gray-300 p-4">
               <h3 className="mb-2 text-xl font-semibold">Auction Ended</h3>
-              <p>This koi has been sold for {auctionKoi.current_bid}</p>
+              <p>
+                This koi has been sold for{" "}
+                {formatCurrency(auctionKoi.current_bid)}
+              </p>
             </div>
           )}
           <h3 className="mb-2 text-xl font-semibold">Bid History</h3>

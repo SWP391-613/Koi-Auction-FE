@@ -14,6 +14,7 @@ import AccountVerificationAlert from "~/components/shared/AccountVerificationAle
 import { KoiDetailModel } from "~/types/kois.type";
 import { AuctionsManagement } from "../../manager/auctions/AuctionsManagement";
 import SearchBar from "~/components/shared/SearchBar";
+import Loading from "~/components/loading/Loading";
 
 const StaffDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -67,7 +68,7 @@ const StaffDetail: React.FC = () => {
     });
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
 

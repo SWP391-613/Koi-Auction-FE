@@ -29,6 +29,7 @@ import NavigateButton from "../../components/shared/NavigateButton";
 import { KoiDetailModel } from "~/types/kois.type";
 import { AuctionModel } from "~/types/auctions.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
+import Loading from "~/components/loading/Loading";
 
 // Define the BidRequest interface
 export type BidRequest = {
@@ -134,9 +135,9 @@ const KoiBidding: React.FC = () => {
     }
   }, [user, auctionKoi, bidAmount]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>;
-  if (!koi || !auctionKoi || !auction) return <div>Loading...</div>;
+  if (!koi || !auctionKoi || !auction) return <Loading />;
 
   return (
     <div className="container mx-auto">

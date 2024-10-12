@@ -14,6 +14,7 @@ import DepositComponent from "~/components/shared/DepositComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import { KoiDetailModel } from "~/types/kois.type";
 import KoiList from "../manager/koi/KoiManagement";
+import Loading from "~/components/loading/Loading";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -119,7 +120,7 @@ const BreederDetail: React.FC = () => {
     setCurrentPage(page); // Update the current page when pagination changes
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
 

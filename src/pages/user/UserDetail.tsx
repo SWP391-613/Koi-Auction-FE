@@ -7,6 +7,7 @@ import { useUserData } from "~/contexts/useUserData";
 import { formatDate } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import "./UserDetail.scss";
+import Loading from "~/components/loading/Loading";
 
 const UserDetail: React.FC = () => {
   const { user, loading, error, setUser } = useUserData();
@@ -14,7 +15,7 @@ const UserDetail: React.FC = () => {
   const [updateValue, setUpdateValue] = useState("");
   const navigate = useNavigate();
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
 
@@ -63,7 +64,7 @@ const UserDetail: React.FC = () => {
   };
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   const accessToken = getCookie("access_token");

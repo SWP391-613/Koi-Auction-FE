@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { koiBreeders } from "../../utils/data/koibreeders";
 import NavigateButton from "../../components/shared/NavigateButton";
 import SearchBar from "~/components/shared/SearchBar";
+import { useAuth } from "~/contexts/AuthContext";
 
 const Home = () => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   return (
     <div className="flex flex-col items-center bg-red">
@@ -21,11 +23,13 @@ const Home = () => {
         </p>
       </div>
       <div className="mb-20 flex h-20 w-5/6 items-center justify-center">
-        <NavigateButton
-          text="Register"
-          to="/register"
-          className="mr-4 mt-10 flex h-[4rem] w-full max-w-[300px] items-center justify-center rounded-2xl bg-red-500 px-4 py-2 text-2xl font-semibold text-white hover:bg-red-600"
-        />
+        {!isLoggedIn && (
+          <NavigateButton
+            text="Register"
+            to="/register"
+            className="mr-4 mt-10 flex h-[4rem] w-full max-w-[300px] items-center justify-center rounded-2xl bg-red-500 px-4 py-2 text-2xl font-semibold text-white hover:bg-red-600"
+          />
+        )}
         <NavigateButton
           text="View Auction"
           to="/auctions"

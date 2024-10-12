@@ -17,6 +17,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { KoiDetailModel } from "~/types/kois.type";
 import { KoiDetailItem } from "~/components/koibiddingdetail/KoiBiddingDetailComponent";
+import { formatCurrency } from "~/utils/currencyUtils";
+import { getCategoryName } from "~/utils/dataConverter";
 
 interface KoiDetailItemProps {
   icon: IconDefinition;
@@ -85,6 +87,18 @@ const KoiDetail: React.FC = () => {
           {/* Koi Info */}
           <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-4 text-lg">
             <div className="mb-4 items-center rounded-2xl">
+              <KoiDetailItem
+                icon={faUser}
+                label="Owner ID"
+                value={koi.owner_id}
+                bgColor="bg-gray-300"
+              />
+              <KoiDetailItem
+                icon={faListOl}
+                label="Status"
+                value={koi.status_name}
+                {...getStatusStyles(koi.status_name)}
+              />
               <div className="grid w-full grid-cols-1 xl:grid-cols-2">
                 <h2 className="col-span-1 m-4 text-4xl font-bold xl:col-span-2">
                   {koi.name}
@@ -110,28 +124,30 @@ const KoiDetail: React.FC = () => {
                 <KoiDetailItem
                   icon={faFish}
                   label="Category ID"
-                  value={koi.category_id}
+                  value={
+                    koi.category_id
+                      ? getCategoryName(koi.category_id)
+                      : "Not Set"
+                  }
+                  bgColor="bg-gray-300"
+                />
+                <KoiDetailItem
+                  icon={faFish}
+                  label="Base Price"
+                  value={
+                    koi.base_price ? formatCurrency(koi.base_price) : "Not Set"
+                  }
+                  bgColor="bg-gray-300"
+                />
+                <KoiDetailItem
+                  icon={faFish}
+                  label="Is Display"
+                  value={koi.is_display == 1 ? "Yes" : "No"}
                   bgColor="bg-gray-300"
                 />
               </div>
             </div>
 
-            <div className="mb-4 flex flex-col items-center justify-between rounded-2xl md:flex-row">
-              <div className="grid w-full grid-cols-1 lg:grid-cols-2">
-                <KoiDetailItem
-                  icon={faListOl}
-                  label="Status"
-                  value={koi.status_name}
-                  {...getStatusStyles(koi.status_name)}
-                />
-                <KoiDetailItem
-                  icon={faUser}
-                  label="Owner ID"
-                  value={koi.owner_id}
-                  bgColor="bg-gray-300"
-                />
-              </div>
-            </div>
             <div className="grid grid-cols-2 grid-rows-3 rounded-2xl">
               <h2 className="col-span-2 row-span-1 m-4 text-4xl font-bold">
                 Description

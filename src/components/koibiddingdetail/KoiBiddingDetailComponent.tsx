@@ -26,7 +26,7 @@ export const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
       className={`${bgColor} m-2 grid grid-cols-2 rounded-3xl border border-gray-300 p-3`}
     >
       <div className="flex items-center">
-        <FontAwesomeIcon icon={icon as IconDefinition} color="#d66b56" />
+        <FontAwesomeIcon icon={icon as IconDefinition} color="#4086c7" />
         <p className={`ml-2 text-lg`}>{label}</p>
       </div>
       <p className={`${fontSize} text-end ${textColor}`}>{value}</p>

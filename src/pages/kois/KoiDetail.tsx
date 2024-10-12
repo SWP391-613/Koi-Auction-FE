@@ -16,6 +16,7 @@ import {
   faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { KoiDetailModel } from "~/types/kois.type";
+import { KoiDetailItem } from "~/components/koibiddingdetail/KoiBiddingDetailComponent";
 
 interface KoiDetailItemProps {
   icon: IconDefinition;
@@ -37,27 +38,6 @@ const getStatusStyles = (status: string) => {
     default:
       return { bgColor: "bg-gray-500", textColor: "text-black font-bold" };
   }
-};
-
-export const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
-  icon,
-  label,
-  value,
-  fontSize = "text-2xl",
-  bgColor = "bg-gray-100",
-  textColor = "text-black",
-}) => {
-  return (
-    <div
-      className={`${bgColor} m-2 grid grid-cols-2 rounded-3xl border border-gray-300 p-3`}
-    >
-      <div className="flex items-center">
-        <FontAwesomeIcon icon={icon as IconDefinition} color="#d66b56" />
-        <p className={`ml-2 text-lg`}>{label}</p>
-      </div>
-      <p className={`${fontSize} text-end ${textColor}`}>{value}</p>
-    </div>
-  );
 };
 
 const KoiDetail: React.FC = () => {

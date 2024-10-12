@@ -1,6 +1,10 @@
 import axios, { AxiosError } from "axios";
 import { environment } from "../environments/environment";
-import { KoiDetailModel, KoisResponse } from "~/types/kois.type";
+import {
+  KoiApiResponse,
+  KoiDetailModel,
+  KoisResponse,
+} from "~/types/kois.type";
 import { Bid } from "~/components/BiddingHistory";
 import { format, isToday, isYesterday, isTomorrow } from "date-fns";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/breeder/BreederDetail";
@@ -9,6 +13,10 @@ import {
   LoginDTO,
   UserRegisterDTO,
   UserLoginResponse,
+  StaffRegisterDTO,
+  Staff,
+  MembersResponse,
+  BreedersResponse,
 } from "~/types/users.type";
 import { AuctionDTO, AuctionModel } from "~/types/auctions.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
@@ -393,4 +401,262 @@ export const fetchOrderDetails = async (
     console.error("Error fetching order details:", error);
     throw error;
   }
+};
+
+export const verifyOtp = async (email: string, otp: string): Promise<any> => {
+  try {
+    const response = await axios.post(`${API_URL}/users/verify`, {
+      email,
+      otp,
+    });
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("OTP verification failed");
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error verifying OTP:", error.response?.data);
+      throw new Error(
+        error.response?.data?.message ||
+          "An error occurred during verification",
+      );
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
+  }
+};
+
+export const deleteAuction = async (id: number): Promise<void> => {
+  try {
+    const response = await axios.delete(`${API_URL}/auctions/${id}`);
+    if (response.status === 204) {
+      console.log("Auction deleted successfully");
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error deleting auction:", error.response?.data);
+      throw new Error(
+        error.response?.data?.message || "An error occurred during deletion",
+      );
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
+  }
+};
+
+export const updateUserField = async (
+  userId: number,
+  field: string,
+  value: any,
+  token: string,
+): Promise<void> => {
+  const response = await axios.put(
+    `${API_URL}/users/${userId}`,
+    { [field]: value },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to update user information.");
+  }
+};
+
+export const createStaff = async (
+  staffData: StaffRegisterDTO,
+  token: string,
+): Promise<void> => {
+  const response = await axios.post(`${API_URL}/staffs`, staffData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (response.status !== 201) {
+    throw new Error(response.data?.reason || "Failed to create staff.");
+  }
+};
+
+export const deleteStaff = async (id: number, token: string): Promise<void> => {
+  const API_URL = `http://localhost:4000/api/v1/staffs/${id}`;
+  const response = await axios.delete(API_URL, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (response.status !== 204) {
+    throw new Error("Failed to delete staff");
+  }
+};
+
+export const updateStaff = async (
+  staffId: number,
+  staffData: Staff,
+  token: string,
+): Promise<void> => {
+  const API_URL = `http://localhost:4000/api/v1/staffs/${staffId}`;
+  const response = await axios.put(API_URL, staffData, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Failed to update staff");
+  }
+};
+
+export const getStaffData = async (
+  staffId: number,
+  token: string,
+): Promise<any> => {
+  const API_URL = `http://localhost:4000/api/v1/staffs/${staffId}`;
+  const response = await axios.get(API_URL, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Failed to fetch staff data");
+  }
+
+  return response.data;
+};
+
+export const getMembersData = async (
+  page: number,
+  limit: number,
+): Promise<MembersResponse> => {
+  const response = await axios.get<MembersResponse>(
+    "http://localhost:4000/api/v1/members",
+    {
+      params: {
+        page: page - 1,
+        limit: limit,
+      },
+    },
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to fetch members");
+  }
+
+  return response.data;
+};
+
+export const getKoiData = async (
+  page: number,
+  limit: number,
+): Promise<KoiApiResponse> => {
+  const response = await axios.get<KoiApiResponse>(
+    "http://localhost:4000/api/v1/kois",
+    {
+      params: {
+        page: page - 1, // Assuming the API is zero-based
+        limit: limit,
+      },
+    },
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to fetch kois");
+  }
+
+  return response.data;
+};
+
+export const deleteKoiById = async (
+  id: number,
+  accessToken: string,
+): Promise<void> => {
+  const response = await axios.delete(
+    `http://localhost:4000/api/v1/kois/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+
+  if (response.status !== 204) {
+    throw new Error("Failed to delete koi");
+  }
+};
+
+export const createKoi = async (
+  formData: FormData,
+): Promise<KoiDetailModel> => {
+  const response = await axios.post<KoiDetailModel>(
+    "http://localhost:4000/api/v1/kois",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
+  );
+
+  if (response.status !== 201) {
+    throw new Error("Failed to create koi");
+  }
+
+  return response.data;
+};
+
+export const updateKoi = async (
+  koiId: number,
+  koi: KoiDetailModel,
+  accessToken: string,
+) => {
+  const response = await axios.put(
+    `http://localhost:4000/api/v1/kois/${koiId}`,
+    koi,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to update koi");
+  }
+
+  return response.data;
+};
+
+export const fetchKoi = async (koiId: number, accessToken: string) => {
+  const response = await axios.get(
+    `http://localhost:4000/api/v1/kois/${koiId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to fetch koi data");
+  }
+
+  return response.data;
+};
+
+export const fetchBreedersData = async (page: number, itemsPerPage: number) => {
+  const response = await axios.get<BreedersResponse>(
+    "http://localhost:4000/api/v1/breeders",
+    {
+      params: {
+        page: page - 1, // Adjusting for zero-based indexing
+        limit: itemsPerPage,
+      },
+    },
+  );
+
+  if (response.status !== 200) {
+    throw new Error("Failed to fetch breeders");
+  }
+
+  return response.data;
 };

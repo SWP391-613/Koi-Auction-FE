@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import { Staff } from "~/types/users.type"; // Adjust the import path as needed
 import { getCookie } from "~/utils/cookieUtils"; // Adjust the import path as needed
 import { toast } from "react-toastify";
+import { getStaffData, updateStaff } from "~/utils/apiUtils";
+import { extractErrorMessage } from "~/utils/dataConverter";
 
 interface EditStaffDialogProps {
   open: boolean;
@@ -58,21 +60,15 @@ const EditStaffDialog: React.FC<EditStaffDialogProps> = ({
     if (!accessToken) return;
 
     try {
-      const response = await axios.get(
-        `http://localhost:4000/api/v1/staffs/${staffId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
+      const staffData = await getStaffData(staffId, accessToken); // Use the utility function
+      setStaff(staffData);
+    } catch (error) {
+      const errorMessage = extractErrorMessage(
+        error,
+        "Failed to fetch staff data",
       );
-      setStaff(response.data);
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        toast.error(err.response?.data.reason);
-      }
-
-      setError("Failed to fetch staff data");
+      toast.error(errorMessage);
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -90,19 +86,13 @@ const EditStaffDialog: React.FC<EditStaffDialogProps> = ({
     if (!accessToken) return;
 
     try {
-      await axios.put(`http://localhost:4000/api/v1/staffs/${staffId}`, staff, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      await updateStaff(staffId, staff, accessToken); // Use the utility function for the API call
       setSnackbar({ open: true, message: "Staff updated successfully" });
       onClose();
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        toast.error(err.response?.data.reason);
-      }
-
-      setError("Failed to update staff");
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error, "Failed to update staff");
+      toast.error(errorMessage);
+      setError(errorMessage);
     }
   };
 

@@ -81,10 +81,10 @@ function App() {
             path="/auctionkois/:auctionId/:auctionKoiId"
             element={<KoiBidding />}
           />
-          <Route path="/kois/:id" element={<KoiDetail />} />
 
           {/* Protected routes for logged-in users */}
           <Route element={<ProtectedRoute />}>
+            <Route path="/kois/:id" element={<KoiDetail />} />
             <Route path="/users/:id" element={<UserDetail />} />
           </Route>
 

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import axios from "axios";
+import "react-toastify/dist/ReactToastify.css";
+import { verifyOtp } from "~/utils/apiUtils";
 
 const OtpVerification: React.FC = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -43,31 +43,20 @@ const OtpVerification: React.FC = () => {
     };
 
   const handleSubmit = async () => {
+    const otpString = otp.join("");
+
+    if (otpString.length !== 6) {
+      toast.error("Please enter a valid 6-digit OTP");
+      return;
+    }
+
     try {
-      const otpString = otp.join("");
-
-      if (otpString.length !== 6) {
-        toast.error("Please enter a valid 6-digit OTP");
-        return;
-      }
-
-      const response = await axios.post(
-        "http://localhost:4000/api/v1/users/verify",
-        {
-          email: email,
-          otp: otpString,
-        },
-      );
-
-      if (response.status === 200) {
-        toast.success("OTP verified successfully");
-        setTimeout(() => navigate("/"), 3000);
-      } else {
-        toast.error("OTP verification failed");
-      }
-    } catch (error) {
-      console.error("Error verifying OTP:", error);
-      toast.error("An error occurred during verification");
+      const data = await verifyOtp(email, otpString);
+      toast.success("OTP verified successfully");
+      setTimeout(() => navigate("/"), 3000);
+    } catch (error: Error | any) {
+      console.error(error);
+      toast.error(error.message || "An error occurred during verification");
     }
   };
 

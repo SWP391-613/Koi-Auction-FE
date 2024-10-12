@@ -12,9 +12,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { KoiDetailItem } from "./KoiBiddingDetailComponent";
 import { UserDetailsResponse } from "~/types/users.type";
-import { convertBidMethodToReadable } from "~/utils/dataConverter";
+import {
+  convertBidMethodToReadable,
+  getCategoryName,
+} from "~/utils/dataConverter";
 import { KoiDetailModel } from "~/types/kois.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
+import { formatCurrency } from "~/utils/currencyUtils";
 
 interface KoiInfoGridProps {
   koi: KoiDetailModel;
@@ -44,19 +48,19 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
     {
       icon: faFish,
       label: "Category ID",
-      value: koi.category_id,
+      value: getCategoryName(koi.category_id),
       bgColor: "bg-gray-300",
     },
     {
       icon: faDollarSign,
       label: "Base Price",
-      value: auctionKoi.base_price,
+      value: formatCurrency(auctionKoi.base_price),
       bgColor: "bg-blue-200",
     },
     {
       icon: faGavel,
       label: "Current Bid",
-      value: auctionKoi.current_bid,
+      value: formatCurrency(auctionKoi.current_bid),
       bgColor: "bg-green-200",
     },
     {

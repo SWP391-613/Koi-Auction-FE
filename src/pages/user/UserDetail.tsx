@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import DepositComponent from "~/components/shared/DepositComponent";
 import { useUserData } from "~/contexts/useUserData";
-import { formatDate } from "~/utils/apiUtils";
+import { formatDate, updateUserField } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import "./UserDetail.scss";
 import Loading from "~/components/loading/Loading";
+import { extractErrorMessage } from "~/utils/dataConverter";
 
 const UserDetail: React.FC = () => {
   const { user, loading, error, setUser } = useUserData();
@@ -19,7 +20,7 @@ const UserDetail: React.FC = () => {
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (): Promise<void> => {
     if (!user || !updateField || !updateValue) return;
 
     const accessToken = getCookie("access_token");
@@ -29,26 +30,19 @@ const UserDetail: React.FC = () => {
     }
 
     try {
-      const API_URL = "http://localhost:4000/api/v1";
-      const response = await axios.put(
-        `${API_URL}/users/${user.id}`,
-        { [updateField]: updateValue },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
+      await updateUserField(user.id, updateField, updateValue, accessToken);
 
-      if (response.status === 200) {
-        setUser({ ...user, [updateField]: updateValue });
-        setUpdateField("");
-        setUpdateValue("");
-        alert("User information updated successfully!");
-      }
+      setUser({ ...user, [updateField]: updateValue });
+      setUpdateField("");
+      setUpdateValue("");
+      alert("User information updated successfully!");
     } catch (error) {
-      console.error("Failed to update user data:", error);
-      alert("Failed to update user information. Please try again.");
+      const errorMessage = extractErrorMessage(
+        error,
+        "Failed to update user information.",
+      );
+      console.error(errorMessage);
+      alert(errorMessage);
     }
   };
 

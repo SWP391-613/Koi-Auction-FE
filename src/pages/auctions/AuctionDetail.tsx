@@ -24,6 +24,7 @@ import {
   fetchAuctionKoi,
   getKoiById,
 } from "~/utils/apiUtils"; // Assume we have this API function
+import { formatCurrency } from "~/utils/currencyUtils";
 import { convertBidMethodToReadable } from "~/utils/dataConverter";
 import { getAuctionStatus, getAuctionStatusV2 } from "~/utils/dateTimeUtils";
 
@@ -158,9 +159,10 @@ const AuctionDetail: React.FC = () => {
                         : "bg-gray-500 text-white"
                     }`}
                   >
-                    $
-                    {combinedKoiData.auctionKoiData.current_bid ||
-                      combinedKoiData.auctionKoiData.base_price}
+                    {formatCurrency(
+                      combinedKoiData.auctionKoiData.current_bid ||
+                        combinedKoiData.auctionKoiData.base_price,
+                    )}
                   </span>
                 </div>
               </div>

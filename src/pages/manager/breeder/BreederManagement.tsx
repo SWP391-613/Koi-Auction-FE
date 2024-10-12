@@ -7,6 +7,9 @@ import { Breeder, BreedersResponse } from "~/types/users.type";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { BREEDER_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
+import { extractErrorMessage } from "~/utils/dataConverter";
+import { toast } from "react-toastify";
+import { fetchBreedersData } from "~/utils/apiUtils";
 
 const BreederManagement = () => {
   const [breeders, setBreeders] = useState<Breeder[]>([]);
@@ -18,27 +21,24 @@ const BreederManagement = () => {
 
   useEffect(() => {
     const fetchBreeders = async () => {
-      try {
-        const response = await axios.get<BreedersResponse>(
-          "http://localhost:4000/api/v1/breeders",
-          {
-            params: {
-              page: page - 1,
-              limit: itemsPerPage,
-            },
-          },
-        );
+      setLoading(true);
 
-        const data = response.data;
+      try {
+        const data = await fetchBreedersData(page, itemsPerPage); // Use the utility function
 
         if (data && Array.isArray(data.item)) {
           setBreeders(data.item);
           setTotalPages(data.total_page);
         } else {
-          setError("Error fetching breeders");
+          setError("Unexpected data structure from API");
         }
       } catch (err) {
-        setError("Error fetching breeders");
+        const errorMessage = extractErrorMessage(
+          err,
+          "Error fetching breeders",
+        );
+        toast.error(errorMessage); // Notify user of the error
+        setError(errorMessage); // Set error state
       } finally {
         setLoading(false);
       }

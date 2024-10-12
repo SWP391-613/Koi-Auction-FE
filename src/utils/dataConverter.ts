@@ -12,6 +12,8 @@ export const convertBidMethodToReadable = (method: string) => {
     .join(" ");
 };
 
+// only take the first part
+
 export const prepareAuctionData = (auction: AuctionModel) => ({
   title: auction.title,
   start_time: convertToJavaLocalDateTime(auction.start_time),
@@ -74,4 +76,26 @@ const categoryMap: Record<number, string> = {
 
 export const getCategoryName = (categoryId: number): string => {
   return categoryMap[categoryId] || "Unknown Category"; // Return "Unknown Category" if ID not found
+};
+
+const breeders = [
+  { id: 24, firstName: "NND" },
+  { id: 25, firstName: "Marushin" },
+  { id: 26, firstName: "Sakai" },
+  { id: 27, firstName: "Isa" },
+  { id: 28, firstName: "Maruhiro" },
+  { id: 29, firstName: "Torazo" },
+  { id: 30, firstName: "Shinoda" },
+  { id: 31, firstName: "Kanno" },
+  { id: 32, firstName: "Dainichi" },
+  { id: 33, firstName: "Omosako" },
+  { id: 34, firstName: "Izumiya" },
+  { id: 35, firstName: "Marudo" },
+  { id: 36, firstName: "Marujyu" },
+  { id: 37, firstName: "Shintaro" },
+];
+
+export const getBreederName = (breederId: number): string => {
+  const breeder = breeders.find((b) => b.id === breederId);
+  return breeder?.firstName || "Unknown Breeder";
 };

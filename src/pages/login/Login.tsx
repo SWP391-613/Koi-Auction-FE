@@ -14,6 +14,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { login } from "../../utils/apiUtils";
 import "react-toastify/dist/ReactToastify.css";
 import "./Login.scss";
+import { extractErrorMessage } from "~/utils/dataConverter";
 const schema = yup.object().shape({
   email: yup
     .string()
@@ -54,10 +55,11 @@ const Login: React.FC = () => {
         navigate(routeUserToEachPage(response.roles[0]));
       }, 2000);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.message);
-      }
-      toast.error("An error occurred during login");
+      const errorMessage = extractErrorMessage(
+        error,
+        "An error occurred during login",
+      );
+      toast.error(errorMessage);
     }
   };
 

@@ -9,6 +9,7 @@ import { register } from "../../utils/apiUtils";
 import NavigateButton from "~/components/shared/NavigateButton";
 import { Button, Typography } from "@mui/material";
 import { UserRegisterDTO } from "~/types/users.type";
+import { extractErrorMessage } from "~/utils/dataConverter";
 
 interface FormFieldProps {
   name: string;
@@ -44,6 +45,7 @@ const schema = yup.object().shape({
     .string()
     .required("Confirm Password is required")
     .oneOf([yup.ref("password"), null], "Passwords must match"),
+  receiveEmailNotifications: yup.boolean(),
   acceptPolicy: yup.boolean().oneOf([true], "You must accept the policy"),
 });
 
@@ -81,7 +83,11 @@ const Register = () => {
         },
       });
     } catch (error) {
-      toast.error(error?.message || "An error occurred during registration");
+      const errorMessage = extractErrorMessage(
+        error,
+        "An error occurred during registration",
+      );
+      toast.error(errorMessage);
     }
   };
 

@@ -6,7 +6,7 @@ import axios from "axios";
 import { environment } from "~/environments/environment";
 import { fetchKoisOfBreeder } from "~/utils/apiUtils";
 import KoiCart from "../kois/KoiCart";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import PaginationComponent from "~/components/pagination/Pagination";
 import { useAuth } from "~/contexts/AuthContext";
 import { useUserData } from "~/contexts/useUserData";
@@ -15,6 +15,9 @@ import AccountVerificationAlert from "~/components/shared/AccountVerificationAle
 import { KoiDetailModel } from "~/types/kois.type";
 import KoiList from "../manager/koi/KoiManagement";
 import Loading from "~/components/loading/Loading";
+import KoiCreatePopup from "~/components/shared/KoiCreatePopup";
+import { extractErrorMessage } from "~/utils/dataConverter";
+import { toast } from "react-toastify";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -40,33 +43,51 @@ const BreederDetail: React.FC = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const { user, loading, error, setUser } = useUserData();
+  const [createPopupOpen, setCreatePopupOpen] = useState(false);
+  const userId = getCookie("user_id");
+  const accessToken = getCookie("access_token");
+
+  const fetchKoiData = async () => {
+    if (!userId || !accessToken) return;
+
+    try {
+      const API_URL = import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
+      const response = await axios.get(`${API_URL}/kois`, {
+        params: {
+          owner_id: userId,
+          page: currentPage - 1,
+          limit: itemsPerPage
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+
+      if (response.data) {
+        setKois(response.data.item);
+        setTotalKoi(response.data.total_item);
+        setHasMorePages(response.data.item.length === itemsPerPage);
+      }
+    } catch (error) {
+      console.error("Không thể lấy dữ liệu cá Koi:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchBreederAndKoi = async () => {
-      if (!user) return;
-
-      try {
-        const koisOfBreederData = await fetchKoisOfBreeder(
-          user.id,
-          currentPage - 1,
-          itemsPerPage,
-        );
-
-        if (koisOfBreederData) {
-          if (koisOfBreederData.item.length < itemsPerPage) {
-            setHasMorePages(false);
-          }
-          setKois((prevKois) => [...prevKois, ...koisOfBreederData.item]);
-        }
-      } catch (error) {
-        console.error("Failed to fetch koi data:", error);
-      }
-    };
-
-    if (isLoggedIn && user) {
-      fetchBreederAndKoi();
+    if (isLoggedIn && userId && accessToken) {
+      fetchKoiData();
     }
-  }, [currentPage, isLoggedIn, user]);
+  }, [currentPage, isLoggedIn, userId, accessToken]);
+
+  const handleCreate = () => {
+    setCreatePopupOpen(true);
+  };
+
+  const handleKoiCreated = () => {
+    setCreatePopupOpen(false);
+    setCurrentPage(1);
+    fetchKoiData(); // Fetch the updated koi list
+  };
 
   const handleUpdate = async () => {
     if (!user || !updateField || !updateValue) return;
@@ -124,11 +145,6 @@ const BreederDetail: React.FC = () => {
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
 
-  const accessToken = getCookie("access_token");
-  if (!accessToken) {
-    navigate("/notfound");
-  }
-
   const handleView = (id: number) => {
     navigate(`/kois/${id}`);
   };
@@ -137,8 +153,29 @@ const BreederDetail: React.FC = () => {
     alert(`Edit koi ${id}`);
   };
 
-  const handleDelete = (id: number) => {
-    alert(`Delete koi ${id}`);
+  const handleDelete = async (id: number) => {
+    const confirmDelete = confirm("Are you sure you want to delete this koi?");
+    if (!confirmDelete) return;
+
+    try {
+      const response = await axios.delete(
+        `http://localhost:4000/api/v1/kois/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+
+      if (response.status === 200) {
+        toast.success("Koi deleted successfully");
+        setCurrentPage(1);
+        fetchKoiData();
+      }
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error, "Failed to delete koi.");
+      toast.error(errorMessage);
+    }
   };
 
   return (
@@ -159,6 +196,13 @@ const BreederDetail: React.FC = () => {
             <button onClick={handleVerify} className="verify-button">
               Verify User
             </button>
+          )}
+          {user.status_name === "VERIFIED" && (
+            <div className="flex justify-center mt-4">
+              <Button color="success" variant="contained" onClick={handleCreate}>
+                Create Koi
+              </Button>
+            </div>
           )}
         </div>
         <div className="user-main">
@@ -212,14 +256,19 @@ const BreederDetail: React.FC = () => {
               placeholder="Enter new value"
               className="update-input"
             />
-            <button onClick={handleUpdate} className="update-button">
+            <Button
+              color="warning"
+              variant="contained"
+              onClick={handleUpdate}
+              className="update-button"
+            >
               Update
-            </button>
+            </Button>
           </div>
         </div>
       </div>
       <div>
-        {/* Render KoiCart with the fetched koi items */}
+        <h2>Danh sách cá Koi của bạn</h2>
         <KoiCart
           items={kois}
           onView={handleView}
@@ -231,6 +280,12 @@ const BreederDetail: React.FC = () => {
         totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages
         currentPage={currentPage}
         onPageChange={handlePageChange}
+      />
+      <KoiCreatePopup
+        open={createPopupOpen}
+        onClose={() => setCreatePopupOpen(false)}
+        onSuccess={handleKoiCreated}
+        owner_id={user.id}
       />
     </div>
   );

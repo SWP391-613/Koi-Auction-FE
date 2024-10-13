@@ -19,7 +19,7 @@ const OtpVerification: React.FC = () => {
 
     if (
       state &&
-      state.from === "register" &&
+      (state.from === "register" || state.from === "userDetail") &&
       state.statusCode === 200 &&
       state.email
     ) {

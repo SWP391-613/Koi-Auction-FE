@@ -409,6 +409,7 @@ export const fetchOrderDetails = async (
 };
 
 export const createDepositPayment = async (
+
   amount: number,
   token: string,
   userId: number,
@@ -429,6 +430,25 @@ export const createDepositPayment = async (
       throw new Error(
         err.response?.data?.message ||
           "An error occurred during payment creation",
+      );
+    }
+  }
+};
+
+export const sendOtp = async (email: string): Promise<any> => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/otp/send?type=mail&recipient=${email}`,
+    );
+    if (response.status === 200) {
+      console.log("OTP sent successfully");
+    }
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error sending OTP:", error.response?.data);
+      throw new Error(
+        error.response?.data?.message || "An error occurred during OTP sending",
       );
     } else {
       throw new Error("An unexpected error occurred");

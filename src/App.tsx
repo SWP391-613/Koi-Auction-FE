@@ -54,6 +54,7 @@ import KoiManagement from "./pages/manager/koi/KoiManagement";
 import MemberManagement from "./pages/manager/member/MemberManagement";
 import StaffManagement from "./pages/manager/staff/StaffManagement";
 import { Role } from "./types/roles.type";
+import VNPayReturn from "./pages/payments/VNPayReturn";
 
 const TITLE = "Auction Koi";
 
@@ -104,6 +105,10 @@ function App() {
           {/* Breeder protected routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/breeders" element={<BreederDetail />} />
+            <Route
+              path="/payments/vnpay-payment-return"
+              element={<VNPayReturn />}
+            />
           </Route>
 
           {/* Staff protected routes */}
@@ -121,6 +126,10 @@ function App() {
           {/* Protected routes for USER */}
           <Route element={<ProtectedRoute />}>
             <Route path="/orders" element={<UserOrder />} />
+            <Route
+              path="/payments/vnpay-payment-return"
+              element={<VNPayReturn />}
+            />
           </Route>
         </Routes>
         <Footer />

@@ -118,7 +118,14 @@ const UserDetail: React.FC = () => {
           <div className="account-balance">
             <p className="balance-label">Account Balance</p>
             <p className="balance-value">${user.account_balance.toFixed(2)}</p>
-            <DepositComponent userId={user.id} token={accessToken || ""} />
+            <DepositComponent
+              userId={user.id}
+              token={accessToken || ""}
+              onDepositSuccess={() => {
+                // Refresh user data after successful deposit
+                setUser({ ...user, account_balance: user.account_balance });
+              }}
+            />
           </div>
           <div className="update-field">
             <select

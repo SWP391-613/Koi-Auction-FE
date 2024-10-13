@@ -3,16 +3,18 @@ import axios from "axios";
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { updateAccountBalance } from "~/utils/apiUtils";
+import { createVNPayPayment } from "~/utils/apiUtils";
 
 interface DepositComponentProps {
   userId: number;
   token: string;
+  onDepositSuccess: () => void;
 }
 
 const DepositComponent: React.FC<DepositComponentProps> = ({
   userId,
   token,
+  onDepositSuccess,
 }) => {
   const [payment, setPayment] = useState<number>(0);
 
@@ -29,9 +31,11 @@ const DepositComponent: React.FC<DepositComponentProps> = ({
     }
 
     try {
-      const response = await updateAccountBalance(userId, payment, token);
-      if (response.status === 200) {
-        toast.success("Deposit successful");
+      const response = await createVNPayPayment(payment, token, userId);
+      if (response.paymentUrl) {
+        window.location.href = response.paymentUrl;
+      } else {
+        toast.error("Failed to create payment URL");
       }
     } catch (error: any) {
       if (axios.isAxiosError(error)) {

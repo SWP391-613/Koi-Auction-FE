@@ -394,3 +394,31 @@ export const fetchOrderDetails = async (
     throw error;
   }
 };
+
+export const createVNPayPayment = async (
+  amount: number,
+  token: string,
+  userId: number,
+) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/payment/vnpay/create_payment`,
+      { amount, userId },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (err: any) {
+    if (axios.isAxiosError(err)) {
+      throw new Error(
+        err.response?.data?.message ||
+          "An error occurred during payment creation",
+      );
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
+  }
+};

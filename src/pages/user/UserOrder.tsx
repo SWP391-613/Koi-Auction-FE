@@ -19,6 +19,8 @@ import { useUserData } from "~/contexts/useUserData";
 import PaginationComponent from "~/components/pagination/Pagination";
 import UserOrderDetail from "./UserOrderDetail";
 import { OrderDetail } from "./UserOrderDetail";
+import EditIcon from "@mui/icons-material/Edit";
+import EditOrderDialog from "./EditOrderDialog";
 
 export type Order = {
   id: number;
@@ -48,6 +50,8 @@ const UserOrder = () => {
   const itemsPerPage = 8;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingOrder, setEditingOrder] = useState<Order | null>(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -100,6 +104,36 @@ const UserOrder = () => {
         return "error";
       default:
         return "default";
+    }
+  };
+
+  const handleEditOrder = (order: Order) => {
+    setEditingOrder(order);
+    setEditDialogOpen(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setEditDialogOpen(false);
+    setEditingOrder(null);
+  };
+
+  const handleSaveEditedOrder = async (editedOrder: Order) => {
+    try {
+      // Implement API call to save edited order
+      // For example: await updateOrder(editedOrder);
+
+      // Update the orders state with the edited order
+      setOrders(
+        orders.map((order) =>
+          order.id === editedOrder.id ? editedOrder : order,
+        ),
+      );
+
+      handleCloseEditDialog();
+      // Optionally, show a success message
+    } catch (error) {
+      console.error("Error updating order:", error);
+      // Optionally, show an error message
     }
   };
 
@@ -208,7 +242,28 @@ const UserOrder = () => {
                 >
                   Address: {order.shipping_address}
                 </Typography>
-                <Box sx={{ mt: "auto", pt: 2, textAlign: "right" }}>
+                <Box
+                  sx={{
+                    mt: "auto",
+                    pt: 2,
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {order.status.toLowerCase() === "pending" && (
+                    <Button
+                      size={isMobile ? "small" : "medium"}
+                      color="secondary"
+                      variant="outlined"
+                      startIcon={<EditIcon />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditOrder(order);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                  )}
                   <Button
                     size={isMobile ? "small" : "medium"}
                     color="primary"
@@ -248,6 +303,13 @@ const UserOrder = () => {
           />
         )}
       </Dialog>
+
+      <EditOrderDialog
+        open={editDialogOpen}
+        onClose={handleCloseEditDialog}
+        order={editingOrder}
+        onSave={handleSaveEditedOrder}
+      />
     </Container>
   );
 };

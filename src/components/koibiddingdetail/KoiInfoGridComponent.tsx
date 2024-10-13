@@ -9,12 +9,20 @@ import {
   faGavel,
   faHandHoldingHeart,
   faWallet,
+  faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { KoiDetailItem } from "./KoiBiddingDetailComponent";
 import { UserDetailsResponse } from "~/types/users.type";
-import { convertBidMethodToReadable } from "~/utils/dataConverter";
+import {
+  convertBidMethodToReadable,
+  getCategoryName,
+} from "~/utils/dataConverter";
 import { KoiDetailModel } from "~/types/kois.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
+import { formatCurrency } from "~/utils/currencyUtils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import LoginOrRegister from "../auth/LoginOrRegister";
+import { getCookie } from "~/utils/cookieUtils";
 
 interface KoiInfoGridProps {
   koi: KoiDetailModel;
@@ -44,19 +52,19 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
     {
       icon: faFish,
       label: "Category ID",
-      value: koi.category_id,
+      value: getCategoryName(koi.category_id),
       bgColor: "bg-gray-300",
     },
     {
       icon: faDollarSign,
       label: "Base Price",
-      value: auctionKoi.base_price,
+      value: formatCurrency(auctionKoi.base_price),
       bgColor: "bg-blue-200",
     },
     {
       icon: faGavel,
       label: "Current Bid",
-      value: auctionKoi.current_bid,
+      value: formatCurrency(auctionKoi.current_bid),
       bgColor: "bg-green-200",
     },
     {
@@ -67,11 +75,13 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
     },
   ];
 
+  const accessToken = getCookie("access_token");
+
   return (
-    <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-4 text-lg">
-      <div className="mb-4 items-center rounded-2xl">
+    <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 text-lg">
+      <div className="mb-2 items-center rounded-2xl">
         <div className="grid w-full grid-cols-1 xl:grid-cols-2">
-          <h2 className="col-span-1 m-4 text-4xl font-bold xl:col-span-2">
+          <h2 className="col-span-1 mb-3 ml-2 text-4xl font-bold xl:col-span-2">
             {koi.name}
           </h2>
           {koiInfoItems.map((item, index) => (
@@ -94,6 +104,7 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
           )}
         </div>
       </div>
+      {!accessToken && <LoginOrRegister />}
     </div>
   );
 };

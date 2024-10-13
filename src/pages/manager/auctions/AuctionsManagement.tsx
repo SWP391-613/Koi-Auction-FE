@@ -27,9 +27,11 @@ import { AuctionKoi } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
 import {
   createNewAuction,
+  deleteAuction,
   fetchAuctionKoi,
   fetchAuctions,
 } from "~/utils/apiUtils";
+import { extractErrorMessage, prepareAuctionData } from "~/utils/dataConverter";
 import { convertToJavaLocalDateTime } from "~/utils/dateTimeUtils";
 
 export const AuctionsManagement: React.FC = () => {
@@ -44,6 +46,7 @@ export const AuctionsManagement: React.FC = () => {
     start_time: "",
     end_time: "",
     status: "",
+    auctioneer_id: -1,
   });
   const [editingAuction, setEditingAuction] = useState<AuctionModel | null>(
     null,
@@ -90,7 +93,13 @@ export const AuctionsManagement: React.FC = () => {
 
   const handleCloseAddDialog = () => {
     setOpenAddDialog(false);
-    setNewAuction({ title: "", start_time: "", end_time: "", status: "" });
+    setNewAuction({
+      title: "",
+      start_time: "",
+      end_time: "",
+      status: "",
+      auctioneer_id: -1,
+    });
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,34 +108,15 @@ export const AuctionsManagement: React.FC = () => {
   };
 
   const handleSubmitNewAuction = async () => {
-    const { title, start_time, end_time, status } = newAuction;
-
-    console.log("Submitting new auction:", newAuction);
-
+    const auctionData = prepareAuctionData(newAuction);
     try {
-      const data = {
-        title,
-        start_time: convertToJavaLocalDateTime(start_time),
-        end_time: convertToJavaLocalDateTime(end_time),
-        status,
-      };
-
-      console.log("data: " + JSON.stringify(data));
-
-      await createNewAuction(data);
-
-      console.log("Auction added successfully");
+      await createNewAuction(auctionData);
       toast.success("Auction added successfully");
+      console.log("Auction added successfully");
       handleCloseAddDialog();
     } catch (error) {
-      console.error("Error adding auction:", error);
-
-      // Get the message from server response (if available)
-      const errorMessage =
-        axios.isAxiosError(error) && error.response && error.response.data
-          ? error.response.data.message
-          : "Failed to add auction";
-
+      const errorMessage = extractErrorMessage(error, "Failed to add auction");
+      console.error(errorMessage);
       toast.error(errorMessage);
     }
   };
@@ -177,26 +167,14 @@ export const AuctionsManagement: React.FC = () => {
 
   const handleDeleteAuction = async (id: number): Promise<void> => {
     try {
-      //return 204 no content
-      return await axios
-        .delete(`http://localhost:4000/api/v1/auctions/${id}`)
-        .then((response) => {
-          if (response.status === 400) {
-            throw new Error("Failed to delete auction");
-          }
-
-          console.log("Auction deleted successfully");
-          toast.success("Auction deleted successfully");
-        });
+      await deleteAuction(id);
+      toast.success("Auction deleted successfully");
     } catch (error) {
-      console.error("Error deleting auction:", error);
-
-      // Get the message from server response (if available)
-      const errorMessage =
-        axios.isAxiosError(error) && error.response && error.response.data
-          ? error.response.data.message
-          : "Failed to delete auction";
-
+      const errorMessage = extractErrorMessage(
+        error,
+        "Failed to delete auction",
+      );
+      console.error(errorMessage);
       toast.error(errorMessage);
     }
   };

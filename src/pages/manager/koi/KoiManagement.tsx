@@ -24,6 +24,8 @@ import EditKoiDialog from "./EditKoiDialog";
 import { getCookie } from "~/utils/cookieUtils";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
+import { createKoi, deleteKoiById, getKoiData } from "~/utils/apiUtils";
+import { createFormData, extractErrorMessage } from "~/utils/dataConverter";
 
 const KoiManagement = () => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
@@ -56,30 +58,23 @@ const KoiManagement = () => {
 
   useEffect(() => {
     const fetchKois = async () => {
+      setLoading(true); // Set loading state to true
       try {
-        setLoading(true);
-        const response = await axios.get<KoiApiResponse>(
-          "http://localhost:4000/api/v1/kois",
-          {
-            params: {
-              page: page - 1, // Assuming the API is zero-based
-              limit: itemsPerPage,
-            },
-          },
-        );
-
-        const data = response.data;
+        const koiData = await getKoiData(page, itemsPerPage); // Use the utility function
+        const data = koiData;
 
         if (data && Array.isArray(data.item)) {
           setKois(data.item);
           setTotalPages(data.total_page);
         } else {
-          setError("Unexpected data structure from API");
+          throw new Error("Unexpected data structure from API");
         }
-      } catch (err: any) {
-        setError("Error fetching kois: " + (err.message || "Unknown error"));
+      } catch (error) {
+        const errorMessage = extractErrorMessage(error, "Error fetching kois");
+        setError(errorMessage); // Set error state
+        toast.error(errorMessage); // Notify user of the error
       } finally {
-        setLoading(false);
+        setLoading(false); // Reset loading state
       }
     };
     fetchKois();
@@ -103,18 +98,13 @@ const KoiManagement = () => {
     if (!confirmed) return;
 
     try {
-      await axios.delete(`http://localhost:4000/api/v1/kois/${id}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      await deleteKoiById(id, accessToken); // Use the utility function
       toast.success("Koi deleted successfully!");
-      setKois(kois.filter((koi) => koi.id !== id));
+      setKois((prevKois) => prevKois.filter((koi) => koi.id !== id)); // Update state
     } catch (err: any) {
-      if (axios.isAxiosError(err)) {
-        toast.error(err.response?.data.reason);
-      }
-      setError("Error deleting koi: " + (err.message || "Unknown error"));
+      const errorMessage = extractErrorMessage(err, "Error deleting koi");
+      toast.error(errorMessage); // Notify user of the error
+      setError(errorMessage); // Set error state
     }
   };
 
@@ -149,34 +139,16 @@ const KoiManagement = () => {
 
   const handleCreateKoi = async () => {
     try {
-      const formData = new FormData();
-      Object.keys(newKoi).forEach((key) => {
-        formData.append(
-          key,
-          newKoi[key as keyof Partial<KoiDetailModel>]?.toString() || "",
-        );
-      });
-      if (koiImage) {
-        formData.append("image", koiImage);
-      }
+      const formData = createFormData(newKoi, koiImage);
 
-      const response = await axios.post<KoiDetailModel>(
-        "http://localhost:4000/api/v1/kois",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      );
-      setKois([...kois, response.data]);
+      const newKoiData = await createKoi(formData); // Use the utility function
+      setKois((prevKois) => [...prevKois, newKoiData]); // Update state
       handleCloseCreateDialog();
       setKoiImage(null);
     } catch (err: any) {
-      if (axios.isAxiosError(err)) {
-        toast.error(err.response?.data.reason);
-      }
-      setError("Error creating koi: " + (err.message || "Unknown error"));
+      const errorMessage = extractErrorMessage(err, "Error creating koi");
+      toast.error(errorMessage); // Notify user of the error
+      setError(errorMessage); // Set error state
     }
   };
 

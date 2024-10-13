@@ -1,6 +1,6 @@
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Typography } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -30,6 +30,7 @@ import { KoiDetailModel } from "~/types/kois.type";
 import { AuctionModel } from "~/types/auctions.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
 import Loading from "~/components/loading/Loading";
+import { formatCurrency } from "~/utils/currencyUtils";
 
 // Define the BidRequest interface
 export type BidRequest = {
@@ -149,9 +150,9 @@ const KoiBidding: React.FC = () => {
           className="rounded bg-gray-200 px-5 py-3 text-lg text-black transition hover:bg-gray-200"
         />
       </div>
-      <div className="m-5 flex flex-col gap-6 p-4 sm:flex-col md:flex-row">
+      <div className="m-5 flex flex-col gap-4 sm:flex-col md:flex-row">
         {/* Koi Image and Media Gallery */}
-        <div className="w-full md:w-128">
+        <div className="flex flex-col items-start justify-start w-[45%]">
           <div className="relative h-96 w-full rounded-xl bg-[#4086c7] sm:h-128 md:h-144 lg:h-192">
             {selectedMedia ? (
               selectedMedia.includes("youtube") ? (
@@ -220,40 +221,84 @@ const KoiBidding: React.FC = () => {
         </div>
 
         {/* Koi Info and Bidding */}
-        <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-4 text-lg">
-          <KoiInfoGridComponent koi={koi} auctionKoi={auctionKoi} user={user} />
+        <div className="flex flex-col gap-5">
+          <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-2 text-lg">
+            <KoiInfoGridComponent
+              koi={koi}
+              auctionKoi={auctionKoi}
+              user={user}
+            />
+          </div>
+          <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-4 text-lg">
+            {!isAuctionEnded() && !auctionKoi.is_sold ? (
+              <div className="flex flex-col gap-2 rounded-2xl bg-[#F1F1F1] p-4">
+                <h3 className="mb-2 text-xl font-semibold text-center">
+                  Place Your Bid
+                </h3>
+                <TextField
+                  type="number"
+                  value={bidAmount}
+                  onChange={(e) => setBidAmount(Number(e.target.value))}
+                  variant="outlined" // You can change to "filled" or "standard" for different styles
+                  placeholder="Enter bid amount"
+                  fullWidth // Makes the input take the full width of its container
+                  inputProps={{
+                    style: { textAlign: "right" }, // Aligns text to the right
+                  }}
+                  sx={{
+                    // Custom styles
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "10px", // Rounded corners
+                      "& fieldset": {
+                        borderColor: "gray", // Border color
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "green", // Border color on hover
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "green", // Border color when focused
+                      },
+                    },
+                  }}
+                />
+                <button
+                  onClick={handlePlaceBid}
+                  className="mt-2 w-full rounded-2xl bg-green-500 px-4 py-2 text-white hover:bg-green-600"
+                >
+                  Submit
+                </button>
+              </div>
+            ) : (
+              <div className="mb-4 rounded-2xl bg-gray-200">
+                <h3 className="mb-2 text-xl font-semibold">Past Bids</h3>
+                <p>
+                  {auctionKoi.current_bid > 0 ? (
+                    `This koi has been sold for ${formatCurrency(auctionKoi.current_bid)}`
+                  ) : (
+                    <div className="bg-gray-300 p-4 rounded-2xl">
+                      <span>No bids yet</span>
+                      <br />
+                      <span>Be the first to bid!</span>
+                    </div>
+                  )}
+                </p>
+              </div>
+            )}
 
-          {!isAuctionEnded() && !auctionKoi.is_sold ? (
-            <div className="mb-4 rounded-2xl bg-gray-300 p-4">
-              <h3 className="mb-2 text-xl font-semibold">Place Your Bid</h3>
-              <input
-                type="number"
-                value={bidAmount}
-                onChange={(e) => setBidAmount(Number(e.target.value))}
-                className="mr-2 w-full rounded border p-2"
-                placeholder="Enter bid amount"
-              />
-              <button
-                onClick={handlePlaceBid}
-                className="mt-2 w-full rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-              >
-                Place Bid
-              </button>
-            </div>
-          ) : (
-            <div className="mb-4 rounded-2xl bg-gray-300 p-4">
-              <h3 className="mb-2 text-xl font-semibold">Auction Ended</h3>
-              <p>This koi has been sold for {auctionKoi.current_bid}</p>
-            </div>
-          )}
-          <h3 className="mb-2 text-xl font-semibold">Bid History</h3>
-          <div className="rounded-2xl bg-gray-300 p-4 max-h-[50rem] overflow-auto">
-            <div className="max-h-full overflow-auto">
-              <BiddingHistory
-                auctionKoiId={auctionKoi.id}
-                latestBid={latestBid}
-              />
-            </div>
+            {/* Conditionally render the Bid History section */}
+            {auctionKoi.current_bid > 0 && (
+              <>
+                <h3 className="mb-2 text-xl font-semibold">Bid History</h3>
+                <div className="rounded-2xl bg-gray-300 p-4 max-h-[50rem] overflow-auto">
+                  <div className="max-h-full overflow-auto">
+                    <BiddingHistory
+                      auctionKoiId={auctionKoi.id}
+                      latestBid={latestBid}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { KoiDetailModel } from "~/types/kois.type";
+import { getStatusColor } from "~/utils/colorUtils";
 
 interface KoiCartProps {
   items: KoiDetailModel[];
@@ -16,23 +17,6 @@ const KoiCart: React.FC<KoiCartProps> = ({
   onDelete,
 }) => {
   // useRedirectIfEmpty(items)
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "VERIFIED":
-        return "bg-green-500";
-      case "UNVERIFIED":
-        return "bg-yellow-500";
-      case "SOLD":
-        return "bg-red-500";
-      case "REJECTED":
-        return "bg-gray-500";
-      case "PENDING":
-        return "bg-blue-500";
-      default:
-        return "bg-gray-300";
-    }
-  };
 
   return (
     <div className="koi-container m-3 grid h-full grid-cols-1 gap-4 p-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">

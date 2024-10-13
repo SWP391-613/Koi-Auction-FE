@@ -2,9 +2,12 @@ import AddIcon from "@mui/icons-material/Add";
 import { Alert, Button, CircularProgress, Container } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import PaginationComponent from "~/components/pagination/Pagination";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import { Member, MembersResponse } from "~/types/users.type";
+import { getMembersData } from "~/utils/apiUtils";
+import { extractErrorMessage } from "~/utils/dataConverter";
 
 const MemberManagement = () => {
   const [members, setMembers] = useState<Member[]>([]);
@@ -16,29 +19,26 @@ const MemberManagement = () => {
 
   useEffect(() => {
     const fetchMembers = async () => {
+      setLoading(true); // Set loading state to true
       try {
-        const response = await axios.get<MembersResponse>(
-          "http://localhost:4000/api/v1/members",
-          {
-            params: {
-              page: page - 1,
-              limit: itemsPerPage,
-            },
-          },
-        );
-
-        const data = response.data;
+        const membersData = await getMembersData(page, itemsPerPage); // Use the utility function
+        const data = membersData;
 
         if (data && Array.isArray(data.item)) {
           setMembers(data.item);
           setTotalPages(data.total_page);
         } else {
-          setError("Error fetching members");
+          throw new Error("Unexpected data structure");
         }
-      } catch (err) {
-        setError("Error fetching members");
+      } catch (error) {
+        const errorMessage = extractErrorMessage(
+          error,
+          "Error fetching members",
+        );
+        setError(errorMessage);
+        toast.error(errorMessage); // Notify user of the error
       } finally {
-        setLoading(false);
+        setLoading(false); // Reset loading state
       }
     };
 

@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import { KoiDetailModel } from "~/types/kois.type"; // Adjust the import path as needed
 import { getCookie } from "~/utils/cookieUtils"; // Adjust the import path as needed
 import { toast } from "react-toastify";
+import { extractErrorMessage } from "~/utils/dataConverter";
+import { fetchKoi, updateKoi } from "~/utils/apiUtils";
 
 interface EditKoiDialogProps {
   open: boolean;
@@ -58,21 +60,12 @@ const EditKoiDialog: React.FC<EditKoiDialogProps> = ({
     if (!accessToken) return;
 
     try {
-      const response = await axios.get(
-        `http://localhost:4000/api/v1/kois/${koiId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-      setKoi(response.data);
+      const data = await fetchKoi(koiId, accessToken); // Use the utility function
+      setKoi(data);
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        toast.error(err.response?.data.reason);
-      }
-
-      setError("Failed to fetch koi data");
+      const errorMessage = extractErrorMessage(err, "Failed to fetch koi data");
+      toast.error(errorMessage); // Notify user of the error
+      setError(errorMessage); // Set error state
     } finally {
       setLoading(false);
     }
@@ -90,19 +83,13 @@ const EditKoiDialog: React.FC<EditKoiDialogProps> = ({
     if (!accessToken) return;
 
     try {
-      await axios.put(`http://localhost:4000/api/v1/kois/${koiId}`, koi, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      await updateKoi(koiId, koi, accessToken); // Use the utility function
       setSnackbar({ open: true, message: "Koi updated successfully" });
       onClose();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        toast.error(err.response?.data.reason);
-      }
-
-      setError("Failed to update koi");
+      const errorMessage = extractErrorMessage(err, "Failed to update koi");
+      toast.error(errorMessage); // Notify user of the error
+      setError(errorMessage); // Set error state
     }
   };
 

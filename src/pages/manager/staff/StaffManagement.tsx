@@ -22,6 +22,8 @@ import usePagination from "~/hooks/usePagination";
 import { ENDPOINT_STAFFS } from "~/constants/endPoints";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { STAFF_MANAGEMENT_HEADER } from "~/constants/tableHeader";
+import { createStaff, deleteStaff } from "~/utils/apiUtils";
+import { extractErrorMessage } from "~/utils/dataConverter";
 
 const StaffManagement = () => {
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
@@ -74,14 +76,15 @@ const StaffManagement = () => {
       if (!confirmed) return;
 
       try {
-        await axios.delete(`http://localhost:4000/api/v1/staffs/${id}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
+        await deleteStaff(id, accessToken); // Use the utility function for API call
         toast.success("Staff deleted successfully!");
         refetch(); // Refetch the data after successful deletion
       } catch (error) {
-        console.error("Failed to delete staff:", error);
-        toast.error("Failed to delete staff. Please try again.");
+        const errorMessage = extractErrorMessage(
+          error,
+          "Failed to delete staff. Please try again.",
+        );
+        toast.error(errorMessage);
       }
     },
     [accessToken, refetch],
@@ -119,27 +122,16 @@ const StaffManagement = () => {
 
   const handleCreateStaff = useCallback(async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:4000/api/v1/staffs",
-        newStaff,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
+      await createStaff(newStaff, accessToken);
       toast.success("Staff created successfully!");
       handleCloseCreateDialog();
       refetch(); // Refetch the data after successful creation
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const errorMessage =
-          error.response?.data?.reason ||
-          "An error occurred during staff creation";
-        toast.error(errorMessage);
-      } else {
-        toast.error("An error occurred during staff creation");
-      }
+      const errorMessage = extractErrorMessage(
+        error,
+        "An error occurred during staff creation",
+      );
+      toast.error(errorMessage);
     }
   }, [newStaff, accessToken, handleCloseCreateDialog, refetch]);
 

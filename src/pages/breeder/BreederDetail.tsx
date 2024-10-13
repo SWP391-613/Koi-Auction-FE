@@ -151,7 +151,7 @@ const BreederDetail: React.FC = () => {
   };
 
   const handleEdit = (id: number) => {
-    alert(`Edit koi ${id}`);
+    navigate(`/kois/${id}/edit`);
   };
 
   const handleDelete = async (id: number) => {
@@ -269,12 +269,23 @@ const BreederDetail: React.FC = () => {
         </div>
       </div>
       <div>
-        <h2>Danh sách cá Koi của bạn</h2>
+        <Typography
+          variant="h2"
+          sx={{
+            mt: 4,
+            mb: 2,
+            fontWeight: "bold",
+            fontSize: "1.5rem",
+            textAlign: "center",
+          }}
+        >
+          Your Koi List
+        </Typography>
         <KoiCart
           items={kois}
-          onView={handleView}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
+          handleView={handleView}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
         />
       </div>
       <PaginationComponent

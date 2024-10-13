@@ -10,6 +10,7 @@ type KoiDetailItemProps = {
   fontSize?: string;
   bgColor?: string;
   textColor?: string;
+  className?: string;
 };
 
 // Define the KoiDetailItem component, the UI for the koi details
@@ -20,6 +21,7 @@ export const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
   fontSize = "text-2xl",
   bgColor = "bg-gray-100",
   textColor = "text-black",
+  className = "",
 }) => {
   return (
     <div

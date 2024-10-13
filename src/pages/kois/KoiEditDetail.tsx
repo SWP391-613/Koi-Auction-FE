@@ -17,7 +17,7 @@ import { formatCurrency } from "~/utils/currencyUtils";
 import { getCategoryName } from "~/utils/dataConverter";
 import { useAuth } from "../../contexts/AuthContext";
 
-interface KoiDetailItemProps {
+interface KoiEditDetailItemProps {
   icon: IconDefinition;
   label: string;
   value: string | number;
@@ -26,7 +26,7 @@ interface KoiDetailItemProps {
   textColor?: string;
 }
 
-const KoiDetail: React.FC = () => {
+const KoiEditDetail: React.FC = () => {
   const { isLoggedIn } = useAuth();
   const { id } = useParams<{ id: string }>();
   const [koi, setKoi] = useState<KoiDetailModel | null>(null);
@@ -148,4 +148,4 @@ const KoiDetail: React.FC = () => {
   );
 };
 
-export default KoiDetail;
+export default KoiEditDetail;

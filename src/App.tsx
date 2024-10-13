@@ -55,6 +55,7 @@ import MemberManagement from "./pages/manager/member/MemberManagement";
 import StaffManagement from "./pages/manager/staff/StaffManagement";
 import { Role } from "./types/roles.type";
 import VNPayReturn from "./pages/payments/VNPayReturn";
+import KoiEditDetail from "./pages/kois/KoiEditDetail";
 
 const TITLE = "Auction Koi";
 
@@ -109,6 +110,7 @@ function App() {
               path="/payments/vnpay-payment-return"
               element={<VNPayReturn />}
             />
+            <Route path="/kois/:id/edit" element={<KoiEditDetail />} />
           </Route>
 
           {/* Staff protected routes */}

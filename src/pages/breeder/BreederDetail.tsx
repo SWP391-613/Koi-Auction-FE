@@ -51,21 +51,22 @@ const BreederDetail: React.FC = () => {
     if (!userId || !accessToken) return;
 
     try {
-      const API_URL = import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
+      const API_URL =
+        import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
       const response = await axios.get(`${API_URL}/kois`, {
         params: {
           owner_id: userId,
           page: currentPage - 1,
-          limit: itemsPerPage
+          limit: itemsPerPage,
         },
         headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
 
       if (response.data) {
         setKois(response.data.item);
-        setTotalKoi(response.data.total_item);
+        setTotalKoi(response.data.item.length);
         setHasMorePages(response.data.item.length === itemsPerPage);
       }
     } catch (error) {
@@ -199,7 +200,11 @@ const BreederDetail: React.FC = () => {
           )}
           {user.status_name === "VERIFIED" && (
             <div className="flex justify-center mt-4">
-              <Button color="success" variant="contained" onClick={handleCreate}>
+              <Button
+                color="success"
+                variant="contained"
+                onClick={handleCreate}
+              >
                 Create Koi
               </Button>
             </div>
@@ -232,10 +237,6 @@ const BreederDetail: React.FC = () => {
             <p className="balance-value">${user.account_balance.toFixed(2)}</p>
             <DepositComponent userId={user.id} token={accessToken || ""} />
           </div>
-          {/* <div className="account-balance">
-            <p className="balance-label">Total Koi</p>
-            <p className="balance-value">Hehe {koisOfBreed  er?.total_item.toFixed(2)}</p>
-          </div> */}
           <div className="update-field">
             <select
               value={updateField}

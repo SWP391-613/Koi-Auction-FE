@@ -409,7 +409,6 @@ export const fetchOrderDetails = async (
 };
 
 export const createDepositPayment = async (
-
   amount: number,
   token: string,
   userId: number,

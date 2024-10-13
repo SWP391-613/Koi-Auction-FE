@@ -4,18 +4,32 @@ import "./BreederDetail.scss";
 import { getCookie } from "~/utils/cookieUtils";
 import axios from "axios";
 import { environment } from "~/environments/environment";
+import { fetchKoisOfBreeder } from "~/utils/apiUtils";
 import KoiCart from "../kois/KoiCart";
-import { Button, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import PaginationComponent from "~/components/pagination/Pagination";
 import { useAuth } from "~/contexts/AuthContext";
 import { useUserData } from "~/contexts/useUserData";
 import DepositComponent from "~/components/shared/DepositComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import { KoiDetailModel } from "~/types/kois.type";
+import KoiList from "../manager/koi/KoiManagement";
 import Loading from "~/components/loading/Loading";
 import KoiCreatePopup from "~/components/shared/KoiCreatePopup";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import { toast } from "react-toastify";
+
+export type KoiOfBreederQueryParams = {
+  breeder_id: number;
+  page: number;
+  limit: number;
+};
+
+export type KoiOfBreeder = {
+  total_page: number;
+  total_item: number;
+  item: KoiDetailModel[];
+};
 
 const BreederDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,9 +46,8 @@ const BreederDetail: React.FC = () => {
   const [createPopupOpen, setCreatePopupOpen] = useState(false);
   const userId = getCookie("user_id");
   const accessToken = getCookie("access_token");
-  const [viewAllKoiPopupOpen, setViewAllKoiPopupOpen] = useState(false);
 
-  const fetchKoiData = async (page: number) => {
+  const fetchKoiData = async () => {
     if (!userId || !accessToken) return;
 
     try {
@@ -42,7 +55,7 @@ const BreederDetail: React.FC = () => {
       const response = await axios.get(`${API_URL}/kois`, {
         params: {
           owner_id: userId,
-          page: page - 1,
+          page: currentPage - 1,
           limit: itemsPerPage
         },
         headers: {
@@ -62,7 +75,7 @@ const BreederDetail: React.FC = () => {
 
   useEffect(() => {
     if (isLoggedIn && userId && accessToken) {
-      fetchKoiData(currentPage);
+      fetchKoiData();
     }
   }, [currentPage, isLoggedIn, userId, accessToken]);
 
@@ -73,7 +86,7 @@ const BreederDetail: React.FC = () => {
   const handleKoiCreated = () => {
     setCreatePopupOpen(false);
     setCurrentPage(1);
-    fetchKoiData(1); // Fetch the updated koi list
+    fetchKoiData(); // Fetch the updated koi list
   };
 
   const handleUpdate = async () => {
@@ -121,14 +134,11 @@ const BreederDetail: React.FC = () => {
     });
   };
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
-    setCurrentPage(page);
-    fetchKoiData(page);
-  };
-
-  const handleViewAllKoi = () => {
-    setViewAllKoiPopupOpen(true);
-    fetchKoiData(1);
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number,
+  ) => {
+    setCurrentPage(page); // Update the current page when pagination changes
   };
 
   if (loading) return <Loading />;
@@ -160,7 +170,7 @@ const BreederDetail: React.FC = () => {
       if (response.status === 200) {
         toast.success("Koi deleted successfully");
         setCurrentPage(1);
-        fetchKoiData(1);
+        fetchKoiData();
       }
     } catch (error) {
       const errorMessage = extractErrorMessage(error, "Failed to delete koi.");
@@ -188,12 +198,9 @@ const BreederDetail: React.FC = () => {
             </button>
           )}
           {user.status_name === "VERIFIED" && (
-            <div className="flex flex-col items-center mt-4 space-y-2">
+            <div className="flex justify-center mt-4">
               <Button color="success" variant="contained" onClick={handleCreate}>
-                Tạo cá Koi mới
-              </Button>
-              <Button color="primary" variant="contained" onClick={handleViewAllKoi}>
-                Xem tất cả cá Koi
+                Create Koi
               </Button>
             </div>
           )}
@@ -260,40 +267,26 @@ const BreederDetail: React.FC = () => {
           </div>
         </div>
       </div>
+      <div>
+        <h2>Danh sách cá Koi của bạn</h2>
+        <KoiCart
+          items={kois}
+          onView={handleView}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      </div>
+      <PaginationComponent
+        totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
       <KoiCreatePopup
         open={createPopupOpen}
         onClose={() => setCreatePopupOpen(false)}
         onSuccess={handleKoiCreated}
         owner_id={user.id}
       />
-      <Dialog 
-        open={viewAllKoiPopupOpen} 
-        onClose={() => setViewAllKoiPopupOpen(false)} 
-        maxWidth="lg" 
-        fullWidth
-      >
-        <DialogTitle>Tất cả cá Koi của bạn</DialogTitle>
-        <DialogContent>
-          <div style={{ overflowX: 'auto' }}>
-            <KoiCart
-              items={kois}
-              onView={handleView}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-            <PaginationComponent
-              totalPages={Math.ceil(totalKoi / itemsPerPage)}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setViewAllKoiPopupOpen(false)}>Đóng</Button>
-        </DialogActions>
-      </Dialog>
     </div>
   );
 };

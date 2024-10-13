@@ -43,15 +43,6 @@ const VNPayReturn: React.FC = () => {
 
     if (success) {
       toast.success(message);
-      // Update user's account balance if needed
-      if (userId && amount) {
-        const token = localStorage.getItem("access_token");
-        if (token) {
-          updateAccountBalance(Number(userId), amount, token).catch((error) =>
-            console.error("Error updating account balance:", error),
-          );
-        }
-      }
     } else {
       toast.error(message);
     }

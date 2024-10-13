@@ -6,7 +6,7 @@ import axios from "axios";
 import { environment } from "~/environments/environment";
 import { fetchKoisOfBreeder } from "~/utils/apiUtils";
 import KoiCart from "../kois/KoiCart";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import PaginationComponent from "~/components/pagination/Pagination";
 import { useAuth } from "~/contexts/AuthContext";
 import { useUserData } from "~/contexts/useUserData";
@@ -15,6 +15,9 @@ import AccountVerificationAlert from "~/components/shared/AccountVerificationAle
 import { KoiDetailModel } from "~/types/kois.type";
 import KoiList from "../manager/koi/KoiManagement";
 import Loading from "~/components/loading/Loading";
+import KoiCreatePopup from "~/components/shared/KoiCreatePopup";
+import { extractErrorMessage } from "~/utils/dataConverter";
+import { toast } from "react-toastify";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -40,33 +43,43 @@ const BreederDetail: React.FC = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const { user, loading, error, setUser } = useUserData();
+  const [createPopupOpen, setCreatePopupOpen] = useState(false);
+
+  const fetchKoiData = async () => {
+    if (!user) return;
+
+    try {
+      const koisOfBreederData = await fetchKoisOfBreeder(
+        user.id,
+        currentPage - 1,
+        itemsPerPage,
+      );
+
+      if (koisOfBreederData) {
+        setKois(koisOfBreederData.item);
+        setTotalKoi(koisOfBreederData.total_item);
+        setHasMorePages(koisOfBreederData.item.length === itemsPerPage);
+      }
+    } catch (error) {
+      console.error("Failed to fetch koi data:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchBreederAndKoi = async () => {
-      if (!user) return;
-
-      try {
-        const koisOfBreederData = await fetchKoisOfBreeder(
-          user.id,
-          currentPage - 1,
-          itemsPerPage,
-        );
-
-        if (koisOfBreederData) {
-          if (koisOfBreederData.item.length < itemsPerPage) {
-            setHasMorePages(false);
-          }
-          setKois((prevKois) => [...prevKois, ...koisOfBreederData.item]);
-        }
-      } catch (error) {
-        console.error("Failed to fetch koi data:", error);
-      }
-    };
-
     if (isLoggedIn && user) {
-      fetchBreederAndKoi();
+      fetchKoiData();
     }
   }, [currentPage, isLoggedIn, user]);
+
+  const handleCreate = () => {
+    setCreatePopupOpen(true);
+  };
+
+  const handleKoiCreated = () => {
+    setCreatePopupOpen(false);
+    setCurrentPage(1);
+    fetchKoiData(); // Fetch the updated koi list
+  };
 
   const handleUpdate = async () => {
     if (!user || !updateField || !updateValue) return;
@@ -137,8 +150,29 @@ const BreederDetail: React.FC = () => {
     alert(`Edit koi ${id}`);
   };
 
-  const handleDelete = (id: number) => {
-    alert(`Delete koi ${id}`);
+  const handleDelete = async (id: number) => {
+    const confirmDelete = confirm("Are you sure you want to delete this koi?");
+    if (!confirmDelete) return;
+
+    try {
+      const response = await axios.delete(
+        `http://localhost:4000/api/v1/kois/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+
+      if (response.status === 200) {
+        toast.success("Koi deleted successfully");
+        setCurrentPage(1);
+        fetchKoiData();
+      }
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error, "Failed to delete koi.");
+      toast.error(errorMessage);
+    }
   };
 
   return (
@@ -212,9 +246,17 @@ const BreederDetail: React.FC = () => {
               placeholder="Enter new value"
               className="update-input"
             />
-            <button onClick={handleUpdate} className="update-button">
+            <Button
+              color="warning"
+              variant="contained"
+              onClick={handleUpdate}
+              className="update-button"
+            >
               Update
-            </button>
+            </Button>
+            <Button color="success" variant="contained" onClick={handleCreate}>
+              Create
+            </Button>
           </div>
         </div>
       </div>
@@ -231,6 +273,12 @@ const BreederDetail: React.FC = () => {
         totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages
         currentPage={currentPage}
         onPageChange={handlePageChange}
+      />
+      <KoiCreatePopup
+        open={createPopupOpen}
+        onClose={() => setCreatePopupOpen(false)}
+        onSuccess={handleKoiCreated}
+        owner_id={user.id}
       />
     </div>
   );

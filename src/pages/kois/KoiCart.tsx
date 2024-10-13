@@ -16,8 +16,6 @@ const KoiCart: React.FC<KoiCartProps> = ({
   onEdit,
   onDelete,
 }) => {
-  // useRedirectIfEmpty(items)
-
   return (
     <div className="koi-container m-3 grid h-full grid-cols-1 gap-4 p-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       {items.map((koi, index) => (
@@ -67,7 +65,10 @@ const KoiCart: React.FC<KoiCartProps> = ({
               </div>
               <div className="actions p-2 flex space-x-2">
                 <button
-                  onClick={() => onView(koi.id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onView(koi.id);
+                  }}
                   className="bg-blue-200 text-blue-600 hover:text-blue-900 p-1 rounded"
                   title="View"
                 >
@@ -87,7 +88,10 @@ const KoiCart: React.FC<KoiCartProps> = ({
                   </svg>
                 </button>
                 <button
-                  onClick={() => onEdit(koi.id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onEdit(koi.id);
+                  }}
                   className="bg-blue-200 text-green-600 hover:text-green-900 p-1 rounded"
                   title="Edit"
                 >
@@ -102,7 +106,10 @@ const KoiCart: React.FC<KoiCartProps> = ({
                   </svg>
                 </button>
                 <button
-                  onClick={() => onDelete(koi.id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onDelete(koi.id);
+                  }}
                   className="bg-blue-200 text-red-600 hover:text-red-900 p-1 rounded"
                   title="Delete"
                 >

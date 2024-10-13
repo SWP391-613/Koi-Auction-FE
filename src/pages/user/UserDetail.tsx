@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import DepositComponent from "~/components/shared/DepositComponent";
 import { useUserData } from "~/contexts/useUserData";
-import { formatDate, updateUserField } from "~/utils/apiUtils";
+import { formatDate, sendOtp, updateUserField } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import "./UserDetail.scss";
 import Loading from "~/components/loading/Loading";
@@ -46,15 +46,24 @@ const UserDetail: React.FC = () => {
     }
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     if (!user) return;
-    navigate("/otp-verification", {
-      state: {
-        email: user.email,
-        from: "userDetail",
-        statusCode: 200,
-      },
-    });
+
+    //send api request to send otp
+    //PUT: /api/v1/users/verify/:otp
+    const response = await sendOtp(user.email);
+
+    if (response.status == 200) {
+      navigate("/otp-verification", {
+        state: {
+          email: user.email,
+          from: "userDetail",
+          statusCode: 200,
+        },
+      });
+    } else {
+      alert("Failed to send OTP");
+    }
   };
 
   if (!user) {

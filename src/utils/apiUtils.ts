@@ -425,6 +425,11 @@ export const createVNPayPayment = async (
       throw new Error(
         err.response?.data?.message ||
           "An error occurred during payment creation",
+      );
+
+  }
+}
+};
 
 export const verifyOtp = async (email: string, otp: string): Promise<any> => {
   try {
@@ -682,4 +687,4 @@ export const fetchBreedersData = async (page: number, itemsPerPage: number) => {
   }
 
   return response.data;
-};
+}

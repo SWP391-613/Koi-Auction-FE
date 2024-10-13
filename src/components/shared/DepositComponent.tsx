@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { createVNPayPayment } from "~/utils/apiUtils";
+import { createDepositPayment } from "~/utils/apiUtils";
 
 interface DepositComponentProps {
   userId: number;
@@ -31,7 +31,7 @@ const DepositComponent: React.FC<DepositComponentProps> = ({
     }
 
     try {
-      const response = await createVNPayPayment(payment, token, userId);
+      const response = await createDepositPayment(payment, token, userId);
       if (response.paymentUrl) {
         window.location.href = response.paymentUrl;
       } else {

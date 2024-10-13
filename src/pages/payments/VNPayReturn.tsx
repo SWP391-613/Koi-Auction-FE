@@ -24,6 +24,7 @@ const VNPayReturn: React.FC = () => {
     userId?: string;
     amount?: number;
     responseCode?: string;
+    paymentType?: string;
   } | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -37,8 +38,16 @@ const VNPayReturn: React.FC = () => {
       ? Number(searchParams.get("amount"))
       : undefined;
     const responseCode = searchParams.get("responseCode") || undefined;
+    const paymentType = searchParams.get("paymentType") || undefined;
 
-    const result = { success, message, userId, amount, responseCode };
+    const result = {
+      success,
+      message,
+      userId,
+      amount,
+      responseCode,
+      paymentType,
+    };
     setPaymentResult(result);
 
     if (success) {
@@ -53,8 +62,14 @@ const VNPayReturn: React.FC = () => {
   useEffect(() => {
     if (!loading && paymentResult) {
       const redirectTimer = setTimeout(() => {
-        if (paymentResult.userId) {
-          navigate(`/users/${paymentResult.userId}`);
+        if (paymentResult.paymentType === "deposit") {
+          if (paymentResult.userId) {
+            navigate(`/users/${paymentResult.userId}`);
+          } else {
+            navigate("/");
+          }
+        } else if (paymentResult.paymentType === "order") {
+          navigate("/orders");
         } else {
           navigate("/");
         }

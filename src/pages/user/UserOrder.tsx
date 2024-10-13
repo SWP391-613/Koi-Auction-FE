@@ -14,13 +14,19 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { fetchUserOrders, fetchOrderDetails } from "../../utils/apiUtils";
+import {
+  fetchUserOrders,
+  fetchOrderDetails,
+  updateOrder,
+} from "../../utils/apiUtils";
 import { useUserData } from "~/contexts/useUserData";
 import PaginationComponent from "~/components/pagination/Pagination";
 import UserOrderDetail from "./UserOrderDetail";
 import { OrderDetail } from "./UserOrderDetail";
 import EditIcon from "@mui/icons-material/Edit";
 import EditOrderDialog from "./EditOrderDialog";
+import { toast } from "react-toastify";
+import { getCookie } from "~/utils/cookieUtils";
 
 export type Order = {
   id: number;
@@ -35,6 +41,8 @@ export type Order = {
   shipping_date: string;
   status: string;
   tracking_number: string;
+  payment_method: string;
+  note: string;
 };
 
 const UserOrder = () => {
@@ -102,6 +110,8 @@ const UserOrder = () => {
         return "success";
       case "cancelled":
         return "error";
+      case "processing":
+        return "warning";
       default:
         return "default";
     }
@@ -119,21 +129,25 @@ const UserOrder = () => {
 
   const handleSaveEditedOrder = async (editedOrder: Order) => {
     try {
-      // Implement API call to save edited order
-      // For example: await updateOrder(editedOrder);
+      const updatedOrder = await updateOrder(
+        editedOrder,
+        getCookie("access_token") || "",
+      );
 
       // Update the orders state with the edited order
       setOrders(
         orders.map((order) =>
-          order.id === editedOrder.id ? editedOrder : order,
+          order.id === updatedOrder.id ? updatedOrder : order,
         ),
       );
 
       handleCloseEditDialog();
-      // Optionally, show a success message
+      // Show a success message
+      toast.success("Order updated successfully");
     } catch (error) {
       console.error("Error updating order:", error);
-      // Optionally, show an error message
+      // Show an error message
+      toast.error("Failed to update order. Please try again.");
     }
   };
 
@@ -309,6 +323,7 @@ const UserOrder = () => {
         onClose={handleCloseEditDialog}
         order={editingOrder}
         onSave={handleSaveEditedOrder}
+        accessToken={getCookie("access_token") || ""}
       />
     </Container>
   );

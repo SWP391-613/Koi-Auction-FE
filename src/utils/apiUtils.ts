@@ -365,6 +365,11 @@ export const fetchUserOrders = async (userId: number): Promise<Order[]> => {
   try {
     const response = await axios.get(
       `${API_URL}${environment.be.endPoint.orders}/user/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      },
     );
     return response.data;
   } catch (error) {
@@ -403,14 +408,15 @@ export const fetchOrderDetails = async (
   }
 };
 
-export const createVNPayPayment = async (
+export const createDepositPayment = async (
+
   amount: number,
   token: string,
   userId: number,
 ) => {
   try {
     const response = await axios.post(
-      `${API_URL}/payment/vnpay/create_payment`,
+      `${API_URL}/payment/vnpay/create_deposit`,
       { amount, userId },
       {
         headers: {
@@ -706,4 +712,49 @@ export const fetchBreedersData = async (page: number, itemsPerPage: number) => {
   }
 
   return response.data;
+};
+
+export const updateOrder = async (
+  order: Order,
+  accessToken: string,
+): Promise<Order> => {
+  try {
+    const response = await axios.put(
+      `${API_URL}${environment.be.endPoint.orders}/${order.id}`,
+      order,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Failed to update order");
+    }
+  } catch (error) {
+    console.error("Error updating order:", error);
+    throw error;
+  }
+};
+
+export const createOrderPayment = async (amount: number, token: string) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/payment/vnpay/create_order_payment`,
+      { amount },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error creating order payment:", error);
+    throw error;
+  }
 };

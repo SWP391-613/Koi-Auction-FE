@@ -9,6 +9,7 @@ import { getCookie } from "~/utils/cookieUtils";
 import "./UserDetail.scss";
 import Loading from "~/components/loading/Loading";
 import { extractErrorMessage } from "~/utils/dataConverter";
+import { formatCurrency } from "~/utils/currencyUtils";
 
 const UserDetail: React.FC = () => {
   const { user, loading, error, setUser } = useUserData();
@@ -126,7 +127,11 @@ const UserDetail: React.FC = () => {
           </div>
           <div className="account-balance">
             <p className="balance-label">Account Balance</p>
-            <p className="balance-value">${user.account_balance.toFixed(2)}</p>
+            <p className="balance-value">
+              {user.account_balance.toFixed(2) != null
+                ? formatCurrency(user.account_balance)
+                : "No money"}
+            </p>
             <DepositComponent
               userId={user.id}
               token={accessToken || ""}

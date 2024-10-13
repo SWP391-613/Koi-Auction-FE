@@ -15,9 +15,12 @@ import {
   Divider,
   useTheme,
   useMediaQuery,
+  Paper,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { fetchOrderDetails } from "~/utils/apiUtils";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 
 interface UserOrderDetailProps {
   orderId: number;
@@ -78,21 +81,39 @@ const UserOrderDetail: React.FC<UserOrderDetailProps> = ({
     <>
       <DialogTitle>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">Order Details</Typography>
+          <Typography variant="h5" fontWeight="bold">
+            Order Details
+          </Typography>
           <IconButton onClick={onClose} size="small">
             <CloseIcon />
           </IconButton>
         </Box>
       </DialogTitle>
       <DialogContent dividers>
-        <Box mb={3}>
-          <Typography variant="h5" gutterBottom>
+        <Paper
+          elevation={3}
+          sx={{
+            p: 3,
+            mb: 3,
+            backgroundColor: theme.palette.background.default,
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
             Order #{orderId}
           </Typography>
-          <Typography variant="subtitle1" color="text.secondary">
-            Total Amount: ${totalOrderAmount.toFixed(2)}
-          </Typography>
-        </Box>
+          <Box display="flex" alignItems="center" mb={1}>
+            <AttachMoneyIcon color="primary" sx={{ mr: 1 }} />
+            <Typography variant="subtitle1">
+              Total Amount: ${totalOrderAmount.toFixed(2)}
+            </Typography>
+          </Box>
+          <Box display="flex" alignItems="center">
+            <LocalShippingIcon color="primary" sx={{ mr: 1 }} />
+            <Typography variant="subtitle1">
+              Estimated Delivery: 3-5 business days
+            </Typography>
+          </Box>
+        </Paper>
         {loading ? (
           <Box display="flex" justifyContent="center" my={4}>
             <CircularProgress />
@@ -105,12 +126,21 @@ const UserOrderDetail: React.FC<UserOrderDetailProps> = ({
               orderDetails.map((detail) => (
                 <Grid item xs={12} sm={6} md={4} key={detail.id}>
                   <Card elevation={3}>
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image={detail.koi.image_url}
-                      alt={detail.koi.name}
-                    />
+                    <Box
+                      sx={{
+                        backgroundColor: "rgb(79 146 209)",
+                        p: 1,
+                        borderRadius: "4px 4px 0 0",
+                      }}
+                    >
+                      <CardMedia
+                        component="img"
+                        height="140"
+                        image={detail.koi.image_url}
+                        alt={detail.koi.name}
+                        sx={{ objectFit: "contain", borderRadius: 1 }}
+                      />
+                    </Box>
                     <CardContent>
                       <Typography variant="h6" gutterBottom noWrap>
                         {detail.koi.name}
@@ -119,7 +149,7 @@ const UserOrderDetail: React.FC<UserOrderDetailProps> = ({
                         <Typography variant="body2" color="text.secondary">
                           Price:
                         </Typography>
-                        <Typography variant="body2">
+                        <Typography variant="body2" fontWeight="bold">
                           ${detail.price.toFixed(2)}
                         </Typography>
                       </Box>
@@ -127,14 +157,18 @@ const UserOrderDetail: React.FC<UserOrderDetailProps> = ({
                         <Typography variant="body2" color="text.secondary">
                           Quantity:
                         </Typography>
-                        <Typography variant="body2">
+                        <Typography variant="body2" fontWeight="bold">
                           {detail.number_of_products}
                         </Typography>
                       </Box>
                       <Divider sx={{ my: 1 }} />
                       <Box display="flex" justifyContent="space-between">
                         <Typography variant="subtitle2">Total:</Typography>
-                        <Typography variant="subtitle2" fontWeight="bold">
+                        <Typography
+                          variant="subtitle1"
+                          fontWeight="bold"
+                          color="primary"
+                        >
                           ${detail.total_money.toFixed(2)}
                         </Typography>
                       </Box>
@@ -144,7 +178,7 @@ const UserOrderDetail: React.FC<UserOrderDetailProps> = ({
               ))
             ) : (
               <Grid item xs={12}>
-                <Typography align="center">
+                <Typography align="center" variant="subtitle1">
                   No order details available.
                 </Typography>
               </Grid>

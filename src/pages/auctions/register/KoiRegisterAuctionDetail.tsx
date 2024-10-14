@@ -1,13 +1,9 @@
 import {
-  faArrowLeft,
   faCakeCandles,
   faEarthAsia,
-  faFish,
-  faHandHoldingHeart,
   faRuler,
   faStar,
   faTag,
-  faTicketSimple,
   faUser,
   faVenusMars,
 } from "@fortawesome/free-solid-svg-icons";
@@ -15,7 +11,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import NavigateButton from "~/components/shared/NavigateButton";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
 import { useAuth } from "~/contexts/AuthContext";
 import { AuctionKoi, KoiWithAuctionKoiData } from "~/types/auctionkois.type";
@@ -27,7 +22,8 @@ import {
 } from "~/utils/apiUtils"; // Assume we have this API function
 import { formatCurrency } from "~/utils/currencyUtils";
 import { convertBidMethodToReadable } from "~/utils/dataConverter";
-import { getAuctionStatus, getAuctionStatusV2 } from "~/utils/dateTimeUtils";
+import { getAuctionStatusV2 } from "~/utils/dateTimeUtils";
+import BreederKoiManagement from "./BreederKoiManagement";
 
 const KoiRegisterAuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();
@@ -75,9 +71,6 @@ const KoiRegisterAuctionDetail: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-center justify-between pl-6 ml-5 mt-5">
           <div className="">
             <div className="mb-4 flex flex-col items-center">
-              <Button variant="contained" onClick={handleAddKoiToAuction}>
-                Add Your Koi
-              </Button>
               <h2 className="text-2xl font-semibold text-black">
                 {auction.title}
               </h2>
@@ -238,6 +231,7 @@ const KoiRegisterAuctionDetail: React.FC = () => {
             </Link>
           ))}
         </div>
+        <BreederKoiManagement />
       </div>
     </>
   );

@@ -4,6 +4,7 @@ import {
   KoiApiResponse,
   KoiDetailModel,
   KoisResponse,
+  KoiTrackingStatus,
 } from "~/types/kois.type";
 import { Bid } from "~/components/BiddingHistory";
 import { format, isToday, isYesterday, isTomorrow } from "date-fns";
@@ -246,12 +247,45 @@ export const fetchKoisOfBreeder = async (
   breeder_id: number,
   page: number,
   limit: number,
+  access_token: string,
 ): Promise<KoisOfBreeder | null> => {
   try {
     const response = await axios.get<KoisOfBreeder>(
       `${API_URL}/breeders/kois`,
       {
         params: { breeder_id, page, limit },
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.error(
+        "Error fetching koi's breeder data:",
+        error.response?.data?.message || error.message,
+      );
+    }
+    throw error;
+  }
+};
+
+export const fetchKoisOfBreederWithStatus = async (
+  breeder_id: number,
+  status: KoiTrackingStatus,
+  page: number,
+  limit: number,
+  access_token: string,
+): Promise<KoisOfBreeder | null> => {
+  try {
+    const response = await axios.get<KoisOfBreeder>(
+      `${API_URL}/breeders/kois/status`,
+      {
+        params: { breeder_id, status, page, limit },
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
       },
     );
     return response.data;

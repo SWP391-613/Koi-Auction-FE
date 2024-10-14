@@ -19,7 +19,7 @@ const KoiCart: React.FC<KoiCartProps> = ({
   handleDelete,
 }) => {
   return (
-    <div className="koi-container grid h-full grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+    <div className="koi-container grid h-full grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
       {items.map((koi, index) => (
         <div
           key={`${koi.id}-${index}`}
@@ -28,7 +28,7 @@ const KoiCart: React.FC<KoiCartProps> = ({
           <div className="flex flex-row">
             <Link
               to={`/kois/${koi.id}`}
-              className="image-container flex w-3/6 bg-[#4086c7]"
+              className="image-container flex w-1/2 bg-[#4086c7]"
             >
               {koi.thumbnail ? (
                 <img
@@ -40,9 +40,11 @@ const KoiCart: React.FC<KoiCartProps> = ({
                 <span className="text-gray-500">No Image</span>
               )}
             </Link>
-            <div className="ml-8 flex flex-col items-start">
+            <div className="flex flex-col justify-center m-3">
               <div className="info p-4">
-                <h2 className="title text-2xl font-semibold">{koi.name}</h2>
+                <h2 className="title text-2xl font-semibold mb-3">
+                  {koi.name}
+                </h2>
                 <div
                   className={`status rounded-xl p-2 text-left text-white ${getStatusColor(koi.status_name)} text-md font-bold`}
                 >

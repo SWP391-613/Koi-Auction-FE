@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import { useAuth } from "~/contexts/AuthContext";
 import { environment } from "~/environments/environment";
@@ -7,6 +7,8 @@ import { KoiDetailModel } from "~/types/kois.type";
 import { getCookie } from "~/utils/cookieUtils";
 import KoiCart from "./KoiCart";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { extractErrorMessage } from "~/utils/dataConverter";
 
 const VerifyKoiList: React.FC = () => {
   const userId = getCookie("user_id");
@@ -14,7 +16,6 @@ const VerifyKoiList: React.FC = () => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
 
@@ -22,15 +23,56 @@ const VerifyKoiList: React.FC = () => {
     navigate(`/kois/${id}`);
   };
 
-  const handleApprove = (id: number) => {
-    alert(`Edit koi with id: ${id}`);
+  const handleApprove = async (id: number) => {
+    try {
+      await axios.put(
+        `http://localhost:4000/api/v1/kois/status/${id}`,
+        {
+          tracking_status: "VERIFIED",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+
+      toast.success("Koi Approved successfully");
+      // Remove the approved Koi from the list
+      setKois((prevKois) => prevKois.filter((koi) => koi.id !== id));
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error, "Failed to approve Koi");
+      toast.error(errorMessage);
+    }
   };
 
-  const handleDecline = (id: number) => {
-    alert(`Delete koi with id: ${id}`);
+  const handleDecline = async (id: number) => {
+    const confirmReject = confirm("Are you sure you want to reject this koi?");
+    if (!confirmReject) return;
+
+    try {
+      await axios.put(
+        `http://localhost:4000/api/v1/kois/status/${id}`,
+        {
+          tracking_status: "REJECTED",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+
+      toast.success("Koi rejected");
+      // Remove the rejected Koi from the list
+      setKois((prevKois) => prevKois.filter((koi) => koi.id !== id));
+    } catch (error) {
+      const errorMessage = extractErrorMessage(error, "Failed to reject Koi");
+      toast.error(errorMessage);
+    }
   };
 
-  const fetchKoiData = async () => {
+  const fetchKoiData = useCallback(async () => {
     if (!accessToken) {
       setError("No access token available");
       setIsLoading(false);
@@ -45,9 +87,10 @@ const VerifyKoiList: React.FC = () => {
         params: {
           status: "UNVERIFIED",
         },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
-
-      console.log("API response:", response.data);
 
       if (Array.isArray(response.data)) {
         setKois(response.data);
@@ -55,20 +98,18 @@ const VerifyKoiList: React.FC = () => {
         setError("Invalid data format received from API");
       }
     } catch (error) {
-      console.error("Không thể lấy dữ liệu cá Koi:", error);
+      console.error("Cannot fetch Koi data:", error);
       setError("Failed to fetch Koi data");
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [accessToken]);
 
   useEffect(() => {
     if (isLoggedIn && userId && accessToken) {
       fetchKoiData();
     }
-  }, [currentPage, isLoggedIn, userId, accessToken]);
-
-  console.log("Current state:", { isLoading, error, kois });
+  }, [isLoggedIn, userId, accessToken, fetchKoiData]);
 
   if (isLoading) {
     return <div>Loading...</div>;

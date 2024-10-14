@@ -124,6 +124,10 @@ const BreederDetail: React.FC = () => {
     }
   };
 
+  const handleRegisterKoiToAuction = () => {
+    navigate("/auctions/register");
+  };
+
   const handleVerify = () => {
     if (!user) return;
     navigate("/otp-verification", {
@@ -182,8 +186,8 @@ const BreederDetail: React.FC = () => {
   return (
     <div className="flex flex-col justify-around m-10">
       <AccountVerificationAlert user={user} />
-      <div className="user-detail-content">
-        <div className="user-sidebar">
+      <div className="flex border bg-[#F1F1F1] rounded-2xl">
+        <div className="flex flex-col justify-start items-center p-5 w-[20rem]">
           <img
             src={user.avatar_url}
             alt={`${user.first_name} ${user.last_name}`}
@@ -199,13 +203,20 @@ const BreederDetail: React.FC = () => {
             </button>
           )}
           {user.status_name === "VERIFIED" && (
-            <div className="flex justify-center mt-4">
+            <div className="flex flex-col gap-4 mt-4">
               <Button
                 color="success"
                 variant="contained"
                 onClick={handleCreate}
               >
-                Create Koi
+                Add New Koi
+              </Button>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={handleRegisterKoiToAuction}
+              >
+                Register to Auction
               </Button>
             </div>
           )}

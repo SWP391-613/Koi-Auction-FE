@@ -4,21 +4,6 @@
   padding: 40px 20px;
 }
 
-.user-detail-content {
-  display: flex;
-  gap: 40px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.user-sidebar {
-  flex: 0 0 250px;
-  background-color: #f8f9fa;
-  padding: 30px;
-}
-
 .user-avatar {
   width: 150px;
   height: 150px;
@@ -95,11 +80,6 @@
 @media (max-width: 768px) {
   .user-detail-content {
     flex-direction: column;
-  }
-
-  .user-sidebar {
-    flex: none;
-    width: 100%;
   }
 
   .user-info-grid {

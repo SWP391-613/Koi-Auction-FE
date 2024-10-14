@@ -3,16 +3,17 @@ import { Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { AuctionKoi } from "~/types/auctionkois.type";
+import { formatCurrency } from "~/utils/currencyUtils";
 
 interface AuctionTableProps {
   auctionKois: AuctionKoi[];
-  onEdit: (koiId: number) => void;
+  handleEdit: (koiId: number) => void;
   onDelete: (koiId: number) => void;
 }
 
 const AuctionTable: React.FC<AuctionTableProps> = ({
   auctionKois,
-  onEdit,
+  handleEdit: onEdit,
   onDelete,
 }) => {
   return (
@@ -21,16 +22,13 @@ const AuctionTable: React.FC<AuctionTableProps> = ({
         <thead className="bg-gray-50">
           <tr>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Auction koi Id
+              Id
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Auction Id
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Koi Id
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Image
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Base Price
@@ -64,17 +62,14 @@ const AuctionTable: React.FC<AuctionTableProps> = ({
               </td>
               <td className="px-6 py-4 whitespace-nowrap">{ackoi.koi_id}</td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <img
-                  // src={ackoi.id}
-                  // alt={ackoi.name}
-                  className="w-16 h-16 object-cover rounded-full"
-                />
+                {ackoi.base_price != null
+                  ? formatCurrency(ackoi.base_price)
+                  : "Not Set"}
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                ${ackoi.base_price}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                ${ackoi.current_bid}
+                {ackoi.current_bid != null
+                  ? formatCurrency(ackoi.current_bid)
+                  : "Not Set"}
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 {ackoi.current_bidder_id}

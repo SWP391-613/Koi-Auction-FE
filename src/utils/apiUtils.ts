@@ -102,9 +102,14 @@ export const createAuctionFromApi = (apiData: AuctionDTO): AuctionDTO => {
 
 export const createNewAuction = async (
   newAuction: AuctionModel,
+  token: string,
 ): Promise<AuctionModel> => {
   try {
-    const response = await axios.post(`${API_URL}/auctions`, newAuction);
+    const response = await axios.post(`${API_URL}/auctions`, newAuction, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (response.status !== 201) {
       throw new Error("Failed to create new auction");
@@ -112,21 +117,15 @@ export const createNewAuction = async (
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error(
-        "Error creating new auction:",
-        error.response?.data?.message || error.message,
-      );
+      // Narrowing down to AxiosError type
+      const errorMessage =
+        error.response?.data?.message ||
+        "An error occurred during create new auction";
+      throw new Error(errorMessage);
     } else {
-      if (error instanceof Error) {
-        console.error("Error creating new auction:", error.message);
-      } else {
-        console.error(
-          "Error creating new auction:",
-          "An unexpected error occurred",
-        );
-      }
+      // Generic fallback error message
+      throw new Error("An unexpected error occurred");
     }
-    throw error;
   }
 };
 

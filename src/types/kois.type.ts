@@ -24,7 +24,12 @@ export type KoiDetailModel = {
 // this type for creating new koi
 export type KoiModel = Omit<KoiDetailModel, "sex"> & { gender: string };
 
-export type KoiTrackingStatus = "VERIFIED" | "REJECTED" | "PENDING" | "SOLD";
+export type KoiTrackingStatus =
+  | "UNVERIFIED"
+  | "VERIFIED"
+  | "REJECTED"
+  | "PENDING"
+  | "SOLD";
 
 export type KoiGender = "Male" | "Female" | "Unknown";
 

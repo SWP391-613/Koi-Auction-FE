@@ -90,12 +90,12 @@ export const formatDate = (dateString: string): string => {
   }
 };
 
-export const createAuctionFromApi = (apiData: AuctionDTO): AuctionDTO => {
+export const createAuctionFromApi = (apiData: AuctionModel): AuctionModel => {
   return {
     id: apiData.id,
     title: apiData.title,
-    start_time: formatDate(apiData.start_time),
-    end_time: formatDate(apiData.end_time),
+    start_time: formatDate(apiData.start_time.toString()),
+    end_time: formatDate(apiData.end_time.toString()),
     status: apiData.status,
     auctioneer_id: apiData.auctioneer_id,
   };
@@ -205,7 +205,7 @@ export const fetchAuctionsByStatus = async (
 
 export const fetchAuctionById = async (
   id: number,
-): Promise<AuctionDTO | null> => {
+): Promise<AuctionModel | null> => {
   try {
     const response = await axios.get(`${API_URL}/auctions/${id}`);
     return createAuctionFromApi(response.data);

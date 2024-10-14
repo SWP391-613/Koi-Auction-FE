@@ -58,7 +58,9 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
     {
       icon: faDollarSign,
       label: "Base Price",
-      value: formatCurrency(auctionKoi.base_price),
+      value: ["DESCENDING_BID", "SEALED_BID"].includes(auctionKoi.bid_method)
+        ? ""
+        : formatCurrency(auctionKoi.base_price),
       bgColor: "bg-blue-200",
     },
     {

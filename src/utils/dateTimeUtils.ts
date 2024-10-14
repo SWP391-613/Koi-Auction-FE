@@ -3,6 +3,7 @@ import {
   isAfter,
   isBefore,
   isValid,
+  parse,
   parseISO,
 } from "date-fns";
 
@@ -58,9 +59,9 @@ export const getAuctionStatusV2 = (
 
   const now = new Date();
 
-  // Parse dates using date-fns to ensure they are valid
-  const start = parseISO(startTime);
-  const end = parseISO(endTime);
+  // Parse dates using date-fns with the format "MMM d, yyyy 'at' h:mm a"
+  const start = parse(startTime, "MMM d, yyyy 'at' h:mm a", new Date());
+  const end = parse(endTime, "MMM d, yyyy 'at' h:mm a", new Date());
 
   // Check for invalid dates
   if (!isValid(start) || !isValid(end)) {

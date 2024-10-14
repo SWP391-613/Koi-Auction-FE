@@ -165,6 +165,43 @@ export const fetchAuctions = async (
   }
 };
 
+export const fetchAuctionsByStatus = async (
+  page: number,
+  limit: number,
+  status: string,
+): Promise<AuctionModel[]> => {
+  try {
+    // if (getCookie("access_token") === null) {
+    //   throw new Error("You are not logged in");
+    // }
+
+    const response = await axios.get(`${API_URL}/auctions/koi_register`, {
+      params: { page, limit, status },
+    });
+
+    // Map the response data to Auction model
+    const auctions: AuctionModel[] = response.data; //need raw data to calculate the time range of the auction
+    return auctions;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Error fetching auctions:",
+        error.response?.data?.message || error.message,
+      );
+    } else {
+      if (error instanceof Error) {
+        console.error("Error fetching auctions:", error.message);
+      } else {
+        console.error(
+          "Error fetching auctions:",
+          "An unexpected error occurred",
+        );
+      }
+    }
+    return [];
+  }
+};
+
 export const fetchAuctionById = async (
   id: number,
 ): Promise<AuctionDTO | null> => {

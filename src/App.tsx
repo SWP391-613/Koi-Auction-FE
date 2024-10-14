@@ -57,6 +57,9 @@ import { Role } from "./types/roles.type";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import KoiEditDetail from "./pages/kois/KoiEditDetail";
 import VerifyKoiList from "./pages/kois/VerifyKoiList";
+import BreederLayout from "./pages/manager/breeder/BreederLayout";
+import AddKoiToAuction from "./pages/auctions/register/AddKoiToAuction";
+import KoiRegisterAuctionDetail from "./pages/auctions/register/KoiRegisterAuctionDetail";
 
 const TITLE = "Auction Koi";
 
@@ -89,6 +92,11 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/kois/:id" element={<KoiDetail />} />
             <Route path="/users/:id" element={<UserDetail />} />
+            <Route path="/auctions/register" element={<AddKoiToAuction />} />
+            <Route
+              path="/auctions/register/:id"
+              element={<KoiRegisterAuctionDetail />}
+            />
           </Route>
 
           {/* Manager and Staff protected routes */}
@@ -106,12 +114,14 @@ function App() {
 
           {/* Breeder protected routes */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/breeders" element={<BreederDetail />} />
-            <Route
-              path="/payments/vnpay-payment-return"
-              element={<VNPayReturn />}
-            />
-            <Route path="/kois/:id/edit" element={<KoiEditDetail />} />
+            <Route path="/breeders" element={<BreederLayout />}>
+              <Route path="" element={<BreederDetail />} />
+              <Route
+                path="payments/vnpay-payment-return"
+                element={<VNPayReturn />}
+              />
+              <Route path="kois/:id/edit" element={<KoiEditDetail />} />
+            </Route>
           </Route>
 
           {/* Staff protected routes */}

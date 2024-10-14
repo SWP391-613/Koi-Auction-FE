@@ -8,7 +8,7 @@ export type AuctionDTO = {
 };
 
 export type AuctionModel = {
-  id?: number;
+  id: number;
   title: string;
   start_time: Date | string;
   end_time: Date | string;

@@ -56,6 +56,7 @@ import StaffManagement from "./pages/manager/staff/StaffManagement";
 import { Role } from "./types/roles.type";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import KoiEditDetail from "./pages/kois/KoiEditDetail";
+import VerifyKoiList from "./pages/kois/VerifyKoiList";
 
 const TITLE = "Auction Koi";
 
@@ -123,6 +124,7 @@ function App() {
                 path="send-notifications"
                 element={<SendNotifications />}
               />
+              <Route path="verify/kois" element={<VerifyKoiList />} />
             </Route>
           </Route>
           {/* Protected routes for USER */}

@@ -25,6 +25,12 @@ const StaffLayout: React.FC = () => {
             Kois
           </Link>
           <Link
+            to="/staffs/verify/kois"
+            className="block py-2 px-4 text-gray-700 hover:bg-gray-200"
+          >
+            Verify Koi
+          </Link>
+          <Link
             to="/staffs/send-notifications"
             className="block py-2 px-4 text-gray-700 hover:bg-gray-200"
           >

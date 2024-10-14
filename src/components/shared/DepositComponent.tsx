@@ -8,13 +8,12 @@ import { createDepositPayment } from "~/utils/apiUtils";
 interface DepositComponentProps {
   userId: number;
   token: string;
-  onDepositSuccess: () => void;
+  // onDepositSuccess: () => void;
 }
 
 const DepositComponent: React.FC<DepositComponentProps> = ({
   userId,
   token,
-  onDepositSuccess,
 }) => {
   const [payment, setPayment] = useState<number>(0);
 

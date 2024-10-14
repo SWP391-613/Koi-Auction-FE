@@ -1,20 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import "./StaffDetail.scss";
-import { getCookie } from "~/utils/cookieUtils";
+import { Button } from "@mui/material";
 import axios from "axios";
-import { environment } from "~/environments/environment";
-import { fetchKoisOfBreeder } from "~/utils/apiUtils";
-import KoiCart from "../../kois/KoiCart";
-import { Button, Typography } from "@mui/material";
-import PaginationComponent from "~/components/pagination/Pagination";
-import { useAuth } from "~/contexts/AuthContext";
-import { useUserData } from "~/contexts/useUserData";
-import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
-import { KoiDetailModel } from "~/types/kois.type";
-import { AuctionsManagement } from "../../manager/auctions/AuctionsManagement";
-import SearchBar from "~/components/shared/SearchBar";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Loading from "~/components/loading/Loading";
+import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
+import { useUserData } from "~/contexts/useUserData";
+import { environment } from "~/environments/environment";
+import { getCookie } from "~/utils/cookieUtils";
+import "./StaffDetail.scss";
 
 const StaffDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -61,7 +54,7 @@ const StaffDetail: React.FC = () => {
     if (!user) return;
     navigate("/otp-verification", {
       state: {
-        email: user.emails,
+        email: user.email,
         from: "userDetail",
         statusCode: 200,
       },
@@ -101,7 +94,7 @@ const StaffDetail: React.FC = () => {
           <div className="user-info-grid">
             <div className="info-item">
               <p className="info-label">Email</p>
-              <p className="info-value">{user.emails}</p>
+              <p className="info-value">{user.email}</p>
             </div>
             <div className="info-item">
               <p className="info-label">Phone</p>

@@ -1,11 +1,11 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import { KoiDetailModel } from "~/types/kois.type";
 import { getStatusColor } from "~/utils/colorUtils";
 
 interface KoiCartProps {
   items: KoiDetailModel[];
+  renderCrudButtons?: (koi: KoiDetailModel) => ReactNode;
   handleView: (id: number) => void;
   handleEdit: (id: number) => void;
   handleDelete: (id: number) => void;
@@ -13,6 +13,7 @@ interface KoiCartProps {
 
 const KoiCart: React.FC<KoiCartProps> = ({
   items,
+  renderCrudButtons,
   handleView,
   handleEdit,
   handleDelete,
@@ -66,23 +67,11 @@ const KoiCart: React.FC<KoiCartProps> = ({
                   <span className="text-lg text-black">{koi.category_id}</span>
                 </p>
               </div>
-              <div className="actions p-2 flex space-x-2">
-                <CrudButton
-                  onClick={() => handleView(koi.id)}
-                  ariaLabel="View"
-                  svgPath="view.svg"
-                />
-                <CrudButton
-                  onClick={() => handleEdit(koi.id)}
-                  ariaLabel="Edit"
-                  svgPath="edit.svg"
-                />
-                <CrudButton
-                  onClick={() => handleDelete(koi.id)}
-                  ariaLabel="Delete"
-                  svgPath="delete.svg"
-                />
-              </div>
+              {renderCrudButtons && (
+                <div className="actions p-2 flex space-x-2">
+                  {renderCrudButtons(koi)}
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -18,6 +18,7 @@ import Loading from "~/components/loading/Loading";
 import KoiCreatePopup from "~/components/shared/KoiCreatePopup";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import { toast } from "react-toastify";
+import { CrudButton } from "~/components/shared/CrudButtonComponent";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -149,6 +150,26 @@ const BreederDetail: React.FC = () => {
   if (loading) return <Loading />;
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
+
+  const renderCrudButtons = (koi: KoiDetailModel) => (
+    <>
+      <CrudButton
+        onClick={() => handleView(koi.id)}
+        ariaLabel="View"
+        svgPath="view.svg"
+      />
+      <CrudButton
+        onClick={() => handleEdit(koi.id)}
+        ariaLabel="Edit"
+        svgPath="edit.svg"
+      />
+      <CrudButton
+        onClick={() => handleDelete(koi.id)}
+        ariaLabel="Delete"
+        svgPath="delete.svg"
+      />
+    </>
+  );
 
   const handleView = (id: number) => {
     navigate(`/kois/${id}`);
@@ -297,6 +318,7 @@ const BreederDetail: React.FC = () => {
           handleView={handleView}
           handleEdit={handleEdit}
           handleDelete={handleDelete}
+          renderCrudButtons={renderCrudButtons}
         />
       </div>
       <PaginationComponent

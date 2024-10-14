@@ -1,17 +1,21 @@
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { TextField, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
-import { Bid } from "~/components/BiddingHistory";
-import { KoiInfoGridComponent } from "~/components/koibiddingdetail/KoiInfoGridComponent";
+import "react-toastify/dist/ReactToastify.css";
+import { TextField, Typography } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+
+import { useUserData } from "~/contexts/useUserData";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
 import { ERROR_MESSAGE } from "~/constants/errorMessages";
 import { SUCCESS_MESSAGE } from "~/constants/successMessage";
 import { WEB_SOCKET_MESSAGE } from "~/constants/webSocketMessages";
-import { useUserData } from "~/contexts/useUserData";
+import { KoiDetailModel } from "~/types/kois.type";
+import { AuctionModel } from "~/types/auctions.type";
+import { AuctionKoi } from "~/types/auctionkois.type";
+import { Bid } from "~/components/BiddingHistory";
+
 import {
   fetchAuctionById,
   fetchAuctionKoiDetails,
@@ -23,21 +27,17 @@ import {
   disconnectWebSocket,
   subscribeToAuctionUpdates,
 } from "~/utils/websocket";
-import Sold from "../../assets/Sold.png";
-import BiddingHistory from "../../components/BiddingHistory";
-import NavigateButton from "../../components/shared/NavigateButton";
-import { KoiDetailModel } from "~/types/kois.type";
-import { AuctionModel } from "~/types/auctions.type";
-import { AuctionKoi } from "~/types/auctionkois.type";
-import Loading from "~/components/loading/Loading";
 import { formatCurrency } from "~/utils/currencyUtils";
 
-// Define the BidRequest interface
-export type BidRequest = {
-  auction_koi_id: number; // The ID of the auction koi
-  bid_amount: number; // The amount of the bid
-  bidder_id: number;
-};
+import { KoiInfoGridComponent } from "~/components/koibiddingdetail/KoiInfoGridComponent";
+import BiddingHistory from "~/components/BiddingHistory";
+import NavigateButton from "~/components/shared/NavigateButton";
+import Loading from "~/components/loading/Loading";
+
+import Sold from "~/assets/Sold.png";
+import { BidRequest } from "~/types/bid.types";
+import MediaGallery from "~/components/bidding/MediaGalleryComponent";
+import BiddingSection from "~/components/bidding/BiddingSectionComponent";
 
 const KoiBidding: React.FC = () => {
   const { auctionId, auctionKoiId } = useParams<{
@@ -94,16 +94,7 @@ const KoiBidding: React.FC = () => {
         setIsConnected(true);
         unsubscribe = subscribeToAuctionUpdates(
           Number(auctionKoiId),
-          (bidResponse: Bid) => {
-            if (auctionKoi && bidResponse.bid_amount > auctionKoi.current_bid) {
-              toast.success("New highest bid received!");
-            }
-            setLatestBid(bidResponse);
-            setAuctionKoi((prev) =>
-              prev ? { ...prev, current_bid: bidResponse.bid_amount } : null,
-            );
-            setBidAmount(bidResponse.bid_amount + (auctionKoi?.bid_step || 0));
-          },
+          handleBidUpdate,
         );
       });
     } else {
@@ -116,6 +107,17 @@ const KoiBidding: React.FC = () => {
     };
   }, [auction, auctionKoiId, isAuctionOngoing, auctionKoi]);
 
+  const handleBidUpdate = (bidResponse: Bid) => {
+    if (auctionKoi && bidResponse.bid_amount > auctionKoi.current_bid) {
+      toast.success("New highest bid received!");
+    }
+    setLatestBid(bidResponse);
+    setAuctionKoi((prev) =>
+      prev ? { ...prev, current_bid: bidResponse.bid_amount } : null,
+    );
+    setBidAmount(bidResponse.bid_amount + (auctionKoi?.bid_step || 0));
+  };
+
   const handlePlaceBid = useCallback(async () => {
     if (!user || !auctionKoi)
       return toast.error(ERROR_MESSAGE.REQUIRED_LOGIN_TO_BID);
@@ -124,9 +126,8 @@ const KoiBidding: React.FC = () => {
         auction_koi_id: auctionKoi.id,
         bid_amount: bidAmount,
         bidder_id: user.id,
-      });
+      } as BidRequest);
       toast.success(SUCCESS_MESSAGE.BID_PLACED);
-      // The WebSocket will handle updating the UI
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -142,169 +143,38 @@ const KoiBidding: React.FC = () => {
 
   return (
     <div className="container mx-auto">
-      <div className="ml-10 mt-6">
-        <NavigateButton
-          to={`/auctions/${auctionId}`}
-          icon={<FontAwesomeIcon icon={faArrowLeft} />}
-          text="Back to Auction"
-          className="rounded bg-gray-200 px-5 py-3 text-lg text-black transition hover:bg-gray-200"
-        />
-      </div>
+      <NavigateButton
+        to={`/auctions/${auctionId}`}
+        icon={<FontAwesomeIcon icon={faArrowLeft} />}
+        text="Back to Auction"
+        className="ml-10 mt-6 rounded bg-gray-200 px-5 py-3 text-lg text-black transition hover:bg-gray-200"
+      />
       <div className="m-5 flex flex-col gap-4 sm:flex-col md:flex-row">
-        {/* Koi Image and Media Gallery */}
         <div className="flex flex-col items-start justify-start w-[45%]">
-          <div className="relative h-96 w-full rounded-xl bg-[#4086c7] sm:h-128 md:h-144 lg:h-192">
-            {selectedMedia ? (
-              selectedMedia.includes("youtube") ? (
-                <iframe
-                  className="absolute inset-0 h-full w-full rounded-xl"
-                  src={selectedMedia}
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              ) : (
-                <img
-                  className="absolute inset-0 h-full w-full rounded-xl object-contain shadow-md transition duration-300 hover:shadow-2xl hover:ring-4 hover:ring-blue-400"
-                  src={selectedMedia}
-                  alt={koi.name}
-                />
-              )
-            ) : (
-              <img
-                className="absolute inset-0 h-full w-full rounded-xl object-contain shadow-md transition duration-300 hover:shadow-2xl hover:ring-4 hover:ring-blue-400"
-                src={koi.thumbnail}
-                alt={koi.name}
-              />
-            )}
-            {auctionKoi.is_sold && (
-              <div className="absolute -left-4 -top-4 z-10">
-                <img
-                  src={Sold}
-                  alt="Sold"
-                  className="h-[10rem] w-[10rem] transform rotate-[-20deg]"
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Media Gallery */}
-          <div className="mt-4 h-30 flex space-x-2 overflow-x-auto">
-            <img
-              src={koi.thumbnail}
-              alt="Main"
-              className="w-20 cursor-pointer rounded-md object-cover"
-              onClick={() => setSelectedMedia(koi.thumbnail)}
-            />
-            <img
-              src={koi.thumbnail}
-              alt="Main"
-              className="w-20 cursor-pointer rounded-md object-cover"
-              onClick={() => setSelectedMedia(koi.thumbnail)}
-            />
-            {/* {koi.additional_images?.map((img, index) => (
-              <img
-                key={index}
-                src={img}
-                alt={`Additional ${index + 1}`}
-                className="h-20 w-20 cursor-pointer rounded-md object-cover"
-                onClick={() => setSelectedMedia(img)}
-              />
-            ))} */}
-            <div
-              className="flex w-20 cursor-pointer items-center justify-center rounded-md bg-gray-200"
-              onClick={() =>
-                setSelectedMedia("https://www.youtube.com/embed/your-video-id")
-              }
-            ></div>
-          </div>
+          <MediaGallery
+            koi={koi}
+            auctionKoi={auctionKoi}
+            selectedMedia={selectedMedia}
+            setSelectedMedia={setSelectedMedia}
+          />
         </div>
-
-        {/* Koi Info and Bidding */}
         <div className="flex flex-col gap-5">
-          <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-2 text-lg">
-            <KoiInfoGridComponent
-              koi={koi}
-              auctionKoi={auctionKoi}
-              user={user}
-            />
-          </div>
-          <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-4 text-lg">
-            {!isAuctionEnded() && !auctionKoi.is_sold ? (
-              <div className="flex flex-col gap-2 rounded-2xl bg-[#F1F1F1] p-4">
-                <h3 className="mb-2 text-xl font-semibold text-center">
-                  Place Your Bid
-                </h3>
-                <TextField
-                  type="number"
-                  value={bidAmount}
-                  onChange={(e) => setBidAmount(Number(e.target.value))}
-                  variant="outlined" // You can change to "filled" or "standard" for different styles
-                  placeholder="Enter bid amount"
-                  fullWidth // Makes the input take the full width of its container
-                  inputProps={{
-                    style: { textAlign: "right" }, // Aligns text to the right
-                  }}
-                  sx={{
-                    // Custom styles
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: "10px", // Rounded corners
-                      "& fieldset": {
-                        borderColor: "gray", // Border color
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "green", // Border color on hover
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "green", // Border color when focused
-                      },
-                    },
-                  }}
-                />
-                <button
-                  onClick={handlePlaceBid}
-                  className="mt-2 w-full rounded-2xl bg-green-500 px-4 py-2 text-white hover:bg-green-600"
-                >
-                  Submit
-                </button>
-              </div>
-            ) : (
-              <div className="mb-4 rounded-2xl bg-gray-200">
-                <h3 className="mb-2 text-xl font-semibold">Past Bids</h3>
-                <p>
-                  {auctionKoi.current_bid > 0 ? (
-                    `This koi has been sold for ${formatCurrency(auctionKoi.current_bid)}`
-                  ) : (
-                    <div className="bg-gray-300 p-4 rounded-2xl">
-                      <span>No bids yet</span>
-                      <br />
-                      <span>Be the first to bid!</span>
-                    </div>
-                  )}
-                </p>
-              </div>
-            )}
-
-            {/* Conditionally render the Bid History section */}
-            {auctionKoi.current_bid > 0 && (
-              <>
-                <h3 className="mb-2 text-xl font-semibold">Bid History</h3>
-                <div className="rounded-2xl bg-gray-300 p-4 max-h-[50rem] overflow-auto">
-                  <div className="max-h-full overflow-auto">
-                    <BiddingHistory
-                      auctionKoiId={auctionKoi.id}
-                      latestBid={latestBid}
-                    />
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
+          <KoiInfoGridComponent koi={koi} auctionKoi={auctionKoi} user={user} />
+          <BiddingSection
+            isAuctionEnded={isAuctionEnded()}
+            auctionKoi={auctionKoi}
+            bidAmount={bidAmount}
+            setBidAmount={setBidAmount}
+            handlePlaceBid={handlePlaceBid}
+            latestBid={latestBid}
+          />
         </div>
       </div>
       {!isAuctionEnded() && (
         <Typography
-          className={`text-lg ${isConnected ? "text-green-500" : "text-red-500"}`}
+          className={`text-lg ${
+            isConnected ? "text-green-500" : "text-red-500"
+          }`}
         >
           {isConnected
             ? WEB_SOCKET_MESSAGE.CONNECTED

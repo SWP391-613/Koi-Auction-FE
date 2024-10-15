@@ -26,6 +26,7 @@ export const BREEDER_KOI_MANAGEMENT_HEADER = [
 ];
 
 export const STAFF_MANAGEMENT_HEADER = [
+  "Id",
   "Staff",
   "First Name",
   "Last Name",
@@ -41,6 +42,7 @@ export const STAFF_MANAGEMENT_HEADER = [
 ];
 
 export const BREEDER_MANAGEMENT_HEADER = [
+  "ID",
   "Breeder",
   "Email",
   "Phone Number",

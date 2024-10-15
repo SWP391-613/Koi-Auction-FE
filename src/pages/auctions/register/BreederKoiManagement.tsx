@@ -1,25 +1,14 @@
 import { Alert, CircularProgress, Container } from "@mui/material";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
-import {
-  BREEDER_KOI_MANAGEMENT_HEADER,
-  KOI_MANAGEMENT_HEADER,
-} from "~/constants/tableHeader";
+import { BREEDER_KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { KoiDetailModel } from "~/types/kois.type";
-import {
-  createKoi,
-  deleteKoiById,
-  fetchKoisOfBreederWithStatus,
-} from "~/utils/apiUtils";
+import { deleteKoiById, fetchKoisOfBreederWithStatus } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
-import {
-  createFormData,
-  extractErrorMessage,
-  getCategoryName,
-} from "~/utils/dataConverter";
+import { extractErrorMessage, getCategoryName } from "~/utils/dataConverter";
 import PaginationComponent from "../../../components/pagination/Pagination";
 
 const BreederKoiManagement = () => {

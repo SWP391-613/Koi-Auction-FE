@@ -105,6 +105,13 @@ const BreederManagement = () => {
         <tbody className="divide-y bg-white dark:divide-gray-700 dark:bg-gray-800">
           {breeders.map((breeder) => (
             <tr key={breeder.id} className="text-gray-700 dark:text-gray-400">
+              <td>
+                <div className="px-4 py-3">
+                  <p className="whitespace-no-wrap text-gray-900">
+                    {breeder.id}
+                  </p>
+                </div>
+              </td>
               <td className="px-4 py-3">
                 <div className="flex items-center text-sm">
                   <div className="relative mr-3 hidden h-[3rem] w-[3rem] rounded-full md:block">

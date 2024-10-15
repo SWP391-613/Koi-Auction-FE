@@ -1,7 +1,7 @@
 export interface KoisResponse {
   total_page: number;
   total_item: number;
-  items: KoiDetailModel[];
+  item: KoiDetailModel[];
 }
 
 // i dont want to change this because this related to many files in the project, so i will create new type KoiModel

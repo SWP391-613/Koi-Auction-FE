@@ -170,7 +170,7 @@ export const AuctionsManagement: React.FC = () => {
 
   const handleDeleteAuction = async (id: number): Promise<void> => {
     try {
-      await deleteAuction(id);
+      await deleteAuction(id, token!);
       toast.success("Auction deleted successfully");
     } catch (error) {
       const errorMessage = extractErrorMessage(

@@ -3,17 +3,26 @@ import React, { useEffect, useState, useCallback } from "react";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import { useAuth } from "~/contexts/AuthContext";
 import { environment } from "~/environments/environment";
-import { KoiDetailModel } from "~/types/kois.type";
+import {
+  KoiApiResponse,
+  KoiDetailModel,
+  KoisResponse,
+} from "~/types/kois.type";
 import { getCookie } from "~/utils/cookieUtils";
 import KoiCart from "./KoiCart";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { extractErrorMessage } from "~/utils/dataConverter";
+import PaginationComponent from "~/components/pagination/Pagination";
 
 const VerifyKoiList: React.FC = () => {
   const userId = getCookie("user_id");
   const accessToken = getCookie("access_token");
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
+  const [totalKoi, setTotalKoi] = useState(0); // State to hold total koi count
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMorePages, setHasMorePages] = useState(true); // To track if more pages are available
+  const itemsPerPage = 16; // Number of koi per page
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { isLoggedIn } = useAuth();
@@ -83,19 +92,26 @@ const VerifyKoiList: React.FC = () => {
       setIsLoading(true);
       const API_URL =
         import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
-      const response = await axios.get(`${API_URL}/kois/status`, {
-        params: {
-          status: "UNVERIFIED",
+      const response = await axios.get<KoiApiResponse>(
+        `${API_URL}/kois/status`,
+        {
+          params: {
+            status: "UNVERIFIED",
+            page: currentPage - 1,
+            limit: itemsPerPage,
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      );
 
-      if (Array.isArray(response.data)) {
-        setKois(response.data);
-      } else {
-        setError("Invalid data format received from API");
+      const data = response.data; // Access the data property of the response
+
+      if (data) {
+        setKois(data.item);
+        setTotalKoi(data.total_item);
+        setHasMorePages(data.total_page > currentPage);
       }
     } catch (error) {
       console.error("Cannot fetch Koi data:", error);
@@ -103,7 +119,7 @@ const VerifyKoiList: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [accessToken]);
+  }, [accessToken, currentPage, itemsPerPage]);
 
   useEffect(() => {
     if (isLoggedIn && userId && accessToken) {
@@ -139,6 +155,13 @@ const VerifyKoiList: React.FC = () => {
     </>
   );
 
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number,
+  ) => {
+    setCurrentPage(page); // Update the current page when pagination changes
+  };
+
   return (
     <div>
       {kois.length > 0 ? (
@@ -152,6 +175,11 @@ const VerifyKoiList: React.FC = () => {
       ) : (
         <div>No Koi data available</div>
       )}
+      <PaginationComponent
+        totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

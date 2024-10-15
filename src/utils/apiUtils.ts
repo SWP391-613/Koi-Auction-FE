@@ -550,9 +550,16 @@ export const verifyOtp = async (email: string, otp: string): Promise<any> => {
   }
 };
 
-export const deleteAuction = async (id: number): Promise<void> => {
+export const deleteAuction = async (
+  id: number,
+  accessToken: string,
+): Promise<void> => {
   try {
-    const response = await axios.delete(`${API_URL}/auctions/${id}`);
+    const response = await axios.delete(`${API_URL}/auctions/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     if (response.status === 204) {
       console.log("Auction deleted successfully");
     }

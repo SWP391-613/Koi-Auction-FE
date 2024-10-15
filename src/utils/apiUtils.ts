@@ -20,12 +20,7 @@ import {
   UserLoginResponse,
   UserRegisterDTO,
 } from "~/types/users.type";
-import { AuctionDTO, AuctionModel } from "~/types/auctions.type";
-import { AuctionKoi } from "~/types/auctionkois.type";
-import { OrderDetail } from "~/pages/user/UserOrderDetail";
-import { Order } from "~/pages/user/UserOrder";
-import { OrderDetailWithKoi } from "~/pages/user/UserOrderDetail";
-import { PaymentRequest } from "~/pages/user/EditOrderDialog";
+import { AuctionDTO } from "~/types/auctions.type";
 import { environment } from "../environments/environment";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;

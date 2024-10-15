@@ -14,7 +14,11 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { fetchUserOrders, updateOrder } from "../../utils/apiUtils";
+import {
+  createOrderPayment,
+  fetchUserOrders,
+  updateOrder,
+} from "../../utils/apiUtils";
 import { useUserData } from "~/contexts/useUserData";
 import PaginationComponent from "~/components/pagination/Pagination";
 import UserOrderDetail from "./UserOrderDetail";
@@ -38,6 +42,14 @@ export type Order = {
   tracking_number: string;
   payment_method: string;
   note: string;
+};
+
+type PaymentDTO = {
+  payment_amount: number;
+  payment_method: string;
+  payment_type: string;
+  order_id: number | null;
+  user_id: number;
 };
 
 const UserOrder = () => {
@@ -150,7 +162,7 @@ const UserOrder = () => {
 
   const handlePayment = async (order: Order) => {
     try {
-      const paymentRequest: PaymentRequest = {
+      const paymentRequest: PaymentDTO = {
         payment_amount: order.total_money,
         payment_method: order.payment_method,
         payment_type: "ORDER",

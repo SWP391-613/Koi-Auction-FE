@@ -132,17 +132,11 @@ const UserDetail: React.FC = () => {
                 ? formatCurrency(user.account_balance)
                 : "No money"}
             </p>
-            <DepositComponent
-              userId={user.id}
-              token={accessToken || ""}
-              onDepositSuccess={() => {
-                // Refresh user data after successful deposit
-                setUser({ ...user, account_balance: user.account_balance });
-              }}
-            />
+            <DepositComponent userId={user.id} token={accessToken || ""} />
           </div>
           <div className="update-field">
             <select
+              title="Select field to update"
               value={updateField}
               onChange={(e) => setUpdateField(e.target.value)}
               className="update-select"

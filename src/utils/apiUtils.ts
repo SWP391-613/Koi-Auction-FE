@@ -25,7 +25,7 @@ import {
 } from "~/types/users.type";
 import { AuctionDTO } from "~/types/auctions.type";
 import { environment } from "../environments/environment";
-import { PaymentDTO } from "~/pages/user/UserOrder";
+import { PaymentDTO } from "~/pages/detail/member/UserOrder";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -82,11 +82,11 @@ export const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
 
   if (isToday(date)) {
-    return `Today, ${format(date, "MMM d, yyyy 'at' h:mm a")}`;
+    return `${format(date, "MMM d, yyyy 'at' h:mm a")}`;
   } else if (isYesterday(date)) {
-    return `Yesterday, ${format(date, "MMM d, yyyy 'at' h:mm a")}`;
+    return `${format(date, "MMM d, yyyy 'at' h:mm a")}`;
   } else if (isTomorrow(date)) {
-    return `Tomorrow, ${format(date, "MMM d, yyyy 'at' h:mm a")}`;
+    return `${format(date, "MMM d, yyyy 'at' h:mm a")}`;
   } else {
     return format(date, "MMM d, yyyy 'at' h:mm a");
   }

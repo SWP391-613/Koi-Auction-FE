@@ -33,3 +33,20 @@ export const getAuctionStatusColor = (
       return "bg-gray-500 text-white"; // Fallback color in case of an unexpected status
   }
 };
+
+export const getOrderStatusColor = (status: string) => {
+  switch (status.toLowerCase()) {
+    case "pending":
+      return "warning";
+    case "shipped":
+      return "info";
+    case "delivered":
+      return "success";
+    case "cancelled":
+      return "error";
+    case "processing":
+      return "primary";
+    default:
+      return "default";
+  }
+};

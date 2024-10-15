@@ -99,10 +99,12 @@ export const getBreederName = (breederId: number): string => {
   return breeder?.firstName || "Unknown Breeder";
 };
 
-export const displayKoiStatus = (status: KoiTrackingStatus): string => {
-  if (status === "SOLD") {
+export const displayKoiStatus = (
+  status: KoiTrackingStatus | boolean,
+): string => {
+  if (status == true) {
     return "Sold!";
   } else {
-    return "Ended!"; // Return an empty string if not SOLD (or you can return some other text if needed)
+    return "Available";
   }
 };

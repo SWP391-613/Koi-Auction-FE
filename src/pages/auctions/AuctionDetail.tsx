@@ -24,6 +24,7 @@ import {
 import { formatCurrency } from "~/utils/currencyUtils";
 import { displayKoiStatus } from "~/utils/dataConverter";
 import { getAuctionStatusV2 } from "~/utils/dateTimeUtils";
+import { format, isPast, parse } from "date-fns"; // Make sure to install date-fns if you haven't already
 
 const AuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();
@@ -70,6 +71,12 @@ const AuctionDetail: React.FC = () => {
 
     fetchAuction();
   }, [id]);
+
+  const isAuctionEnded = (endDate: string) => {
+    console.log("endDate", endDate);
+    const parsedDate = parse(endDate, "MMM d, yyyy 'at' h:mm a", new Date());
+    return isPast(parsedDate);
+  };
 
   if (isLoading) {
     return (
@@ -167,13 +174,21 @@ const AuctionDetail: React.FC = () => {
                 </h2>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-lg font-semibold text-black w-1/2 flex gap-3 justify-start items-center">
-                    {displayKoiStatus(combinedKoiData.status_name) ? (
+                    {combinedKoiData.auctionKoiData.is_sold ? (
                       <>
                         <FontAwesomeIcon icon={faClock} />
-                        {displayKoiStatus(combinedKoiData.status_name)}
+                        Sold!
+                      </>
+                    ) : isAuctionEnded(auction.end_time.toString()) ? (
+                      <>
+                        <FontAwesomeIcon icon={faClock} />
+                        Ended!
                       </>
                     ) : (
-                      <span>&nbsp;</span> // Empty space to maintain layout
+                      <>
+                        <FontAwesomeIcon icon={faClock} />
+                        Available
+                      </>
                     )}
                   </span>
                   <span

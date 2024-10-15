@@ -12,6 +12,8 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
+  Avatar,
+  Divider,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -26,6 +28,13 @@ import {
 import EditOrderDialog from "./EditOrderDialog";
 import UserOrderDetail from "./UserOrderDetail";
 import PaginationComponent from "~/components/common/PaginationComponent";
+import { formatCurrency } from "~/utils/currencyUtils";
+import PaymentIcon from "@mui/icons-material/Payment";
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import HomeIcon from "@mui/icons-material/Home";
+import { getOrderStatusColor } from "~/utils/colorUtils";
 
 export type Order = {
   id: number;
@@ -109,23 +118,6 @@ const UserOrder = () => {
     setSelectedOrderId(null);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "pending":
-        return "warning";
-      case "shipped":
-        return "info";
-      case "delivered":
-        return "success";
-      case "cancelled":
-        return "error";
-      case "processing":
-        return "primary";
-      default:
-        return "default";
-    }
-  };
-
   const handleEditOrder = (order: Order) => {
     setEditingOrder(order);
     setEditDialogOpen(true);
@@ -174,11 +166,8 @@ const UserOrder = () => {
       );
 
       if (paymentResponse) {
-        // Update the order status to PROCESS
-        const updatedOrder = { ...order, status: "PROCESS" };
-        await updateOrder(updatedOrder, getCookie("access_token") || "");
+        const updatedOrder = { ...order, status: "PROCESSING" };
 
-        // Update the local state
         setOrders(orders.map((o) => (o.id === order.id ? updatedOrder : o)));
 
         if (order.payment_method === "Cash") {
@@ -238,7 +227,7 @@ const UserOrder = () => {
         </Typography>
       </Box>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={3}>
         {orders.map((order) => (
           <Grid item xs={12} sm={6} md={4} key={order.id}>
             <Card
@@ -250,10 +239,27 @@ const UserOrder = () => {
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
+                borderRadius: 2,
+                overflow: "hidden",
               }}
             >
+              <Box sx={{ bgcolor: theme.palette.primary.main, py: 2, px: 3 }}>
+                <Typography
+                  variant="h6"
+                  component="div"
+                  color="white"
+                  fontWeight="bold"
+                >
+                  Order #{order.id}
+                </Typography>
+              </Box>
               <CardContent
-                sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}
+                sx={{
+                  flexGrow: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  p: 3,
+                }}
               >
                 <Box
                   sx={{
@@ -263,91 +269,151 @@ const UserOrder = () => {
                     mb: 2,
                   }}
                 >
-                  <Typography
-                    variant={isMobile ? "subtitle1" : "h6"}
-                    component="div"
-                  >
-                    Order #{order.id}
+                  <Typography color="text.secondary" variant="body2">
+                    {new Date(order.order_date).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </Typography>
                   <Chip
                     label={order.status}
-                    color={getStatusColor(order.status)}
+                    color={getOrderStatusColor(order.status)}
                     size="small"
+                    sx={{ fontWeight: "bold" }}
                   />
                 </Box>
-                <Typography
-                  color="text.secondary"
-                  variant={isMobile ? "body2" : "body1"}
-                  gutterBottom
-                >
-                  {new Date(order.order_date).toLocaleDateString()}
-                </Typography>
-                <Typography variant={isMobile ? "body2" : "body1"} gutterBottom>
-                  {order.first_name} {order.last_name}
-                </Typography>
-                <Typography
-                  variant={isMobile ? "body1" : "h6"}
-                  fontWeight="bold"
-                  color="green"
-                  gutterBottom
-                >
-                  Total: ${order.total_money.toFixed(2)}
-                </Typography>
-                <Typography variant="body2" color="green" gutterBottom>
-                  Shipping: {order.shipping_method}
-                </Typography>
-                <Typography variant="body2" color="purple" gutterBottom>
-                  Payment Method: {order.payment_method}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                  }}
-                >
-                  Address: {order.shipping_address}
-                </Typography>
-                <Box
-                  sx={{
-                    mt: "auto",
-                    pt: 2,
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {order.status.toLowerCase() === "pending" && (
-                    <>
-                      <Button
-                        size={isMobile ? "small" : "medium"}
-                        color="secondary"
-                        variant="outlined"
-                        startIcon={<EditIcon />}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEditOrder(order);
-                        }}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        size={isMobile ? "small" : "medium"}
-                        color="primary"
-                        variant="contained"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handlePayment(order);
-                        }}
-                      >
-                        Pay
-                      </Button>
-                    </>
-                  )}
+
+                <Divider sx={{ my: 2 }} />
+
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: theme.palette.secondary.main,
+                      mr: 2,
+                      width: 32,
+                      height: 32,
+                    }}
+                  >
+                    <ShoppingBasketIcon fontSize="small" />
+                  </Avatar>
+                  <Typography variant="body1" fontWeight="medium">
+                    {order.first_name} {order.last_name}
+                  </Typography>
                 </Box>
+
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: theme.palette.success.main,
+                      mr: 2,
+                      width: 32,
+                      height: 32,
+                    }}
+                  >
+                    <CreditCardIcon fontSize="small" />
+                  </Avatar>
+                  <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    color="success.main"
+                  >
+                    {formatCurrency(order.total_money)}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: theme.palette.info.main,
+                      mr: 2,
+                      width: 32,
+                      height: 32,
+                    }}
+                  >
+                    <LocalShippingIcon fontSize="small" />
+                  </Avatar>
+                  <Typography variant="body2">
+                    {order.shipping_method}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: theme.palette.warning.main,
+                      mr: 2,
+                      width: 32,
+                      height: 32,
+                    }}
+                  >
+                    <PaymentIcon fontSize="small" />
+                  </Avatar>
+                  <Typography variant="body2">
+                    {order.payment_method}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: theme.palette.error.main,
+                      mr: 2,
+                      width: 32,
+                      height: 32,
+                    }}
+                  >
+                    <HomeIcon fontSize="small" />
+                  </Avatar>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                    }}
+                  >
+                    {order.shipping_address}
+                  </Typography>
+                </Box>
+
+                {order.status.toLowerCase() === "pending" && (
+                  <Box
+                    sx={{
+                      mt: "auto",
+                      pt: 2,
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Button
+                      size={isMobile ? "small" : "medium"}
+                      color="secondary"
+                      variant="outlined"
+                      startIcon={<EditIcon />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditOrder(order);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      size={isMobile ? "small" : "medium"}
+                      color="success"
+                      variant="contained"
+                      startIcon={<PaymentIcon />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePayment(order);
+                      }}
+                    >
+                      Pay
+                    </Button>
+                  </Box>
+                )}
               </CardContent>
             </Card>
           </Grid>

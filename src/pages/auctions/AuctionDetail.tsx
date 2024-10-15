@@ -1,24 +1,18 @@
 import {
   faArrowCircleRight,
-  faArrowLeft,
-  faArrowRight,
   faCakeCandles,
   faClock,
   faEarthAsia,
-  faFish,
-  faHandHoldingHeart,
   faRuler,
   faStar,
   faTag,
-  faTicketSimple,
   faUser,
   faVenusMars,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import NavigateButton from "~/components/shared/NavigateButton";
-import { AUCTION_STATUS } from "~/constants/auctionStatus";
 import { useAuth } from "~/contexts/AuthContext";
 import { AuctionKoi, KoiWithAuctionKoiData } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
@@ -28,12 +22,8 @@ import {
   getKoiById,
 } from "~/utils/apiUtils"; // Assume we have this API function
 import { formatCurrency } from "~/utils/currencyUtils";
-import {
-  convertBidMethodToReadable,
-  displayKoiStatus,
-  getCategoryName,
-} from "~/utils/dataConverter";
-import { getAuctionStatus, getAuctionStatusV2 } from "~/utils/dateTimeUtils";
+import { displayKoiStatus } from "~/utils/dataConverter";
+import { getAuctionStatusV2 } from "~/utils/dateTimeUtils";
 
 const AuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();
@@ -42,33 +32,59 @@ const AuctionDetail: React.FC = () => {
   const [koiWithAuctionKoiData, setKoiWithAuctionKoiData] = useState<
     KoiWithAuctionKoiData[]
   >([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAuction = async () => {
-      const auctionData = await fetchAuctionById(Number(id));
-      setAuction(auctionData);
+      setIsLoading(true);
+      setError(null);
+      try {
+        const auctionData = await fetchAuctionById(Number(id));
+        setAuction(auctionData);
 
-      if (auctionData) {
-        const auctionKoiData = await fetchAuctionKoi(auctionData.id!);
-        const koiDetailsPromises = auctionKoiData.map(
-          (auctionKoi: AuctionKoi) => getKoiById(auctionKoi.koi_id),
-        );
-        const koiDetails = await Promise.all(koiDetailsPromises);
+        if (auctionData) {
+          const auctionKoiData = await fetchAuctionKoi(auctionData.id!);
+          const koiDetailsPromises = auctionKoiData.map((auctionKoi) =>
+            getKoiById(auctionKoi.koi_id),
+          );
+          const koiDetails = await Promise.all(koiDetailsPromises);
 
-        const combined = koiDetails.map((koiDetail, index) => ({
-          ...koiDetail,
-          auctionKoiData: auctionKoiData[index],
-        }));
+          const combined = koiDetails.map((koiDetail, index) => ({
+            ...koiDetail,
+            auctionKoiData: auctionKoiData[index],
+          }));
 
-        setKoiWithAuctionKoiData(combined);
+          setKoiWithAuctionKoiData(combined);
+        } else {
+          setError("Auction not found.");
+        }
+      } catch (err) {
+        console.error("Error fetching auction details:", err);
+        setError("Failed to load auction details. Please try again later.");
+      } finally {
+        setIsLoading(false);
       }
     };
+
     fetchAuction();
   }, [id]);
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="py-8 text-center text-red-500">{error}</div>;
+  }
+
   if (!auction) {
-    return <div className="py-8 text-center">Auction not found.</div>;
+    return <div className="py-8 text-center">No auction data available.</div>;
   }
 
   return (

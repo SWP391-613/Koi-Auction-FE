@@ -15,7 +15,7 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
-    <Box display="flex" height="100vh">
+    <Box display="flex" height="">
       <Box
         component="nav"
         sx={{ width: "240px", backgroundColor: "#f4f4f4", p: 2 }}

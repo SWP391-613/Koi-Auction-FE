@@ -1,29 +1,26 @@
 import axios, { AxiosError } from "axios";
-import { environment } from "../environments/environment";
-import {
-  KoiApiResponse,
-  KoiDetailModel,
-  KoisResponse,
-  KoiTrackingStatus,
-} from "~/types/kois.type";
+import { format, isToday, isTomorrow, isYesterday } from "date-fns";
 import { Bid } from "~/components/BiddingHistory";
-import { format, isToday, isYesterday, isTomorrow } from "date-fns";
-import { KoiOfBreeder as KoisOfBreeder } from "~/pages/breeder/BreederDetail";
 import { BidRequest } from "~/pages/auctions/KoiBidding";
+import { KoiOfBreeder as KoisOfBreeder } from "~/pages/breeder/BreederDetail";
+import { Order } from "~/pages/user/UserOrder";
+import { OrderDetail, OrderDetailWithKoi } from "~/pages/user/UserOrderDetail";
+import { AuctionKoi } from "~/types/auctionkois.type";
+import { AuctionModel } from "~/types/auctions.type";
+import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";
+import {
+  BreedersResponse,
+  KoisResponse,
+  MembersResponse,
+} from "~/types/paginated.types";
 import {
   LoginDTO,
-  UserRegisterDTO,
-  UserLoginResponse,
-  StaffRegisterDTO,
   Staff,
-  MembersResponse,
-  BreedersResponse,
+  StaffRegisterDTO,
+  UserLoginResponse,
+  UserRegisterDTO,
 } from "~/types/users.type";
-import { AuctionDTO, AuctionModel } from "~/types/auctions.type";
-import { AuctionKoi } from "~/types/auctionkois.type";
-import { OrderDetail } from "~/pages/user/UserOrderDetail";
-import { Order } from "~/pages/user/UserOrder";
-import { OrderDetailWithKoi } from "~/pages/user/UserOrderDetail";
+import { environment } from "../environments/environment";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -677,8 +674,8 @@ export const getMembersData = async (
 export const getKoiData = async (
   page: number,
   limit: number,
-): Promise<KoiApiResponse> => {
-  const response = await axios.get<KoiApiResponse>(
+): Promise<KoisResponse> => {
+  const response = await axios.get<KoisResponse>(
     "http://localhost:4000/api/v1/kois",
     {
       params: {

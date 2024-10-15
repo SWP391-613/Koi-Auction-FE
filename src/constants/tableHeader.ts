@@ -53,3 +53,19 @@ export const BREEDER_MANAGEMENT_HEADER = [
   "Balance",
   "Actions",
 ];
+
+export const MEMBER_MANAGEMENT_HEADER = [
+  "ID",
+  "Member",
+  "First Name",
+  "Last Name",
+  "Phone Number",
+  "Email",
+  "Address",
+  "Status",
+  "Active",
+  "Subscription",
+  "Date of Birth",
+  "Balance",
+  "Actions",
+];

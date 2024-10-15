@@ -1,19 +1,16 @@
 import axios from "axios";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import PaginationComponent from "~/components/pagination/Pagination";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import { useAuth } from "~/contexts/AuthContext";
 import { environment } from "~/environments/environment";
-import {
-  KoiApiResponse,
-  KoiDetailModel,
-  KoisResponse,
-} from "~/types/kois.type";
+import { KoiDetailModel } from "~/types/kois.type";
+import { KoisResponse } from "~/types/paginated.types";
 import { getCookie } from "~/utils/cookieUtils";
-import KoiCart from "./KoiCart";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { extractErrorMessage } from "~/utils/dataConverter";
-import PaginationComponent from "~/components/pagination/Pagination";
+import KoiCart from "./KoiCart";
 
 const VerifyKoiList: React.FC = () => {
   const userId = getCookie("user_id");
@@ -92,19 +89,16 @@ const VerifyKoiList: React.FC = () => {
       setIsLoading(true);
       const API_URL =
         import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
-      const response = await axios.get<KoiApiResponse>(
-        `${API_URL}/kois/status`,
-        {
-          params: {
-            status: "UNVERIFIED",
-            page: currentPage - 1,
-            limit: itemsPerPage,
-          },
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+      const response = await axios.get<KoisResponse>(`${API_URL}/kois/status`, {
+        params: {
+          status: "UNVERIFIED",
+          page: currentPage - 1,
+          limit: itemsPerPage,
         },
-      );
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
       const data = response.data; // Access the data property of the response
 

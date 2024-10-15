@@ -1,6 +1,6 @@
 import { KoiDetailModel } from "./kois.type";
 
-export interface AuctionKoi {
+export type AuctionKoi = {
   id: number;
   auction_id: number;
   koi_id: number;
@@ -10,7 +10,7 @@ export interface AuctionKoi {
   is_sold: boolean;
   bid_method: string;
   bid_step: number;
-}
+};
 
 export interface KoiWithAuctionKoiData extends KoiDetailModel {
   auctionKoiData: AuctionKoi;

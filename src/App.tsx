@@ -37,7 +37,6 @@ import { AuctionsManagement } from "./pages/manager/auctions/AuctionsManagement"
 import Settings from "./pages/manager/settings/Settings";
 
 // Breeder pages
-import BreederDetail from "./pages/breeder/BreederDetail";
 
 // Staff pages
 import StaffLayout from "./pages/staff/Staff";
@@ -47,7 +46,6 @@ import UserOrder from "./pages/user/UserOrder";
 // Types
 import AddKoiToAuction from "./pages/auctions/register/AddKoiToAuction";
 import KoiRegisterAuctionDetail from "./pages/auctions/register/KoiRegisterAuctionDetail";
-import KoiEditDetail from "./pages/kois/KoiEditDetail";
 import BreederLayout from "./pages/manager/breeder/BreederLayout";
 import BreederManagement from "./pages/manager/breeder/BreederManagement";
 import KoiManagement from "./pages/manager/koi/KoiManagement";
@@ -100,27 +98,12 @@ function App() {
 
               {/* Manager and Staff protected routes */}
               <Route element={<ProtectedRoute />}>
-                <Route path="/managers" element={<Manager />}>
-                  <Route path="auctions" element={<AuctionsManagement />} />
-                  <Route path="member" element={<MemberManagement />} />
-                  <Route path="breeder" element={<BreederManagement />} />
-                  <Route path="staff" element={<StaffManagement />} />
-                  <Route path="setting" element={<Settings />} />
-                  <Route path="koi" element={<KoiManagement />} />
-                  <Route path="koi-detail" element={<KoiDetail />} />
-                </Route>
+                <Route path="/managers/*" element={<Manager />}></Route>
               </Route>
 
               {/* Breeder protected routes */}
               <Route element={<ProtectedRoute />}>
-                <Route path="/breeders" element={<BreederLayout />}>
-                  <Route path="" element={<BreederDetail />} />
-                  <Route
-                    path="payments/vnpay-payment-return"
-                    element={<VNPayReturn />}
-                  />
-                  <Route path="kois/:id/edit" element={<KoiEditDetail />} />
-                </Route>
+                <Route path="/breeders/*" element={<BreederLayout />}></Route>
               </Route>
 
               {/* Staff protected routes */}

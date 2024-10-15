@@ -6,9 +6,9 @@ import { getStatusColor } from "~/utils/colorUtils";
 interface KoiCartProps {
   items: KoiDetailModel[];
   renderCrudButtons?: (koi: KoiDetailModel) => ReactNode;
-  handleView: (id: number) => void;
-  handleEdit: (id: number) => void;
-  handleDelete: (id: number) => void;
+  handleView?: (id: number) => void;
+  handleEdit?: (id: number) => void;
+  handleDelete?: (id: number) => void;
 }
 
 const KoiCart: React.FC<KoiCartProps> = ({

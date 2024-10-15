@@ -173,7 +173,7 @@ const KoiManagement = () => {
           </Typography>
           <Button
             variant="contained"
-            color="primary"
+            color="success"
             onClick={handleOpenCreateDialog}
             className="mb-4"
           >

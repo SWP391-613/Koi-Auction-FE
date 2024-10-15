@@ -1,22 +1,24 @@
 import axios, { AxiosError } from "axios";
-import { environment } from "../environments/environment";
-import {
-  KoiApiResponse,
-  KoiDetailModel,
-  KoisResponse,
-} from "~/types/kois.type";
+import { format, isToday, isTomorrow, isYesterday } from "date-fns";
 import { Bid } from "~/components/BiddingHistory";
-import { format, isToday, isYesterday, isTomorrow } from "date-fns";
-import { KoiOfBreeder as KoisOfBreeder } from "~/pages/breeder/BreederDetail";
 import { BidRequest } from "~/pages/auctions/KoiBidding";
+import { KoiOfBreeder as KoisOfBreeder } from "~/pages/breeder/BreederDetail";
+import { Order } from "~/pages/user/UserOrder";
+import { OrderDetail, OrderDetailWithKoi } from "~/pages/user/UserOrderDetail";
+import { AuctionKoi, BidMethod } from "~/types/auctionkois.type";
+import { AuctionModel } from "~/types/auctions.type";
+import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";
+import {
+  BreedersResponse,
+  KoisResponse,
+  MembersResponse,
+} from "~/types/paginated.types";
 import {
   LoginDTO,
-  UserRegisterDTO,
-  UserLoginResponse,
-  StaffRegisterDTO,
   Staff,
-  MembersResponse,
-  BreedersResponse,
+  StaffRegisterDTO,
+  UserLoginResponse,
+  UserRegisterDTO,
 } from "~/types/users.type";
 import { AuctionDTO, AuctionModel } from "~/types/auctions.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
@@ -24,6 +26,7 @@ import { OrderDetail } from "~/pages/user/UserOrderDetail";
 import { Order } from "~/pages/user/UserOrder";
 import { OrderDetailWithKoi } from "~/pages/user/UserOrderDetail";
 import { PaymentRequest } from "~/pages/user/EditOrderDialog";
+import { environment } from "../environments/environment";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -90,12 +93,12 @@ export const formatDate = (dateString: string): string => {
   }
 };
 
-export const createAuctionFromApi = (apiData: AuctionDTO): AuctionDTO => {
+export const createAuctionFromApi = (apiData: AuctionModel): AuctionModel => {
   return {
     id: apiData.id,
     title: apiData.title,
-    start_time: formatDate(apiData.start_time),
-    end_time: formatDate(apiData.end_time),
+    start_time: formatDate(apiData.start_time.toString()),
+    end_time: formatDate(apiData.end_time.toString()),
     status: apiData.status,
     auctioneer_id: apiData.auctioneer_id,
   };
@@ -205,7 +208,7 @@ export const fetchAuctionsByStatus = async (
 
 export const fetchAuctionById = async (
   id: number,
-): Promise<AuctionDTO | null> => {
+): Promise<AuctionModel | null> => {
   try {
     const response = await axios.get(`${API_URL}/auctions/${id}`);
     return createAuctionFromApi(response.data);
@@ -247,12 +250,45 @@ export const fetchKoisOfBreeder = async (
   breeder_id: number,
   page: number,
   limit: number,
+  access_token: string,
 ): Promise<KoisOfBreeder | null> => {
   try {
     const response = await axios.get<KoisOfBreeder>(
       `${API_URL}/breeders/kois`,
       {
         params: { breeder_id, page, limit },
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.error(
+        "Error fetching koi's breeder data:",
+        error.response?.data?.message || error.message,
+      );
+    }
+    throw error;
+  }
+};
+
+export const fetchKoisOfBreederWithStatus = async (
+  breeder_id: number,
+  status: KoiTrackingStatus,
+  page: number,
+  limit: number,
+  access_token: string,
+): Promise<KoisOfBreeder | null> => {
+  try {
+    const response = await axios.get<KoisOfBreeder>(
+      `${API_URL}/breeders/kois/status`,
+      {
+        params: { breeder_id, status, page, limit },
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
       },
     );
     return response.data;
@@ -524,9 +560,16 @@ export const verifyOtp = async (email: string, otp: string): Promise<any> => {
   }
 };
 
-export const deleteAuction = async (id: number): Promise<void> => {
+export const deleteAuction = async (
+  id: number,
+  accessToken: string,
+): Promise<void> => {
   try {
-    const response = await axios.delete(`${API_URL}/auctions/${id}`);
+    const response = await axios.delete(`${API_URL}/auctions/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     if (response.status === 204) {
       console.log("Auction deleted successfully");
     }
@@ -644,8 +687,8 @@ export const getMembersData = async (
 export const getKoiData = async (
   page: number,
   limit: number,
-): Promise<KoiApiResponse> => {
-  const response = await axios.get<KoiApiResponse>(
+): Promise<KoisResponse> => {
+  const response = await axios.get<KoisResponse>(
     "http://localhost:4000/api/v1/kois",
     {
       params: {
@@ -845,5 +888,48 @@ export const createOrderPayment = async (
   } catch (error) {
     console.error("Error creating order payment:", error);
     throw error;
+  }
+};
+
+export const postAuctionKoi = async (
+  koi_id: number,
+  auction_id: number,
+  base_price: number,
+  bid_step: number,
+  bid_method: BidMethod,
+  ceil_price: number,
+  access_token: string,
+) => {
+  const auctionKoiPayload = {
+    base_price,
+    bid_step,
+    bid_method,
+    ceil_price,
+    auction_id,
+    koi_id,
+  };
+
+  try {
+    const response = await axios.post(
+      "http://localhost:4000/api/v1/auctionkois",
+      auctionKoiPayload,
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      },
+    );
+
+    console.log("Auction Koi created successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Axios error:", error.response?.data || error.message);
+      throw new Error(
+        error.response?.data?.message || "Failed to create auction koi",
+      );
+    } else {
+      console.error("Unexpected error:", error);
+    }
   }
 };

@@ -1,5 +1,27 @@
 import { Role } from "./roles.type";
 
+export type UserBase = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  phone_number: string | null;
+  email: string;
+  address: string;
+  password: string | null;
+  is_active: number;
+  is_subscription: number;
+  status_name: UserStatus;
+  date_of_birth: number;
+  avatar_url: string;
+  google_account_id: number;
+  role_name: string;
+  account_balance: number;
+};
+
+export type Breeder = UserBase;
+export type Member = UserBase;
+export type Staff = UserBase;
+
 export type UserDetailsResponse = {
   id: number;
   first_name: string;
@@ -9,7 +31,7 @@ export type UserDetailsResponse = {
   address: string;
   is_active: number;
   is_subscription: number;
-  status_name: string;
+  status_name: UserStatus;
   date_of_birth: string | null;
   avatar_url: string;
   google_account_id: number;
@@ -47,24 +69,6 @@ export type UserRegisterDTO = {
   role_id: number;
 };
 
-export type Staff = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  phone_number: string | null;
-  email: string;
-  address: string;
-  password: string | null;
-  is_active: number;
-  is_subscription: number;
-  status_name: UserStatus;
-  date_of_birth: string;
-  avatar_url: string;
-  google_account_id: number;
-  role_name: string;
-  account_balance: number;
-};
-
 export type UserStatus = "UNVERIFIED" | "VERIFIED" | "BANNED";
 
 export type StaffRegisterDTO = {
@@ -79,56 +83,4 @@ export type StaffRegisterDTO = {
   date_of_birth?: string;
   avatar_url?: string;
   google_account_id?: number;
-};
-
-export type StaffsResponse = {
-  total_page: number;
-  total_item: number;
-  item: Staff[];
-};
-
-export type Member = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  phone_number: string | null;
-  email: string;
-  address: string;
-  password: string | null;
-  status_name: string;
-  date_of_birth: number;
-  avatar_url: string;
-  google_account_id: number;
-  role_name: string;
-  account_balance: number;
-};
-
-export type MembersResponse = {
-  total_page: number;
-  total_item: number;
-  item: Member[];
-};
-
-export type Breeder = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  phone_number: string | null;
-  email: string;
-  address: string;
-  password: string | null;
-  is_active: number;
-  is_subscription: number;
-  status_name: UserStatus;
-  date_of_birth: number;
-  avatar_url: string;
-  google_account_id: number;
-  role_name: string;
-  account_balance: number;
-};
-
-export type BreedersResponse = {
-  total_page: number;
-  total_item: number;
-  item: Breeder[];
 };

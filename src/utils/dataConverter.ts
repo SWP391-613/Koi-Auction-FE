@@ -1,7 +1,7 @@
 import { AuctionModel } from "~/types/auctions.type";
 import { convertToJavaLocalDateTime } from "./dateTimeUtils";
 import axios from "axios";
-import { KoiDetailModel } from "~/types/kois.type";
+import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";
 import { BreedersResponse } from "~/types/users.type";
 
 export const convertBidMethodToReadable = (method: string) => {
@@ -98,4 +98,12 @@ const breeders = [
 export const getBreederName = (breederId: number): string => {
   const breeder = breeders.find((b) => b.id === breederId);
   return breeder?.firstName || "Unknown Breeder";
+};
+
+export const displayKoiStatus = (status: KoiTrackingStatus): string => {
+  if (status === "SOLD") {
+    return "Sold!";
+  } else {
+    return "Ended!"; // Return an empty string if not SOLD (or you can return some other text if needed)
+  }
 };

@@ -1,9 +1,12 @@
 import React from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, Routes, Route } from "react-router-dom";
+import BreederDetail from "~/pages/breeder/BreederDetail";
+import KoiEditDetail from "~/pages/kois/KoiEditDetail";
+import VNPayReturn from "~/pages/payments/VNPayReturn";
 
 const BreederLayout: React.FC = () => {
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex bg-gray-100">
       {/* Sidebar */}
       <div className="w-64 bg-white shadow-md">
         <div className="p-4">
@@ -24,7 +27,14 @@ const BreederLayout: React.FC = () => {
       {/* Main content */}
       <div className="flex-1 overflow-x-hidden overflow-y-auto">
         <div className="container mx-auto px-6 py-8">
-          <Outlet />
+          <Routes>
+            <Route path="" element={<BreederDetail />} />
+            <Route
+              path="payments/vnpay-payment-return"
+              element={<VNPayReturn />}
+            />
+            <Route path="kois/:id/edit" element={<KoiEditDetail />} />
+          </Routes>
         </div>
       </div>
     </div>

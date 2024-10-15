@@ -1,6 +1,6 @@
 import { KoiDetailModel } from "./kois.type";
 
-export interface AuctionKoi {
+export type AuctionKoi = {
   id: number;
   auction_id: number;
   koi_id: number;
@@ -8,9 +8,15 @@ export interface AuctionKoi {
   current_bid: number;
   current_bidder_id: number | null;
   is_sold: boolean;
-  bid_method: string;
+  bid_method: BidMethod;
   bid_step: number;
-}
+};
+
+export type BidMethod =
+  | "SEALED_BID"
+  | "DESCENDING_BID"
+  | "ASCENDING_BID"
+  | "FIXED_PRICE";
 
 export interface KoiWithAuctionKoiData extends KoiDetailModel {
   auctionKoiData: AuctionKoi;

@@ -48,19 +48,22 @@ const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
                   <div className="flex flex-col lg:flex-row lg:space-x-4">
                     <p className="flex justify-between">
                       <span className="text-md text-black glow-text">
-                        {formatDate(auction.start_time)}
+                        {formatDate(auction.start_time.toString())}
                       </span>
                     </p>
                     <p className="flex justify-between">
                       <span className="text-md text-black glow-text">
-                        {formatDate(auction.end_time)}
+                        {formatDate(auction.end_time.toString())}
                       </span>
                     </p>
                   </div>
                 ) : (
                   <>
                     <span className="text-2xl text-black glow-text">
-                      {getAuctionStatus(auction.start_time, auction.end_time)}
+                      {getAuctionStatus(
+                        auction.start_time.toString(),
+                        auction.end_time.toString(),
+                      )}
                     </span>
                   </>
                 )}

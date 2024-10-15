@@ -1,9 +1,3 @@
-export interface KoisResponse {
-  total_page: number;
-  total_item: number;
-  items: KoiDetailModel[];
-}
-
 // i dont want to change this because this related to many files in the project, so i will create new type KoiModel
 export type KoiDetailModel = {
   id: number;
@@ -24,12 +18,11 @@ export type KoiDetailModel = {
 // this type for creating new koi
 export type KoiModel = Omit<KoiDetailModel, "sex"> & { gender: string };
 
-export type KoiTrackingStatus = "VERIFIED" | "REJECTED" | "PENDING" | "SOLD";
+export type KoiTrackingStatus =
+  | "UNVERIFIED"
+  | "VERIFIED"
+  | "REJECTED"
+  | "PENDING"
+  | "SOLD";
 
 export type KoiGender = "Male" | "Female" | "Unknown";
-
-export type KoiApiResponse = {
-  total_page: number;
-  total_item: number;
-  item: KoiDetailModel[];
-};

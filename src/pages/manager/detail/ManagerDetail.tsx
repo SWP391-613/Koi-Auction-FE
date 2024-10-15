@@ -2,16 +2,14 @@ import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Loading from "~/components/loading/Loading";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
-import SearchBar from "~/components/shared/SearchBar";
 import { useUserData } from "~/contexts/useUserData";
 import { environment } from "~/environments/environment";
 import { getCookie } from "~/utils/cookieUtils";
-import { AuctionsManagement } from "../manager/auctions/AuctionsManagement";
-import "./StaffDetail.scss";
-import Loading from "~/components/loading/Loading";
+import "./ManagerDetail.scss";
 
-const StaffDetail: React.FC = () => {
+const ManagerDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [updateField, setUpdateField] = useState("");
   const [updateValue, setUpdateValue] = useState("");
@@ -135,12 +133,8 @@ const StaffDetail: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* <SearchBar /> */}
-
-      <AuctionsManagement />
     </div>
   );
 };
 
-export default StaffDetail;
+export default ManagerDetail;

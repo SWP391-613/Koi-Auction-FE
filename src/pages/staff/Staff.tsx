@@ -1,9 +1,13 @@
 import React from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
+import VerifyKoiList from "../kois/VerifyKoiList";
+import { AuctionsManagement } from "../manager/auctions/AuctionsManagement";
+import SendNotifications from "./notifications/SendNotifications";
+import StaffDetail from "./detail/StaffDetail";
 
 const StaffLayout: React.FC = () => {
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex bg-gray-100">
       {/* Sidebar */}
       <div className="w-64 bg-white shadow-md">
         <div className="p-4">
@@ -42,7 +46,13 @@ const StaffLayout: React.FC = () => {
       {/* Main content */}
       <div className="flex-1 overflow-x-hidden overflow-y-auto">
         <div className="container mx-auto px-6 py-8">
-          <Outlet />
+          <Routes>
+            <Route path="" element={<StaffDetail />} />
+            <Route path="auctions" element={<AuctionsManagement />} />
+            <Route path="kois" element={<VerifyKoiList />} />
+            <Route path="verify/kois" element={<VerifyKoiList />} />
+            <Route path="send-notifications" element={<SendNotifications />} />
+          </Routes>
         </div>
       </div>
     </div>

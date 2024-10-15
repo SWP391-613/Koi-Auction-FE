@@ -162,6 +162,7 @@ const StaffManagement = () => {
         <tbody className="divide-y bg-white dark:divide-gray-700 dark:bg-gray-800">
           {staffs.map((staff) => (
             <tr key={staff.id} className="text-gray-700 dark:text-gray-400">
+              <td className="px-4 py-3 text-sm">{staff.id}</td>
               <td className="px-4 py-3">
                 <div className="flex items-center text-sm">
                   <div className="relative mr-3 hidden h-8 w-8 rounded-full md:block">
@@ -171,16 +172,6 @@ const StaffManagement = () => {
                       alt=""
                       loading="lazy"
                     />
-                    <div
-                      className="absolute inset-0 rounded-full shadow-inner"
-                      aria-hidden="true"
-                    ></div>
-                  </div>
-                  <div>
-                    <p className="font-semibold">{staff.first_name}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">
-                      Staff
-                    </p>
                   </div>
                 </div>
               </td>

@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import "./BreederDetail.scss";
-import { getCookie } from "~/utils/cookieUtils";
+import { Button } from "@mui/material";
 import axios from "axios";
-import { environment } from "~/environments/environment";
-import { fetchKoisOfBreeder } from "~/utils/apiUtils";
-import KoiCart from "../kois/KoiCart";
-import { Button, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import Loading from "~/components/loading/Loading";
 import PaginationComponent from "~/components/pagination/Pagination";
+import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
+import { CrudButton } from "~/components/shared/CrudButtonComponent";
+import DepositComponent from "~/components/shared/DepositComponent";
+import KoiCreatePopup from "~/components/shared/KoiCreatePopup";
 import { useAuth } from "~/contexts/AuthContext";
 import { useUserData } from "~/contexts/useUserData";
-import DepositComponent from "~/components/shared/DepositComponent";
-import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
+import { environment } from "~/environments/environment";
 import { KoiDetailModel } from "~/types/kois.type";
-import KoiList from "../manager/koi/KoiManagement";
-import Loading from "~/components/loading/Loading";
-import KoiCreatePopup from "~/components/shared/KoiCreatePopup";
+import { fetchKoisOfBreeder } from "~/utils/apiUtils";
+import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
-import { toast } from "react-toastify";
-import { CrudButton } from "~/components/shared/CrudButtonComponent";
+import KoiCart from "../kois/KoiCart";
+import "./BreederDetail.scss";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -54,23 +53,24 @@ const BreederDetail: React.FC = () => {
     try {
       const API_URL =
         import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
-      const response = await axios.get(`${API_URL}/kois`, {
-        params: {
-          owner_id: userId,
-          page: currentPage - 1,
-          limit: itemsPerPage,
-        },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await fetchKoisOfBreeder(
+        parseInt(userId),
+        currentPage - 1,
+        itemsPerPage,
+        accessToken,
+      );
 
-      if (response.data) {
-        setKois(response.data.item);
-        setTotalKoi(response.data.item.length);
-        setHasMorePages(response.data.item.length === itemsPerPage);
+      if (response) {
+        setKois(response.item);
+        setTotalKoi(response.item.length);
+        setHasMorePages(response.item.length === itemsPerPage);
       }
     } catch (error) {
+      const errorMessage = extractErrorMessage(
+        error,
+        "Failed to fetch koi data",
+      );
+      toast.error(errorMessage);
       console.error("Không thể lấy dữ liệu cá Koi:", error);
     }
   };
@@ -154,11 +154,6 @@ const BreederDetail: React.FC = () => {
   const renderCrudButtons = (koi: KoiDetailModel) => (
     <>
       <CrudButton
-        onClick={() => handleView(koi.id)}
-        ariaLabel="View"
-        svgPath="view.svg"
-      />
-      <CrudButton
         onClick={() => handleEdit(koi.id)}
         ariaLabel="Edit"
         svgPath="edit.svg"
@@ -171,12 +166,8 @@ const BreederDetail: React.FC = () => {
     </>
   );
 
-  const handleView = (id: number) => {
-    navigate(`/kois/${id}`);
-  };
-
   const handleEdit = (id: number) => {
-    navigate(`/kois/${id}/edit`);
+    navigate(`/kois/${id}`);
   };
 
   const handleDelete = async (id: number) => {
@@ -233,7 +224,7 @@ const BreederDetail: React.FC = () => {
                 Add New Koi
               </Button>
               <Button
-                color="primary"
+                color="error"
                 variant="contained"
                 onClick={handleRegisterKoiToAuction}
               >
@@ -300,22 +291,10 @@ const BreederDetail: React.FC = () => {
           </div>
         </div>
       </div>
-      <div>
-        <Typography
-          variant="h2"
-          sx={{
-            mt: 4,
-            mb: 2,
-            fontWeight: "bold",
-            fontSize: "1.5rem",
-            textAlign: "center",
-          }}
-        >
-          Your Koi List
-        </Typography>
+      <div className="mt-5">
         <KoiCart
           items={kois}
-          handleView={handleView}
+          handleView={() => {}}
           handleEdit={handleEdit}
           handleDelete={handleDelete}
           renderCrudButtons={renderCrudButtons}

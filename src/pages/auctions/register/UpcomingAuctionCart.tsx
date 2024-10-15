@@ -8,6 +8,7 @@ import {
   faMoneyCheckDollar,
 } from "@fortawesome/free-solid-svg-icons";
 import { AuctionModel } from "~/types/auctions.type";
+import KoiManagement from "~/pages/manager/koi/KoiManagement";
 
 interface UpcomingAuctionCartProps {
   items: AuctionModel[];

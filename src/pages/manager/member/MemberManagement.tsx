@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import PaginationComponent from "~/components/pagination/Pagination";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
+import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
+import { MEMBER_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { Member, MembersResponse } from "~/types/users.type";
 import { getMembersData } from "~/utils/apiUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
@@ -103,17 +105,11 @@ const MemberManagement = () => {
       </div>
 
       <table className="whitespace-no-wrap w-full">
-        <thead>
-          <tr className="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
-            <th className="px-4 py-3">Member</th>
-            <th className="px-4 py-3">Email</th>
-            <th className="px-4 py-3">Address</th>
-            <th className="px-4 py-3">Actions</th>
-          </tr>
-        </thead>
+        <TableHeaderComponent headers={MEMBER_MANAGEMENT_HEADER} />
         <tbody className="divide-y bg-white dark:divide-gray-700 dark:bg-gray-800">
           {members.map((member) => (
             <tr key={member.id} className="text-gray-700 dark:text-gray-400">
+              <td className="px-4 py-3 text-sm">{member.id}</td>
               <td className="px-4 py-3">
                 <div className="flex items-center text-sm">
                   <div className="relative mr-3 hidden h-8 w-8 rounded-full md:block">
@@ -136,8 +132,24 @@ const MemberManagement = () => {
                   </div>
                 </div>
               </td>
+              <td className="px-4 py-3 text-sm">{member.first_name}</td>
+              <td className="px-4 py-3 text-sm">{member.last_name}</td>
+              <td className="px-4 py-3 text-sm">
+                {member.phone_number || "Not provided"}
+              </td>
               <td className="px-4 py-3 text-sm">{member.email}</td>
-              <td className="px-4 py-3 text-sm">{member.address}</td>
+              <td className="px-4 py-3 text-sm">
+                {member.address || "Not provided"}
+              </td>
+              <td className="px-4 py-3 text-sm">
+                {member.status_name || "N/A"}
+              </td>
+              <td className="px-4 py-3 text-sm">
+                {member.is_active ? "Active" : "Inactive"}
+              </td>
+              <td className="px-4 py-3 text-sm">{member.is_subscription}</td>
+              <td className="px-4 py-3 text-sm">{member.date_of_birth}</td>
+              <td className="px-4 py-3 text-sm">{member.account_balance}</td>
               <td className="px-4 py-3 text-sm">
                 <div className="flex items-center space-x-4 text-sm">
                   <CrudButton

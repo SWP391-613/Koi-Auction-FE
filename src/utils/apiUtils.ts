@@ -25,6 +25,7 @@ import {
 } from "~/types/users.type";
 import { AuctionDTO } from "~/types/auctions.type";
 import { environment } from "../environments/environment";
+import { PaymentDTO } from "~/pages/user/UserOrder";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -488,7 +489,7 @@ export const fetchOrderById = async (orderId: number): Promise<Order> => {
 };
 
 export const createDepositPayment = async (
-  paymentRequest: PaymentRequest,
+  paymentRequest: PaymentDTO,
   token: string,
 ) => {
   try {
@@ -847,7 +848,7 @@ export const createCashOrderPayment = async (
 };
 
 export const createOnlineOrderPayment = async (
-  paymentRequest: PaymentRequest,
+  paymentRequest: PaymentDTO,
   token: string,
 ): Promise<any> => {
   try {
@@ -868,13 +869,13 @@ export const createOnlineOrderPayment = async (
 };
 
 export const createOrderPayment = async (
-  paymentRequest: PaymentRequest,
+  paymentDTO: PaymentDTO,
   token: string,
 ): Promise<any> => {
   try {
     const response = await axios.post(
       `${API_URL}/payment/create_order_payment`,
-      paymentRequest,
+      paymentDTO,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -884,8 +885,15 @@ export const createOrderPayment = async (
     );
     return response.data;
   } catch (error) {
-    console.error("Error creating order payment:", error);
-    throw error;
+    if (axios.isAxiosError(error)) {
+      console.error("Error creating order payment:", error.response?.data);
+      throw new Error(
+        error.response?.data?.message || "Failed to process payment",
+      );
+    } else {
+      console.error("Unexpected error:", error);
+      throw new Error("An unexpected error occurred");
+    }
   }
 };
 

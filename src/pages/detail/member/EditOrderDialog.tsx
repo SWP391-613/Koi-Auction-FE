@@ -50,13 +50,11 @@ const EditOrderDialog: React.FC<EditOrderDialogProps> = ({
   onClose,
   order,
   onSave,
-  accessToken = getCookie("access_token") || "",
 }) => {
   const [editedOrder, setEditedOrder] = useState<Order | null>(order);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const { user } = useUserData();
 
   React.useEffect(() => {
     setEditedOrder(order);
@@ -82,10 +80,9 @@ const EditOrderDialog: React.FC<EditOrderDialogProps> = ({
     setError(null);
 
     try {
-      const updatedOrder = await updateOrder(editedOrder, accessToken);
-      onSave(updatedOrder);
+      onSave(editedOrder);
       onClose();
-      toast.success("Order information updated successfully");
+      // Remove the toast from here as it will be handled in UserOrder.tsx
     } catch (err) {
       setError("Failed to update order information. Please try again.");
     } finally {

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createDepositPayment } from "~/utils/apiUtils";
-import { PaymentRequest } from "~/pages/user/EditOrderDialog";
+import { PaymentDTO } from "~/pages/user/UserOrder";
 
 interface DepositComponentProps {
   userId: number;
@@ -31,14 +31,14 @@ const DepositComponent: React.FC<DepositComponentProps> = ({
     }
 
     try {
-      const paymentRequest: PaymentRequest = {
+      const paymentDTO: PaymentDTO = {
         payment_amount: payment,
         payment_method: "VNPAY",
         payment_type: "DEPOSIT",
         user_id: userId,
         order_id: null,
       };
-      const response = await createDepositPayment(paymentRequest, token);
+      const response = await createDepositPayment(paymentDTO, token);
       if (response.paymentUrl) {
         window.location.href = response.paymentUrl;
       } else {

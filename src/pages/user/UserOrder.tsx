@@ -44,7 +44,7 @@ export type Order = {
   note: string;
 };
 
-type PaymentDTO = {
+export type PaymentDTO = {
   payment_amount: number;
   payment_method: string;
   payment_type: string;
@@ -143,26 +143,24 @@ const UserOrder = () => {
         getCookie("access_token") || "",
       );
 
-      // Update the orders state with the edited order
-      setOrders(
-        orders.map((order) =>
-          order.id === updatedOrder.id ? updatedOrder : order,
-        ),
-      );
-
-      handleCloseEditDialog();
-      // Show a success message
+      if (updatedOrder && updatedOrder.id) {
+        setOrders(
+          orders.map((order) =>
+            order.id === updatedOrder.id ? updatedOrder : order,
+          ),
+        );
+      }
       toast.success("Order updated successfully");
+      handleCloseEditDialog();
     } catch (error) {
       console.error("Error updating order:", error);
-      // Show an error message
       toast.error("Failed to update order. Please try again.");
     }
   };
 
   const handlePayment = async (order: Order) => {
     try {
-      const paymentRequest: PaymentDTO = {
+      const paymentDTO: PaymentDTO = {
         payment_amount: order.total_money,
         payment_method: order.payment_method,
         payment_type: "ORDER",
@@ -171,17 +169,21 @@ const UserOrder = () => {
       };
 
       const paymentResponse = await createOrderPayment(
-        paymentRequest,
+        paymentDTO,
         getCookie("access_token") || "",
       );
 
       if (paymentResponse) {
+        // Update the order status to PROCESS
+        const updatedOrder = { ...order, status: "PROCESS" };
+        await updateOrder(updatedOrder, getCookie("access_token") || "");
+
+        // Update the local state
+        setOrders(orders.map((o) => (o.id === order.id ? updatedOrder : o)));
+
         if (order.payment_method === "Cash") {
-          // Handle cash payment
           toast.success("Cash payment recorded successfully");
-          // Optionally update the order status here
         } else {
-          // Handle online payment
           if (paymentResponse.paymentUrl) {
             window.location.href = paymentResponse.paymentUrl;
           } else {
@@ -193,7 +195,11 @@ const UserOrder = () => {
       }
     } catch (error) {
       console.error("Error processing payment:", error);
-      toast.error("Failed to process payment. Please try again.");
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("Failed to process payment. Please try again.");
+      }
     }
   };
 
@@ -282,12 +288,16 @@ const UserOrder = () => {
                 <Typography
                   variant={isMobile ? "body1" : "h6"}
                   fontWeight="bold"
+                  color="green"
                   gutterBottom
                 >
                   Total: ${order.total_money.toFixed(2)}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
+                <Typography variant="body2" color="green" gutterBottom>
                   Shipping: {order.shipping_method}
+                </Typography>
+                <Typography variant="body2" color="purple" gutterBottom>
+                  Payment Method: {order.payment_method}
                 </Typography>
                 <Typography
                   variant="body2"

@@ -11,7 +11,7 @@ import axios, { Axios } from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
-import { Staff, StaffRegisterDTO} from "~/types/users.type";
+import { Staff, StaffRegisterDTO } from "~/types/users.type";
 import { getCookie } from "~/utils/cookieUtils";
 import CreateStaffDialog from "./CreateStaffDialog";
 import EditStaffDialog from "./EditStaffDialog";

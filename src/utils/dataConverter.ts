@@ -50,7 +50,7 @@ export const createFormData = (
   return formData;
 };
 
-const categoryMap: Record<number, string> = {
+export const categoryMap: Record<number, string> = {
   1: "Kohaku",
   2: "Taisho Sanke",
   3: "Showa Sanshoku",

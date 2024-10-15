@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -196,19 +196,31 @@ const BreederDetail: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col justify-around m-10">
+    <div className="flex flex-col justify-around mt-5">
       <AccountVerificationAlert user={user} />
+      <div>
+        <Typography
+          variant="h4"
+          sx={{ marginBottom: "1rem" }}
+          component="h1"
+          className="text-left"
+        >
+          Breeder Detail
+        </Typography>
+      </div>
       <div className="flex border bg-[#F1F1F1] rounded-2xl">
-        <div className="flex flex-col justify-start items-center p-5 w-[20rem]">
+        <div className="flex p-5 flex-col justify-center gap-5 items-center w-[20rem]">
           <img
             src={user.avatar_url}
             alt={`${user.first_name} ${user.last_name}`}
             className="user-avatar"
           />
-          <h1 className="user-name">
+          <h1 className="text-2xl font-bold text-center mb-2">
             {user.first_name} {user.last_name}
           </h1>
-          <p className="user-status">{user.status_name}</p>
+          <p className="text-green-600 font-semibold">
+            {user.status_name == "VERIFIED" ? "Your Account is Verified" : ""}
+          </p>
           {user.status_name !== "VERIFIED" && (
             <button onClick={handleVerify} className="verify-button">
               Verify User
@@ -226,6 +238,7 @@ const BreederDetail: React.FC = () => {
               <Button
                 color="error"
                 variant="contained"
+                sx={{ marginTop: "" }}
                 onClick={handleRegisterKoiToAuction}
               >
                 Register to Auction
@@ -233,34 +246,39 @@ const BreederDetail: React.FC = () => {
             </div>
           )}
         </div>
-        <div className="user-main">
-          <div className="user-info-grid">
-            <div className="info-item">
-              <p className="info-label">Email</p>
-              <p className="info-value">{user.email}</p>
+        <div className="flex flex-col flex-1 justify-between p-7 bg-white">
+          <div className="grid grid-cols-2 gap-2">
+            <div className="">
+              <p className="text-2xl font-bold">Full Name</p>
+              <p className="text-xl">{user.first_name + user.last_name}</p>
             </div>
-            <div className="info-item">
-              <p className="info-label">Phone</p>
-              <p className="info-value">
-                {user.phone_number || "Not provided"}
+            <div className="">
+              <p className="text-2xl font-bold">Email</p>
+              <p className="text-xl">{user.email}</p>
+            </div>
+            <div className="">
+              <p className="text-2xl font-bold">Date Of Birth</p>
+              <p className="text-xl">
+                {user.date_of_birth === null
+                  ? user.date_of_birth
+                  : "Not Provided"}
               </p>
             </div>
-            <div className="info-item">
-              <p className="info-label">Address</p>
-              <p className="info-value">{user.address || "Not provided"}</p>
+            <div className="">
+              <p className="text-2xl font-bold">Phone</p>
+              <p className="text-xl">{user.phone_number || "Not provided"}</p>
             </div>
-            <div className="info-item">
-              <p className="info-label">Total Koi</p>
-              <p className="info-value">{totalKoi}</p>{" "}
+            <div className="">
+              <p className="text-2xl font-bold">Address</p>
+              <p className="text-xl">{user.address || "Not provided"}</p>
+            </div>
+            <div className="">
+              <p className="text-2xl font-bold ">Total Koi</p>
+              <p className="text-xl ">{totalKoi}</p>{" "}
               {/* Display total number of koi */}
             </div>
           </div>
-          <div className="account-balance">
-            <p className="balance-label">Account Balance</p>
-            <p className="balance-value">${user.account_balance.toFixed(2)}</p>
-            <DepositComponent userId={user.id} token={accessToken || ""} />
-          </div>
-          <div className="update-field">
+          <div className="mt-6 flex gap-10 align-content-center">
             <select
               value={updateField}
               onChange={(e) => setUpdateField(e.target.value)}
@@ -289,6 +307,13 @@ const BreederDetail: React.FC = () => {
               Update
             </Button>
           </div>
+        </div>
+        <div className="bg-gray-100 flex flex-col justify-between p-10 text-center rounded-r-2xl">
+          <p className="text-2xl font-bold text-black mb-2">Account Balance</p>
+          <p className="text-2xl font-bold text-green-600">
+            ${user.account_balance.toFixed(2)}
+          </p>
+          <DepositComponent userId={user.id} token={accessToken || ""} />
         </div>
       </div>
       <div className="mt-5">

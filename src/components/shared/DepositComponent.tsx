@@ -57,7 +57,7 @@ const DepositComponent: React.FC<DepositComponentProps> = ({
   return (
     <Box sx={{ maxWidth: 400, margin: "0 auto", padding: 2 }}>
       <form
-        className="flex justify-between items-center"
+        className="flex flex-col justify-between items-center"
         onSubmit={handleSubmit}
       >
         <Box sx={{ marginBottom: 2 }}>

@@ -18,6 +18,10 @@ export type KoiDetailModel = {
 // this type for creating new koi
 export type KoiModel = Omit<KoiDetailModel, "sex"> & { gender: string };
 
+export type AddNewKoiDTO = Omit<Omit<KoiDetailModel, "sex">, "id"> & {
+  gender: string;
+};
+
 export type KoiTrackingStatus =
   | "UNVERIFIED"
   | "VERIFIED"

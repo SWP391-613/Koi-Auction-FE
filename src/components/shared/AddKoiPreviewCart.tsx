@@ -1,17 +1,16 @@
 import React, { ReactNode } from "react";
-import { Link } from "react-router-dom";
-import { KoiDetailModel } from "~/types/kois.type";
+import { AddNewKoiDTO } from "~/types/kois.type";
 import { getStatusColor } from "~/utils/colorUtils";
 
-interface KoiCartProps {
-  items: KoiDetailModel[];
-  renderCrudButtons?: (koi: KoiDetailModel) => ReactNode;
+interface AddKoiPreviewCartProps {
+  items: AddNewKoiDTO[];
+  renderCrudButtons?: (koi: AddNewKoiDTO) => ReactNode;
   handleView?: (id: number) => void;
   handleEdit?: (id: number) => void;
   handleDelete?: (id: number) => void;
 }
 
-const KoiCart: React.FC<KoiCartProps> = ({
+const AddKoiPreviewCart: React.FC<AddKoiPreviewCartProps> = ({
   items,
   renderCrudButtons,
   handleView,
@@ -19,17 +18,14 @@ const KoiCart: React.FC<KoiCartProps> = ({
   handleDelete,
 }) => {
   return (
-    <div className="koi-container grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+    <div className="">
       {items.map((koi, index) => (
         <div
-          key={`${koi.id}-${index}`}
+          key={`${index}`}
           className="koi-card m-2 transform overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:scale-105"
         >
           <div className="flex gap-10">
-            <Link
-              to={`/kois/${koi.id}`}
-              className="image-container flex w-[35%] bg-[#4086c7]"
-            >
+            <div className="image-container justify-center items-center flex w-[35%] bg-[#4086c7]">
               {koi.thumbnail ? (
                 <img
                   src={koi.thumbnail}
@@ -37,9 +33,9 @@ const KoiCart: React.FC<KoiCartProps> = ({
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <span className="text-gray-500">No Image</span>
+                <span className="text-white text-xl">No Image Found</span>
               )}
-            </Link>
+            </div>
             <div className="flex flex-col">
               <div className="info p-4">
                 <h2 className="title text-2xl font-semibold mb-3">
@@ -58,7 +54,7 @@ const KoiCart: React.FC<KoiCartProps> = ({
                 </p>
                 <p className="flex items-center justify-between">
                   <span>Sex:</span>
-                  <span className="text-lg text-black">{koi.sex}</span>
+                  <span className="text-lg text-black">{koi.gender}</span>
                 </p>
                 <p className="flex items-center justify-between">
                   <span>Age:</span>
@@ -69,11 +65,6 @@ const KoiCart: React.FC<KoiCartProps> = ({
                   <span className="text-lg text-black">{koi.category_id}</span>
                 </p>
               </div>
-              {renderCrudButtons && (
-                <div className="actions p-2 flex space-x-2">
-                  {renderCrudButtons(koi)}
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -82,4 +73,4 @@ const KoiCart: React.FC<KoiCartProps> = ({
   );
 };
 
-export default KoiCart;
+export default AddKoiPreviewCart;

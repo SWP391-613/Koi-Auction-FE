@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
   Button,
-  Select,
-  MenuItem,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControl,
+  Grid,
   InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   Snackbar,
+  TextField,
 } from "@mui/material";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { AddNewKoiDTO, KoiDetailModel } from "~/types/kois.type";
 import { getCookie } from "~/utils/cookieUtils";
+import AddKoiPreviewCart from "./AddKoiPreviewCart";
+import { categoryMap } from "~/utils/dataConverter";
 
 interface KoiCreatePopupProps {
   open: boolean;
@@ -28,7 +33,7 @@ const KoiCreatePopup: React.FC<KoiCreatePopupProps> = ({
   onSuccess,
   owner_id,
 }) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AddNewKoiDTO>({
     name: "",
     base_price: 0,
     thumbnail: "",
@@ -38,22 +43,85 @@ const KoiCreatePopup: React.FC<KoiCreatePopupProps> = ({
     description: "",
     category_id: 0,
     owner_id: 0,
+    status_name: "UNVERIFIED",
+    is_display: 1,
   });
+
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     setFormData((prevData) => ({ ...prevData, owner_id }));
   }, [owner_id]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>,
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | SelectChangeEvent<unknown>,
   ) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name as string]: value });
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]:
+        name === "category_id" ||
+        name === "age" ||
+        name === "length" ||
+        name === "base_price"
+          ? Number(value)
+          : value,
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    // Validate name
+    if (!formData.name) {
+      newErrors.name = "Name is required";
+    }
+
+    // Validate base price
+    if (formData.base_price <= 0) {
+      newErrors.base_price = "Base price must be greater than 0";
+    }
+
+    // Validate gender
+    if (!formData.gender) {
+      newErrors.gender = "Gender is required";
+    }
+
+    // Validate length
+    if (formData.length <= 0) {
+      newErrors.length = "Length must be greater than 0";
+    }
+
+    // Validate age
+    if (formData.age < 0) {
+      newErrors.age = "Age cannot be negative";
+    }
+
+    // Validate category
+    if (formData.category_id <= 0) {
+      newErrors.category_id = "Category is required";
+    }
+
+    // Validate thumbnail
+    if (!formData.thumbnail) {
+      newErrors.thumbnail = "Thumbnail URL is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0; // Return true if no errors
   };
 
   const handleSubmit = async () => {
+    if (!validateForm()) {
+      setSnackbarMessage("Please fix the errors in the form.");
+      setSnackbarOpen(true);
+      return;
+    }
+
     try {
       const token = getCookie("access_token");
       console.log(formData);
@@ -78,96 +146,141 @@ const KoiCreatePopup: React.FC<KoiCreatePopupProps> = ({
     }
   };
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prevData) => ({
+          ...prevData,
+          thumbnail: reader.result as string,
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <>
-      <Dialog open={open} onClose={onClose}>
+      <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
         <DialogTitle>Create New Koi</DialogTitle>
         <DialogContent>
-          <TextField
-            fullWidth
-            margin="normal"
-            name="name"
-            label="Name"
-            value={formData.name}
-            onChange={handleInputChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            name="base_price"
-            label="Base Price"
-            type="number"
-            value={formData.base_price}
-            onChange={handleInputChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            name="thumbnail"
-            label="Thumbnail URL"
-            value={formData.thumbnail}
-            onChange={handleInputChange}
-          />
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Gender</InputLabel>
-            <Select
-              name="gender"
-              value={formData.gender}
-              onChange={handleInputChange}
-            >
-              <MenuItem value="MALE">Male</MenuItem>
-              <MenuItem value="FEMALE">Female</MenuItem>
-              <MenuItem value="UNKNOWN">Unknown</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            fullWidth
-            margin="normal"
-            name="length"
-            label="Length"
-            type="number"
-            value={formData.length}
-            onChange={handleInputChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            name="age"
-            label="Age"
-            type="number"
-            value={formData.age}
-            onChange={handleInputChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            name="description"
-            label="Description"
-            multiline
-            rows={4}
-            value={formData.description}
-            onChange={handleInputChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            name="category_id"
-            label="Category ID"
-            type="number"
-            value={formData.category_id}
-            onChange={handleInputChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            name="owner_id"
-            label="Owner ID"
-            type="number"
-            value={formData.owner_id}
-            InputProps={{
-              readOnly: true,
-            }}
-          />
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                margin="normal"
+                name="name"
+                label="Name"
+                value={formData.name}
+                onChange={handleInputChange}
+                error={!!errors.name}
+                helperText={errors.name}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                name="base_price"
+                label="Base Price"
+                type="number"
+                value={formData.base_price}
+                onChange={handleInputChange}
+                error={!!errors.base_price}
+                helperText={errors.base_price}
+              />
+              <FormControl fullWidth margin="normal" error={!!errors.gender}>
+                <InputLabel>Gender</InputLabel>
+                <Select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleInputChange}
+                >
+                  <MenuItem value="MALE">Male</MenuItem>
+                  <MenuItem value="FEMALE">Female</MenuItem>
+                  <MenuItem value="UNKNOWN">Unknown</MenuItem>
+                </Select>
+                {errors.gender && (
+                  <p style={{ color: "red" }}>{errors.gender}</p>
+                )}
+              </FormControl>
+              <TextField
+                fullWidth
+                margin="normal"
+                name="length"
+                label="Length"
+                type="number"
+                value={formData.length}
+                onChange={handleInputChange}
+                error={!!errors.length}
+                helperText={errors.length}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                name="age"
+                label="Age"
+                type="number"
+                value={formData.age}
+                onChange={handleInputChange}
+                error={!!errors.age}
+                helperText={errors.age}
+              />
+              <TextField
+                fullWidth
+                margin="normal"
+                name="description"
+                label="Description"
+                multiline
+                rows={3}
+                value={formData.description}
+                onChange={handleInputChange}
+              />
+              <FormControl
+                fullWidth
+                margin="normal"
+                error={!!errors.category_id}
+              >
+                <InputLabel>Category</InputLabel>
+                <Select
+                  name="category_id"
+                  value={formData.category_id}
+                  onChange={handleInputChange}
+                >
+                  {Object.entries(categoryMap).map(([id, name]) => (
+                    <MenuItem key={id} value={Number(id)}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.category_id && (
+                  <p style={{ color: "red" }}>{errors.category_id}</p>
+                )}
+              </FormControl>
+              <TextField
+                fullWidth
+                margin="normal"
+                name="thumbnail"
+                label="Thumbnail URL"
+                value={formData.thumbnail}
+                onChange={handleInputChange}
+                error={!!errors.thumbnail}
+                helperText={errors.thumbnail}
+              />
+              <input
+                id="koiImageUpload"
+                type="file"
+                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                accept="image/*"
+                aria-label="Upload Koi Image"
+                onChange={handleFileChange}
+                style={{ marginTop: "1rem" }}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <h3 className="text-xl font-bold mb-4">Preview</h3>
+              <AddKoiPreviewCart items={[formData]} />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Cancel</Button>

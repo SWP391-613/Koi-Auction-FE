@@ -31,13 +31,15 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
   onClose,
   koiId,
   auctionId,
-  basePrice,
+  basePrice: originalBasePrice, // Rename the prop for clarity
   onSubmit,
 }) => {
   const [bidStep, setBidStep] = useState<number>(0);
+  const [basePrice, setBasePrice] = useState<number>(originalBasePrice);
   const [bidMethod, setBidMethod] = useState<BidMethod>("ASCENDING_BID");
   const [ceilPrice, setCeilPrice] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [basePriceError, setBasePriceError] = useState<string>("");
 
   useEffect(() => {
     if (bidStep < MIN_BID_STEP) {
@@ -46,6 +48,17 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
       setErrorMessage("");
     }
   }, [bidStep]);
+
+  useEffect(() => {
+    // Check if the new base price is less than the original base price
+    if (basePrice < originalBasePrice) {
+      setBasePriceError(
+        `Base price must be greater than or equal to the original price of $${originalBasePrice}.`,
+      );
+    } else {
+      setBasePriceError("");
+    }
+  }, [basePrice, originalBasePrice]);
 
   const handleSubmit = () => {
     if (!errorMessage) {
@@ -83,8 +96,13 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
           fullWidth
           margin="normal"
           value={basePrice}
-          InputProps={{ readOnly: true }} // Make it read-only
+          onChange={(e) => setBasePrice(Number(e.target.value))}
+          placeholder="Enter base price"
+          error={!!basePriceError} // Show error if base price error exists
         />
+        {basePriceError && (
+          <FormHelperText error>{basePriceError}</FormHelperText>
+        )}
 
         <TextField
           label="Bid Step"
@@ -140,7 +158,7 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
             color="success"
             sx={{ ":hover": { backgroundColor: "#4caf50" } }}
             onClick={handleSubmit}
-            disabled={!!errorMessage} // Disable submit if there's an error
+            disabled={!!errorMessage || !!basePriceError} // Disable submit if there's an error
           >
             Submit
           </Button>

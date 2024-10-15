@@ -10,9 +10,8 @@ import {
 import axios, { Axios } from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PaginationComponent from "~/components/pagination/Pagination";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
-import { Staff, StaffRegisterDTO, StaffsResponse } from "~/types/users.type";
+import { Staff, StaffRegisterDTO} from "~/types/users.type";
 import { getCookie } from "~/utils/cookieUtils";
 import CreateStaffDialog from "./CreateStaffDialog";
 import EditStaffDialog from "./EditStaffDialog";
@@ -24,6 +23,7 @@ import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { STAFF_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { createStaff, deleteStaff } from "~/utils/apiUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
+import PaginationComponent from "~/components/common/PaginationComponent";
 
 const StaffManagement = () => {
   const [openCreateDialog, setOpenCreateDialog] = useState(false);

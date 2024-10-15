@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import {
-  CircularProgress,
-  Typography,
-  Container,
-  Card,
-  CardContent,
-  Box,
-} from "@mui/material";
-import {
+  AccessTime,
   CheckCircleOutline,
   ErrorOutline,
-  AccessTime,
 } from "@mui/icons-material";
+import { Box, Card, CardContent, Container, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { updateAccountBalance } from "~/utils/apiUtils";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 
 const VNPayReturn: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -80,18 +73,7 @@ const VNPayReturn: React.FC = () => {
   }, [loading, paymentResult, navigate]);
 
   if (loading) {
-    return (
-      <Container
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <CircularProgress />
-      </Container>
-    );
+    return <LoadingComponent />;
   }
 
   return (

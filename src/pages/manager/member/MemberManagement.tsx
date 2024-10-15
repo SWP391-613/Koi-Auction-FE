@@ -1,13 +1,13 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Alert, Button, CircularProgress, Container } from "@mui/material";
-import axios from "axios";
+import { Alert, Button, Container } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import PaginationComponent from "~/components/pagination/Pagination";
+import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { MEMBER_MANAGEMENT_HEADER } from "~/constants/tableHeader";
-import { Member, MembersResponse } from "~/types/users.type";
+import { Member } from "~/types/users.type";
 import { getMembersData } from "~/utils/apiUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 
@@ -77,7 +77,7 @@ const MemberManagement = () => {
   if (loading) {
     return (
       <Container>
-        <CircularProgress />
+        <LoadingComponent />
       </Container>
     );
   }

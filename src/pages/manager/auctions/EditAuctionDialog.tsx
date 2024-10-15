@@ -10,7 +10,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { AuctionModel } from "~/types/auctions.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
-import AuctionTable from "~/editkoiinauction/EditAuction";
+import AuctionKoiView from "~/pages/manager/auctions/AuctionKoiView";
 
 interface EditAuctionDialogProps {
   open: boolean;
@@ -85,7 +85,7 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
                 onClick={() => alert("Add Koi")}
               />
               <div className="overflow-x-auto">
-                <AuctionTable
+                <AuctionKoiView
                   auctionKois={auctionKois}
                   handleEdit={onEdit}
                   onDelete={onDelete}

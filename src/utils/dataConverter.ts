@@ -2,7 +2,6 @@ import { AuctionModel } from "~/types/auctions.type";
 import { convertToJavaLocalDateTime } from "./dateTimeUtils";
 import axios from "axios";
 import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";
-import { BreedersResponse } from "~/types/users.type";
 
 export const convertBidMethodToReadable = (method: string) => {
   //convert from FIXED_PRICE to Fixed Price, all caps to first letter caps, and remove the underscore

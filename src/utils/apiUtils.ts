@@ -2,9 +2,12 @@ import axios, { AxiosError } from "axios";
 import { format, isToday, isTomorrow, isYesterday } from "date-fns";
 import { Bid } from "~/components/BiddingHistory";
 import { BidRequest } from "~/pages/auctions/KoiBidding";
-import { KoiOfBreeder as KoisOfBreeder } from "~/pages/breeder/BreederDetail";
-import { Order } from "~/pages/user/UserOrder";
-import { OrderDetail, OrderDetailWithKoi } from "~/pages/user/UserOrderDetail";
+import { KoiOfBreeder as KoisOfBreeder } from "~/pages/detail/breeder/BreederDetail";
+import { Order } from "~/pages/detail/member/UserOrder";
+import {
+  OrderDetail,
+  OrderDetailWithKoi,
+} from "~/pages/detail/member/UserOrderDetail";
 import { AuctionKoi, BidMethod } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
 import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";

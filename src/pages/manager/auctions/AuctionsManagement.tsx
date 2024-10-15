@@ -15,7 +15,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import PaginationComponent from "~/components/pagination/Pagination";
 import { AuctionKoi } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
 import {
@@ -29,6 +28,7 @@ import AddAuctionDialog from "./AddAuctionDialog";
 import EditAuctionDialog from "./EditAuctionDialog";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
 import { getCookie } from "~/utils/cookieUtils";
+import PaginationComponent from "~/components/common/PaginationComponent";
 
 export const AuctionsManagement: React.FC = () => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);

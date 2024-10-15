@@ -1,15 +1,15 @@
-import { Alert, Button, CircularProgress, Container } from "@mui/material";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
-import PaginationComponent from "~/components/pagination/Pagination";
-import { Breeder, BreedersResponse } from "~/types/users.type";
+import { Alert, Button, Container } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import LoadingComponent from "~/components/shared/LoadingComponent";
+import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { BREEDER_MANAGEMENT_HEADER } from "~/constants/tableHeader";
-import { CrudButton } from "~/components/shared/CrudButtonComponent";
-import { extractErrorMessage } from "~/utils/dataConverter";
-import { toast } from "react-toastify";
+import { Breeder } from "~/types/users.type";
 import { fetchBreedersData } from "~/utils/apiUtils";
+import { extractErrorMessage } from "~/utils/dataConverter";
+import PaginationComponent from "~/components/common/PaginationComponent";
 
 const BreederManagement = () => {
   const [breeders, setBreeders] = useState<Breeder[]>([]);
@@ -73,7 +73,7 @@ const BreederManagement = () => {
   if (loading) {
     return (
       <Container>
-        <CircularProgress />
+        <LoadingComponent />
       </Container>
     );
   }

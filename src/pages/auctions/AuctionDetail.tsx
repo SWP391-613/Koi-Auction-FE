@@ -10,11 +10,11 @@ import {
   faVenusMars,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import { useAuth } from "~/contexts/AuthContext";
-import { AuctionKoi, KoiWithAuctionKoiData } from "~/types/auctionkois.type";
+import { KoiWithAuctionKoiData } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
 import {
   fetchAuctionById,
@@ -74,7 +74,7 @@ const AuctionDetail: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <CircularProgress />
+        <LoadingComponent />
       </div>
     );
   }

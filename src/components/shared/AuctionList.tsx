@@ -1,7 +1,8 @@
+import { Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Typography, CircularProgress } from "@mui/material";
-import PaginationComponent from "~/components/pagination/Pagination";
 import { AuctionModel } from "~/types/auctions.type";
+import LoadingComponent from "./LoadingComponent";
+import PaginationComponent from "../common/PaginationComponent";
 
 interface AuctionListProps {
   fetchAuctionsData: (
@@ -60,7 +61,7 @@ const AuctionList: React.FC<AuctionListProps> = ({
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <CircularProgress />
+        <LoadingComponent />
       </div>
     );
   }

@@ -13,44 +13,31 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
 // Components
+import ProtectedRoute from "./components/common/ProtectedRoute";
 import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
-import ProtectedRoute from "./components/protectedRoute/ProtectedRoute";
 
 // Pages
 import NotFound from "./components/error/NotFound";
 import OtpVerification from "./components/otp/OtpVeficitaion";
-import About from "./pages/about/About";
+import ManagerLayout from "./layouts/ManagerLayout";
 import AuctionDetail from "./pages/auctions/AuctionDetail";
-import Auctions from "./pages/auctions/Auctions";
 import KoiBidding from "./pages/auctions/KoiBidding";
-import Home from "./pages/home/Home";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import UserDetail from "./pages/detail/member/UserDetail";
+import UserOrder from "./pages/detail/member/UserOrder";
 import KoiDetail from "./pages/kois/KoiDetail";
-import Login from "./pages/login/Login";
-import Privacy from "./pages/privacy/Privacy";
-import Register from "./pages/register/Register";
-import Terms from "./pages/terms/Terms";
-
-// Manager pages
-import Manager from "./pages/manager/Manager";
-import { AuctionsManagement } from "./pages/manager/auctions/AuctionsManagement";
-import Settings from "./pages/manager/settings/Settings";
-
-// Breeder pages
-
-// Staff pages
-import StaffLayout from "./pages/staff/Staff";
-
-import UserDetail from "./pages/user/UserDetail";
-import UserOrder from "./pages/user/UserOrder";
+import About from "./pages/static/About";
+import Home from "./pages/static/Home";
+import Privacy from "./pages/static/Privacy";
+import Terms from "./pages/static/Terms";
 // Types
+import BreederLayout from "./layouts/BreederLayout";
+import StaffLayout from "./layouts/StaffLayout";
+import Auctions from "./pages/auctions/Auctions";
 import AddKoiToAuction from "./pages/auctions/register/AddKoiToAuction";
 import KoiRegisterAuctionDetail from "./pages/auctions/register/KoiRegisterAuctionDetail";
-import BreederLayout from "./pages/manager/breeder/BreederLayout";
-import BreederManagement from "./pages/manager/breeder/BreederManagement";
-import KoiManagement from "./pages/manager/koi/KoiManagement";
-import MemberManagement from "./pages/manager/member/MemberManagement";
-import StaffManagement from "./pages/manager/staff/StaffManagement";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 
 const TITLE = "Auction Koi";
@@ -98,7 +85,7 @@ function App() {
 
               {/* Manager and Staff protected routes */}
               <Route element={<ProtectedRoute />}>
-                <Route path="/managers/*" element={<Manager />}></Route>
+                <Route path="/managers/*" element={<ManagerLayout />}></Route>
               </Route>
 
               {/* Breeder protected routes */}

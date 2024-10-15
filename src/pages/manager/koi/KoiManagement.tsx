@@ -1,7 +1,6 @@
 import {
   Alert,
   Button,
-  CircularProgress,
   Container,
   Dialog,
   DialogActions,
@@ -13,6 +12,7 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
@@ -20,7 +20,7 @@ import { KoiDetailModel } from "~/types/kois.type";
 import { createKoi, deleteKoiById, getKoiData } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { createFormData, extractErrorMessage } from "~/utils/dataConverter";
-import PaginationComponent from "../../../components/pagination/Pagination";
+import PaginationComponent from "../../../components/common/PaginationComponent";
 import EditKoiDialog from "./EditKoiDialog";
 
 const KoiManagement = () => {
@@ -151,7 +151,7 @@ const KoiManagement = () => {
   if (loading) {
     return (
       <Container className="flex justify-center items-center h-screen">
-        <CircularProgress />
+        <LoadingComponent />
       </Container>
     );
   }

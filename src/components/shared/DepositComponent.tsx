@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createDepositPayment } from "~/utils/apiUtils";
-import { PaymentDTO } from "~/pages/user/UserOrder";
+import { PaymentRequest } from "~/pages/detail/member/EditOrderDialog";
+import { PaymentDTO } from "~/pages/detail/member/UserOrder";
 
 interface DepositComponentProps {
   userId: number;

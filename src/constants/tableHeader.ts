@@ -69,3 +69,16 @@ export const MEMBER_MANAGEMENT_HEADER = [
   "Balance",
   "Actions",
 ];
+
+export const AUCTION_KOI_HEADER = [
+  "Id",
+  "Auction Id",
+  "Koi Id",
+  "Base Price",
+  "Current Bid",
+  "Current Bidder Id",
+  "Is Sold",
+  "Bid Method",
+  "Bid Step",
+  "Actions",
+];

@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import PaginationComponent from "~/components/pagination/Pagination";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import { useAuth } from "~/contexts/AuthContext";
 import { environment } from "~/environments/environment";
@@ -11,6 +10,7 @@ import { KoisResponse } from "~/types/paginated.types";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import KoiCart from "./KoiCart";
+import PaginationComponent from "~/components/common/PaginationComponent";
 
 const VerifyKoiList: React.FC = () => {
   const userId = getCookie("user_id");

@@ -17,6 +17,7 @@ import { getCookie } from "~/utils/cookieUtils"; // Adjust the import path as ne
 import { toast } from "react-toastify";
 import { getStaffData, updateStaff } from "~/utils/apiUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 
 interface EditStaffDialogProps {
   open: boolean;
@@ -108,7 +109,7 @@ const EditStaffDialog: React.FC<EditStaffDialogProps> = ({
               height: 200,
             }}
           >
-            <CircularProgress />
+            <LoadingComponent />
           </Box>
         </DialogContent>
       </Dialog>

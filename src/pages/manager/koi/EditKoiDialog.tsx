@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from "react";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField,
-  Box,
-  CircularProgress,
   Snackbar,
+  TextField,
 } from "@mui/material";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { KoiDetailModel } from "~/types/kois.type"; // Adjust the import path as needed
-import { getCookie } from "~/utils/cookieUtils"; // Adjust the import path as needed
 import { toast } from "react-toastify";
-import { extractErrorMessage } from "~/utils/dataConverter";
+import LoadingComponent from "~/components/shared/LoadingComponent";
+import { KoiDetailModel } from "~/types/kois.type"; // Adjust the import path as needed
 import { fetchKoi, updateKoi } from "~/utils/apiUtils";
+import { getCookie } from "~/utils/cookieUtils"; // Adjust the import path as needed
+import { extractErrorMessage } from "~/utils/dataConverter";
 
 interface EditKoiDialogProps {
   open: boolean;
@@ -106,7 +105,7 @@ const EditKoiDialog: React.FC<EditKoiDialogProps> = ({
             }}
           >
             log
-            <CircularProgress />
+            <LoadingComponent />
           </Box>
         </DialogContent>
       </Dialog>

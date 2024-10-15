@@ -1,7 +1,8 @@
-import { Alert, CircularProgress, Container } from "@mui/material";
+import { Alert, Container } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { BREEDER_KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
@@ -15,7 +16,7 @@ import {
 } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage, getCategoryName } from "~/utils/dataConverter";
-import PaginationComponent from "../../../components/pagination/Pagination";
+import PaginationComponent from "../../../components/common/PaginationComponent";
 import AuctionKoiPopup from "./AuctionKoiPopup";
 
 interface BreederKoiManagementProps {
@@ -159,7 +160,7 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
   if (loading) {
     return (
       <Container className="flex justify-center items-center h-screen">
-        <CircularProgress />
+        <LoadingComponent />
       </Container>
     );
   }

@@ -24,8 +24,14 @@ import {
   Divider,
 } from "@mui/material";
 import { Order } from "./UserOrder";
-import { updateOrder, createOrderPayment } from "~/utils/apiUtils";
+import {
+  updateOrder,
+  createOrderPayment,
+  fetchOrderById,
+} from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
+import { useUserData } from "~/contexts/useUserData";
+import { toast } from "react-toastify";
 
 interface EditOrderDialogProps {
   open: boolean;
@@ -34,6 +40,14 @@ interface EditOrderDialogProps {
   onSave: (editedOrder: Order) => void;
   accessToken: string;
 }
+
+export type PaymentRequest = {
+  payment_amount: number;
+  payment_method: string;
+  payment_type: string;
+  order_id: number | null;
+  user_id: number;
+};
 
 const EditOrderDialog: React.FC<EditOrderDialogProps> = ({
   open,
@@ -46,6 +60,7 @@ const EditOrderDialog: React.FC<EditOrderDialogProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const { user } = useUserData();
 
   React.useEffect(() => {
     setEditedOrder(order);
@@ -71,34 +86,12 @@ const EditOrderDialog: React.FC<EditOrderDialogProps> = ({
     setError(null);
 
     try {
-      if (editedOrder.payment_method === "Payment") {
-        // Create VNPay payment for order
-        const paymentResponse = await createOrderPayment(
-          editedOrder.total_money,
-          accessToken,
-        );
-
-        if (paymentResponse.paymentUrl) {
-          // Redirect to VNPay payment page
-          window.location.href = paymentResponse.paymentUrl;
-          // after payment success, update the order
-          // the below condition is not working, implement later
-          if (paymentResponse.paymentUrl.includes("success")) {
-            const updatedOrder = await updateOrder(editedOrder, accessToken);
-            onSave(updatedOrder);
-            onClose();
-          } else {
-            setError("Failed to create payment. Please try again.");
-          }
-        } else {
-          // For Cash on Delivery, update the order directly
-          const updatedOrder = await updateOrder(editedOrder, accessToken);
-          onSave(updatedOrder);
-          onClose();
-        }
-      }
+      const updatedOrder = await updateOrder(editedOrder, accessToken);
+      onSave(updatedOrder);
+      onClose();
+      toast.success("Order information updated successfully");
     } catch (err) {
-      setError("Failed to process order. Please try again.");
+      setError("Failed to update order information. Please try again.");
     } finally {
       setLoading(false);
       setConfirmDialogOpen(false);

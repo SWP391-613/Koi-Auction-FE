@@ -14,15 +14,10 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import {
-  fetchUserOrders,
-  fetchOrderDetails,
-  updateOrder,
-} from "../../utils/apiUtils";
+import { fetchUserOrders, updateOrder } from "../../utils/apiUtils";
 import { useUserData } from "~/contexts/useUserData";
 import PaginationComponent from "~/components/pagination/Pagination";
 import UserOrderDetail from "./UserOrderDetail";
-import { OrderDetail } from "./UserOrderDetail";
 import EditIcon from "@mui/icons-material/Edit";
 import EditOrderDialog from "./EditOrderDialog";
 import { toast } from "react-toastify";
@@ -48,7 +43,6 @@ export type Order = {
 const UserOrder = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const { user, loading: userLoading, error: userError } = useUserData();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -65,7 +59,10 @@ const UserOrder = () => {
     const fetchOrders = async () => {
       if (user) {
         try {
-          const response = await fetchUserOrders(user.id);
+          const response = await fetchUserOrders(
+            user.id,
+            getCookie("access_token") || "",
+          );
           setOrders(
             response.slice((page - 1) * itemsPerPage, page * itemsPerPage),
           );
@@ -111,7 +108,7 @@ const UserOrder = () => {
       case "cancelled":
         return "error";
       case "processing":
-        return "warning";
+        return "primary";
       default:
         return "default";
     }
@@ -148,6 +145,43 @@ const UserOrder = () => {
       console.error("Error updating order:", error);
       // Show an error message
       toast.error("Failed to update order. Please try again.");
+    }
+  };
+
+  const handlePayment = async (order: Order) => {
+    try {
+      const paymentRequest: PaymentRequest = {
+        payment_amount: order.total_money,
+        payment_method: order.payment_method,
+        payment_type: "ORDER",
+        order_id: order.id,
+        user_id: user?.id || 0,
+      };
+
+      const paymentResponse = await createOrderPayment(
+        paymentRequest,
+        getCookie("access_token") || "",
+      );
+
+      if (paymentResponse) {
+        if (order.payment_method === "Cash") {
+          // Handle cash payment
+          toast.success("Cash payment recorded successfully");
+          // Optionally update the order status here
+        } else {
+          // Handle online payment
+          if (paymentResponse.paymentUrl) {
+            window.location.href = paymentResponse.paymentUrl;
+          } else {
+            throw new Error("No payment URL received for online payment");
+          }
+        }
+      } else {
+        throw new Error("Failed to create payment");
+      }
+    } catch (error) {
+      console.error("Error processing payment:", error);
+      toast.error("Failed to process payment. Please try again.");
     }
   };
 
@@ -265,30 +299,32 @@ const UserOrder = () => {
                   }}
                 >
                   {order.status.toLowerCase() === "pending" && (
-                    <Button
-                      size={isMobile ? "small" : "medium"}
-                      color="secondary"
-                      variant="outlined"
-                      startIcon={<EditIcon />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEditOrder(order);
-                      }}
-                    >
-                      Edit
-                    </Button>
+                    <>
+                      <Button
+                        size={isMobile ? "small" : "medium"}
+                        color="secondary"
+                        variant="outlined"
+                        startIcon={<EditIcon />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditOrder(order);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        size={isMobile ? "small" : "medium"}
+                        color="primary"
+                        variant="contained"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePayment(order);
+                        }}
+                      >
+                        Pay
+                      </Button>
+                    </>
                   )}
-                  <Button
-                    size={isMobile ? "small" : "medium"}
-                    color="primary"
-                    variant="outlined"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleOrderClick(order.id);
-                    }}
-                  >
-                    View Details
-                  </Button>
                 </Box>
               </CardContent>
             </Card>

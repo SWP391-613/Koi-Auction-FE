@@ -20,6 +20,12 @@ import {
   UserLoginResponse,
   UserRegisterDTO,
 } from "~/types/users.type";
+import { AuctionDTO, AuctionModel } from "~/types/auctions.type";
+import { AuctionKoi } from "~/types/auctionkois.type";
+import { OrderDetail } from "~/pages/user/UserOrderDetail";
+import { Order } from "~/pages/user/UserOrder";
+import { OrderDetailWithKoi } from "~/pages/user/UserOrderDetail";
+import { PaymentRequest } from "~/pages/user/EditOrderDialog";
 import { environment } from "../environments/environment";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
@@ -428,13 +434,16 @@ export const placeBid = async (bid: BidRequest): Promise<void> => {
   }
 };
 
-export const fetchUserOrders = async (userId: number): Promise<Order[]> => {
+export const fetchUserOrders = async (
+  userId: number,
+  token: string,
+): Promise<Order[]> => {
   try {
     const response = await axios.get(
       `${API_URL}${environment.be.endPoint.orders}/user/${userId}`,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${token}`,
         },
       },
     );
@@ -475,15 +484,19 @@ export const fetchOrderDetails = async (
   }
 };
 
+export const fetchOrderById = async (orderId: number): Promise<Order> => {
+  const response = await axios.get(`${API_URL}/orders/${orderId}`);
+  return response.data;
+};
+
 export const createDepositPayment = async (
-  amount: number,
+  paymentRequest: PaymentRequest,
   token: string,
-  userId: number,
 ) => {
   try {
     const response = await axios.post(
-      `${API_URL}/payment/vnpay/create_deposit`,
-      { amount, userId },
+      `${API_URL}/payment/create_deposit_payment`,
+      paymentRequest,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -814,14 +827,60 @@ export const updateOrder = async (
   }
 };
 
-export const createOrderPayment = async (amount: number, token: string) => {
+export const createCashOrderPayment = async (
+  paymentRequest: PaymentRequest,
+  token: string,
+): Promise<any> => {
   try {
     const response = await axios.post(
-      `${API_URL}/payment/vnpay/create_order_payment`,
-      { amount },
+      `${API_URL}/payment/cash/create_order_payment`,
+      paymentRequest,
       {
         headers: {
           Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error creating order payment:", error);
+    throw error;
+  }
+};
+
+export const createOnlineOrderPayment = async (
+  paymentRequest: PaymentRequest,
+  token: string,
+): Promise<any> => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/payment/vnpay/create_order_payment`,
+      paymentRequest,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error creating order payment:", error);
+    throw error;
+  }
+};
+
+export const createOrderPayment = async (
+  paymentRequest: PaymentRequest,
+  token: string,
+): Promise<any> => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/payment/create_order_payment`,
+      paymentRequest,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       },
     );

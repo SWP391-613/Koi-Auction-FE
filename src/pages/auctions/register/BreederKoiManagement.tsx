@@ -5,15 +5,29 @@ import { toast, ToastContainer } from "react-toastify";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { BREEDER_KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
+import { BidMethod } from "~/types/auctionkois.type";
+import { AuctionModel } from "~/types/auctions.type";
 import { KoiDetailModel } from "~/types/kois.type";
-import { deleteKoiById, fetchKoisOfBreederWithStatus } from "~/utils/apiUtils";
+import {
+  deleteKoiById,
+  fetchKoisOfBreederWithStatus,
+  postAuctionKoi,
+} from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage, getCategoryName } from "~/utils/dataConverter";
 import PaginationComponent from "../../../components/pagination/Pagination";
+import AuctionKoiPopup from "./AuctionKoiPopup";
 
-const BreederKoiManagement = () => {
+interface BreederKoiManagementProps {
+  auction_id: number;
+}
+
+const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
+  auction_id,
+}) => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [auction, setAuction] = useState<AuctionModel | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
   const navigate = useNavigate();
@@ -22,6 +36,7 @@ const BreederKoiManagement = () => {
   const itemsPerPage = 8; // Adjusted to match the API limit parameter
   const [selectedKoiId, setSelectedKoiId] = useState<number | null>(null);
   const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false);
+  const [openPopup, setOpenPopup] = useState<boolean>(false);
   const [newKoi, setNewKoi] = useState<Partial<KoiDetailModel>>({
     name: "",
     sex: "",
@@ -69,7 +84,7 @@ const BreederKoiManagement = () => {
       }
     };
     fetchKois();
-  }, [page, itemsPerPage]);
+  }, [page, itemsPerPage, accessToken, userId]);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -82,8 +97,42 @@ const BreederKoiManagement = () => {
     navigate(`/kois/${id}`);
   };
 
-  const handlePush = async (id: number) => {
-    alert(`Push koi: ${id}`);
+  const handlePush = (id: number) => {
+    console.log("Koi id to be pushed:", id);
+    setSelectedKoiId(id);
+    setOpenPopup(true);
+  };
+
+  const handlePopupSubmit = async (
+    basePrice: number,
+    bidStep: number,
+    bidMethod: BidMethod,
+    ceilPrice: number,
+  ) => {
+    console.log("Koi id to be pushed1312312:", selectedKoiId);
+
+    if (!selectedKoiId || !auction_id) {
+      toast.error("Please select a koi and auction.");
+      return;
+    }
+
+    try {
+      const result = await postAuctionKoi(
+        selectedKoiId,
+        auction_id, //the props passed from KoiRegisterAuctionDetail.tsx
+        basePrice,
+        bidStep,
+        bidMethod,
+        ceilPrice,
+        accessToken,
+      );
+      console.log("Koi registered successfully:", result);
+      toast.success("Koi registered successfully!");
+      setOpenPopup(false); // Close the popup
+    } catch (error) {
+      console.error("Failed to register koi:", error);
+      toast.error("Failed to register koi. Please try again.");
+    }
   };
 
   const handleCancel = async (id: number) => {
@@ -124,8 +173,8 @@ const BreederKoiManagement = () => {
   }
 
   return (
-    <div className="w-full overflow-x-auto">
-      <div className="-mx-4 overflow-hidden px-4 py-4 sm:-mx-8 sm:px-8">
+    <div className="w-full overflow-x-auto p-10">
+      <div className="overflow-hidden px-4 py-4 sm:-mx-8 sm:px-8">
         <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
           <table className="min-w-full leading-normal">
             <TableHeaderComponent headers={BREEDER_KOI_MANAGEMENT_HEADER} />
@@ -213,6 +262,16 @@ const BreederKoiManagement = () => {
               )}
             </tbody>
           </table>
+          <AuctionKoiPopup
+            open={openPopup}
+            onClose={() => setOpenPopup(false)}
+            koiId={selectedKoiId ?? 0}
+            auctionId={auction_id ?? 0}
+            basePrice={
+              kois.filter((koi) => koi.id === selectedKoiId)[0]?.base_price
+            }
+            onSubmit={handlePopupSubmit}
+          />
           <div className="xs:flex-row xs:justify-between flex flex-col items-center border-t bg-white px-5 py-5">
             <PaginationComponent
               totalPages={totalPages}

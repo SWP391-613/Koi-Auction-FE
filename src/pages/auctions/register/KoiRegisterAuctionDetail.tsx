@@ -8,10 +8,8 @@ import {
   faVenusMars,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { AUCTION_STATUS } from "~/constants/auctionStatus";
 import { useAuth } from "~/contexts/AuthContext";
 import { AuctionKoi, KoiWithAuctionKoiData } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
@@ -20,6 +18,7 @@ import {
   fetchAuctionKoi,
   getKoiById,
 } from "~/utils/apiUtils"; // Assume we have this API function
+import { getAuctionStatusColor } from "~/utils/colorUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { convertBidMethodToReadable } from "~/utils/dataConverter";
 import { getAuctionStatusV2 } from "~/utils/dateTimeUtils";
@@ -68,28 +67,40 @@ const KoiRegisterAuctionDetail: React.FC = () => {
   return (
     <>
       <div className="flex flex-col mt-2">
-        <div className="flex flex-col sm:flex-row items-center justify-between pl-6 ml-5 mt-5">
-          <div className="">
-            <div className="mb-4 flex flex-col items-center">
-              <h2 className="text-2xl font-semibold text-black">
-                {auction.title}
-              </h2>
-            </div>
-            <div className="">
-              <span
-                className={`rounded-lg px-4 py-2 text-lg font-bold
-                  ${auction.status === AUCTION_STATUS.ONGOING ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}
-              >
-                {auction.status}
-              </span>
-            </div>
-            <div className=" mt-5">
-              <span className="text-xl text-black glow-text">
-                {getAuctionStatusV2(auction.start_time, auction.end_time)}
-              </span>
-            </div>
+        <div className="flex flex-col sm:flex-col items-start pl-6 ml-5 mt-5">
+          <div className="mb-4">
+            <span className="text-xl text-black">Auction Name: </span>
+            <h2 className="text-2xl font-semibold text-black">
+              {auction.title}
+            </h2>
           </div>
-          {/* <SearchBar placeholder="Type to search..." debounceTime={500} /> */}
+          <div className="">
+            <span
+              className={`rounded-lg px-4 py-2 text-lg font-bold ${getAuctionStatusColor(auction.status)}`}
+            >
+              {auction.status}
+            </span>
+          </div>
+          <div className="mt-5">
+            <label className="text-xl text-black">Start Time: </label>
+            <span className="text-xl text-black glow-text">
+              {auction.start_time.toString()}
+            </span>
+          </div>
+          <div className="mt-5">
+            <label className="text-xl text-black">End Time: </label>
+            <span className="text-xl text-black glow-text">
+              {auction.end_time.toString()}
+            </span>
+          </div>
+          <div className=" mt-5">
+            <span className="text-xl text-black glow-text">
+              {getAuctionStatusV2(
+                auction.start_time.toString(),
+                auction.end_time.toString(),
+              )}
+            </span>
+          </div>
         </div>
 
         <div className="ml-20 mr-20 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -231,7 +242,7 @@ const KoiRegisterAuctionDetail: React.FC = () => {
             </Link>
           ))}
         </div>
-        <BreederKoiManagement />
+        <BreederKoiManagement auction_id={auction.id} />
       </div>
     </>
   );

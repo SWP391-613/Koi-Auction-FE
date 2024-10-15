@@ -5,7 +5,7 @@ import { BidRequest } from "~/pages/auctions/KoiBidding";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/breeder/BreederDetail";
 import { Order } from "~/pages/user/UserOrder";
 import { OrderDetail, OrderDetailWithKoi } from "~/pages/user/UserOrderDetail";
-import { AuctionKoi } from "~/types/auctionkois.type";
+import { AuctionKoi, BidMethod } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
 import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";
 import {
@@ -829,5 +829,48 @@ export const createOrderPayment = async (amount: number, token: string) => {
   } catch (error) {
     console.error("Error creating order payment:", error);
     throw error;
+  }
+};
+
+export const postAuctionKoi = async (
+  koi_id: number,
+  auction_id: number,
+  base_price: number,
+  bid_step: number,
+  bid_method: BidMethod,
+  ceil_price: number,
+  access_token: string,
+) => {
+  const auctionKoiPayload = {
+    base_price,
+    bid_step,
+    bid_method,
+    ceil_price,
+    auction_id,
+    koi_id,
+  };
+
+  try {
+    const response = await axios.post(
+      "http://localhost:4000/api/v1/auctionkois",
+      auctionKoiPayload,
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      },
+    );
+
+    console.log("Auction Koi created successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Axios error:", error.response?.data || error.message);
+      throw new Error(
+        error.response?.data?.message || "Failed to create auction koi",
+      );
+    } else {
+      console.error("Unexpected error:", error);
+    }
   }
 };

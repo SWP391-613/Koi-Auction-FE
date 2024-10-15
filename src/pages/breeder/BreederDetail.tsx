@@ -224,7 +224,7 @@ const BreederDetail: React.FC = () => {
                 Add New Koi
               </Button>
               <Button
-                color="primary"
+                color="error"
                 variant="contained"
                 onClick={handleRegisterKoiToAuction}
               >

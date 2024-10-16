@@ -1,15 +1,15 @@
-import React, { useContext } from "react";
-import { useForm, Controller, Control, FieldErrors } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { Link, useNavigate } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
-import { toast, ToastContainer } from "react-toastify";
-import { register } from "../../utils/apiUtils";
-import NavigateButton from "~/components/shared/NavigateButton";
 import { Button, Typography } from "@mui/material";
+import React from "react";
+import { Control, Controller, FieldErrors, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import NavigateButton from "~/components/shared/NavigateButton";
 import { UserRegisterDTO } from "~/types/users.type";
 import { extractErrorMessage } from "~/utils/dataConverter";
+import { registerValidationSchema } from "~/utils/validation.utils";
+import { register } from "../../utils/apiUtils";
 
 interface FormFieldProps {
   name: string;
@@ -26,29 +26,6 @@ interface CheckboxFieldProps {
   errors?: FieldErrors;
 }
 
-const schema = yup.object().shape({
-  first_name: yup.string().required("First name is required"),
-  last_name: yup.string().required("Last name is required"),
-  email: yup
-    .string()
-    .email("Invalid email address")
-    .required("Email is required"),
-  password: yup
-    .string()
-    .required("Password is required")
-    .min(8, "Password must be at least 8 characters long")
-    .matches(
-      /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
-      "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.",
-    ),
-  confirm_password: yup
-    .string()
-    .required("Confirm Password is required")
-    .oneOf([yup.ref("password"), null], "Passwords must match"),
-  receiveEmailNotifications: yup.boolean(),
-  acceptPolicy: yup.boolean().oneOf([true], "You must accept the policy"),
-});
-
 const Register = () => {
   const navigate = useNavigate();
 
@@ -58,7 +35,7 @@ const Register = () => {
     setError,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(registerValidationSchema),
     defaultValues: {
       first_name: "",
       last_name: "",

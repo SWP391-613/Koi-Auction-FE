@@ -1,6 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Typography } from "@mui/material";
-import axios from "axios";
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -10,17 +15,10 @@ import * as yup from "yup";
 import { routeUserToEachPage } from "~/components/auth/RoleBasedRoute";
 import NavigateButton from "~/components/shared/NavigateButton";
 import { LoginDTO } from "~/types/users.type";
-import { useAuth } from "../../contexts/AuthContext";
-import { login } from "../../utils/apiUtils";
-import "react-toastify/dist/ReactToastify.css";
 import { extractErrorMessage } from "~/utils/dataConverter";
-const schema = yup.object().shape({
-  email: yup
-    .string()
-    .email("Invalid email address")
-    .required("Email is required"),
-  password: yup.string().required("Password is required"),
-});
+import { loginValidationSchema } from "~/utils/validation.utils";
+import { useAuth } from "../../contexts/AuthContext";
+import { login, sendOtpForgotPassword } from "../../utils/apiUtils";
 
 const Login: React.FC = () => {
   const { authLogin } = useAuth();
@@ -29,11 +27,35 @@ const Login: React.FC = () => {
   const {
     control,
     handleSubmit,
+    getValues,
     setError,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(loginValidationSchema),
   });
+
+  const handleForgotPassword = async () => {
+    const email = getValues("email");
+    if (!email || !yup.string().email().isValidSync(email)) {
+      // Show an error message if the email is empty or invalid
+      toast.error("Please enter a valid email address to reset your password.");
+      return;
+    }
+
+    const response = await sendOtpForgotPassword(email);
+
+    if (response.status == 200) {
+      navigate("/otp-verification", {
+        state: {
+          email: email,
+          from: "login",
+          statusCode: 200,
+        },
+      });
+    } else {
+      alert("Failed to send OTP");
+    }
+  };
 
   const onSubmit = async (data: LoginDTO) => {
     try {
@@ -109,8 +131,37 @@ const Login: React.FC = () => {
             <p className="error text-red-500">{errors.password.message}</p>
           )}
         </div>
+        <div className="flex justify-between gap-10 items-center">
+          <Button
+            size="small"
+            disableElevation
+            variant="text"
+            color="primary"
+            onClick={handleForgotPassword}
+          >
+            Forgot password?
+          </Button>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  defaultChecked
+                  sx={{
+                    marginRight: 0,
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyItems: "center",
+                  }}
+                  size="small"
+                />
+              }
+              label="Remember me"
+            />
+          </FormGroup>
+        </div>
         <button
-          className="button-submit mt-4 h-12 w-full rounded-lg bg-blue-500 text-xl font-bold text-white hover:bg-blue-600"
+          className="button-submit h-12 w-full rounded-lg bg-blue-500 text-xl font-bold text-white hover:bg-blue-600"
           type="submit"
         >
           Log In

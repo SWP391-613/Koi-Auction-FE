@@ -4,6 +4,15 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { verifyOtp } from "~/utils/apiUtils";
 
+const validFromStates = [
+  "login",
+  "register",
+  "userDetail",
+  "managerDetail",
+  "staffDetail",
+  "breederDetail",
+];
+
 const OtpVerification: React.FC = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [email, setEmail] = useState("");
@@ -13,17 +22,13 @@ const OtpVerification: React.FC = () => {
   useEffect(() => {
     const state = location.state as {
       email?: string;
-      from?: string;
+      from: string;
       statusCode?: number;
     };
 
     if (
       state &&
-      (state.from === "register" ||
-        state.from === "userDetail" ||
-        state.from === "managerDetail" ||
-        state.from === "staffDetail" ||
-        state.from === "breederDetail") &&
+      validFromStates.includes(state.from) &&
       state.statusCode === 200 &&
       state.email
     ) {
@@ -54,10 +59,21 @@ const OtpVerification: React.FC = () => {
       return;
     }
 
+    const state = location.state as {
+      from: string;
+    };
+
     try {
       const data = await verifyOtp(email, otpString);
       toast.success("OTP verified successfully");
-      setTimeout(() => navigate("/"), 3000);
+
+      if (state.from === "login") {
+        // Redirect to /forgot-password if coming from login
+        setTimeout(() => navigate("/forgot-password"), 5000);
+      } else {
+        // Redirect to home page or other pages as per requirement
+        setTimeout(() => navigate("/"), 3000);
+      }
     } catch (error: Error | any) {
       console.error(error);
       toast.error(error.message || "An error occurred during verification");

@@ -131,8 +131,8 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
       toast.success("Koi registered successfully!");
       setOpenPopup(false); // Close the popup
     } catch (error) {
-      console.error("Failed to register koi:", error);
-      toast.error("Failed to register koi. Please try again.");
+      const errorMessage = extractErrorMessage(error, "Failed to register koi");
+      toast.error(errorMessage); // Notify user of the error
     }
   };
 

@@ -39,6 +39,7 @@ import Auctions from "./pages/auctions/Auctions";
 import AddKoiToAuction from "./pages/auctions/register/AddKoiToAuction";
 import KoiRegisterAuctionDetail from "./pages/auctions/register/KoiRegisterAuctionDetail";
 import VNPayReturn from "./pages/payments/VNPayReturn";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 
 const TITLE = "Auction Koi";
 
@@ -68,6 +69,7 @@ function App() {
                 path="/auctionkois/:auctionId/:auctionKoiId"
                 element={<KoiBidding />}
               />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
 
               {/* Protected routes for logged-in users */}
               <Route element={<ProtectedRoute />}>

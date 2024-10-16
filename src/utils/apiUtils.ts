@@ -534,6 +534,27 @@ export const sendOtp = async (email: string): Promise<any> => {
   }
 };
 
+export const sendOtpForgotPassword = async (email: string): Promise<any> => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/forgot-password?toEmail=${email}`,
+    );
+    if (response.status === 200) {
+      console.log("OTP sent successfully");
+    }
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error sending OTP:", error.response?.data);
+      throw new Error(
+        error.response?.data?.message || "An error occurred during OTP sending",
+      );
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
+  }
+};
+
 export const verifyOtp = async (email: string, otp: string): Promise<any> => {
   try {
     const response = await axios.post(`${API_URL}/users/verify`, {
@@ -932,7 +953,7 @@ export const postAuctionKoi = async (
     if (axios.isAxiosError(error)) {
       console.error("Axios error:", error.response?.data || error.message);
       throw new Error(
-        error.response?.data?.message || "Failed to create auction koi",
+        error.response?.data?.reason || "Failed to create auction koi",
       );
     } else {
       console.error("Unexpected error:", error);

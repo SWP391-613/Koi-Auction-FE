@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { verifyOtp } from "~/utils/apiUtils";
+import { verifyOtpIsCorrect, verifyOtpToVerifyUser } from "~/utils/apiUtils";
 
 const validFromStates = [
   "login",
@@ -64,16 +64,16 @@ const OtpVerification: React.FC = () => {
     };
 
     try {
-      const data = await verifyOtp(email, otpString);
-      toast.success("OTP verified successfully");
-
       if (state.from === "login") {
+        await verifyOtpIsCorrect(email, otpString);
         // Redirect to /forgot-password if coming from login
-        setTimeout(() => navigate("/forgot-password"), 5000);
+        setTimeout(() => navigate("/forgot-password", { state: { email } }), 3000);
       } else {
+        await verifyOtpToVerifyUser(email, otpString);
         // Redirect to home page or other pages as per requirement
         setTimeout(() => navigate("/"), 3000);
       }
+      toast.success("OTP verified successfully");
     } catch (error: Error | any) {
       console.error(error);
       toast.error(error.message || "An error occurred during verification");

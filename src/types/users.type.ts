@@ -67,3 +67,8 @@ export type UserDetailsResponse = UserBase & {
 };
 
 export type UserStatus = "UNVERIFIED" | "VERIFIED" | "BANNED";
+
+export type UpdatePasswordDTO = {
+  email: string;
+  new_password: string;
+}

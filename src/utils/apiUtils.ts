@@ -20,6 +20,7 @@ import {
   LoginDTO,
   Staff,
   StaffRegisterDTO,
+  UpdatePasswordDTO,
   UserLoginResponse,
   UserRegisterDTO,
 } from "~/types/users.type";
@@ -555,9 +556,34 @@ export const sendOtpForgotPassword = async (email: string): Promise<any> => {
   }
 };
 
-export const verifyOtp = async (email: string, otp: string): Promise<any> => {
+export const verifyOtpToVerifyUser = async (email: string, otp: string): Promise<any> => {
   try {
     const response = await axios.post(`${API_URL}/users/verify`, {
+      email,
+      otp,
+    });
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("OTP verification failed");
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error verifying OTP:", error.response?.data);
+      throw new Error(
+        error.response?.data?.message ||
+          "An error occurred during verification",
+      );
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
+  }
+};
+
+export const verifyOtpIsCorrect = async (email: string, otp: string): Promise<any> => {
+  try {
+    const response = await axios.post(`${API_URL}/otp/verify`, {
       email,
       otp,
     });
@@ -960,3 +986,18 @@ export const postAuctionKoi = async (
     }
   }
 };
+
+export const updateUserPassword = async (newPassword: UpdatePasswordDTO): Promise<void> => {
+
+  try{
+    const response = await axios.put(`${API_URL}/forgot-password`, newPassword);
+    if(response.status === 200){
+      console.log("Password updated successfully");
+    }
+  }catch(error){
+    console.error("Error updating password:", error);
+    throw error;
+  }
+
+
+}

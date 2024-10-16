@@ -1,14 +1,18 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { updateUserPassword } from "~/utils/apiUtils";
 import { forgotPasswordValidationSchema } from "~/utils/validation.utils";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ForgotPassword: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const email = location.state?.email;
 
-  // Setup React Hook Form
   const {
     register,
     handleSubmit,
@@ -17,12 +21,24 @@ const ForgotPassword: React.FC = () => {
     resolver: yupResolver(forgotPasswordValidationSchema),
   });
 
-  // Handle form submission
-  const onSubmit = (data: any) => {
-    toast.success("Password has been reset successfully");
-    console.log(data);
-    // Add your password reset logic here
+  const onSubmit = async (data: { password: string }) => {
+    if (!email) {
+      toast.error("Email not provided. Please try again.");
+      return;
+    }
+
+    try {
+      await updateUserPassword({ email, new_password: data.password });
+      toast.success("Password has been reset successfully");
+      setTimeout(() => navigate("/login"), 3000);
+    } catch (error) {
+      toast.error("Failed to update password. Please try again.");
+    }
   };
+
+  if (!email) {
+    return <div>Invalid access. Please start from the login page.</div>;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
@@ -31,7 +47,7 @@ const ForgotPassword: React.FC = () => {
         <div className="mb-4">
           <div className="relative">
             <input
-              type={showPassword ? "text" : "password"} // Show password based on state
+              type={showPassword ? "text" : "password"}
               placeholder="New Password"
               {...register("password")}
               className={`w-full h-12 text-xl border rounded-md p-3 ${
@@ -40,7 +56,7 @@ const ForgotPassword: React.FC = () => {
             />
             <button
               type="button"
-              onClick={() => setShowPassword((prev) => !prev)} // Toggle visibility
+              onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-3 top-3 text-gray-600"
             >
               {showPassword ? "Hide" : "Show"}
@@ -54,7 +70,7 @@ const ForgotPassword: React.FC = () => {
         </div>
         <div className="mb-4">
           <input
-            type="password" // Keep confirm password hidden
+            type="password"
             placeholder="Confirm Password"
             {...register("confirmPassword")}
             className={`w-full h-12 text-xl border rounded-md p-3 ${

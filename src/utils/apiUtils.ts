@@ -556,7 +556,10 @@ export const sendOtpForgotPassword = async (email: string): Promise<any> => {
   }
 };
 
-export const verifyOtpToVerifyUser = async (email: string, otp: string): Promise<any> => {
+export const verifyOtpToVerifyUser = async (
+  email: string,
+  otp: string,
+): Promise<any> => {
   try {
     const response = await axios.post(`${API_URL}/users/verify`, {
       email,
@@ -581,7 +584,10 @@ export const verifyOtpToVerifyUser = async (email: string, otp: string): Promise
   }
 };
 
-export const verifyOtpIsCorrect = async (email: string, otp: string): Promise<any> => {
+export const verifyOtpIsCorrect = async (
+  email: string,
+  otp: string,
+): Promise<any> => {
   try {
     const response = await axios.post(`${API_URL}/otp/verify`, {
       email,
@@ -987,17 +993,16 @@ export const postAuctionKoi = async (
   }
 };
 
-export const updateUserPassword = async (newPassword: UpdatePasswordDTO): Promise<void> => {
-
-  try{
+export const updateUserPassword = async (
+  newPassword: UpdatePasswordDTO,
+): Promise<void> => {
+  try {
     const response = await axios.put(`${API_URL}/forgot-password`, newPassword);
-    if(response.status === 200){
+    if (response.status === 200) {
       console.log("Password updated successfully");
     }
-  }catch(error){
+  } catch (error) {
     console.error("Error updating password:", error);
     throw error;
   }
-
-
-}
+};

@@ -67,7 +67,10 @@ const OtpVerification: React.FC = () => {
       if (state.from === "login") {
         await verifyOtpIsCorrect(email, otpString);
         // Redirect to /forgot-password if coming from login
-        setTimeout(() => navigate("/forgot-password", { state: { email } }), 3000);
+        setTimeout(
+          () => navigate("/forgot-password", { state: { email } }),
+          3000,
+        );
       } else {
         await verifyOtpToVerifyUser(email, otpString);
         // Redirect to home page or other pages as per requirement

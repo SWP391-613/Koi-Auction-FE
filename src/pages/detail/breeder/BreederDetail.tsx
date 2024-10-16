@@ -12,7 +12,7 @@ import { useAuth } from "~/contexts/AuthContext";
 import { useUserData } from "~/contexts/useUserData";
 import { environment } from "~/environments/environment";
 import { KoiDetailModel } from "~/types/kois.type";
-import { fetchKoisOfBreeder } from "~/utils/apiUtils";
+import { fetchKoisOfBreeder, sendOtp } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import KoiCart from "../../kois/KoiCart";
@@ -129,15 +129,24 @@ const BreederDetail: React.FC = () => {
     navigate("/auctions/register");
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     if (!user) return;
-    navigate("/otp-verification", {
-      state: {
-        email: user.email,
-        from: "userDetail",
-        statusCode: 200,
-      },
-    });
+
+    //send api request to send otp
+    //PUT: /api/v1/users/verify/:otp
+    const response = await sendOtp(user.email);
+
+    if (response.status == 200) {
+      navigate("/otp-verification", {
+        state: {
+          email: user.email,
+          from: "breederDetail",
+          statusCode: 200,
+        },
+      });
+    } else {
+      alert("Failed to send OTP");
+    }
   };
 
   const handlePageChange = (

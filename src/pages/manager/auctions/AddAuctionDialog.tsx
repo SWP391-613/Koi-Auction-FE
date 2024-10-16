@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Button,
   Dialog,
@@ -6,17 +7,32 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  CircularProgress,
+  SelectChangeEvent,
 } from "@mui/material";
 import { AuctionModel } from "~/types/auctions.type";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
-import { format, startOfDay } from "date-fns"; // Import necessary functions from date-fns
+import { format } from "date-fns";
+import { Staff } from "~/types/users.type";
+import { getCookie } from "~/utils/cookieUtils";
+import { useNavigate } from "react-router-dom";
+
+interface StaffApiResponse {
+  total_page: number;
+  total_item: number;
+  item: Staff[];
+}
 
 interface AddAuctionDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: () => void;
   newAuction: Partial<AuctionModel>;
-  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onInputChange: (name: string, value: unknown) => void;
 }
 
 const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
@@ -26,24 +42,82 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
   newAuction,
   onInputChange,
 }) => {
-  // Get today's date in the required format for datetime-local
+  const [staffList, setStaffList] = useState<Staff[]>([]);
+  const [page, setPage] = useState(0);
+  const [itemsPerPage] = useState(10); // You can adjust this value as needed
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleTextFieldChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    onInputChange(event.target.name, event.target.value);
+  };
+
+  const handleSelectChange = (event: SelectChangeEvent<unknown>) => {
+    onInputChange(event.target.name as string, event.target.value);
+  };
+
   const getCurrentDateTime = () => {
     const now = new Date();
-    return format(now, "yyyy-MM-dd'T'HH:mm"); // Format to YYYY-MM-DDTHH:MM
+    return format(now, "yyyy-MM-dd'T'HH:mm");
   };
 
   const [defaultStartTime] = useState(getCurrentDateTime());
 
+  const fetchStaffList = async () => {
+    const accessToken = getCookie("access_token");
+    if (!accessToken) {
+      navigate("/login");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.get<StaffApiResponse>(
+        "http://localhost:4000/api/v1/staffs",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          params: {
+            page: page,
+            limit: itemsPerPage,
+          },
+        },
+      );
+      setStaffList((prevList) => [...prevList, ...response.data.item]);
+      setTotalPages(response.data.total_page);
+    } catch (error) {
+      console.error("Error fetching staff list:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (open) {
-      // Set start_time if not already set
       if (!newAuction.start_time) {
-        onInputChange({
-          target: { name: "start_time", value: defaultStartTime },
-        } as React.ChangeEvent<HTMLInputElement>);
+        onInputChange("start_time", defaultStartTime);
       }
+
+      fetchStaffList();
     }
-  }, [open, newAuction.start_time, defaultStartTime, onInputChange]);
+  }, [
+    open,
+    newAuction.start_time,
+    defaultStartTime,
+    onInputChange,
+    navigate,
+    page,
+  ]);
+
+  const handleLoadMore = () => {
+    if (page < totalPages) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -58,7 +132,7 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
           fullWidth
           variant="standard"
           value={newAuction.title || ""}
-          onChange={onInputChange}
+          onChange={handleTextFieldChange}
         />
         <TextField
           margin="dense"
@@ -71,10 +145,10 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
             shrink: true,
           }}
           value={newAuction.start_time || ""}
-          onChange={onInputChange}
+          onChange={handleTextFieldChange}
           InputProps={{
             inputProps: {
-              min: defaultStartTime, // Prevent selecting past dates/times
+              min: defaultStartTime,
             },
           }}
         />
@@ -89,10 +163,10 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
             shrink: true,
           }}
           value={newAuction.end_time || ""}
-          onChange={onInputChange}
+          onChange={handleTextFieldChange}
           InputProps={{
             inputProps: {
-              min: newAuction.start_time || defaultStartTime, // Prevent selecting past dates/times and ensure end_time is after start_time
+              min: newAuction.start_time || defaultStartTime,
             },
           }}
         />
@@ -107,21 +181,31 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
             readOnly: true,
           }}
           value={AUCTION_STATUS.UPCOMING}
-          onChange={onInputChange}
+          onChange={handleTextFieldChange}
         />
-        <TextField
-          margin="dense"
-          name="auctioneer_id"
-          label="Auctioneer ID"
-          type="text"
-          fullWidth
-          variant="standard"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          value={newAuction.auctioneer_id || ""}
-          onChange={onInputChange}
-        />
+        <FormControl fullWidth variant="standard" margin="dense">
+          <InputLabel id="auctioneer-select-label">Auctioneer</InputLabel>
+          <Select
+            labelId="auctioneer-select-label"
+            id="auctioneer-select"
+            name="auctioneer_id"
+            value={newAuction.auctioneer_id || ""}
+            onChange={handleSelectChange}
+            label="Auctioneer"
+          >
+            {staffList.map((staff, index) => (
+              <MenuItem key={index} value={staff.id}>
+                {`${staff.first_name} ${staff.last_name}`}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        {loading && <CircularProgress />}
+        {page < totalPages && (
+          <Button onClick={handleLoadMore} disabled={loading}>
+            Load More Staff
+          </Button>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>

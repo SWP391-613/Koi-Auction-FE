@@ -8,6 +8,7 @@ import { useUserData } from "~/contexts/useUserData";
 import { environment } from "~/environments/environment";
 import { getCookie } from "~/utils/cookieUtils";
 import "./StaffDetail.scss";
+import { sendOtp } from "~/utils/apiUtils";
 
 const StaffDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -50,15 +51,24 @@ const StaffDetail: React.FC = () => {
     }
   };
 
-  const handleVerify = () => {
+  const handleVerify = async () => {
     if (!user) return;
-    navigate("/otp-verification", {
-      state: {
-        email: user.email,
-        from: "userDetail",
-        statusCode: 200,
-      },
-    });
+
+    //send api request to send otp
+    //PUT: /api/v1/users/verify/:otp
+    const response = await sendOtp(user.email);
+
+    if (response.status == 200) {
+      navigate("/otp-verification", {
+        state: {
+          email: user.email,
+          from: "staffDetail",
+          statusCode: 200,
+        },
+      });
+    } else {
+      alert("Failed to send OTP");
+    }
   };
 
   if (loading) return <LoadingComponent />;

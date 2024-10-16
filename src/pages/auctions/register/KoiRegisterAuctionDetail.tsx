@@ -23,6 +23,7 @@ import { formatCurrency } from "~/utils/currencyUtils";
 import { convertBidMethodToReadable } from "~/utils/dataConverter";
 import { getAuctionStatusV2 } from "~/utils/dateTimeUtils";
 import BreederKoiManagement from "./BreederKoiManagement";
+import { getCookie } from "~/utils/cookieUtils";
 
 const KoiRegisterAuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();
@@ -32,8 +33,13 @@ const KoiRegisterAuctionDetail: React.FC = () => {
     KoiWithAuctionKoiData[]
   >([]);
   const navigate = useNavigate();
+  const token = getCookie("access_token");
 
   useEffect(() => {
+    if (!token) {
+      return;
+    }
+
     const fetchAuction = async () => {
       const auctionData = await fetchAuctionById(Number(id));
       setAuction(auctionData);
@@ -54,11 +60,17 @@ const KoiRegisterAuctionDetail: React.FC = () => {
       }
     };
     fetchAuction();
-  }, [id]);
+  }, [id, token]);
 
   if (!auction) {
-    return <div className="py-8 text-center">Auction not found.</div>;
+    return (
+      <div className="py-8 text-center text-red-500">
+        No Upcoming Auction Found.
+      </div>
+    );
   }
+
+  if (!token) navigate("/login");
 
   const handleAddKoiToAuction = () => {
     alert(`Add Koi id to auction ${auction.id}`);

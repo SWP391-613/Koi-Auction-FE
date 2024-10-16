@@ -91,7 +91,11 @@ const AuctionDetail: React.FC = () => {
   }
 
   if (!auction) {
-    return <div className="py-8 text-center">No auction data available.</div>;
+    return (
+      <div className="py-8 text-center text-red-500">
+        No auction data available.
+      </div>
+    );
   }
 
   return (

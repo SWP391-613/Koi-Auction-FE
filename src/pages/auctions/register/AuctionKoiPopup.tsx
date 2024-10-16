@@ -25,6 +25,7 @@ interface AuctionKoiPopupProps {
 }
 
 const MIN_BID_STEP = 5;
+const auctionNeedCeilingPrice: string[] = ["DESCENDING_BID", "ASCENDING_BID"];
 
 const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
   open,
@@ -40,6 +41,7 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
   const [ceilPrice, setCeilPrice] = useState<number>(0);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [basePriceError, setBasePriceError] = useState<string>("");
+  const [ceilPriceError, setCeilPriceError] = useState<string>("");
 
   useEffect(() => {
     if (bidStep < MIN_BID_STEP) {
@@ -53,12 +55,23 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
     // Check if the new base price is less than the original base price
     if (basePrice < originalBasePrice) {
       setBasePriceError(
-        `Base price must be greater than or equal to the original price of $${originalBasePrice}.`,
+        `Price must be greater than or equal to the original price of $${originalBasePrice}.`,
       );
     } else {
       setBasePriceError("");
     }
   }, [basePrice, originalBasePrice]);
+
+  useEffect(() => {
+    // Check if the ceiling price is less than the current base price
+    if (ceilPrice > 0 && ceilPrice <= basePrice) {
+      setCeilPriceError(
+        `Ceiling price must be greater than the current base price of $${basePrice}.`,
+      );
+    } else {
+      setCeilPriceError("");
+    }
+  }, [ceilPrice, basePrice]);
 
   const handleSubmit = () => {
     if (!errorMessage) {
@@ -73,7 +86,7 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
           padding: 4,
           background: "#fff",
           borderRadius: 2,
-          maxWidth: 400,
+          maxWidth: 500,
           margin: "auto",
           marginTop: "100px",
           boxShadow: 3,
@@ -90,14 +103,14 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
         </Typography>
 
         <TextField
-          label="Base Price"
+          label="Base Price ($)"
           type="number"
           variant="outlined"
           fullWidth
           margin="normal"
           value={basePrice}
           onChange={(e) => setBasePrice(Number(e.target.value))}
-          placeholder="Enter base price"
+          placeholder="Enter base price ($)"
           error={!!basePriceError} // Show error if base price error exists
         />
         {basePriceError && (
@@ -105,14 +118,14 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
         )}
 
         <TextField
-          label="Bid Step"
+          label="Bid Step ($)"
           type="number"
           variant="outlined"
           fullWidth
           margin="normal"
           value={bidStep}
           onChange={(e) => setBidStep(Number(e.target.value))}
-          placeholder="Enter bid step"
+          placeholder="Enter bid step  ($)"
           error={!!errorMessage} // Show error if exists
         />
         {errorMessage && <FormHelperText error>{errorMessage}</FormHelperText>}
@@ -133,18 +146,22 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
         </TextField>
 
         <TextField
-          label="Ceiling Price"
+          label="Ceiling Price ($)"
           type="number"
           variant="outlined"
           fullWidth
           margin="normal"
           value={ceilPrice}
           onChange={(e) => setCeilPrice(Number(e.target.value))}
-          placeholder="Enter ceiling price"
+          placeholder="Enter ceiling price ($)"
           InputProps={{
-            readOnly: bidMethod !== "DESCENDING_BID", // Read-only unless descending
+            readOnly: !auctionNeedCeilingPrice.includes(bidMethod),
           }}
+          error={!!ceilPriceError}
         />
+        {ceilPriceError && (
+          <FormHelperText error>{ceilPriceError}</FormHelperText>
+        )}
 
         <Box
           sx={{

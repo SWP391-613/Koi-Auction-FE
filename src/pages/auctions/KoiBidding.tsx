@@ -72,11 +72,13 @@ const KoiBidding: React.FC = () => {
         setAuctionKoi(auctionKoiDetails);
         setAuction(auctionDetails);
         setBidAmount(
-          auctionKoiDetails.current_bid +
-            auctionKoiDetails.bid_step +
-            (auctionKoiDetails.current_bid === 0
-              ? auctionKoiDetails.base_price
-              : 0),
+          auctionKoi?.bid_method === "SEALED_BID"
+            ? 0
+            : auctionKoiDetails.current_bid +
+                auctionKoiDetails.bid_step +
+                (auctionKoiDetails.current_bid === 0
+                  ? auctionKoiDetails.base_price
+                  : 0),
         );
         setKoi(await getKoiById(auctionKoiDetails.koi_id));
       } catch (error) {
@@ -150,10 +152,10 @@ const KoiBidding: React.FC = () => {
           className="rounded bg-gray-200 px-5 py-3 text-lg text-black transition hover:bg-gray-200"
         />
       </div>
-      <div className="m-5 flex flex-col gap-4 sm:flex-col md:flex-row">
+      <div className="m-5 flex flex-col gap-4 md:flex-row">
         {/* Koi Image and Media Gallery */}
         <div className="flex flex-col items-start justify-start w-[45%]">
-          <div className="relative h-96 w-full rounded-xl bg-[#4086c7] sm:h-128 md:h-144 lg:h-192">
+          <div className="relative h-[60%] w-full rounded-xl bg-[#4086c7]">
             {selectedMedia ? (
               selectedMedia.includes("youtube") ? (
                 <iframe

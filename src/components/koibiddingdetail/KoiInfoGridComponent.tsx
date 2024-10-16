@@ -65,7 +65,10 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
     },
     {
       icon: faGavel,
-      label: "Current Bid",
+      label:
+        auctionKoi.bid_method === "DESCENDING_BID"
+          ? "Current Price"
+          : "Current Bid",
       value: formatCurrency(auctionKoi.current_bid),
       bgColor: "bg-green-200",
     },

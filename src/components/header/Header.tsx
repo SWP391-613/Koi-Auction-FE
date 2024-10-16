@@ -18,6 +18,7 @@ import {
   faCartShopping,
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames"; // Install this package for easier class management
+import { motion, AnimatePresence } from "framer-motion";
 
 // Define interfaces for navigation and account buttons
 interface NavButton {
@@ -66,8 +67,94 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
       className={classNames(baseClasses, inactiveClasses)}
     >
       {button.icon}
-      <span className="ml-2">{button.text}</span>
+      <span className="ml-2 hidden md:flex">{button.text}</span>
     </button>
+  );
+};
+
+const Sidebar: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  navButtons: NavButton[];
+  accountButtons: NavButton[];
+  isActive: (path: string) => boolean; // Added this line
+}> = ({ isOpen, onClose, navButtons, accountButtons, isActive }) => {
+  // Added isActive here
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ x: "100%" }}
+          animate={{ x: 0 }}
+          exit={{ x: "100%" }}
+          transition={{ type: "tween", duration: 0.3 }}
+          className="fixed inset-y-0 right-0 z-50 w-72 bg-white shadow-lg md:hidden overflow-y-auto"
+        >
+          <div className="flex flex-col h-full bg-gray-100">
+            <div className="flex justify-end p-4">
+              <button
+                onClick={onClose}
+                aria-label="Close navigation menu"
+                className="bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors duration-200"
+              >
+                <FontAwesomeIcon
+                  icon={faTimes}
+                  className="h-6 w-6 text-gray-600"
+                />
+              </button>
+            </div>
+            <div className="px-4 py-2 flex-grow bg-gray-100">
+              <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">
+                Navigation
+              </h2>
+              <nav>
+                <ul className="space-y-4">
+                  {navButtons.map((button, index) => (
+                    <li key={index}>
+                      <Link
+                        to={button.to ?? ""}
+                        className={`flex items-center p-3 rounded-lg ${
+                          button.to && isActive(button.to)
+                            ? "bg-blue-50 text-blue-700"
+                            : "text-gray-700 hover:bg-gray-50"
+                        } transition-colors duration-150`}
+                        onClick={onClose}
+                      >
+                        {button.icon} &nbsp;
+                        <span className="text-lg">{button.text}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+              <h2 className="text-2xl font-bold mt-8 mb-6 text-gray-800 border-b pb-2">
+                Account
+              </h2>
+              <nav>
+                <ul className="space-y-4">
+                  {accountButtons.map((button, index) => (
+                    <li key={index}>
+                      <Link
+                        to={button.to ?? ""}
+                        className={`flex items-center p-3 rounded-lg ${
+                          button.to && isActive(button.to)
+                            ? "bg-blue-50 text-blue-700"
+                            : "text-gray-700 hover:bg-gray-50"
+                        } transition-colors duration-150`}
+                        onClick={onClose}
+                      >
+                        {button.icon} &nbsp;
+                        <span className="text-lg">{button.text}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
@@ -205,11 +292,13 @@ const Header = () => {
           className="bg-transparent hover:bg-transparent flex items-center"
         >
           <img src="/favicon.svg" alt="Koi Auction Logo" className="w-8" />
-          <h1 className="ml-2 text-2xl font-bold text-red-500">Koi Auction</h1>
+          <h1 className="ml-2 text-xl font-bold text-red-500 hidden lg:flex">
+            Koi Auction
+          </h1>
         </button>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex md:gap-6">
+        <nav className="hidden md:flex md:gap-3">
           {navButtons.map((button, index) => (
             <HeaderButton
               key={index}
@@ -250,42 +339,13 @@ const Header = () => {
       </div>
 
       {/* Mobile Slide-Out Menu */}
-      <div
-        className={classNames(
-          "fixed inset-y-0 right-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out md:hidden",
-          { "translate-x-0": isNavOpen, "translate-x-full": !isNavOpen },
-        )}
-      >
-        <div className="flex justify-end p-4">
-          <button
-            onClick={closeNav}
-            aria-label="Close navigation menu"
-            className="bg-gray-200 rounded-2xl p-2"
-          >
-            <FontAwesomeIcon icon={faTimes} className="h-6 w-6 text-gray-600" />
-          </button>
-        </div>
-        <div className="px-4 py-2">
-          <h2 className="text-lg font-semibold mb-4">Navigation</h2>
-          {navButtons.map((button, index) => (
-            <HeaderButton
-              key={index}
-              button={button}
-              isActive={button.to ? isActive(button.to) : false}
-              onClick={closeNav}
-            />
-          ))}
-          <h2 className="text-lg font-semibold mt-6 mb-4">Account</h2>
-          {accountButtons.map((button, index) => (
-            <HeaderButton
-              key={index}
-              button={button}
-              isActive={false}
-              onClick={closeNav}
-            />
-          ))}
-        </div>
-      </div>
+      <Sidebar
+        isOpen={isNavOpen}
+        onClose={closeNav}
+        navButtons={navButtons}
+        accountButtons={accountButtons}
+        isActive={isActive}
+      />
     </header>
   );
 };

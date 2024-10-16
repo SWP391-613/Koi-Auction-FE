@@ -199,10 +199,12 @@ const AuctionDetail: React.FC = () => {
                     }`}
                   >
                     <FontAwesomeIcon icon={faArrowCircleRight} className="" />
-                    {formatCurrency(
-                      combinedKoiData.auctionKoiData.current_bid ||
-                        combinedKoiData.auctionKoiData.base_price,
-                    )}
+                    {combinedKoiData.auctionKoiData.bid_method === "SEALED_BID"
+                      ? "Hidden"
+                      : formatCurrency(
+                          combinedKoiData.auctionKoiData.current_bid ||
+                            combinedKoiData.auctionKoiData.base_price,
+                        )}
                   </span>
                 </div>
               </div>

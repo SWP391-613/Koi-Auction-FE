@@ -18,7 +18,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { useUserData } from "~/contexts/useUserData";
+import { useUserData } from "~/hooks/useUserData";
 import { getCookie } from "~/utils/cookieUtils";
 import {
   createOrderPayment,

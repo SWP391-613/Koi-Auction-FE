@@ -21,6 +21,7 @@ export type UserBase = {
 export type LoginDTO = {
   email: string;
   password: string;
+  rememberMe?: boolean;
 };
 
 export type UserLoginResponse = {
@@ -47,6 +48,8 @@ export type UserRegisterDTO = UserRegisterBase & {
   confirm_password: string; // Unique field for UserRegisterDTO
   status: string;
   role_id: number;
+  receiveEmailNotifications?: boolean;
+  acceptPolicy?: boolean;
 };
 
 export type StaffRegisterDTO = Omit<UserRegisterBase, "password"> & {

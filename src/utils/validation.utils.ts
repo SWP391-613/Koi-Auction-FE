@@ -19,6 +19,7 @@ export const loginValidationSchema = Yup.object().shape({
     .email("Invalid email address")
     .required("Email is required"),
   password: Yup.string().required("Password is required"),
+  rememberMe: Yup.boolean(),
 });
 
 export const registerValidationSchema = Yup.object().shape({

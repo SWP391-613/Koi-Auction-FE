@@ -2,6 +2,7 @@ import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "~/contexts/AuthContext";
 import { Role } from "~/types/roles.type";
+import { getUserCookieToken } from "~/utils/auth.utils";
 import { getCookie, parseRoles } from "~/utils/cookieUtils";
 
 interface RoleBasedRouteProps {
@@ -28,7 +29,7 @@ const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
   redirectPath = "/login",
 }) => {
   const { isLoggedIn, user } = useAuth();
-  const token = getCookie("access_token");
+  const token = getUserCookieToken();
   const storedRoles = getCookie("user_roles");
 
   if (!isLoggedIn || !token) {

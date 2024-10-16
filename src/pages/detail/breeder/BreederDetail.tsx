@@ -9,7 +9,7 @@ import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import DepositComponent from "~/components/shared/DepositComponent";
 import KoiCreatePopup from "~/components/shared/KoiCreatePopup";
 import { useAuth } from "~/contexts/AuthContext";
-import { useUserData } from "~/contexts/useUserData";
+import { useUserData } from "~/hooks/useUserData";
 import { environment } from "~/environments/environment";
 import { KoiDetailModel } from "~/types/kois.type";
 import { fetchKoisOfBreeder, sendOtp } from "~/utils/apiUtils";

@@ -23,6 +23,7 @@ import { formatCurrency } from "~/utils/currencyUtils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoginOrRegister from "../auth/LoginOrRegister";
 import { getCookie } from "~/utils/cookieUtils";
+import { getUserCookieToken } from "~/utils/auth.utils";
 
 interface KoiInfoGridProps {
   koi: KoiDetailModel;
@@ -80,7 +81,7 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
     },
   ];
 
-  const accessToken = getCookie("access_token");
+  const accessToken = getUserCookieToken();
 
   return (
     <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 text-lg">

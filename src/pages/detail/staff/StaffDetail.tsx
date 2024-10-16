@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
-import { useUserData } from "~/contexts/useUserData";
+import { useUserData } from "~/hooks/useUserData";
 import { environment } from "~/environments/environment";
 import { getCookie } from "~/utils/cookieUtils";
 import "./StaffDetail.scss";

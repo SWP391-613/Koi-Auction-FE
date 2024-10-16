@@ -1,3 +1,5 @@
+// src/pages/Login.tsx
+import React from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Button,
@@ -6,19 +8,20 @@ import {
   FormGroup,
   Typography,
 } from "@mui/material";
-import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import * as yup from "yup";
-import { routeUserToEachPage } from "~/components/auth/RoleBasedRoute";
 import NavigateButton from "~/components/shared/NavigateButton";
 import { LoginDTO } from "~/types/users.type";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import { loginValidationSchema } from "~/utils/validation.utils";
 import { useAuth } from "../../contexts/AuthContext";
 import { login, sendOtpForgotPassword } from "../../utils/apiUtils";
+import FormField from "~/components/forms/FormField";
+import CheckboxField from "~/components/forms/CheckboxField";
+import AuthFormContainer from "~/components/forms/AuthFormContainer";
+import { routeUserToEachPage } from "~/components/auth/RoleBasedRoute";
 
 const Login: React.FC = () => {
   const { authLogin } = useAuth();
@@ -32,37 +35,42 @@ const Login: React.FC = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(loginValidationSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: true,
+    },
   });
 
   const handleForgotPassword = async () => {
     const email = getValues("email");
-    if (!email || !yup.string().email().isValidSync(email)) {
-      // Show an error message if the email is empty or invalid
+    if (!email || !(await yup.string().email().isValid(email))) {
       toast.error("Please enter a valid email address to reset your password.");
       return;
     }
 
-    const response = await sendOtpForgotPassword(email);
-
-    if (response.status == 200) {
-      navigate("/otp-verification", {
-        state: {
-          email: email,
-          from: "login",
-          statusCode: 200,
-        },
-      });
-    } else {
-      alert("Failed to send OTP");
+    try {
+      const response = await sendOtpForgotPassword(email);
+      if (response.status === 200) {
+        navigate("/otp-verification", {
+          state: {
+            email,
+            from: "login",
+            statusCode: 200,
+          },
+        });
+      } else {
+        toast.error("Failed to send OTP");
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred.");
     }
   };
 
   const onSubmit = async (data: LoginDTO) => {
     try {
-      console.log(data);
-      const response = await login({ ...data });
+      const response = await login(data);
 
-      // Use authLogin here
       authLogin({
         token: response.token,
         roles: response.roles,
@@ -71,7 +79,7 @@ const Login: React.FC = () => {
         refresh_token: response.refresh_token,
       });
 
-      toast.success("Login successful!");
+      toast.success("Login successfully!");
       setTimeout(() => {
         navigate(routeUserToEachPage(response.roles[0]));
       }, 2000);
@@ -85,53 +93,30 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div
-      className={`login-container flex h-screen items-center justify-center bg-gray-100`}
-    >
+    <AuthFormContainer>
       <form
-        className="form flex flex-col gap-4 rounded-lg bg-white p-9 shadow-md"
+        className="form flex flex-col gap-4 rounded-lg bg-white p-9 shadow-md w-full max-w-md"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className="mb-6 text-4xl">Welcome back!</h1>
-        <div className="flex flex-col">
-          <label className="mb-3 text-lg text-gray-700">Email Address *</label>
-          <Controller
-            name="email"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <input
-                type="email"
-                className="input border-indigo mt-1 rounded-lg border-2 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter your Email Address"
-                {...field}
-              />
-            )}
-          />
-          {errors.email && (
-            <p className="error text-red-500">{errors.email.message}</p>
-          )}
-        </div>
-        <div className="flex flex-col">
-          <label className="mb-3 text-lg text-gray-700">Password *</label>
-          <Controller
-            name="password"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <input
-                type="password"
-                className="input mt-1 rounded-lg border-2 border-indigo-500 p-2 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter your Password"
-                {...field}
-              />
-            )}
-          />
-          {errors.password && (
-            <p className="error text-red-500">{errors.password.message}</p>
-          )}
-        </div>
-        <div className="flex justify-between gap-10 items-center">
+        <h1 className="mb-6 text-4xl text-center">Welcome back!</h1>
+
+        <FormField
+          name="email"
+          label="Email Address"
+          type="email"
+          control={control}
+          errors={errors}
+        />
+
+        <FormField
+          name="password"
+          label="Password"
+          type="password"
+          control={control}
+          errors={errors}
+        />
+
+        <div className="flex justify-between items-center">
           <Button
             size="small"
             disableElevation
@@ -141,31 +126,21 @@ const Login: React.FC = () => {
           >
             Forgot password?
           </Button>
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  defaultChecked
-                  sx={{
-                    marginRight: 0,
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyItems: "center",
-                  }}
-                  size="small"
-                />
-              }
-              label="Remember me"
-            />
-          </FormGroup>
+          <CheckboxField
+            name="rememberMe"
+            label="Remember me"
+            control={control}
+            errors={errors}
+          />
         </div>
+
         <button
-          className="button-submit h-12 w-full rounded-lg bg-blue-500 text-xl font-bold text-white hover:bg-blue-600"
+          className="button-submit h-12 w-full rounded-lg bg-blue-500 text-xl font-bold text-white hover:bg-blue-600 transition duration-200"
           type="submit"
         >
           Log In
         </button>
+
         <div className="flex justify-center items-center">
           <Typography
             variant="h6"
@@ -181,8 +156,7 @@ const Login: React.FC = () => {
           />
         </div>
       </form>
-      <ToastContainer />
-    </div>
+    </AuthFormContainer>
   );
 };
 

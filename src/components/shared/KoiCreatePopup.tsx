@@ -15,10 +15,10 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { AddNewKoiDTO, KoiDetailModel } from "~/types/kois.type";
-import { getCookie } from "~/utils/cookieUtils";
-import AddKoiPreviewCart from "./AddKoiPreviewCart";
+import { AddNewKoiDTO } from "~/types/kois.type";
+import { getUserCookieToken } from "~/utils/auth.utils";
 import { categoryMap } from "~/utils/dataConverter";
+import AddKoiPreviewCart from "./AddKoiPreviewCart";
 
 interface KoiCreatePopupProps {
   open: boolean;
@@ -123,7 +123,7 @@ const KoiCreatePopup: React.FC<KoiCreatePopupProps> = ({
     }
 
     try {
-      const token = getCookie("access_token");
+      const token = getUserCookieToken();
       console.log(formData);
       const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/api/v1/kois`,

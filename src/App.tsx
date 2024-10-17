@@ -10,7 +10,6 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Context providers
 import { AuthProvider } from "./contexts/AuthContext";
-import { ThemeProvider } from "./contexts/ThemeContext";
 
 // Components
 import ProtectedRoute from "./components/common/ProtectedRoute";
@@ -40,6 +39,7 @@ import AddKoiToAuction from "./pages/auctions/register/AddKoiToAuction";
 import KoiRegisterAuctionDetail from "./pages/auctions/register/KoiRegisterAuctionDetail";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import ForgotPassword from "./pages/auth/ForgotPassword";
+import InternalServerError from "./components/error/NotFound";
 
 const TITLE = "Auction Koi";
 
@@ -62,6 +62,10 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/notfound" element={<NotFound />} />
+              <Route
+                path="/internal-server-error"
+                element={<InternalServerError />}
+              />
               <Route path="/otp-verification" element={<OtpVerification />} />
               <Route path="/auctions" element={<Auctions />} />
               <Route path="/auctions/:id" element={<AuctionDetail />} />

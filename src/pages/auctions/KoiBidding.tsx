@@ -8,10 +8,8 @@ import { toast, ToastContainer } from "react-toastify";
 import { Bid } from "~/components/koibiddingdetail/BiddingHistory";
 import { KoiInfoGridComponent } from "~/components/koibiddingdetail/KoiInfoGridComponent";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
-import { ERROR_MESSAGE } from "~/constants/errorMessages";
-import { SUCCESS_MESSAGE } from "~/constants/successMessage";
 import { WEB_SOCKET_MESSAGE } from "~/constants/webSocketMessages";
-import { useUserData } from "~/contexts/useUserData";
+import { useUserData } from "~/hooks/useUserData";
 import {
   fetchAuctionById,
   fetchAuctionKoiDetails,
@@ -31,6 +29,7 @@ import { AuctionModel } from "~/types/auctions.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { formatCurrency } from "~/utils/currencyUtils";
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "~/constants/message";
 
 // Define the BidRequest interface
 export type BidRequest = {
@@ -98,7 +97,7 @@ const KoiBidding: React.FC = () => {
           Number(auctionKoiId),
           (bidResponse: Bid) => {
             if (auctionKoi && bidResponse.bid_amount > auctionKoi.current_bid) {
-              toast.success("New highest bid received!");
+              toast.success(SUCCESS_MESSAGE.HIGHEST_BID_RECEIVED);
             }
             setLatestBid(bidResponse);
             setAuctionKoi((prev) =>

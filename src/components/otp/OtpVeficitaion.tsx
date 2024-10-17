@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  ERROR_MESSAGE,
+  SUCCESS_MESSAGE,
+  VALIDATION_MESSAGE,
+} from "~/constants/message";
 import { verifyOtpIsCorrect, verifyOtpToVerifyUser } from "~/utils/apiUtils";
 
 const validFromStates = [
@@ -55,7 +60,7 @@ const OtpVerification: React.FC = () => {
     const otpString = otp.join("");
 
     if (otpString.length !== 6) {
-      toast.error("Please enter a valid 6-digit OTP");
+      toast.error(VALIDATION_MESSAGE.ENTER_VALID_OTP_6_DIGIT);
       return;
     }
 
@@ -76,10 +81,10 @@ const OtpVerification: React.FC = () => {
         // Redirect to home page or other pages as per requirement
         setTimeout(() => navigate("/"), 3000);
       }
-      toast.success("OTP verified successfully");
+      toast.success(SUCCESS_MESSAGE.OTP_VERIFY_SUCCESS);
     } catch (error: Error | any) {
       console.error(error);
-      toast.error(error.message || "An error occurred during verification");
+      toast.error(error.message || ERROR_MESSAGE.OTP_VERIFICATION_ERROR);
     }
   };
 

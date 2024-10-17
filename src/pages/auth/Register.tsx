@@ -1,32 +1,20 @@
+// src/pages/Register.tsx
+import React from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Typography } from "@mui/material";
-import React from "react";
-import { Control, Controller, FieldErrors, useForm } from "react-hook-form";
+import { Control, FieldErrors, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import NavigateButton from "~/components/shared/NavigateButton";
 import { UserRegisterDTO } from "~/types/users.type";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import { registerValidationSchema } from "~/utils/validation.utils";
-import { register } from "../../utils/apiUtils";
+import { register as registerUser } from "../../utils/apiUtils";
+import FormField from "~/components/forms/FormField";
+import CheckboxField from "~/components/forms/CheckboxField";
+import AuthFormContainer from "~/components/forms/AuthFormContainer";
 
-interface FormFieldProps {
-  name: string;
-  label: string;
-  type?: string;
-  control: Control<any>;
-  errors: FieldErrors;
-}
-
-interface CheckboxFieldProps {
-  name: string;
-  label: string;
-  control: Control<any>;
-  errors?: FieldErrors;
-}
-
-const Register = () => {
+const Register: React.FC = () => {
   const navigate = useNavigate();
 
   const {
@@ -43,14 +31,13 @@ const Register = () => {
       password: "",
       confirm_password: "",
       receiveEmailNotifications: true,
-      acceptPolicy: false,
+      acceptPolicy: true,
     },
   });
 
   const onSubmit = async (data: UserRegisterDTO) => {
     try {
-      const response = await register(data);
-      console.log("Data ne: " + JSON.stringify(response));
+      const response = await registerUser(data);
       toast.success("Registered successfully");
       navigate("/otp-verification", {
         state: {
@@ -69,9 +56,7 @@ const Register = () => {
   };
 
   return (
-    <div
-      className={`min-h-screen flex items-center justify-center bg-gray-100 p-4`}
-    >
+    <AuthFormContainer>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-md bg-white rounded-lg shadow-md p-8 space-y-6"
@@ -156,76 +141,8 @@ const Register = () => {
           />
         </div>
       </form>
-      <ToastContainer />
-    </div>
+    </AuthFormContainer>
   );
 };
-
-const FormField: React.FC<FormFieldProps> = ({
-  name,
-  label,
-  type = "text",
-  control,
-  errors,
-}) => (
-  <div>
-    <label
-      htmlFor={name}
-      className="block text-sm font-medium text-gray-700 mb-1"
-    >
-      {label} *
-    </label>
-    <Controller
-      name={name}
-      control={control}
-      render={({ field }) => (
-        <input
-          {...field}
-          type={type}
-          id={name}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder={label}
-        />
-      )}
-    />
-    {errors[name] && (
-      <p className="mt-1 text-xs text-red-500">
-        {errors[name]?.message as string}
-      </p>
-    )}
-  </div>
-);
-
-const CheckboxField: React.FC<CheckboxFieldProps> = ({
-  name,
-  label,
-  control,
-  errors,
-}) => (
-  <div className="flex items-center">
-    <Controller
-      name={name}
-      control={control}
-      render={({ field: { onChange, value, ...field } }) => (
-        <input
-          {...field}
-          type="checkbox"
-          id={name}
-          checked={value}
-          onChange={(e) => onChange(e.target.checked)}
-          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-        />
-      )}
-    />
-    <label htmlFor={name} className="ml-2 block text-sm text-gray-900">
-      {label}
-    </label>
-    {errors && errors[name] && (
-      <p className="mt-1 text-xs text-red-500">
-        {errors[name]?.message as string}
-      </p>
-    )}
-  </div>
-);
 
 export default Register;

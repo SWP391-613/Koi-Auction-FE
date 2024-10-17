@@ -24,7 +24,7 @@ import {
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { useUserData } from "~/contexts/useUserData";
+import { useUserData } from "~/hooks/useUserData";
 import { updateOrder } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { Order } from "./UserOrder";

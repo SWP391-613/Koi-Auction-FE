@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import DepositComponent from "~/components/shared/DepositComponent";
-import { useUserData } from "~/contexts/useUserData";
+import { useUserData } from "~/hooks/useUserData";
 import { formatDate, sendOtp, updateUserField } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import "./UserDetail.scss";

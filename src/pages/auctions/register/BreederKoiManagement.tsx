@@ -2,9 +2,10 @@ import { Alert, Container } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import LoadingComponent from "~/components/shared/LoadingComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "~/constants/message";
 import { BREEDER_KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { BidMethod } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
@@ -18,6 +19,7 @@ import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage, getCategoryName } from "~/utils/dataConverter";
 import PaginationComponent from "../../../components/common/PaginationComponent";
 import AuctionKoiPopup from "./AuctionKoiPopup";
+import { getUserCookieToken } from "~/utils/auth.utils";
 
 interface BreederKoiManagementProps {
   auction_id: number;
@@ -46,7 +48,7 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
   });
   const [koiImage, setKoiImage] = useState<File | null>(null);
 
-  const accessToken = getCookie("access_token");
+  const accessToken = getUserCookieToken();
   const userId = getCookie("user_id");
   // Handle access token early return
   useEffect(() => {
@@ -77,7 +79,10 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
           throw new Error("Unexpected data structure from API");
         }
       } catch (error) {
-        const errorMessage = extractErrorMessage(error, "Error fetching kois");
+        const errorMessage = extractErrorMessage(
+          error,
+          ERROR_MESSAGE.FETCH_KOI_ERROR,
+        );
         setError(errorMessage); // Set error state
         toast.error(errorMessage); // Notify user of the error
       } finally {
@@ -99,7 +104,6 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
   };
 
   const handlePush = (id: number) => {
-    console.log("Koi id to be pushed:", id);
     setSelectedKoiId(id);
     setOpenPopup(true);
   };
@@ -110,10 +114,8 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
     bidMethod: BidMethod,
     ceilPrice: number,
   ) => {
-    console.log("Koi id to be pushed1312312:", selectedKoiId);
-
     if (!selectedKoiId || !auction_id) {
-      toast.error("Please select a koi and auction.");
+      toast.error(ERROR_MESSAGE.SELECT_KOI_AND_AUCTION);
       return;
     }
 
@@ -127,11 +129,13 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
         ceilPrice,
         accessToken,
       );
-      console.log("Koi registered successfully:", result);
-      toast.success("Koi registered successfully!");
+      toast.success(SUCCESS_MESSAGE.REGISTER_KOI_SUCCESS);
       setOpenPopup(false); // Close the popup
     } catch (error) {
-      const errorMessage = extractErrorMessage(error, "Failed to register koi");
+      const errorMessage = extractErrorMessage(
+        error,
+        ERROR_MESSAGE.REGISTER_KOI_FAILED,
+      );
       toast.error(errorMessage); // Notify user of the error
     }
   };
@@ -148,10 +152,13 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
 
     try {
       await deleteKoiById(id, accessToken); // Use the utility function
-      toast.success("Koi deleted successfully!");
+      toast.success(SUCCESS_MESSAGE.DELETE_KOI_SUCCESS);
       setKois((prevKois) => prevKois.filter((koi) => koi.id !== id)); // Update state
     } catch (err: any) {
-      const errorMessage = extractErrorMessage(err, "Error deleting koi");
+      const errorMessage = extractErrorMessage(
+        err,
+        ERROR_MESSAGE.DELETE_KOI_FAILED,
+      );
       toast.error(errorMessage); // Notify user of the error
       setError(errorMessage); // Set error state
     }

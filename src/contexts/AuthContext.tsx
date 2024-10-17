@@ -8,11 +8,7 @@ import {
 } from "~/utils/cookieUtils";
 import { doLogout } from "~/utils/apiUtils";
 import { UserLoginResponse } from "~/types/users.type";
-
-type AuthLoginData = Pick<
-  UserLoginResponse,
-  "token" | "roles" | "id" | "username"
->;
+import { AuthLoginData } from "~/types/auth.types";
 
 interface AuthContextType {
   isLoggedIn: boolean;

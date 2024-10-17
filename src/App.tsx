@@ -10,7 +10,6 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Context providers
 import { AuthProvider } from "./contexts/AuthContext";
-import { ThemeProvider } from "./contexts/ThemeContext";
 
 // Components
 import ProtectedRoute from "./components/common/ProtectedRoute";

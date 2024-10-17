@@ -13,10 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { KoiDetailItem } from "./KoiBiddingDetailComponent";
 import { UserDetailsResponse } from "~/types/users.type";
-import {
-  convertBidMethodToReadable,
-  getCategoryName,
-} from "~/utils/dataConverter";
+import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter";
 import { KoiDetailModel } from "~/types/kois.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
 import { formatCurrency } from "~/utils/currencyUtils";
@@ -36,7 +33,12 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
   user,
 }) => {
   const koiInfoItems = [
-    { icon: faVenusMars, label: "Sex", value: koi.sex, bgColor: "bg-gray-300" },
+    {
+      icon: faVenusMars,
+      label: "Sex",
+      value: convertDataToReadable(koi.sex),
+      bgColor: "bg-gray-300",
+    },
     {
       icon: faRuler,
       label: "Length",
@@ -51,7 +53,7 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
     },
     {
       icon: faFish,
-      label: "Category ID",
+      label: "Category",
       value: getCategoryName(koi.category_id),
       bgColor: "bg-gray-300",
     },
@@ -75,7 +77,7 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
     {
       icon: faHandHoldingHeart,
       label: "Bid Method",
-      value: convertBidMethodToReadable(auctionKoi.bid_method),
+      value: convertDataToReadable(auctionKoi.bid_method),
       bgColor: "bg-blue-200",
     },
   ];

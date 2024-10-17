@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
-import { Bid } from "~/components/BiddingHistory";
+import { Bid } from "~/components/koibiddingdetail/BiddingHistory";
 import { KoiInfoGridComponent } from "~/components/koibiddingdetail/KoiInfoGridComponent";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
 import { ERROR_MESSAGE } from "~/constants/errorMessages";
@@ -24,7 +24,7 @@ import {
   subscribeToAuctionUpdates,
 } from "~/utils/websocket";
 import Sold from "../../assets/Sold.png";
-import BiddingHistory from "../../components/BiddingHistory";
+import BiddingHistory from "~/components/koibiddingdetail/BiddingHistory";
 import NavigateButton from "../../components/shared/NavigateButton";
 import { KoiDetailModel } from "~/types/kois.type";
 import { AuctionModel } from "~/types/auctions.type";
@@ -154,8 +154,11 @@ const KoiBidding: React.FC = () => {
       </div>
       <div className="m-5 flex flex-col gap-4 md:flex-row">
         {/* Koi Image and Media Gallery */}
-        <div className="flex flex-col items-start justify-start w-[45%]">
-          <div className="relative h-[60%] w-full rounded-xl bg-[#4086c7]">
+        <div className="flex flex-col items-center justify-start w-full md:w-[50%]">
+          <div
+            className="relative justify-center h-[25rem] w-full md:h-[40rem] md:w-[80%] rounded-xl
+          bg-gradient-to-r from-[#1365b4] to-[#1584cb] duration-300 ease-in-out"
+          >
             {selectedMedia ? (
               selectedMedia.includes("youtube") ? (
                 <iframe
@@ -167,14 +170,20 @@ const KoiBidding: React.FC = () => {
                 ></iframe>
               ) : (
                 <img
-                  className="absolute inset-0 h-full w-full rounded-xl object-contain shadow-md transition duration-300 hover:shadow-2xl hover:ring-4 hover:ring-blue-400"
+                  className="absolute inset-0 h-full w-full rounded-xl object-contain
+                          drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.2)]
+                        duration-500
+                        hover:drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.35)] opacity-100"
                   src={selectedMedia}
                   alt={koi.name}
                 />
               )
             ) : (
               <img
-                className="absolute inset-0 h-full w-full rounded-xl object-contain shadow-md transition duration-300 hover:shadow-2xl hover:ring-4 hover:ring-blue-400"
+                className="absolute inset-0 h-full w-full rounded-xl object-contain
+                          drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.2)]
+                        duration-500
+                        hover:drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.35)] opacity-100"
                 src={koi.thumbnail}
                 alt={koi.name}
               />
@@ -223,7 +232,7 @@ const KoiBidding: React.FC = () => {
         </div>
 
         {/* Koi Info and Bidding */}
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-5 w-full">
           <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-2 text-lg">
             <KoiInfoGridComponent
               koi={koi}

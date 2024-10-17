@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchBidHistory } from "../utils/apiUtils";
+import { fetchBidHistory } from "~/utils/apiUtils";
 
 // Define the interface for checking AuctionKoi is On-going
 interface BiddingHistoryProps {

@@ -3,7 +3,7 @@ import { convertToJavaLocalDateTime } from "./dateTimeUtils";
 import axios from "axios";
 import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";
 
-export const convertBidMethodToReadable = (method: string) => {
+export const convertDataToReadable = (method: string) => {
   //convert from FIXED_PRICE to Fixed Price, all caps to first letter caps, and remove the underscore
   return method
     .split("_")

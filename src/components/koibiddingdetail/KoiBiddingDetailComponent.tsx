@@ -1,6 +1,7 @@
 import React from "react";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { convertDataToReadable } from "~/utils/dataConverter";
 
 // Define the KoiDetail UI component
 type KoiDetailItemProps = {
@@ -18,7 +19,7 @@ export const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
   icon,
   label,
   value,
-  fontSize = "text-2xl",
+  fontSize = "text-xl",
   bgColor = "bg-gray-100",
   textColor = "text-black",
   className = "",
@@ -29,7 +30,7 @@ export const KoiDetailItem: React.FC<KoiDetailItemProps> = ({
     >
       <div className="flex items-center">
         <FontAwesomeIcon icon={icon as IconDefinition} color="#4086c7" />
-        <p className={`ml-2 text-lg`}>{label}</p>
+        <p className={`ml-2 text-lg`}>{convertDataToReadable(label)}</p>
       </div>
       <p className={`${fontSize} text-end ${textColor}`}>{value}</p>
     </div>

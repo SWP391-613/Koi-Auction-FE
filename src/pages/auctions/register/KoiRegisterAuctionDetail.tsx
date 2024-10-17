@@ -20,7 +20,7 @@ import {
 } from "~/utils/apiUtils"; // Assume we have this API function
 import { getAuctionStatusColor } from "~/utils/colorUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
-import { convertBidMethodToReadable } from "~/utils/dataConverter";
+import { convertDataToReadable } from "~/utils/dataConverter";
 import { getAuctionStatusV2 } from "~/utils/dateTimeUtils";
 import BreederKoiManagement from "./BreederKoiManagement";
 import { getCookie } from "~/utils/cookieUtils";
@@ -152,7 +152,7 @@ const KoiRegisterAuctionDetail: React.FC = () => {
                 text-white rounded-full p-1 text-md font-bold"
                 >
                   {combinedKoiData.auctionKoiData.bid_method
-                    ? convertBidMethodToReadable(
+                    ? convertDataToReadable(
                         combinedKoiData.auctionKoiData.bid_method,
                       )
                     : "Buy Now"}

@@ -9,6 +9,8 @@ let subscriptions: { [key: string]: any } = {};
 export const connectWebSocket = (onConnect: () => void) => {
   const socket = new SockJS(
     `${environment.be.baseUrl}${environment.be.apiPrefix}${environment.be.endPoint.socket}`,
+    undefined,
+    { withCredentials: true },
   );
 
   stompClient = new Client({

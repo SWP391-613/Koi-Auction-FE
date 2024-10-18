@@ -22,7 +22,7 @@ import {
   getKoiById,
 } from "~/utils/apiUtils"; // Assume we have this API function
 import { formatCurrency } from "~/utils/currencyUtils";
-import { displayKoiStatus } from "~/utils/dataConverter";
+import { displayKoiStatus, getCategoryName } from "~/utils/dataConverter";
 import { getAuctionStatusV2 } from "~/utils/dateTimeUtils";
 import { format, isPast, parse } from "date-fns"; // Make sure to install date-fns if you haven't already
 import KoiDetails from "~/components/auctiondetail/KoiDetails";
@@ -133,15 +133,18 @@ const AuctionDetail: React.FC = () => {
                   className="relative flex md:justify-center
                 bg-gradient-to-r from-[#1365b4] to-[#1584cb] duration-300 ease-in-out"
                 >
-                  <div className="h-[17rem] w-[50%] md:h-[30rem] md:w-[23rem] flex justify-center">
-                    <div className="absolute w-[30%] h-[50%] md:w-[70%] md:h-[80%] md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2">
+                  <div className="h-[17rem] w-[50%] md:h-[28rem] md:w-[23rem] flex justify-center">
+                    <div
+                      className="absolute w-[30%] h-[60%] top-1/2 left-1/4
+                    -translate-x-1/2 -translate-y-1/2 md:w-[60%] md:h-[90%] md:top-1/2 md:left-1/2"
+                    >
                       <img
                         src={combinedKoiData.thumbnail}
                         alt={combinedKoiData.name}
                         className="h-full w-full
                         drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.2)]
                         duration-500
-                        hover:drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.35)] opacity-100"
+                        hover:drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.35)] opacity-100 "
                       />
                     </div>
                   </div>
@@ -164,22 +167,12 @@ const AuctionDetail: React.FC = () => {
                   w-1/2"
                   >
                     <KoiDetails
-                      category={combinedKoiData.category_id.toString()}
+                      category={getCategoryName(combinedKoiData.category_id)}
                       sex={combinedKoiData.sex}
                       length={combinedKoiData.length}
                       age={combinedKoiData.age}
                     />
                   </div>
-                  {/* <div
-                    className="absolute top-3 right-3
-                  text-white rounded-full p-1 text-md font-bold"
-                  >
-                    {combinedKoiData.auctionKoiData.bid_method
-                      ? convertBidMethodToReadable(
-                          combinedKoiData.auctionKoiData.bid_method,
-                        )
-                      : "Buy Now"}
-                  </div> */}
                   <div
                     className="absolute bottom-2 left-2 sm:left-auto sm:right-2
                   text-white rounded-full p-1 text-md font-bold"

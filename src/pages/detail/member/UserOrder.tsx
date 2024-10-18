@@ -35,23 +35,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import HomeIcon from "@mui/icons-material/Home";
 import { getOrderStatusColor } from "~/utils/colorUtils";
-
-export type Order = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  total_money: number;
-  phone_number: string;
-  address: string;
-  order_date: string;
-  shipping_method: string;
-  shipping_address: string;
-  shipping_date: string;
-  status: string;
-  tracking_number: string;
-  payment_method: string;
-  note: string;
-};
+import { Order } from "~/types/orders.type";
 
 export type PaymentDTO = {
   payment_amount: number;

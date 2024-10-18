@@ -21,21 +21,11 @@ import {
 import React, { useEffect, useState } from "react";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { fetchOrderDetails } from "~/utils/apiUtils";
-
+import { OrderDetail } from "~/types/orders.type";
 interface UserOrderDetailProps {
   orderId: number;
   onClose: () => void;
 }
-
-export type OrderDetail = {
-  id: number;
-  color: string | null;
-  order_id: number;
-  product_id: number;
-  price: number;
-  number_of_products: number;
-  total_money: number;
-};
 
 export type OrderDetailWithKoi = OrderDetail & {
   koi: {

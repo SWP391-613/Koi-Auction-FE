@@ -1,4 +1,7 @@
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faMoneyCheckDollar,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TextField, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
@@ -155,7 +158,7 @@ const KoiBidding: React.FC = () => {
         {/* Koi Image and Media Gallery */}
         <div className="flex flex-col items-center justify-start w-full md:w-[50%]">
           <div
-            className="relative justify-center h-[25rem] w-full md:h-[40rem] md:w-[80%] rounded-xl
+            className="relative justify-center h-[25rem] w-full md:h-[30rem] lg:h-[40rem] lg:w-[90%] rounded-xl
           bg-gradient-to-r from-[#1365b4] to-[#1584cb] duration-300 ease-in-out"
           >
             {selectedMedia ? (
@@ -187,7 +190,7 @@ const KoiBidding: React.FC = () => {
                 alt={koi.name}
               />
             )}
-            {auctionKoi.is_sold && (
+            {auctionKoi.is_sold && selectedMedia === koi.thumbnail && (
               <div className="absolute -left-4 -top-4 z-10">
                 <img
                   src={Sold}
@@ -294,21 +297,33 @@ const KoiBidding: React.FC = () => {
                 </p>
               </div>
             )}
-
+            <div className="flex justify-center items-center">
+              <FontAwesomeIcon
+                icon={faMoneyCheckDollar}
+                className="text-green-500 text-2xl"
+              />
+              <span className="text-green-500 text-2xl">
+                <label htmlFor="Your Highest Bid">
+                  Your Highest Bid: {formatCurrency(auctionKoi.current_bid)}
+                </label>
+              </span>
+            </div>
             {/* Conditionally render the Bid History section */}
-            {auctionKoi.current_bid > 0 && (
-              <>
-                <h3 className="mb-2 text-xl font-semibold">Bid History</h3>
-                <div className="rounded-2xl bg-gray-300 p-4 max-h-[50rem] overflow-auto">
-                  <div className="max-h-full overflow-auto">
-                    <BiddingHistory
-                      auctionKoiId={auctionKoi.id}
-                      latestBid={latestBid}
-                    />
+            {auctionKoi.current_bid > 0 &&
+              (auction.status !== AUCTION_STATUS.ONGOING ||
+                auctionKoi.bid_method !== "SEALED_BID") && (
+                <>
+                  <h3 className="mb-2 text-xl font-semibold">Bid History</h3>
+                  <div className="rounded-2xl bg-gray-300 p-4 max-h-[50rem] overflow-auto">
+                    <div className="max-h-full overflow-auto">
+                      <BiddingHistory
+                        auctionKoiId={auctionKoi.id}
+                        latestBid={latestBid}
+                      />
+                    </div>
                   </div>
-                </div>
-              </>
-            )}
+                </>
+              )}
           </div>
         </div>
       </div>

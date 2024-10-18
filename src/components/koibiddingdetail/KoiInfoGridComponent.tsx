@@ -72,7 +72,10 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
         auctionKoi.bid_method === "DESCENDING_BID"
           ? "Current Price"
           : "Current Bid",
-      value: formatCurrency(auctionKoi.current_bid),
+      value:
+        auctionKoi.bid_method === "SEALED_BID" && !auctionKoi.is_sold
+          ? "Hidden"
+          : formatCurrency(auctionKoi.current_bid),
       bgColor: "bg-green-200",
     },
     {

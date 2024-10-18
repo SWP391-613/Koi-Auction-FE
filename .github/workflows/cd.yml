@@ -19,10 +19,10 @@ jobs:
           cache: "yarn"
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Build the project
-        run: yarn run build:dev
+        run: yarn run build:prod
 
       - name: Deploy to Production Repo
         env:

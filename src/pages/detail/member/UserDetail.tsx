@@ -139,7 +139,7 @@ const UserDetail: React.FC = () => {
             <FontAwesomeIcon
               icon={faEdit}
               onClick={handleUpdate}
-              className="text-2xl text-gray-400"
+              className="text-2xl text-gray-400 hover:cursor-pointer"
             />
           </div>
           <h2 className="text-2xl text-blue-500 mt-5 mb-6">Account Details</h2>

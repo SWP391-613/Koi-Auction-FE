@@ -6,7 +6,7 @@ import VNPayReturn from "~/pages/payments/VNPayReturn";
 import DashboardLayout from "~/components/shared/DashboardLayout";
 
 const BreederLayout: React.FC = () => {
-  const navLinks = [{ to: "", label: "Your Koi List" }];
+  const navLinks = [{ to: "", label: "Your Koi" }];
 
   return (
     <DashboardLayout title="Breeder Dashboard" navLinks={navLinks}>

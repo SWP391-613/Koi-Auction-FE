@@ -21,7 +21,7 @@ import { createKoi, deleteKoiById, getKoiData } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { createFormData, extractErrorMessage } from "~/utils/dataConverter";
 import PaginationComponent from "../../../components/common/PaginationComponent";
-import EditKoiDialog from "./EditKoiDialog";
+import BreederEditKoiDialog from "./BreederEditKoiDialog";
 
 const KoiManagement = () => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
@@ -283,7 +283,7 @@ const KoiManagement = () => {
                   </tr>
                 )}
                 {selectedKoiId && (
-                  <EditKoiDialog
+                  <BreederEditKoiDialog
                     open={openEditDialog}
                     onClose={handleCloseEditDialog}
                     koiId={selectedKoiId}

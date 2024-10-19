@@ -192,12 +192,12 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
                 onChange={handleInputChange}
               />
               <TextField
-                name="status_name"
-                label="Status"
+                name="description"
+                label="Description"
                 type="text"
                 fullWidth
                 variant="outlined"
-                value={koi?.status_name ?? ""}
+                value={koi?.description ?? ""}
                 inputProps={inputProps}
               />
             </Box>

@@ -16,7 +16,7 @@ const AccountVerificationAlert: React.FC<AccountVerificationAlertProps> = ({
   }
 
   return (
-    <Alert severity="warning" className="verify-alert">
+    <Alert severity="warning" className="verify-alert mb-5">
       <AlertTitle>Account Not Verified</AlertTitle>
       Your account is not verified. Please verify your account to access all
       features.

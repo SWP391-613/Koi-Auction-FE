@@ -287,35 +287,6 @@ const BreederDetail: React.FC = () => {
               {/* Display total number of koi */}
             </div>
           </div>
-          <div className="mt-6 flex gap-10 align-content-center">
-            <select
-              value={updateField}
-              onChange={(e) => setUpdateField(e.target.value)}
-              className="update-select"
-            >
-              <option value="">Select field to update</option>
-              <option value="first_name">First Name</option>
-              <option value="last_name">Last Name</option>
-              <option value="email">Email</option>
-              <option value="phone_number">Phone</option>
-              <option value="address">Address</option>
-            </select>
-            <input
-              type="text"
-              value={updateValue}
-              onChange={(e) => setUpdateValue(e.target.value)}
-              placeholder="Enter new value"
-              className="update-input"
-            />
-            <Button
-              color="warning"
-              variant="contained"
-              onClick={handleUpdate}
-              className="update-button"
-            >
-              Update
-            </Button>
-          </div>
         </div>
         <div className="bg-gray-100 flex flex-col justify-between p-10 text-center rounded-r-2xl">
           <p className="text-2xl font-bold text-black mb-2">Account Balance</p>

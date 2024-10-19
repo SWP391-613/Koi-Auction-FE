@@ -12,7 +12,7 @@ const BreederInfo: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto mt-8 px-4">
+    <div className="container mx-auto mt-8 px-4 mb-8">
       <div className="rounded-lg bg-white p-6 shadow-lg">
         <div className="mb-6 flex items-center">
           <img

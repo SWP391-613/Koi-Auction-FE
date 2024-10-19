@@ -45,7 +45,7 @@ const Home = () => {
         {koiBreeders.map((breeder, index) => (
           <div
             key={index}
-            className="flex h-[11rem] w-[11rem] items-center justify-center rounded-2xl border border-gray-400 bg-gray-200 p-4 transition-shadow duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+            className="flex h-[11rem] hover:cursor-pointer w-[11rem] items-center justify-center rounded-2xl border border-gray-400 bg-gray-200 p-4 transition-shadow duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.5)]"
             onClick={() => handleBreederClick(index)}
           >
             <img

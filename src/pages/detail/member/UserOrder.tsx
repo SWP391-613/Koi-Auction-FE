@@ -15,8 +15,9 @@ import {
   Avatar,
   Divider,
 } from "@mui/material";
+import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { useUserData } from "~/hooks/useUserData";
 import { getCookie } from "~/utils/cookieUtils";
@@ -37,23 +38,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import { getOrderStatusColor } from "~/utils/colorUtils";
 import FeedbackIcon from "@mui/icons-material/Feedback";
 import { Link as RouterLink } from "react-router-dom";
-
-export type Order = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  total_money: number;
-  phone_number: string;
-  address: string;
-  order_date: string;
-  shipping_method: string;
-  shipping_address: string;
-  shipping_date: string;
-  status: string;
-  tracking_number: string;
-  payment_method: string;
-  note: string;
-};
 import { Order } from "~/types/orders.type";
 
 export type PaymentDTO = {
@@ -479,6 +463,7 @@ const UserOrder = () => {
         onSave={handleSaveEditedOrder}
         accessToken={getCookie("access_token") || ""}
       />
+      <ToastContainer />
     </Container>
   );
 };

@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { AuctionModel } from "~/types/auctions.type";
 import LoadingComponent from "./LoadingComponent";
 import PaginationComponent from "../common/PaginationComponent";
+import SearchBar from "./SearchBar";
+import { useSearch } from "~/hooks/useSearch";
 
 interface AuctionListProps {
   fetchAuctionsData: (
@@ -25,6 +27,8 @@ const AuctionList: React.FC<AuctionListProps> = ({
   const [hasMorePages, setHasMorePages] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { query, setQuery, results, loadingSearch, errorSearch, handleSearch } =
+    useSearch(500); // 500ms debounce
 
   useEffect(() => {
     const loadAuctions = async () => {
@@ -98,6 +102,28 @@ const AuctionList: React.FC<AuctionListProps> = ({
         </Typography>
       ) : (
         <>
+          <div className="container mx-auto p-4">
+            <SearchBar
+              value={query}
+              onChange={setQuery}
+              onSearch={handleSearch}
+              loading={loadingSearch}
+              placeholder="Search for koi..."
+            />
+            {error && <p className="text-red-500 mt-2">{error.message}</p>}
+            {results.length > 0 && (
+              <ul className="mt-4">
+                {results.map((result) => (
+                  <li key={result.id} className="mb-2">
+                    {result.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {!loadingSearch && query && results.length === 0 && (
+              <p className="mt-2">No results found.</p>
+            )}
+          </div>
           <CartComponent items={auctions} />
           <PaginationComponent
             totalPages={hasMorePages ? currentPage + 1 : currentPage}

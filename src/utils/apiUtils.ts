@@ -98,6 +98,7 @@ export const createAuctionFromApi = (apiData: AuctionModel): AuctionModel => {
     title: apiData.title,
     start_time: formatDate(apiData.start_time.toString()),
     end_time: formatDate(apiData.end_time.toString()),
+    end_time_countdown: apiData.end_time,
     status: apiData.status,
     auctioneer_id: apiData.auctioneer_id,
   };

@@ -33,6 +33,7 @@ import { AuctionKoi } from "~/types/auctionkois.type";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "~/constants/message";
+import CountdownClock from "~/components/auctions/CountdownClock";
 
 // Define the BidRequest interface
 export type BidRequest = {
@@ -249,11 +250,12 @@ const KoiBidding: React.FC = () => {
 
         {/* Koi Info and Bidding */}
         <div className="flex flex-col gap-5 w-full">
-          <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-2 text-lg">
+          <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-4 text-lg">
             <KoiInfoGridComponent
               koi={koi}
               auctionKoi={auctionKoi}
               user={user}
+              endTime={auction.end_time_countdown.toString()}
             />
           </div>
           <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 p-4 text-lg">

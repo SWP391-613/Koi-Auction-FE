@@ -37,23 +37,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import { getOrderStatusColor } from "~/utils/colorUtils";
 import FeedbackIcon from "@mui/icons-material/Feedback";
 import { Link as RouterLink } from "react-router-dom";
-
-export type Order = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  total_money: number;
-  phone_number: string;
-  address: string;
-  order_date: string;
-  shipping_method: string;
-  shipping_address: string;
-  shipping_date: string;
-  status: string;
-  tracking_number: string;
-  payment_method: string;
-  note: string;
-};
 import { Order } from "~/types/orders.type";
 
 export type PaymentDTO = {

@@ -22,17 +22,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoginOrRegister from "../auth/LoginOrRegister";
 import { getCookie } from "~/utils/cookieUtils";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import CountdownClock from "../auctions/CountdownClock";
 
 interface KoiInfoGridProps {
   koi: KoiDetailModel;
   auctionKoi: AuctionKoi;
   user: UserDetailsResponse | null;
+  endTime: string;
 }
 
 export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
   koi,
   auctionKoi,
   user,
+  endTime,
 }) => {
   const koiInfoItems = [
     {
@@ -102,10 +105,14 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
   return (
     <div className="koi-info w-full space-y-4 rounded-2xl bg-gray-200 text-lg">
       <div className="mb-2 items-center rounded-2xl">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
+          <h2 className="text-4xl font-bold mb-2 md:mb-0">{koi.name}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 flex items-center">
+            <span className="mr-2">⏱️Time Remaining:</span>
+            <CountdownClock endTime={endTime.toString()} />
+          </div>
+        </div>
         <div className="grid w-full grid-cols-1 xl:grid-cols-2">
-          <h2 className="col-span-1 mb-3 ml-2 text-4xl font-bold xl:col-span-2">
-            {koi.name}
-          </h2>
           {koiInfoItems.map((item, index) => (
             <KoiDetailItem
               key={index}

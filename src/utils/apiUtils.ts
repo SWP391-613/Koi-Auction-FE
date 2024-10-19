@@ -484,8 +484,12 @@ export const fetchOrderDetails = async (
   }
 };
 
-export const fetchOrderById = async (orderId: number): Promise<Order> => {
-  const response = await axios.get(`${API_URL}/orders/${orderId}`);
+export const fetchOrderById = async (orderId: number, token: string): Promise<Order> => {
+  const response = await axios.get(`${API_URL}/orders/${orderId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
   return response.data;
 };
 
@@ -1004,5 +1008,19 @@ export const updateUserPassword = async (
   } catch (error) {
     console.error("Error updating password:", error);
     throw error;
+  }
+};
+
+export const submitFeedback = async (orderId: number, rating: number, comment: string, token: string): Promise<void> => {
+  const response = await fetch(`${API_URL}/feedback`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ orderId, rating, comment }),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to submit feedback');
   }
 };

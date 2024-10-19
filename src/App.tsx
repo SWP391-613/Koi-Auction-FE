@@ -40,83 +40,80 @@ import KoiRegisterAuctionDetail from "./pages/auctions/register/KoiRegisterAucti
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import InternalServerError from "./components/error/NotFound";
+import Feedback from './pages/detail/member/Feedback';
 
 const TITLE = "Auction Koi";
 
 function App() {
   return (
     <AuthProvider>
-      <ThemeProvider>
-        <div className="flex flex-col min-h-screen">
-          <Helmet>
-            <title>{TITLE}</title>
-          </Helmet>
-          <Header />
-          <main className="flex-grow">
-            <Routes>
-              {/* Public routes */}
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/notfound" element={<NotFound />} />
+      <div className="flex flex-col min-h-screen">
+        <Helmet>
+          <title>{TITLE}</title>
+        </Helmet>
+        <Header />
+        <main className="flex-grow">
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/notfound" element={<NotFound />} />
+            <Route
+              path="/internal-server-error"
+              element={<InternalServerError />}
+            />
+            <Route path="/otp-verification" element={<OtpVerification />} />
+            <Route path="/auctions" element={<Auctions />} />
+            <Route path="/auctions/:id" element={<AuctionDetail />} />
+            <Route
+              path="/auctionkois/:auctionId/:auctionKoiId"
+              element={<KoiBidding />}
+            />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+
+            {/* Protected routes for logged-in users */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/kois/:id" element={<KoiDetail />} />
+              <Route path="/users/:id" element={<UserDetail />} />
+              <Route path="/auctions/register" element={<AddKoiToAuction />} />
               <Route
-                path="/internal-server-error"
-                element={<InternalServerError />}
+                path="/auctions/register/:id"
+                element={<KoiRegisterAuctionDetail />}
               />
-              <Route path="/otp-verification" element={<OtpVerification />} />
-              <Route path="/auctions" element={<Auctions />} />
-              <Route path="/auctions/:id" element={<AuctionDetail />} />
+            </Route>
+
+            {/* Manager and Staff protected routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/managers/*" element={<ManagerLayout />}></Route>
+            </Route>
+
+            {/* Breeder protected routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/breeders/*" element={<BreederLayout />}></Route>
+            </Route>
+
+            {/* Staff protected routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/staffs/*" element={<StaffLayout />}></Route>
+            </Route>
+            {/* Protected routes for USER */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/orders" element={<UserOrder />} />
               <Route
-                path="/auctionkois/:auctionId/:auctionKoiId"
-                element={<KoiBidding />}
+                path="/payments/vnpay-payment-return"
+                element={<VNPayReturn />}
               />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-
-              {/* Protected routes for logged-in users */}
-              <Route element={<ProtectedRoute />}>
-                <Route path="/kois/:id" element={<KoiDetail />} />
-                <Route path="/users/:id" element={<UserDetail />} />
-                <Route
-                  path="/auctions/register"
-                  element={<AddKoiToAuction />}
-                />
-                <Route
-                  path="/auctions/register/:id"
-                  element={<KoiRegisterAuctionDetail />}
-                />
-              </Route>
-
-              {/* Manager and Staff protected routes */}
-              <Route element={<ProtectedRoute />}>
-                <Route path="/managers/*" element={<ManagerLayout />}></Route>
-              </Route>
-
-              {/* Breeder protected routes */}
-              <Route element={<ProtectedRoute />}>
-                <Route path="/breeders/*" element={<BreederLayout />}></Route>
-              </Route>
-
-              {/* Staff protected routes */}
-              <Route element={<ProtectedRoute />}>
-                <Route path="/staffs/*" element={<StaffLayout />}></Route>
-              </Route>
-              {/* Protected routes for USER */}
-              <Route element={<ProtectedRoute />}>
-                <Route path="/orders" element={<UserOrder />} />
-                <Route
-                  path="/payments/vnpay-payment-return"
-                  element={<VNPayReturn />}
-                />
-              </Route>
-            </Routes>
-          </main>
-          <Footer />
-          <ToastContainer />
-        </div>
-      </ThemeProvider>
+            </Route>
+            <Route path="/feedback/:orderId" element={<Feedback />} />
+          </Routes>
+        </main>
+        <Footer />
+        <ToastContainer />
+      </div>
       <Analytics />
       <SpeedInsights />
     </AuthProvider>

@@ -40,6 +40,7 @@ import KoiRegisterAuctionDetail from "./pages/auctions/register/KoiRegisterAucti
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import InternalServerError from "./components/error/NotFound";
+import Feedback from './pages/detail/member/Feedback';
 import { ThemeProvider } from "@mui/material";
 
 const TITLE = "Auction Koi";
@@ -109,6 +110,7 @@ function App() {
                 element={<VNPayReturn />}
               />
             </Route>
+            <Route path="/feedback/:orderId" element={<Feedback />} />
           </Routes>
         </main>
         <Footer />

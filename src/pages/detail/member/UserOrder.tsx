@@ -54,6 +54,7 @@ export type Order = {
   payment_method: string;
   note: string;
 };
+import { Order } from "~/types/orders.type";
 
 export type PaymentDTO = {
   payment_amount: number;

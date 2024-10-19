@@ -41,12 +41,14 @@ import VNPayReturn from "./pages/payments/VNPayReturn";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import InternalServerError from "./components/error/NotFound";
 import Feedback from './pages/detail/member/Feedback';
+import { ThemeProvider } from "@mui/material";
 
 const TITLE = "Auction Koi";
 
 function App() {
   return (
     <AuthProvider>
+      {/* <ThemeProvider> */}
       <div className="flex flex-col min-h-screen">
         <Helmet>
           <title>{TITLE}</title>
@@ -114,6 +116,7 @@ function App() {
         <Footer />
         <ToastContainer />
       </div>
+      {/* </ThemeProvider> */}
       <Analytics />
       <SpeedInsights />
     </AuthProvider>

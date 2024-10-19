@@ -1,13 +1,9 @@
 import axios, { AxiosError } from "axios";
 import { format, isToday, isTomorrow, isYesterday } from "date-fns";
-import { Bid } from "~/components/BiddingHistory";
+import { Bid } from "~/components/koibiddingdetail/BiddingHistory";
 import { BidRequest } from "~/pages/auctions/KoiBidding";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/detail/breeder/BreederDetail";
-import { Order } from "~/pages/detail/member/UserOrder";
-import {
-  OrderDetail,
-  OrderDetailWithKoi,
-} from "~/pages/detail/member/UserOrderDetail";
+import { OrderDetailWithKoi } from "~/pages/detail/member/UserOrderDetail";
 import { AuctionKoi, BidMethod } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
 import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";
@@ -27,6 +23,8 @@ import {
 import { AuctionDTO } from "~/types/auctions.type";
 import { environment } from "../environments/environment";
 import { PaymentDTO } from "~/pages/detail/member/UserOrder";
+import { OrderDetail } from "~/types/orders.type";
+import { Order } from "~/types/orders.type";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 

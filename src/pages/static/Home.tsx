@@ -1,9 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { koiBreeders } from "../../utils/data/koibreeders";
-import NavigateButton from "../../components/shared/NavigateButton";
-import SearchBar from "~/components/shared/SearchBar";
 import { useAuth } from "~/contexts/AuthContext";
+import NavigateButton from "../../components/shared/NavigateButton";
+import { koiBreeders } from "../../utils/data/koibreeders";
 
 const Home = () => {
   const navigate = useNavigate();

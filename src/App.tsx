@@ -42,6 +42,7 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import InternalServerError from "./components/error/NotFound";
 import Feedback from "./pages/detail/member/Feedback";
 import { ThemeProvider } from "@mui/material";
+import BreederInfo from "./pages/static/BreederInfo";
 
 const TITLE = "Auction Koi";
 
@@ -76,6 +77,7 @@ function App() {
               element={<KoiBidding />}
             />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/breeder/:id/info" element={<BreederInfo />} />
 
             {/* Protected routes for logged-in users */}
             <Route element={<ProtectedRoute />}>

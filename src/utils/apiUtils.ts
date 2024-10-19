@@ -25,6 +25,7 @@ import { environment } from "../environments/environment";
 import { PaymentDTO } from "~/pages/detail/member/UserOrder";
 import { OrderDetail } from "~/types/orders.type";
 import { Order } from "~/types/orders.type";
+import { feedbackDTO } from "~/pages/detail/member/Feedback";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -404,18 +405,22 @@ export const updateAccountBalance = async (
   }
 };
 
-export const placeBid = async (bid: BidRequest): Promise<void> => {
+export const placeBid = async (
+  bid: BidRequest,
+): Promise<{ isSold: boolean }> => {
   try {
-    await axios.post(
+    const response = await axios.post(
       `${environment.be.baseUrl}${environment.be.apiPrefix}${environment.be.endPoint.bidding}/bid/${bid.auction_koi_id}`.trim(),
       bid,
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Add this line
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       },
     );
+
+    return { isSold: response.data.isSold };
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       if (error.response.status === 401) {
@@ -482,11 +487,14 @@ export const fetchOrderDetails = async (
   }
 };
 
-export const fetchOrderById = async (orderId: number, token: string): Promise<Order> => {
+export const fetchOrderById = async (
+  orderId: number,
+  token: string,
+): Promise<Order> => {
   const response = await axios.get(`${API_URL}/orders/${orderId}`, {
     headers: {
-      Authorization: `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    },
   });
   return response.data;
 };
@@ -1009,16 +1017,19 @@ export const updateUserPassword = async (
   }
 };
 
-export const submitFeedback = async (orderId: number, rating: number, comment: string, token: string): Promise<void> => {
-  const response = await fetch(`${API_URL}/feedback`, {
-    method: 'POST',
+export const submitFeedback = async (
+  feedbackDTO: feedbackDTO,
+  token: string,
+): Promise<void> => {
+  const response = await fetch(`${API_URL}/feedbacks`, {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ orderId, rating, comment }),
+    body: JSON.stringify(feedbackDTO),
   });
   if (!response.ok) {
-    throw new Error('Failed to submit feedback');
+    throw new Error("Failed to submit feedback");
   }
 };

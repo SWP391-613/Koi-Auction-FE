@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -12,12 +12,17 @@ import {
   Card,
   CardContent,
   Grid,
-} from '@mui/material';
-import { toast } from 'react-toastify';
-import { Order } from './UserOrder';
-import { fetchOrderById, fetchOrderDetails, submitFeedback } from '../../../utils/apiUtils';
-import { getCookie } from '../../../utils/cookieUtils';
-import { formatCurrency } from '../../../utils/currencyUtils';
+} from "@mui/material";
+import { toast } from "react-toastify";
+import { Order } from "./UserOrder";
+import {
+  fetchOrderById,
+  fetchOrderDetails,
+  submitFeedback,
+} from "../../../utils/apiUtils";
+import { getCookie } from "../../../utils/cookieUtils";
+import { formatCurrency } from "../../../utils/currencyUtils";
+import { useAuth } from "~/contexts/AuthContext";
 
 export type OrderDetail = {
   id: number;
@@ -36,25 +41,35 @@ export type OrderDetailWithKoi = OrderDetail & {
   };
 };
 
+export type feedbackDTO = {
+  content: string;
+  rating: number;
+  order_id: number;
+  user_id: number;
+};
+
 const Feedback: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
   const [order, setOrder] = useState<Order | null>(null);
   const [orderDetails, setOrderDetails] = useState<OrderDetailWithKoi[]>([]);
   const [rating, setRating] = useState<number | null>(0);
-  const [comment, setComment] = useState('');
-
+  const [comment, setComment] = useState("");
+  const user = useAuth();
   useEffect(() => {
     const getOrderAndDetails = async () => {
       try {
         if (orderId) {
-          const fetchedOrder = await fetchOrderById(Number(orderId), getCookie('access_token') || '');
+          const fetchedOrder = await fetchOrderById(
+            Number(orderId),
+            getCookie("access_token") || "",
+          );
           setOrder(fetchedOrder);
           const fetchedOrderDetails = await fetchOrderDetails(Number(orderId));
           setOrderDetails(fetchedOrderDetails);
         }
       } catch (error) {
-        console.error('Error fetching order and details:', error);
-        toast.error('Failed to fetch order details');
+        console.error("Error fetching order and details:", error);
+        toast.error("Failed to fetch order details");
       }
     };
 
@@ -64,16 +79,22 @@ const Feedback: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!rating) {
-      toast.error('Please provide a rating');
+      toast.error("Please provide a rating");
       return;
     }
     try {
-      await submitFeedback(Number(orderId), rating, comment, getCookie('access_token') || '');
-      toast.success('Feedback submitted successfully');
+      const feedbackDTO: feedbackDTO = {
+        content: comment,
+        rating: rating,
+        order_id: Number(orderId),
+        user_id: user?.user?.id || 0,
+      };
+      await submitFeedback(feedbackDTO, getCookie("access_token") || "");
+      toast.success("Feedback submitted successfully");
       // Redirect or update UI as needed
     } catch (error) {
-      console.error('Error submitting feedback:', error);
-      toast.error('Failed to submit feedback');
+      console.error("Error submitting feedback:", error);
+      toast.error("Failed to submit feedback");
     }
   };
 
@@ -94,7 +115,9 @@ const Feedback: React.FC = () => {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <Typography variant="subtitle1">Order Date:</Typography>
-              <Typography>{new Date(order.order_date).toLocaleDateString()}</Typography>
+              <Typography>
+                {new Date(order.order_date).toLocaleDateString()}
+              </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
               <Typography variant="subtitle1">Total Amount:</Typography>

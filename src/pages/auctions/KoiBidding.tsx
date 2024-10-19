@@ -5,7 +5,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TextField, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import { Bid } from "~/components/koibiddingdetail/BiddingHistory";
@@ -54,6 +54,7 @@ const KoiBidding: React.FC = () => {
   const [latestBid, setLatestBid] = useState<Bid | null>(null);
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const navigate = useNavigate();
 
   const isAuctionOngoing = useCallback(
     () => auction?.status === AUCTION_STATUS.ONGOING,
@@ -89,7 +90,7 @@ const KoiBidding: React.FC = () => {
       }
     };
     loadData();
-  }, [auctionId, auctionKoiId]);
+  }, [auctionId, auctionKoiId, latestBid]);
 
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
@@ -124,12 +125,25 @@ const KoiBidding: React.FC = () => {
     if (!user || !auctionKoi)
       return toast.error(ERROR_MESSAGE.REQUIRED_LOGIN_TO_BID);
     try {
-      await placeBid({
+      const response = await placeBid({
         auction_koi_id: auctionKoi.id,
         bid_amount: bidAmount,
         bidder_id: user.id,
       });
-      toast.success(SUCCESS_MESSAGE.BID_PLACED);
+
+      if (response.isSold) {
+        toast.success(
+          "Congratulations! You've won the auction. Redirecting to order page...",
+          {
+            onClose: () => {
+              navigate(`/orders`); // or navigate to a specific order if you have an order ID
+            },
+            autoClose: 3000, // Adjust this value to control how long the toast is displayed before redirecting
+          },
+        );
+      } else {
+        toast.success(SUCCESS_MESSAGE.BID_PLACED);
+      }
       // The WebSocket will handle updating the UI
     } catch (error) {
       if (error instanceof Error) {
@@ -138,7 +152,7 @@ const KoiBidding: React.FC = () => {
         toast.error(ERROR_MESSAGE.UNEXPECTED_ERROR_BID);
       }
     }
-  }, [user, auctionKoi, bidAmount]);
+  }, [user, auctionKoi, bidAmount, navigate]);
 
   if (loading) return <LoadingComponent />;
   if (error) return <div>Error: {error}</div>;

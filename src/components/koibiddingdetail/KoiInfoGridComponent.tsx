@@ -10,6 +10,7 @@ import {
   faHandHoldingHeart,
   faWallet,
   faStar,
+  faArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { KoiDetailItem } from "./KoiBiddingDetailComponent";
 import { UserDetailsResponse } from "~/types/users.type";
@@ -84,6 +85,16 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
       value: convertDataToReadable(auctionKoi.bid_method),
       bgColor: "bg-blue-200",
     },
+    ...(auctionKoi.bid_method === "ASCENDING_BID"
+      ? [
+          {
+            icon: faArrowUp,
+            label: "Bid Step",
+            value: formatCurrency(auctionKoi.bid_step),
+            bgColor: "bg-blue-200",
+          },
+        ]
+      : []),
   ];
 
   const accessToken = getUserCookieToken();

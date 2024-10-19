@@ -35,8 +35,8 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import HomeIcon from "@mui/icons-material/Home";
 import { getOrderStatusColor } from "~/utils/colorUtils";
-import FeedbackIcon from '@mui/icons-material/Feedback';
-import { Link as RouterLink } from 'react-router-dom';
+import FeedbackIcon from "@mui/icons-material/Feedback";
+import { Link as RouterLink } from "react-router-dom";
 
 export type Order = {
   id: number;
@@ -198,8 +198,12 @@ const UserOrder = () => {
   const canLeaveFeedback = (order: Order) => {
     const processingDate = new Date(order.order_date);
     const currentDate = new Date();
-    const daysSinceProcessing = Math.floor((currentDate.getTime() - processingDate.getTime()) / (1000 * 3600 * 24));
-    return order.status.toLowerCase() === "processing" && daysSinceProcessing >= 3;
+    const daysSinceProcessing = Math.floor(
+      (currentDate.getTime() - processingDate.getTime()) / (1000 * 3600 * 24),
+    );
+    return (
+      order.status.toLowerCase() === "processing" && daysSinceProcessing >= 3
+    );
   };
 
   if (userLoading || loading) {
@@ -426,7 +430,9 @@ const UserOrder = () => {
                 )}
 
                 {canLeaveFeedback(order) && (
-                  <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+                  <Box
+                    sx={{ mt: 2, display: "flex", justifyContent: "center" }}
+                  >
                     <Button
                       component={RouterLink}
                       to={`/feedback/${order.id}`}

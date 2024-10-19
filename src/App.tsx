@@ -43,6 +43,8 @@ import InternalServerError from "./components/error/NotFound";
 import Feedback from "./pages/detail/member/Feedback";
 import { ThemeProvider } from "@mui/material";
 import BreederInfo from "./pages/static/BreederInfo";
+import BlogList from "./pages/blog/BlogList";
+import BlogPost from "./pages/blog/BlogPost";
 
 const TITLE = "Auction Koi";
 
@@ -78,6 +80,8 @@ function App() {
             />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/breeder/:id/info" element={<BreederInfo />} />
+            <Route path="/blog" element={<BlogList />} />
+            <Route path="/blog/:id" element={<BlogPost />} />
 
             {/* Protected routes for logged-in users */}
             <Route element={<ProtectedRoute />}>

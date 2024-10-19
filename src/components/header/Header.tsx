@@ -16,6 +16,7 @@ import {
   faScrewdriver,
   faLock,
   faCartShopping,
+  faBook,
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames"; // Install this package for easier class management
 import { motion, AnimatePresence } from "framer-motion";
@@ -188,6 +189,11 @@ const Header = () => {
         text: "About",
         to: "/about",
         icon: <FontAwesomeIcon icon={faQuestion} />,
+      },
+      {
+        text: "Blogs",
+        to: "/blog",
+        icon: <FontAwesomeIcon icon={faBook} />,
       },
     ];
 

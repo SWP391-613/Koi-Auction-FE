@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import PaginationComponent from "~/components/common/PaginationComponent";
+import KoiBreederViewGrid from "~/components/search/KoiBreederViewGrid";
 import KoiSearchComponent from "~/components/search/KoiSearchComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
@@ -17,7 +18,6 @@ import { KoiDetailModel } from "~/types/kois.type";
 import { fetchKoisOfBreeder, sendOtp } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
-import KoiCart from "../../kois/KoiCart";
 import "./BreederDetail.scss";
 
 export type KoiOfBreederQueryParams = {
@@ -303,12 +303,12 @@ const BreederDetail: React.FC = () => {
       </div>
       <KoiSearchComponent onSearchStateChange={handleSearchStateChange} />
       <div className="mt-5">
-        <KoiCart
-          items={kois}
+        <KoiBreederViewGrid
+          kois={kois}
           handleView={() => {}}
           handleEdit={handleEdit}
           handleDelete={handleDelete}
-          renderCrudButtons={renderCrudButtons}
+          renderActions={renderCrudButtons}
         />
       </div>
       <PaginationComponent

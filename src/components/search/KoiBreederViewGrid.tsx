@@ -1,31 +1,34 @@
+import { faStar, faTag, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faTag, faStar } from "@fortawesome/free-solid-svg-icons";
+import { KoiDetailModel } from "~/types/kois.type";
 import { getCategoryName } from "~/utils/dataConverter"; // Adjust the import path as needed
 import KoiDetails from "../auctiondetail/KoiDetails";
-import { KoiInAuctionDetailModel } from "~/types/kois.type";
 
-interface KoiSearchGridProps {
-  kois: KoiInAuctionDetailModel[];
-  renderActions?: (koi: KoiInAuctionDetailModel) => ReactNode;
+interface KoiBreederViewGridProps {
+  kois: KoiDetailModel[];
+  renderActions?: (koi: KoiDetailModel) => ReactNode;
   handleView?: (id: number) => void;
   handleEdit?: (id: number) => void;
   handleDelete?: (id: number) => void;
 }
 
-const KoiSearchGrid: React.FC<KoiSearchGridProps> = ({
+const KoiBreederViewGrid: React.FC<KoiBreederViewGridProps> = ({
   kois,
   renderActions,
 }) => {
   return (
     <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {kois.map((koi: KoiInAuctionDetailModel) => (
+      {kois.map((koi: KoiDetailModel) => (
         <Link
-          to={`/auctions/${koi.auction_id}`}
+          to={`/kois/${koi.id}`}
           key={koi.id}
           className="transform overflow-hidden m-1 md:m-5 rounded-[1.5rem] bg-white shadow-md transition-transform hover:scale-102"
         >
+          <div className="flex justify-end bg-gray-200">
+            {renderActions && renderActions(koi)}
+          </div>
           <div className="flex flex-col">
             <div className="relative flex md:justify-center bg-gradient-to-r from-[#1365b4] to-[#1584cb] duration-300 ease-in-out">
               <div className="h-[17rem] w-[50%] md:h-[28rem] md:w-[23rem] flex justify-center">
@@ -74,7 +77,6 @@ const KoiSearchGrid: React.FC<KoiSearchGridProps> = ({
                   age={koi.age}
                 />
               </div>
-              {renderActions && renderActions(koi)}
             </div>
           </div>
         </Link>
@@ -83,4 +85,4 @@ const KoiSearchGrid: React.FC<KoiSearchGridProps> = ({
   );
 };
 
-export default KoiSearchGrid;
+export default KoiBreederViewGrid;

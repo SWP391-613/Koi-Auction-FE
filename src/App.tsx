@@ -82,10 +82,10 @@ function App() {
             <Route path="/breeder/:id/info" element={<BreederInfo />} />
             <Route path="/blog" element={<BlogList />} />
             <Route path="/blog/:id" element={<BlogPost />} />
+            <Route path="/kois/:id" element={<KoiDetail />} />
 
             {/* Protected routes for logged-in users */}
             <Route element={<ProtectedRoute />}>
-              <Route path="/kois/:id" element={<KoiDetail />} />
               <Route path="/users/:id" element={<UserDetail />} />
               <Route path="/auctions/register" element={<AddKoiToAuction />} />
               <Route

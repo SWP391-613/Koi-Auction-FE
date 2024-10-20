@@ -18,7 +18,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     <Box display="flex" height="">
       <Box
         component="nav"
-        sx={{ width: "10rem", backgroundColor: "#686D76",marginRight: 3, color: "white" }}
+        sx={{
+          width: "10rem",
+          backgroundColor: "#686D76",
+          marginRight: 3,
+          color: "white",
+        }}
       >
         <List>
           <ListItem>

@@ -19,6 +19,7 @@ import { formatCurrency } from "~/utils/currencyUtils";
 import { getCategoryName } from "~/utils/dataConverter";
 import { useAuth } from "../../contexts/AuthContext";
 import BreederEditKoiDialog from "../manager/koi/BreederEditKoiDialog";
+import { isTokenValid } from "~/utils/auth.utils";
 
 interface KoiDetailItemProps {
   icon: IconDefinition;
@@ -91,20 +92,24 @@ const KoiDetail: React.FC = () => {
           <div className="mb-4 items-center rounded-2xl">
             <div className="flex justify-between items-center">
               <h2 className="m-4 text-4xl font-bold">{koi.name}</h2>
-              <button
-                onClick={handleEdit}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                <FontAwesomeIcon icon={faPencilAlt} className="mr-2" />
-                Edit
-              </button>
+              {isTokenValid() && ( // Check if token is valid
+                <button
+                  onClick={handleEdit}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  <FontAwesomeIcon icon={faPencilAlt} className="mr-2" />
+                  Edit
+                </button>
+              )}
             </div>
-            <KoiDetailItem
-              icon={faUser}
-              label="Owner ID"
-              value={koi.owner_id}
-              bgColor="bg-gray-300"
-            />
+            {isTokenValid() && ( // Check if token is valid
+              <KoiDetailItem
+                icon={faListOl}
+                label="Status"
+                value={koi.status_name}
+                className={getStatusColor(koi.status_name)}
+              />
+            )}
             <KoiDetailItem
               icon={faListOl}
               label="Status"

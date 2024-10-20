@@ -1,52 +1,102 @@
 import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
 
-interface SearchResult {
+type KoiGender = "Male" | "Female";
+type KoiTrackingStatus = "VERIFIED" | "UNVERIFIED";
+
+export type KoiDetailModel = {
   id: number;
   name: string;
-  // Add other properties as needed
-}
+  sex: KoiGender | "";
+  length: number;
+  age: number;
+  base_price: number;
+  status_name: KoiTrackingStatus;
+  is_display: number;
+  thumbnail: string;
+  description: string | null;
+  owner_id: number;
+  category_id: number;
+};
 
-export const useSearch = (debounceTime = 300) => {
+export type KoiSearchResult = {
+  total_page: number;
+  total_item: number;
+  item: KoiDetailModel[];
+};
+
+export const useKoiSearch = (debounceTime = 300) => {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [loadingSearch, setLoadingSearch] = useState(false);
-  const [errorSearch, setErrorSearch] = useState<Error | null>(null);
+  const [results, setResults] = useState<KoiDetailModel[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
+  const limit = 8;
 
-  const searchApi = useCallback(async (searchQuery: string) => {
-    setLoadingSearch(true);
-    setErrorSearch(null);
+  const searchApi = useCallback(
+    async (searchQuery: string, currentPage: number) => {
+      setLoading(true);
+      setError(null);
 
-    console.log("heheheh");
-    try {
-      // Replace with your actual API call
-      const response = await fetch(
-        `https://api.example.com/search?q=${searchQuery}`,
-      );
-      if (!response.ok) throw new Error("Search failed");
-      const data = await response.json();
-      setResults(data);
-    } catch (err) {
-      setErrorSearch(
-        err instanceof Error ? err : new Error("An error occurred"),
-      );
-      setResults([]);
-    } finally {
-      setLoadingSearch(false);
-    }
-  }, []);
+      try {
+        const response = await axios.get<KoiSearchResult>(
+          "http://localhost:4000/api/v1/auctionkois/get-kois-by-keyword",
+          {
+            params: {
+              keyword: searchQuery,
+              page: currentPage,
+              limit: limit,
+            },
+          },
+        );
+        setResults(response.data.item);
+        setTotalPages(response.data.total_page);
+        setTotalItems(response.data.total_item);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error("An error occurred"));
+        setResults([]);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     if (query) {
-      const handler = setTimeout(() => searchApi(query), debounceTime);
+      const handler = setTimeout(() => searchApi(query, page), debounceTime);
       return () => clearTimeout(handler);
     } else {
       setResults([]);
+      setTotalPages(0);
+      setTotalItems(0);
     }
-  }, [query, debounceTime, searchApi]);
+  }, [query, page, debounceTime, searchApi]);
 
   const handleSearch = useCallback(() => {
-    searchApi(query);
+    searchApi(query, 1);
+    setPage(1);
   }, [query, searchApi]);
 
-  return { query, setQuery, results, loadingSearch, errorSearch, handleSearch };
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setPage(value);
+  };
+
+  return {
+    query,
+    setQuery,
+    results,
+    loading,
+    error,
+    handleSearch,
+    page,
+    totalPages,
+    totalItems,
+    handlePageChange,
+  };
 };

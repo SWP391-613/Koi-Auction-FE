@@ -1,48 +1,47 @@
 import { Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { AuctionModel } from "~/types/auctions.type";
-import LoadingComponent from "./LoadingComponent";
 import PaginationComponent from "../common/PaginationComponent";
-import SearchBar from "./SearchBar";
-import { useSearch } from "~/hooks/useSearch";
+import KoiSearchComponent from "../search/KoiSearchComponent";
+import LoadingComponent from "./LoadingComponent";
 
 interface AuctionListProps {
   fetchAuctionsData: (
     page: number,
     itemsPerPage: number,
-  ) => Promise<AuctionModel[]>; // Function to fetch auctions
-  cartComponent: React.FC<{ items: AuctionModel[] }>; // Component to render auction items
-  emptyMessage: string; // Message to display when no auctions found
-  itemsPerPage?: number; // Optional items per page, with default
+  ) => Promise<AuctionModel[]>;
+  cartComponent: React.FC<{ items: AuctionModel[] }>;
+  emptyMessage: string;
+  itemsPerPage?: number;
 }
 
 const AuctionList: React.FC<AuctionListProps> = ({
   fetchAuctionsData,
   cartComponent: CartComponent,
   emptyMessage,
-  itemsPerPage = 18, // Default value for items per page
+  itemsPerPage = 18,
 }) => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { query, setQuery, results, loadingSearch, errorSearch, handleSearch } =
-    useSearch(500); // 500ms debounce
+  const [isSearchActive, setIsSearchActive] = useState(false);
 
   useEffect(() => {
     const loadAuctions = async () => {
+      if (isSearchActive) return; // Skip loading auctions if there's an active search
+
       setIsLoading(true);
       setError(null);
+
       try {
         const fetchedAuctions = await fetchAuctionsData(
           currentPage - 1,
           itemsPerPage,
         );
-        if (fetchedAuctions.length < itemsPerPage) {
-          setHasMorePages(false);
-        }
         setAuctions(fetchedAuctions);
+        setHasMorePages(fetchedAuctions.length === itemsPerPage);
       } catch (error) {
         console.error("Error fetching auctions:", error);
         setError("Failed to load auctions. Please try again later.");
@@ -53,16 +52,20 @@ const AuctionList: React.FC<AuctionListProps> = ({
     };
 
     loadAuctions();
-  }, [currentPage, fetchAuctionsData, itemsPerPage]);
+  }, [currentPage, fetchAuctionsData, itemsPerPage, isSearchActive]);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     page: number,
   ) => {
-    setCurrentPage(page); // Update the page number on pagination change
+    setCurrentPage(page);
   };
 
-  if (isLoading) {
+  const handleSearchStateChange = (isActive: boolean) => {
+    setIsSearchActive(isActive);
+  };
+
+  if (isLoading && !isSearchActive) {
     return (
       <div className="flex justify-center items-center h-screen">
         <LoadingComponent />
@@ -70,12 +73,13 @@ const AuctionList: React.FC<AuctionListProps> = ({
     );
   }
 
-  if (error) {
+  if (error && !isSearchActive) {
     return (
       <Typography
         variant="h5"
         sx={{
           marginTop: "10rem",
+          marginBottom: "10rem",
           color: "error.main",
           fontWeight: "bold",
           textAlign: "center",
@@ -88,48 +92,40 @@ const AuctionList: React.FC<AuctionListProps> = ({
 
   return (
     <div className="container mx-auto">
-      {auctions.length === 0 ? (
-        <Typography
-          variant="h3"
-          sx={{
-            marginTop: "10rem",
-            color: "error.main",
-            fontWeight: "bold",
-            textAlign: "center",
-          }}
-        >
-          {emptyMessage}
-        </Typography>
-      ) : (
+      {!isSearchActive && (
         <>
-          <div className="container mx-auto p-4">
-            <SearchBar
-              value={query}
-              onChange={setQuery}
-              onSearch={handleSearch}
-              loading={loadingSearch}
-              placeholder="Search for koi..."
-            />
-            {error && <p className="text-red-500 mt-2">{error.message}</p>}
-            {results.length > 0 && (
-              <ul className="mt-4">
-                {results.map((result) => (
-                  <li key={result.id} className="mb-2">
-                    {result.name}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {!loadingSearch && query && results.length === 0 && (
-              <p className="mt-2">No results found.</p>
-            )}
-          </div>
-          <CartComponent items={auctions} />
-          <PaginationComponent
-            totalPages={hasMorePages ? currentPage + 1 : currentPage}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
+          {auctions.length === 0 ? (
+            <div className="flex flex-col justify-center items-center h-[30rem]">
+              <Typography
+                variant="h3"
+                sx={{
+                  color: "error.main",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }}
+              >
+                {emptyMessage}
+              </Typography>
+            </div>
+          ) : (
+            <>
+              <Typography
+                variant="h3"
+                sx={{ textAlign: "center", marginTop: "2rem" }}
+              >
+                Our Auctions
+              </Typography>
+              <CartComponent items={auctions} />
+              <PaginationComponent
+                totalPages={hasMorePages ? currentPage + 1 : currentPage}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
+              <KoiSearchComponent
+                onSearchStateChange={handleSearchStateChange}
+              />
+            </>
+          )}
         </>
       )}
     </div>

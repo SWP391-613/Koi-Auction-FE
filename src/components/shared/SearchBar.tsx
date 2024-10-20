@@ -1,10 +1,10 @@
-import React from "react";
 import {
-  TextField,
-  InputAdornment,
   Button,
   CircularProgress,
+  InputAdornment,
+  TextField,
 } from "@mui/material";
+import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
 
 interface SearchBarProps {
@@ -29,7 +29,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
+    <div
+      style={{ display: "flex", alignItems: "center", marginBottom: "2rem" }}
+    >
       <TextField
         value={value}
         onChange={(e) => onChange(e.target.value)}

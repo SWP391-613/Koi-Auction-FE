@@ -193,17 +193,17 @@ export const AuctionsManagement: React.FC = () => {
     <div>
       {/* <SearchBar /> */}
       <div className="mt-3">
-        <div className="flex flex-col justify-between items-start mb-6">
-          <Typography variant="h3">Auctions Management</Typography>
-          <Button
-            variant="contained"
-            color="success"
-            startIcon={<AddIcon />}
-            onClick={handleAddAuction}
-          >
-            Add New Auction
-          </Button>
-        </div>
+        <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Auctions Management</h1>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleAddAuction}
+        >
+          Add New Auction 
+        </Button>
+      </div>
 
         <TableContainer component={Paper}>
           <Table>

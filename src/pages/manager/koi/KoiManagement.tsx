@@ -22,6 +22,7 @@ import { getCookie } from "~/utils/cookieUtils";
 import { createFormData, extractErrorMessage } from "~/utils/dataConverter";
 import PaginationComponent from "../../../components/common/PaginationComponent";
 import BreederEditKoiDialog from "./BreederEditKoiDialog";
+import AddIcon from "@mui/icons-material/Add";
 
 const KoiManagement = () => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
@@ -173,9 +174,9 @@ const KoiManagement = () => {
           </Typography>
           <Button
             variant="contained"
-            color="success"
+            color="primary"
             onClick={handleOpenCreateDialog}
-            className="mb-4"
+            startIcon={<AddIcon />}
           >
             Create New Koi
           </Button>

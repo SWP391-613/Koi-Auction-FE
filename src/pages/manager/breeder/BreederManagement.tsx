@@ -87,7 +87,7 @@ const BreederManagement = () => {
   }
 
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="mt-3 w-full overflow-x-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Breeder Management</h1>
         <Button
@@ -96,7 +96,7 @@ const BreederManagement = () => {
           startIcon={<AddIcon />}
           onClick={handleCreate}
         >
-          Add New Breeder
+          Add New Breeder 
         </Button>
       </div>
 

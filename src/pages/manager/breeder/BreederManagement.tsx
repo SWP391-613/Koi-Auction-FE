@@ -96,7 +96,7 @@ const BreederManagement = () => {
           startIcon={<AddIcon />}
           onClick={handleCreate}
         >
-          Add New Breeder 
+          Add New Breeder
         </Button>
       </div>
 

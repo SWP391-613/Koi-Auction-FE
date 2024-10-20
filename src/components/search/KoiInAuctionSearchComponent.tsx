@@ -1,15 +1,17 @@
 import { Typography } from "@mui/material";
 import React from "react";
-import { useKoiSearch } from "~/hooks/useKoiSearch";
+import { useKoiInAuctionSearch } from "~/hooks/useKoiInAuctionSearch";
 import PaginationComponent from "../common/PaginationComponent";
 import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
 
-interface KoiSearchComponentProps {
+interface KoiInAuctionSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
 }
 
-const KoiSearchComponent: React.FC<KoiSearchComponentProps> = () => {
+const KoiInAuctionSearchComponent: React.FC<
+  KoiInAuctionSearchComponentProps
+> = () => {
   const {
     query,
     setQuery,
@@ -20,7 +22,7 @@ const KoiSearchComponent: React.FC<KoiSearchComponentProps> = () => {
     totalPages,
     totalItems,
     handlePageChange,
-  } = useKoiSearch(500);
+  } = useKoiInAuctionSearch(500);
 
   return (
     <div className="container mx-auto p-4 mt-5">
@@ -53,4 +55,4 @@ const KoiSearchComponent: React.FC<KoiSearchComponentProps> = () => {
   );
 };
 
-export default KoiSearchComponent;
+export default KoiInAuctionSearchComponent;

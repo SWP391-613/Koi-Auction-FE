@@ -3,7 +3,7 @@ import axios from "axios";
 import { debounce } from "@mui/material";
 import { KoiInAuctionDetailModel, KoiSearchResult } from "~/types/kois.type";
 
-export const useKoiSearch = (debounceTime = 300) => {
+export const useAuctionSearch = (debounceTime = 300) => {
   const [query, setQueryState] = useState("");
   const [results, setResults] = useState<KoiInAuctionDetailModel[]>([]);
   const [loading, setLoading] = useState(false);

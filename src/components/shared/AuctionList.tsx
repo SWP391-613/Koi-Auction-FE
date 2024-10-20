@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { AuctionModel } from "~/types/auctions.type";
 import PaginationComponent from "../common/PaginationComponent";
-import KoiSearchComponent from "../search/KoiSearchComponent";
+import KoiInAuctionSearchComponent from "../search/KoiInAuctionSearchComponent";
 import LoadingComponent from "./LoadingComponent";
 
 interface AuctionListProps {
@@ -121,7 +121,7 @@ const AuctionList: React.FC<AuctionListProps> = ({
                 currentPage={currentPage}
                 onPageChange={handlePageChange}
               />
-              <KoiSearchComponent
+              <KoiInAuctionSearchComponent
                 onSearchStateChange={handleSearchStateChange}
               />
             </>

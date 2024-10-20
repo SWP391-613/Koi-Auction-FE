@@ -3,21 +3,22 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import LoadingComponent from "~/components/shared/LoadingComponent";
+import PaginationComponent from "~/components/common/PaginationComponent";
+import KoiSearchComponent from "~/components/search/KoiSearchComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import DepositComponent from "~/components/shared/DepositComponent";
 import KoiCreatePopup from "~/components/shared/KoiCreatePopup";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import { useAuth } from "~/contexts/AuthContext";
-import { useUserData } from "~/hooks/useUserData";
 import { environment } from "~/environments/environment";
+import { useUserData } from "~/hooks/useUserData";
 import { KoiDetailModel } from "~/types/kois.type";
 import { fetchKoisOfBreeder, sendOtp } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import KoiCart from "../../kois/KoiCart";
 import "./BreederDetail.scss";
-import PaginationComponent from "~/components/common/PaginationComponent";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -46,6 +47,10 @@ const BreederDetail: React.FC = () => {
   const [createPopupOpen, setCreatePopupOpen] = useState(false);
   const userId = getCookie("user_id");
   const accessToken = getCookie("access_token");
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const handleSearchStateChange = (isActive: boolean) => {
+    setIsSearchActive(isActive);
+  };
 
   const fetchKoiData = async () => {
     if (!userId || !accessToken) return;
@@ -296,6 +301,7 @@ const BreederDetail: React.FC = () => {
           <DepositComponent userId={user.id} token={accessToken || ""} />
         </div>
       </div>
+      <KoiSearchComponent onSearchStateChange={handleSearchStateChange} />
       <div className="mt-5">
         <KoiCart
           items={kois}

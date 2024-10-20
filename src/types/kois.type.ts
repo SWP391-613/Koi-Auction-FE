@@ -30,3 +30,13 @@ export type KoiTrackingStatus =
   | "SOLD";
 
 export type KoiGender = "Male" | "Female" | "Unknown";
+
+export type KoiInAuctionDetailModel = KoiDetailModel & {
+  auction_id: number;
+};
+
+export type KoiSearchResult = {
+  total_page: number;
+  total_item: number;
+  item: KoiInAuctionDetailModel[];
+};

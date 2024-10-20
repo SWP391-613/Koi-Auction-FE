@@ -1,34 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { debounce } from "@mui/material";
-
-type KoiGender = "Male" | "Female";
-type KoiTrackingStatus = "VERIFIED" | "UNVERIFIED";
-
-export type KoiDetailModel = {
-  id: number;
-  name: string;
-  sex: KoiGender | "";
-  length: number;
-  age: number;
-  base_price: number;
-  status_name: KoiTrackingStatus;
-  is_display: number;
-  thumbnail: string;
-  description: string | null;
-  owner_id: number;
-  category_id: number;
-};
-
-export type KoiSearchResult = {
-  total_page: number;
-  total_item: number;
-  item: KoiDetailModel[];
-};
+import { KoiInAuctionDetailModel, KoiSearchResult } from "~/types/kois.type";
 
 export const useKoiSearch = (debounceTime = 300) => {
   const [query, setQueryState] = useState("");
-  const [results, setResults] = useState<KoiDetailModel[]>([]);
+  const [results, setResults] = useState<KoiInAuctionDetailModel[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [page, setPage] = useState(0);

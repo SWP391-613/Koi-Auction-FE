@@ -14,6 +14,7 @@ import {
   useTheme,
   Avatar,
   Divider,
+  CardMedia,
 } from "@mui/material";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, useState } from "react";
@@ -25,8 +26,8 @@ import {
   createOrderPayment,
   fetchUserOrders,
   updateOrder,
+  getUserOrderByStatus,
 } from "../../../utils/apiUtils";
-import EditOrderDialog from "./EditOrderDialog";
 import UserOrderDetail from "./UserOrderDetail";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import { formatCurrency } from "~/utils/currencyUtils";
@@ -39,6 +40,8 @@ import { getOrderStatusColor } from "~/utils/colorUtils";
 import FeedbackIcon from "@mui/icons-material/Feedback";
 import { Link as RouterLink } from "react-router-dom";
 import { Order } from "~/types/orders.type";
+import { OrderStatus } from "~/types/orders.type";
+import { useNavigate } from "react-router-dom";
 
 export type PaymentDTO = {
   payment_amount: number;
@@ -48,33 +51,40 @@ export type PaymentDTO = {
   user_id: number;
 };
 
+// Add this type to include the Koi image
+type OrderWithKoiImage = Order & {
+  koi_image?: string;
+};
+
 const UserOrder = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { user, loading: userLoading, error: userError } = useUserData();
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<OrderWithKoiImage[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const itemsPerPage = 8;
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [editingOrder, setEditingOrder] = useState<Order | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<OrderStatus>(
+    OrderStatus.PENDING,
+  );
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
       if (user) {
         try {
-          const response = await fetchUserOrders(
+          setLoading(true);
+          const response = await getUserOrderByStatus(
             user.id,
+            selectedStatus,
+            page - 1,
+            itemsPerPage,
             getCookie("access_token") || "",
           );
-          setOrders(
-            response.slice((page - 1) * itemsPerPage, page * itemsPerPage),
-          );
-          setTotalPages(Math.ceil(response.length / itemsPerPage));
+          setOrders(response.orders);
+          setTotalPages(response.totalPages);
         } catch (err) {
           setError("Error fetching orders");
         } finally {
@@ -86,7 +96,7 @@ const UserOrder = () => {
     if (user) {
       fetchOrders();
     }
-  }, [user, page]);
+  }, [user, page, selectedStatus]);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -96,87 +106,7 @@ const UserOrder = () => {
   };
 
   const handleOrderClick = (orderId: number) => {
-    setSelectedOrderId(orderId);
-    setDialogOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
-    setSelectedOrderId(null);
-  };
-
-  const handleEditOrder = (order: Order) => {
-    setEditingOrder(order);
-    setEditDialogOpen(true);
-  };
-
-  const handleCloseEditDialog = () => {
-    setEditDialogOpen(false);
-    setEditingOrder(null);
-  };
-
-  const handleSaveEditedOrder = async (editedOrder: Order) => {
-    try {
-      const updatedOrder = await updateOrder(
-        editedOrder,
-        getCookie("access_token") || "",
-      );
-
-      if (updatedOrder && updatedOrder.id) {
-        setOrders(
-          orders.map((order) =>
-            order.id === updatedOrder.id ? updatedOrder : order,
-          ),
-        );
-      }
-      toast.success("Order updated successfully");
-      handleCloseEditDialog();
-    } catch (error) {
-      console.error("Error updating order:", error);
-      toast.error("Failed to update order. Please try again.");
-    }
-  };
-
-  const handlePayment = async (order: Order) => {
-    try {
-      const paymentDTO: PaymentDTO = {
-        payment_amount: order.total_money,
-        payment_method: order.payment_method,
-        payment_type: "ORDER",
-        order_id: order.id,
-        user_id: user?.id || 0,
-      };
-
-      const paymentResponse = await createOrderPayment(
-        paymentDTO,
-        getCookie("access_token") || "",
-      );
-
-      if (paymentResponse) {
-        const updatedOrder = { ...order, status: "PROCESSING" };
-
-        setOrders(orders.map((o) => (o.id === order.id ? updatedOrder : o)));
-
-        if (order.payment_method === "Cash") {
-          toast.success("Cash payment recorded successfully");
-        } else {
-          if (paymentResponse.paymentUrl) {
-            window.location.href = paymentResponse.paymentUrl;
-          } else {
-            throw new Error("No payment URL received for online payment");
-          }
-        }
-      } else {
-        throw new Error("Failed to create payment");
-      }
-    } catch (error) {
-      console.error("Error processing payment:", error);
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("Failed to process payment. Please try again.");
-      }
-    }
+    navigate(`/order-detail/${orderId}`);
   };
 
   const canLeaveFeedback = (order: Order) => {
@@ -188,6 +118,11 @@ const UserOrder = () => {
     return (
       order.status.toLowerCase() === "processing" && daysSinceProcessing >= 3
     );
+  };
+
+  const handleStatusChange = (status: OrderStatus) => {
+    setSelectedStatus(status);
+    setPage(1);
   };
 
   if (userLoading || loading) {
@@ -214,8 +149,6 @@ const UserOrder = () => {
   }
 
   if (!user) return <Alert severity="info">No user data found</Alert>;
-  if (orders.length === 0)
-    return <Alert severity="info">No orders found</Alert>;
 
   return (
     <Container maxWidth="lg">
@@ -223,246 +156,234 @@ const UserOrder = () => {
         <Typography variant="h4" component="h1" gutterBottom>
           My Orders
         </Typography>
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+          {Object.values(OrderStatus).map((status) => (
+            <Button
+              key={status}
+              variant={selectedStatus === status ? "contained" : "outlined"}
+              onClick={() => handleStatusChange(status)}
+              sx={{ mx: 1 }}
+            >
+              {status}
+            </Button>
+          ))}
+        </Box>
       </Box>
 
-      <Grid container spacing={3}>
-        {orders.map((order) => (
-          <Grid item xs={12} sm={6} md={4} key={order.id}>
-            <Card
-              onClick={() => handleOrderClick(order.id)}
-              sx={{
-                cursor: "pointer",
-                transition: "0.3s",
-                "&:hover": { transform: "translateY(-5px)", boxShadow: 3 },
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                borderRadius: 2,
-                overflow: "hidden",
-              }}
-            >
-              <Box sx={{ bgcolor: theme.palette.primary.main, py: 2, px: 3 }}>
-                <Typography
-                  variant="h6"
-                  component="div"
-                  color="white"
-                  fontWeight="bold"
-                >
-                  Order #{order.id}
-                </Typography>
-              </Box>
-              <CardContent
-                sx={{
-                  flexGrow: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  p: 3,
-                }}
-              >
-                <Box
+      {orders.length === 0 ? (
+        <Box sx={{ textAlign: "center", my: 4 }}>
+          <Typography variant="h6">
+            No orders found for {selectedStatus} status
+          </Typography>
+          <Typography variant="body1" sx={{ mt: 2 }}>
+            Select a different status to view other orders
+          </Typography>
+        </Box>
+      ) : (
+        <>
+          <Grid container spacing={3}>
+            {orders.map((order) => (
+              <Grid item xs={12} sm={6} md={4} key={order.id}>
+                <Card
+                  onClick={() => handleOrderClick(order.id)}
                   sx={{
+                    cursor: "pointer",
+                    transition: "0.3s",
+                    "&:hover": { transform: "translateY(-5px)", boxShadow: 3 },
+                    height: "100%",
                     display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    mb: 2,
+                    flexDirection: "column",
+                    borderRadius: 2,
+                    overflow: "hidden",
                   }}
                 >
-                  <Typography color="text.secondary" variant="body2">
-                    {new Date(order.order_date).toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </Typography>
-                  <Chip
-                    label={order.status}
-                    color={getOrderStatusColor(order.status)}
-                    size="small"
-                    sx={{ fontWeight: "bold" }}
-                  />
-                </Box>
-
-                <Divider sx={{ my: 2 }} />
-
-                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                  <Avatar
-                    sx={{
-                      bgcolor: theme.palette.secondary.main,
-                      mr: 2,
-                      width: 32,
-                      height: 32,
-                    }}
-                  >
-                    <ShoppingBasketIcon fontSize="small" />
-                  </Avatar>
-                  <Typography variant="body1" fontWeight="medium">
-                    {order.first_name} {order.last_name}
-                  </Typography>
-                </Box>
-
-                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                  <Avatar
-                    sx={{
-                      bgcolor: theme.palette.success.main,
-                      mr: 2,
-                      width: 32,
-                      height: 32,
-                    }}
-                  >
-                    <CreditCardIcon fontSize="small" />
-                  </Avatar>
-                  <Typography
-                    variant="h6"
-                    fontWeight="bold"
-                    color="success.main"
-                  >
-                    {formatCurrency(order.total_money)}
-                  </Typography>
-                </Box>
-
-                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                  <Avatar
-                    sx={{
-                      bgcolor: theme.palette.info.main,
-                      mr: 2,
-                      width: 32,
-                      height: 32,
-                    }}
-                  >
-                    <LocalShippingIcon fontSize="small" />
-                  </Avatar>
-                  <Typography variant="body2">
-                    {order.shipping_method}
-                  </Typography>
-                </Box>
-
-                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                  <Avatar
-                    sx={{
-                      bgcolor: theme.palette.warning.main,
-                      mr: 2,
-                      width: 32,
-                      height: 32,
-                    }}
-                  >
-                    <PaymentIcon fontSize="small" />
-                  </Avatar>
-                  <Typography variant="body2">
-                    {order.payment_method}
-                  </Typography>
-                </Box>
-
-                <Box sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}>
-                  <Avatar
-                    sx={{
-                      bgcolor: theme.palette.error.main,
-                      mr: 2,
-                      width: 32,
-                      height: 32,
-                    }}
-                  >
-                    <HomeIcon fontSize="small" />
-                  </Avatar>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                    }}
-                  >
-                    {order.shipping_address}
-                  </Typography>
-                </Box>
-
-                {order.status.toLowerCase() === "pending" && (
+                  {order.koi_image && (
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image={order.koi_image}
+                      alt="Koi"
+                      sx={{ objectFit: "cover" }}
+                    />
+                  )}
                   <Box
+                    sx={{ bgcolor: theme.palette.primary.main, py: 2, px: 3 }}
+                  >
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      color="white"
+                      fontWeight="bold"
+                    >
+                      Order #{order.id}
+                    </Typography>
+                  </Box>
+                  <CardContent
                     sx={{
-                      mt: "auto",
-                      pt: 2,
+                      flexGrow: 1,
                       display: "flex",
-                      justifyContent: "space-between",
+                      flexDirection: "column",
+                      p: 3,
                     }}
                   >
-                    <Button
-                      size={isMobile ? "small" : "medium"}
-                      color="secondary"
-                      variant="outlined"
-                      startIcon={<EditIcon />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEditOrder(order);
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 2,
                       }}
                     >
-                      Edit
-                    </Button>
-                    <Button
-                      size={isMobile ? "small" : "medium"}
-                      color="success"
-                      variant="contained"
-                      startIcon={<PaymentIcon />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handlePayment(order);
-                      }}
-                    >
-                      Pay
-                    </Button>
-                  </Box>
-                )}
+                      <Typography color="text.secondary" variant="body2">
+                        {new Date(order.order_date).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          },
+                        )}
+                      </Typography>
+                      <Chip
+                        label={order.status}
+                        color={getOrderStatusColor(order.status)}
+                        size="small"
+                        sx={{ fontWeight: "bold" }}
+                      />
+                    </Box>
 
-                {canLeaveFeedback(order) && (
-                  <Box
-                    sx={{ mt: 2, display: "flex", justifyContent: "center" }}
-                  >
-                    <Button
-                      component={RouterLink}
-                      to={`/feedback/${order.id}`}
-                      variant="contained"
-                      color="primary"
-                      startIcon={<FeedbackIcon />}
+                    <Divider sx={{ my: 2 }} />
+
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                      <Avatar
+                        sx={{
+                          bgcolor: theme.palette.secondary.main,
+                          mr: 2,
+                          width: 32,
+                          height: 32,
+                        }}
+                      >
+                        <ShoppingBasketIcon fontSize="small" />
+                      </Avatar>
+                      <Typography variant="body1" fontWeight="medium">
+                        {order.first_name} {order.last_name}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                      <Avatar
+                        sx={{
+                          bgcolor: theme.palette.success.main,
+                          mr: 2,
+                          width: 32,
+                          height: 32,
+                        }}
+                      >
+                        <CreditCardIcon fontSize="small" />
+                      </Avatar>
+                      <Typography
+                        variant="h6"
+                        fontWeight="bold"
+                        color="success.main"
+                      >
+                        {formatCurrency(order.total_money)}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                      <Avatar
+                        sx={{
+                          bgcolor: theme.palette.info.main,
+                          mr: 2,
+                          width: 32,
+                          height: 32,
+                        }}
+                      >
+                        <LocalShippingIcon fontSize="small" />
+                      </Avatar>
+                      <Typography variant="body2">
+                        {order.shipping_method}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                      <Avatar
+                        sx={{
+                          bgcolor: theme.palette.warning.main,
+                          mr: 2,
+                          width: 32,
+                          height: 32,
+                        }}
+                      >
+                        <PaymentIcon fontSize="small" />
+                      </Avatar>
+                      <Typography variant="body2">
+                        {order.payment_method}
+                      </Typography>
+                    </Box>
+
+                    <Box
+                      sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}
                     >
-                      Leave Feedback
-                    </Button>
-                  </Box>
-                )}
-              </CardContent>
-            </Card>
+                      <Avatar
+                        sx={{
+                          bgcolor: theme.palette.error.main,
+                          mr: 2,
+                          width: 32,
+                          height: 32,
+                        }}
+                      >
+                        <HomeIcon fontSize="small" />
+                      </Avatar>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                        }}
+                      >
+                        {order.shipping_address}
+                      </Typography>
+                    </Box>
+
+                    {canLeaveFeedback(order) && (
+                      <Box
+                        sx={{
+                          mt: 2,
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Button
+                          component={RouterLink}
+                          to={`/order-detail/${order.id}`}
+                          variant="contained"
+                          color="primary"
+                          startIcon={<FeedbackIcon />}
+                        >
+                          Leave Feedback
+                        </Button>
+                      </Box>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
 
-      <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-        <PaginationComponent
-          totalPages={totalPages}
-          currentPage={page}
-          onPageChange={handlePageChange}
-        />
-      </Box>
+          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+            <PaginationComponent
+              totalPages={totalPages}
+              currentPage={page}
+              onPageChange={handlePageChange}
+            />
+          </Box>
+        </>
+      )}
 
-      <Dialog
-        open={dialogOpen}
-        onClose={handleCloseDialog}
-        maxWidth="md"
-        fullWidth
-      >
-        {selectedOrderId && (
-          <UserOrderDetail
-            orderId={selectedOrderId}
-            onClose={handleCloseDialog}
-          />
-        )}
-      </Dialog>
-
-      <EditOrderDialog
-        open={editDialogOpen}
-        onClose={handleCloseEditDialog}
-        order={editingOrder}
-        onSave={handleSaveEditedOrder}
-        accessToken={getCookie("access_token") || ""}
-      />
       <ToastContainer />
     </Container>
   );

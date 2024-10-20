@@ -45,6 +45,7 @@ import { ThemeProvider } from "@mui/material";
 import BreederInfo from "./pages/static/BreederInfo";
 import BlogList from "./pages/blog/BlogList";
 import BlogPost from "./pages/blog/BlogPost";
+import UserOrderDetail from "./pages/detail/member/UserOrderDetail";
 
 const TITLE = "Auction Koi";
 
@@ -114,6 +115,10 @@ function App() {
               <Route
                 path="/payments/vnpay-payment-return"
                 element={<VNPayReturn />}
+              />
+              <Route
+                path="/order-detail/:orderId"
+                element={<UserOrderDetail />}
               />
             </Route>
             <Route path="/feedback/:orderId" element={<Feedback />} />

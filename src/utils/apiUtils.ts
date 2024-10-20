@@ -1034,3 +1034,30 @@ export const submitFeedback = async (
     throw new Error("Failed to submit feedback");
   }
 };
+
+export const getUserOrderByStatus = async (
+  userId: number,
+  status: string,
+  page: number,
+  limit: number,
+  token: string,
+): Promise<{ orders: Order[]; totalPages: number }> => {
+  const response = await axios.get(
+    `${API_URL}/orders/user/${userId}/get-sorted-orders`,
+    {
+      params: { keyword: status, page, limit },
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
+  return response.data;
+};
+
+export const getOrderById = async (
+  orderId: number,
+  token: string,
+): Promise<Order> => {
+  const response = await axios.get(`${API_URL}/orders/${orderId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};

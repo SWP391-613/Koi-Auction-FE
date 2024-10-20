@@ -24,3 +24,11 @@ export type OrderDetail = {
   number_of_products: number;
   total_money: number;
 };
+
+export enum OrderStatus {
+  PENDING = "PENDING",
+  PROCESSING = "PROCESSING",
+  SHIPPED = "SHIPPED",
+  DELIVERED = "DELIVERED",
+  CANCELLED = "CANCELLED",
+}

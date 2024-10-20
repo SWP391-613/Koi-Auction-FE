@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import { debounce } from "@mui/material";
 
 type KoiGender = "Male" | "Female";
 type KoiTrackingStatus = "VERIFIED" | "UNVERIFIED";
@@ -26,11 +27,11 @@ export type KoiSearchResult = {
 };
 
 export const useKoiSearch = (debounceTime = 300) => {
-  const [query, setQuery] = useState("");
+  const [query, setQueryState] = useState("");
   const [results, setResults] = useState<KoiDetailModel[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
   const limit = 8;
@@ -64,27 +65,34 @@ export const useKoiSearch = (debounceTime = 300) => {
     [],
   );
 
-  useEffect(() => {
-    if (query) {
-      const handler = setTimeout(() => searchApi(query, page), debounceTime);
-      return () => clearTimeout(handler);
-    } else {
-      setResults([]);
-      setTotalPages(0);
-      setTotalItems(0);
-    }
-  }, [query, page, debounceTime, searchApi]);
+  const debouncedSearch = useCallback(
+    debounce((q: string) => {
+      if (q) {
+        searchApi(q, 0);
+        setPage(0);
+      } else {
+        setResults([]);
+        setTotalPages(0);
+        setTotalItems(0);
+      }
+    }, debounceTime),
+    [searchApi, debounceTime],
+  );
 
-  const handleSearch = useCallback(() => {
-    searchApi(query, 1);
-    setPage(1);
-  }, [query, searchApi]);
+  const setQuery = useCallback(
+    (newQuery: string) => {
+      setQueryState(newQuery);
+      debouncedSearch(newQuery);
+    },
+    [debouncedSearch],
+  );
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number,
   ) => {
     setPage(value);
+    searchApi(query, value - 1);
   };
 
   return {
@@ -93,7 +101,6 @@ export const useKoiSearch = (debounceTime = 300) => {
     results,
     loading,
     error,
-    handleSearch,
     page,
     totalPages,
     totalItems,

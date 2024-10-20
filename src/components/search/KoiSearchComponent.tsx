@@ -33,25 +33,17 @@ const KoiSearchComponent: React.FC<KoiSearchComponentProps> = () => {
     results,
     loading,
     error,
-    handleSearch,
     page,
     totalPages,
     totalItems,
     handlePageChange,
   } = useKoiSearch(500);
 
-  useEffect(() => {
-    if (query) {
-      handleSearch();
-    }
-  }, [query]);
-
   return (
     <div className="container mx-auto p-4 mt-5">
       <SearchBar
         value={query}
         onChange={setQuery}
-        onSearch={handleSearch}
         loading={loading}
         placeholder="Search for koi..."
       />

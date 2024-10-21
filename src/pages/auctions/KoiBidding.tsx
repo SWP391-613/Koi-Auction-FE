@@ -34,6 +34,7 @@ import LoadingComponent from "~/components/shared/LoadingComponent";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "~/constants/message";
 import CountdownClock from "~/components/auctions/CountdownClock";
+import { getUserCookieToken } from "~/utils/auth.utils";
 
 // Define the BidRequest interface
 export type BidRequest = {
@@ -56,6 +57,7 @@ const KoiBidding: React.FC = () => {
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const navigate = useNavigate();
+  const token = getUserCookieToken();
 
   const isAuctionOngoing = useCallback(
     () => auction?.status === AUCTION_STATUS.ONGOING,
@@ -67,6 +69,7 @@ const KoiBidding: React.FC = () => {
   );
 
   useEffect(() => {
+    if (!token) return;
     const loadData = async () => {
       try {
         const [auctionKoiDetails, auctionDetails] = await Promise.all([
@@ -84,7 +87,7 @@ const KoiBidding: React.FC = () => {
                   ? auctionKoiDetails.base_price
                   : 0),
         );
-        setKoi(await getKoiById(auctionKoiDetails.koi_id));
+        setKoi(await getKoiById(auctionKoiDetails.koi_id, token));
       } catch (error) {
         console.error("Error loading data:", error);
         toast.error("Failed to load auction details. Please try again.");

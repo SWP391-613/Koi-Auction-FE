@@ -1,7 +1,12 @@
+import { Typography } from "@mui/material";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import PaginationComponent from "~/components/common/PaginationComponent";
+import KoiBreederViewGrid from "~/components/search/KoiBreederViewGrid";
+import KoiSearchComponent from "~/components/search/KoiSearchComponent";
+import KoiUnverifiedSearchComponent from "~/components/search/KoiUnverifiedSearchComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import { useAuth } from "~/contexts/AuthContext";
 import { environment } from "~/environments/environment";
@@ -9,8 +14,6 @@ import { KoiDetailModel } from "~/types/kois.type";
 import { KoisResponse } from "~/types/paginated.types";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
-import KoiCart from "./KoiCart";
-import PaginationComponent from "~/components/common/PaginationComponent";
 
 const VerifyKoiList: React.FC = () => {
   const userId = getCookie("user_id");
@@ -24,6 +27,10 @@ const VerifyKoiList: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const handleSearchStateChange = (isActive: boolean) => {
+    setIsSearchActive(isActive);
+  };
 
   const handleView = (id: number) => {
     navigate(`/kois/${id}`);
@@ -159,13 +166,19 @@ const VerifyKoiList: React.FC = () => {
   return (
     <div>
       {kois.length > 0 ? (
-        <KoiCart
-          items={kois}
-          handleView={handleView}
-          handleEdit={handleApprove}
-          handleDelete={handleDecline}
-          renderCrudButtons={renderCrudButtons}
-        />
+        <>
+          <KoiUnverifiedSearchComponent
+            onSearchStateChange={handleSearchStateChange}
+          />
+          <Typography variant="h3">Unverified Kois</Typography>
+          <KoiBreederViewGrid
+            kois={kois}
+            handleView={handleView}
+            handleEdit={handleApprove}
+            handleDelete={handleDecline}
+            renderActions={renderCrudButtons}
+          />
+        </>
       ) : (
         <div>No Koi data available</div>
       )}

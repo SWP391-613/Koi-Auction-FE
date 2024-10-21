@@ -19,7 +19,7 @@ import { formatCurrency } from "~/utils/currencyUtils";
 import { getCategoryName } from "~/utils/dataConverter";
 import { useAuth } from "../../contexts/AuthContext";
 import BreederEditKoiDialog from "../manager/koi/BreederEditKoiDialog";
-import { isTokenValid } from "~/utils/auth.utils";
+import { getUserCookieToken, isTokenValid } from "~/utils/auth.utils";
 
 interface KoiDetailItemProps {
   icon: IconDefinition;
@@ -38,11 +38,13 @@ const KoiDetail: React.FC = () => {
   const [selectedKoiId, setSelectedKoiId] = useState<number | null>(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const navigate = useNavigate();
-
+  const token = getUserCookieToken();
   useEffect(() => {
+    if (!token) return;
+
     const fetchKoiData = async () => {
       try {
-        const response = await getKoiById(parseInt(id || ""));
+        const response = await getKoiById(parseInt(id || ""), token);
 
         if (!response) {
           navigate("/notfound");
@@ -110,12 +112,6 @@ const KoiDetail: React.FC = () => {
                 className={getStatusColor(koi.status_name)}
               />
             )}
-            <KoiDetailItem
-              icon={faListOl}
-              label="Status"
-              value={koi.status_name}
-              className={getStatusColor(koi.status_name)}
-            />
             <div className="grid w-full grid-cols-1 xl:grid-cols-2">
               <KoiDetailItem
                 icon={faVenusMars}

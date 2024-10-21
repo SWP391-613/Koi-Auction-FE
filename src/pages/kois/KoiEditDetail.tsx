@@ -16,6 +16,7 @@ import { getStatusColor } from "~/utils/colorUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { getCategoryName } from "~/utils/dataConverter";
 import { useAuth } from "../../contexts/AuthContext";
+import { getUserCookieToken } from "~/utils/auth.utils";
 
 interface KoiEditDetailItemProps {
   icon: IconDefinition;
@@ -32,10 +33,13 @@ const KoiEditDetail: React.FC = () => {
   const [koi, setKoi] = useState<KoiDetailModel | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  const token = getUserCookieToken();
   useEffect(() => {
+    if (!token) return;
+
     const fetchKoiData = async () => {
       try {
-        const response = await getKoiById(parseInt(id || ""));
+        const response = await getKoiById(parseInt(id || ""), token);
 
         // Check if the response is valid
         if (!response) {

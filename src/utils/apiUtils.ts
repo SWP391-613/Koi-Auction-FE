@@ -318,9 +318,16 @@ export async function getKois(
   }
 }
 
-export async function getKoiById(id: number): Promise<KoiDetailModel> {
+export async function getKoiById(
+  id: number,
+  token: string,
+): Promise<KoiDetailModel> {
   try {
-    const response = await axios.get<KoiDetailModel>(`${API_URL}/kois/${id}`);
+    const response = await axios.get<KoiDetailModel>(`${API_URL}/kois/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching koi data:", error);
@@ -460,6 +467,7 @@ export const fetchUserOrders = async (
 
 export const fetchOrderDetails = async (
   orderId: number,
+  token: string,
 ): Promise<OrderDetailWithKoi[]> => {
   try {
     const response = await axios.get(
@@ -470,7 +478,7 @@ export const fetchOrderDetails = async (
     // Fetch Koi data for each order detail
     const orderDetailsWithKoi = await Promise.all(
       orderDetails.map(async (detail) => {
-        const koiData = await getKoiById(detail.product_id);
+        const koiData = await getKoiById(detail.product_id, token);
         return {
           ...detail,
           koi: {

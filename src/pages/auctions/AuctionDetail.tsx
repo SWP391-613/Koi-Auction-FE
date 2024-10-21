@@ -14,6 +14,7 @@ import {
   fetchAuctionKoi,
   getKoiById,
 } from "~/utils/apiUtils"; // Assume we have this API function
+import { getUserCookieToken } from "~/utils/auth.utils";
 import { getAuctionStatusV2 } from "~/utils/dateTimeUtils";
 
 const AuctionDetail: React.FC = () => {
@@ -26,8 +27,10 @@ const AuctionDetail: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
-
+  const token = getUserCookieToken();
   useEffect(() => {
+    if (!token) return;
+
     const fetchAuction = async () => {
       setIsLoading(true);
       setError(null);
@@ -38,7 +41,7 @@ const AuctionDetail: React.FC = () => {
         if (auctionData) {
           const auctionKoiData = await fetchAuctionKoi(auctionData.id!);
           const koiDetailsPromises = auctionKoiData.map((auctionKoi) =>
-            getKoiById(auctionKoi.koi_id),
+            getKoiById(auctionKoi.koi_id, token),
           );
           const koiDetails = await Promise.all(koiDetailsPromises);
 

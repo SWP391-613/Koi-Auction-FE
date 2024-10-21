@@ -35,6 +35,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
+import { getUserCookieToken } from "~/utils/auth.utils";
 
 export type OrderDetailWithKoi = OrderDetail & {
   koi: {
@@ -57,7 +58,13 @@ const UserOrderDetail: React.FC = () => {
   const [order, setOrder] = useState<Order | null>(null);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const token = getUserCookieToken();
+
   useEffect(() => {
+    if (!token) {
+      return;
+    }
+
     if (orderId) {
       setLoading(true);
       getOrderById(parseInt(orderId), getCookie("access_token") || "")
@@ -69,7 +76,7 @@ const UserOrderDetail: React.FC = () => {
           setError("Failed to fetch order");
         });
 
-      fetchOrderDetails(parseInt(orderId))
+      fetchOrderDetails(parseInt(orderId), token)
         .then((details) => {
           if (Array.isArray(details)) {
             setOrderDetails(details);
@@ -102,6 +109,10 @@ const UserOrderDetail: React.FC = () => {
   };
 
   const handleSaveEditedOrder = async () => {
+    if (!token) {
+      return;
+    }
+
     if (editedOrder) {
       try {
         const updatedOrder = await updateOrder(
@@ -111,7 +122,10 @@ const UserOrderDetail: React.FC = () => {
 
         if (updatedOrder && updatedOrder.id) {
           setOrder(updatedOrder);
-          const refreshedDetails = await fetchOrderDetails(updatedOrder.id);
+          const refreshedDetails = await fetchOrderDetails(
+            updatedOrder.id,
+            token,
+          );
           setOrderDetails(refreshedDetails);
         }
         toast.success("Order updated successfully");

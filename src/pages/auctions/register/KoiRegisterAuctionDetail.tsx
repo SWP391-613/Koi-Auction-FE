@@ -37,9 +37,7 @@ const KoiRegisterAuctionDetail: React.FC = () => {
   const token = getCookie("access_token");
 
   useEffect(() => {
-    if (!token) {
-      return;
-    }
+    if (!token) return;
 
     const fetchAuction = async () => {
       const auctionData = await fetchAuctionById(Number(id));
@@ -48,7 +46,7 @@ const KoiRegisterAuctionDetail: React.FC = () => {
       if (auctionData) {
         const auctionKoiData = await fetchAuctionKoi(auctionData.id!);
         const koiDetailsPromises = auctionKoiData.map(
-          (auctionKoi: AuctionKoi) => getKoiById(auctionKoi.koi_id),
+          (auctionKoi: AuctionKoi) => getKoiById(auctionKoi.koi_id, token),
         );
         const koiDetails = await Promise.all(koiDetailsPromises);
 

@@ -29,6 +29,7 @@ import EditAuctionDialog from "./EditAuctionDialog";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
 import { getCookie } from "~/utils/cookieUtils";
 import PaginationComponent from "~/components/common/PaginationComponent";
+import AuctionSearchComponent from "~/components/search/AuctionSearchComponent";
 
 export const AuctionsManagement: React.FC = () => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);
@@ -48,6 +49,10 @@ export const AuctionsManagement: React.FC = () => {
     null,
   );
   const [auctionKois, setAuctionKois] = useState<AuctionKoi[]>([]);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const handleSearchStateChange = (isActive: boolean) => {
+    setIsSearchActive(isActive);
+  };
 
   const formatDateForInput = (date: Date): string => {
     if (!date) return "";
@@ -191,7 +196,7 @@ export const AuctionsManagement: React.FC = () => {
 
   return (
     <div>
-      {/* <SearchBar /> */}
+      <AuctionSearchComponent onSearchStateChange={handleSearchStateChange} />
       <div className="mt-3">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Auctions Management</h1>

@@ -757,6 +757,11 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.57.0.tgz#a5417ae8427873f1dd08b70b3574b453e67b5f7f"
   integrity sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==
 
+"@faker-js/faker@^9.0.3":
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/@faker-js/faker/-/faker-9.0.3.tgz#be817db896b07d1716bc65d9aad1ba587b499826"
+  integrity sha512-lWrrK4QNlFSU+13PL9jMbMKLJYXDFu3tQfayBsMXX7KL/GiQeqfB1CzHkqD5UHBUtPAuPo6XwGbMFNdVMZObRA==
+
 "@fortawesome/fontawesome-common-types@6.6.0":
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-6.6.0.tgz#31ab07ca6a06358c5de4d295d4711b675006163f"
@@ -1000,6 +1005,14 @@
   dependencies:
     "@babel/runtime" "^7.25.7"
     "@mui/utils" "^5.16.6 || ^6.0.0"
+
+"@ngneat/falso@^7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@ngneat/falso/-/falso-7.2.0.tgz#0683a643a1ab0ea99d0d461cb2333f108b2329bb"
+  integrity sha512-283EXBFd05kCbGuGSXgmvhCsQYEYzvD/eJaE7lxd05qRB0tgREvZX7TRlJ1KSp8nHxoK6Ws029G1Y30mt4IVAA==
+  dependencies:
+    seedrandom "3.0.5"
+    uuid "8.3.2"
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
@@ -3261,6 +3274,7 @@ keyv@^4.5.3:
     "@mui/icons-material" "^6.0.2"
     "@mui/material" "^6.0.2"
     "@mui/x-data-grid" "^7.17.0"
+    "@ngneat/falso" "^7.2.0"
     "@popperjs/core" "^2.11.8"
     "@react-oauth/google" "^0.12.1"
     "@stomp/stompjs" "^7.0.0"
@@ -3277,7 +3291,7 @@ keyv@^4.5.3:
     dotenv "^16.4.5"
     framer-motion "^11.11.9"
     husky "^9.1.5"
-    koiproject "file:../../../../../../home/lcaohoanq/.cache/yarn/v6/npm-koiproject-0.0.0-e4bc482b-a94d-4c0f-bf97-a2bd68d73193-1729523127595/node_modules/koiproject"
+    koiproject "file:../../../../../../home/lcaohoanq/.cache/yarn/v6/npm-koiproject-0.0.0-86064bb0-3ef1-4dcc-834c-58963d9af3a1-1729526131451/node_modules/koiproject"
     prop-types "^15.8.1"
     react "^18.3.1"
     react-dom "^18.3.1"
@@ -4012,6 +4026,11 @@ scheduler@^0.23.2:
   dependencies:
     loose-envify "^1.1.0"
 
+seedrandom@3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/seedrandom/-/seedrandom-3.0.5.tgz#54edc85c95222525b0c7a6f6b3543d8e0b3aa0a7"
+  integrity sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg==
+
 semver@^6.3.1:
   version "6.3.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
@@ -4550,6 +4569,11 @@ util-deprecate@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
+
+uuid@8.3.2:
+  version "8.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
+  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
 v8-compile-cache-lib@^3.0.1:
   version "3.0.1"

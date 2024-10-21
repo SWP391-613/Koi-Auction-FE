@@ -34,6 +34,7 @@
     "@mui/icons-material": "^6.0.2",
     "@mui/material": "^6.0.2",
     "@mui/x-data-grid": "^7.17.0",
+    "@ngneat/falso": "^7.2.0",
     "@popperjs/core": "^2.11.8",
     "@react-oauth/google": "^0.12.1",
     "@stomp/stompjs": "^7.0.0",
@@ -57,13 +58,13 @@
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.53.0",
     "react-router-dom": "^6.26.1",
+    "react-scroll-to-top": "3.0.0",
     "react-toastify": "^10.0.5",
     "sass": "1.32.13",
     "sockjs-client": "^1.6.1",
     "styled-components": "^6.1.13",
     "typescript": "^5.5.4",
-    "yup": "^1.4.0",
-    "react-scroll-to-top": "3.0.0"
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.25.1",
@@ -71,6 +72,7 @@
     "@babel/preset-typescript": "^7.24.7",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "8.57.0",
+    "@faker-js/faker": "^9.0.3",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",

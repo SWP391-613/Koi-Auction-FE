@@ -7,6 +7,7 @@ import KoiDetails from "../auctiondetail/KoiDetails";
 import { KoiInAuctionDetailModel } from "~/types/kois.type";
 import { KoiWithAuctionKoiData } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
+import { koiBreeders } from "~/utils/data/koibreeders";
 
 interface KoiInAuctionGridProps {
   kois: KoiWithAuctionKoiData[];
@@ -36,9 +37,17 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
                   />
                 </div>
               </div>
-              <div className="absolute top-3 left-3 bg-black bg-opacity-50 text-white rounded-full p-3 text-lg flex items-center">
-                <FontAwesomeIcon icon={faUser} className="mr-1" />
-                {koi.owner_id}
+              <div className="absolute top-3 left-3 bg-opacity-50 text-white rounded-full p-3 text-lg flex items-center">
+                {koiBreeders.find((breeder) => breeder.id === koi.owner_id) && (
+                  <img
+                    src={
+                      koiBreeders.find((breeder) => breeder.id === koi.owner_id)
+                        ?.avatar_url
+                    }
+                    alt="Breeder Avatar"
+                    className="w-[25%]"
+                  />
+                )}
               </div>
               <div className="absolute bottom-9 left-2 md:bottom-2 md:left-3 text-white rounded-full p-1 text-md font-bold">
                 <FontAwesomeIcon icon={faTag} className="mr-1" />

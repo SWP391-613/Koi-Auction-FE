@@ -16,7 +16,7 @@ const BreederInfo: React.FC = () => {
       <div className="rounded-lg bg-white p-6 shadow-lg">
         <div className="mb-6 flex items-center">
           <img
-            src={breeder.logo}
+            src={breeder.avatar_url}
             alt={`${breeder.name} logo`}
             className="mr-4 h-20 w-20"
           />

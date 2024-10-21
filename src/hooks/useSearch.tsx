@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
 import { debounce } from "@mui/material";
 import { getUserCookieToken } from "~/utils/auth.utils";
@@ -15,6 +15,8 @@ interface SearchHookOptions<T> {
   limit?: number;
   requiresAuth?: boolean;
   transformResponse?: (data: any) => SearchResult<T>;
+  preload?: boolean;
+  defaultQuery?: string;
 }
 
 export function useSearch<T>({
@@ -23,14 +25,17 @@ export function useSearch<T>({
   limit = 8,
   requiresAuth = false,
   transformResponse = (data) => data,
+  preload = false,
+  defaultQuery = "",
 }: SearchHookOptions<T>) {
-  const [query, setQueryState] = useState("");
+  const [query, setQueryState] = useState(defaultQuery);
   const [results, setResults] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
+  const initialLoadDone = useRef(false);
 
   const searchApi = useCallback(
     async (searchQuery: string, currentPage: number) => {
@@ -98,6 +103,14 @@ export function useSearch<T>({
     setPage(value);
     searchApi(query, value - 1);
   };
+
+  // Preload data on mount if `preload` is true and it hasn't been done before
+  useEffect(() => {
+    if (preload && !initialLoadDone.current) {
+      searchApi(defaultQuery, 0);
+      initialLoadDone.current = true;
+    }
+  }, [preload, defaultQuery, searchApi]);
 
   return {
     query,

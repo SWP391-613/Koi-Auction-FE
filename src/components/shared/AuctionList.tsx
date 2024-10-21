@@ -110,34 +110,17 @@ const AuctionList: React.FC<AuctionListProps> = ({
             </div>
           ) : (
             <>
-              <div>
-                <Typography
-                  variant="h3"
-                  sx={{ textAlign: "center", marginTop: "2rem" }}
-                >
-                  Our Auctions
-                </Typography>
-                <AuctionSearchComponent
-                  onSearchStateChange={handleSearchStateChange}
-                />
-                <CartComponent items={auctions} />
-                <PaginationComponent
+              <AuctionSearchComponent
+                onSearchStateChange={handleSearchStateChange}
+              />
+              {/* <div> */}
+              {/* <CartComponent items={auctions} /> */}
+              {/* <PaginationComponent
                   totalPages={hasMorePages ? currentPage + 1 : currentPage}
                   currentPage={currentPage}
                   onPageChange={handlePageChange}
-                />
-                <div>
-                  <Typography
-                    variant="h3"
-                    sx={{ textAlign: "center", marginTop: "2rem" }}
-                  >
-                    Our Kois
-                  </Typography>
-                  <KoiInAuctionSearchComponent
-                    onSearchStateChange={handleSearchStateChange}
-                  />
-                </div>
-              </div>
+                /> */}
+              {/* </div> */}
             </>
           )}
         </>

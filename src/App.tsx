@@ -46,6 +46,7 @@ import Feedback from "./pages/detail/member/Feedback";
 import UserOrderDetail from "./pages/detail/member/UserOrderDetail";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import BreederInfo from "./pages/static/BreederInfo";
+import Kois from "./pages/kois/Kois";
 
 const TITLE = "Auction Koi";
 
@@ -91,6 +92,7 @@ function App() {
               <Route path="/breeder/:id/info" element={<BreederInfo />} />
               <Route path="/blog" element={<BlogList />} />
               <Route path="/blog/:id" element={<BlogPost />} />
+              <Route path="/kois" element={<Kois />} />
               <Route path="/kois/:id" element={<KoiDetail />} />
 
               {/* Protected routes for logged-in users */}

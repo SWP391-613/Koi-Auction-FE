@@ -5,6 +5,7 @@ import { faUser, faTag, faStar } from "@fortawesome/free-solid-svg-icons";
 import { getCategoryName } from "~/utils/dataConverter"; // Adjust the import path as needed
 import KoiDetails from "../auctiondetail/KoiDetails";
 import { KoiInAuctionDetailModel } from "~/types/kois.type";
+import ScrollToTop from "react-scroll-to-top";
 
 interface KoiSearchGridProps {
   kois: KoiInAuctionDetailModel[];
@@ -79,6 +80,7 @@ const KoiSearchGrid: React.FC<KoiSearchGridProps> = ({
           </div>
         </Link>
       ))}
+      <ScrollToTop smooth />
     </div>
   );
 };

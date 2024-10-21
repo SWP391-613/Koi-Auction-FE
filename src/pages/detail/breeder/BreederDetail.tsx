@@ -18,6 +18,7 @@ import { fetchKoisOfBreeder, sendOtp } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import "./BreederDetail.scss";
+import ScrollToTop from "react-scroll-to-top";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -305,6 +306,7 @@ const BreederDetail: React.FC = () => {
         currentPage={currentPage}
         onPageChange={handlePageChange}
       />
+      <ScrollToTop smooth />
     </div>
   );
 };

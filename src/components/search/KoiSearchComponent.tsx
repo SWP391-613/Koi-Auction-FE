@@ -33,9 +33,9 @@ const KoiSearchComponent: React.FC<KoiSearchComponentProps> = () => {
       {loading && <p className="mt-2">Searching...</p>}
       {error && <p className="text-red-500 mt-2">{error.message}</p>}
       {results.length > 0 && !loading && (
-        <>
+        <div className="mt-3 text-gray-500">
           <Typography variant="body2" className="mt-3">
-            Total Items: {totalItems}
+            Showing 1 - {results.length} of {totalItems} results.
           </Typography>
 
           <KoiSearchGrid kois={results} />
@@ -44,7 +44,7 @@ const KoiSearchComponent: React.FC<KoiSearchComponentProps> = () => {
             currentPage={page}
             onPageChange={handlePageChange}
           />
-        </>
+        </div>
       )}
       {!loading && query && results.length === 0 && (
         <p className="mt-2">No results found.</p>

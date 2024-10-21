@@ -21,7 +21,7 @@ interface SearchHookOptions<T> {
 
 export function useSearch<T>({
   apiUrl,
-  debounceTime = 300,
+  debounceTime = 500,
   limit = 8,
   requiresAuth = false,
   transformResponse = (data) => data,

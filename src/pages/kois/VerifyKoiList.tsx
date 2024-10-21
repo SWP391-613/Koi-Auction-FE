@@ -2,6 +2,7 @@ import { Typography } from "@mui/material";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ScrollToTop from "react-scroll-to-top";
 import { toast } from "react-toastify";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import KoiBreederViewGrid from "~/components/search/KoiBreederViewGrid";
@@ -187,6 +188,7 @@ const VerifyKoiList: React.FC = () => {
         currentPage={currentPage}
         onPageChange={handlePageChange}
       />
+      <ScrollToTop smooth />
     </div>
   );
 };

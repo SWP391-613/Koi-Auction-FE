@@ -1,7 +1,7 @@
 import { KoiInAuctionDetailModel } from "~/types/kois.type";
 import { useSearch } from "./useSearch";
 
-export const useKoiInAuctionSearch = (debounceTime = 300) => {
+export const useKoiInAuctionSearch = (debounceTime = 500) => {
   return useSearch<KoiInAuctionDetailModel>({
     apiUrl: "http://localhost:4000/api/v1/auctionkois/get-kois-by-keyword",
     requiresAuth: false,

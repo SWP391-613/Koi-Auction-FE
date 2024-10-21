@@ -1,4 +1,5 @@
 import React from "react";
+import ScrollToTop from "react-scroll-to-top";
 import AuctionCard from "~/components/shared/AuctionCard";
 import { AuctionModel } from "~/types/auctions.type";
 import { getAuctionStatus } from "~/utils/dateTimeUtils";
@@ -19,6 +20,7 @@ const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
           getStatus={getAuctionStatus}
         />
       ))}
+      <ScrollToTop smooth />
     </div>
   );
 };

@@ -9,7 +9,6 @@ import KoiSearchComponent from "~/components/search/KoiSearchComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import DepositComponent from "~/components/shared/DepositComponent";
-import KoiCreatePopup from "~/components/shared/KoiCreatePopup";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { useAuth } from "~/contexts/AuthContext";
 import { environment } from "~/environments/environment";
@@ -44,7 +43,6 @@ const BreederDetail: React.FC = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const { user, loading, error, setUser } = useUserData();
-  const [createPopupOpen, setCreatePopupOpen] = useState(false);
   const userId = getCookie("user_id");
   const accessToken = getCookie("access_token");
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -67,7 +65,7 @@ const BreederDetail: React.FC = () => {
 
       if (response) {
         setKois(response.item);
-        setTotalKoi(response.item.length);
+        setTotalKoi(response.total_item);
         setHasMorePages(response.item.length === itemsPerPage);
       }
     } catch (error) {
@@ -85,16 +83,6 @@ const BreederDetail: React.FC = () => {
       fetchKoiData();
     }
   }, [currentPage, isLoggedIn, userId, accessToken]);
-
-  const handleCreate = () => {
-    setCreatePopupOpen(true);
-  };
-
-  const handleKoiCreated = () => {
-    setCreatePopupOpen(false);
-    setCurrentPage(1);
-    fetchKoiData(); // Fetch the updated koi list
-  };
 
   const handleUpdate = async () => {
     if (!user || !updateField || !updateValue) return;
@@ -243,13 +231,6 @@ const BreederDetail: React.FC = () => {
           {user.status_name === "VERIFIED" && (
             <div className="flex flex-col gap-4 mt-4">
               <Button
-                color="success"
-                variant="contained"
-                onClick={handleCreate}
-              >
-                Add New Koi
-              </Button>
-              <Button
                 color="error"
                 variant="contained"
                 sx={{ marginTop: "" }}
@@ -301,8 +282,16 @@ const BreederDetail: React.FC = () => {
           <DepositComponent userId={user.id} token={accessToken || ""} />
         </div>
       </div>
-      <KoiSearchComponent onSearchStateChange={handleSearchStateChange} />
-      <div className="mt-5">
+      <div>
+        <Typography variant="h5" sx={{ marginTop: "2rem", marginLeft: "1rem" }}>
+          Search your koi here
+        </Typography>
+        <KoiSearchComponent onSearchStateChange={handleSearchStateChange} />
+      </div>
+      <div>
+        <Typography variant="h5" sx={{ marginTop: "2rem", marginLeft: "1rem" }}>
+          All Koi
+        </Typography>
         <KoiBreederViewGrid
           kois={kois}
           handleView={() => {}}
@@ -315,12 +304,6 @@ const BreederDetail: React.FC = () => {
         totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages
         currentPage={currentPage}
         onPageChange={handlePageChange}
-      />
-      <KoiCreatePopup
-        open={createPopupOpen}
-        onClose={() => setCreatePopupOpen(false)}
-        onSuccess={handleKoiCreated}
-        owner_id={user.id}
       />
     </div>
   );

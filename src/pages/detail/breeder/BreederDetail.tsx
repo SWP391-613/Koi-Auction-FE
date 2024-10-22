@@ -119,10 +119,6 @@ const BreederDetail: React.FC = () => {
     }
   };
 
-  const handleRegisterKoiToAuction = () => {
-    navigate("/auctions/register");
-  };
-
   const handleVerify = async () => {
     if (!user) return;
 
@@ -228,18 +224,6 @@ const BreederDetail: React.FC = () => {
             <button onClick={handleVerify} className="verify-button">
               Verify User
             </button>
-          )}
-          {user.status_name === "VERIFIED" && (
-            <div className="flex flex-col gap-4 mt-4">
-              <Button
-                color="error"
-                variant="contained"
-                sx={{ marginTop: "" }}
-                onClick={handleRegisterKoiToAuction}
-              >
-                Register to Auction
-              </Button>
-            </div>
           )}
         </div>
         <div className="flex flex-col flex-1 justify-between p-7 bg-white">

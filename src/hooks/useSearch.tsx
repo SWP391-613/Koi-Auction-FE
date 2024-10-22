@@ -15,14 +15,16 @@ interface SearchHookOptions<T> {
   limit?: number;
   requiresAuth?: boolean;
   transformResponse?: (data: any) => SearchResult<T>;
+  defaultParams?: Record<string, any>;
 }
 
 export function useSearch<T>({
   apiUrl,
-  debounceTime = 300,
+  debounceTime = 1000,
   limit = 8,
   requiresAuth = false,
   transformResponse = (data) => data,
+  defaultParams = {},
 }: SearchHookOptions<T>) {
   const [query, setQueryState] = useState("");
   const [results, setResults] = useState<T[]>([]);
@@ -31,6 +33,7 @@ export function useSearch<T>({
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
+  const [customParams, setCustomParams] = useState(defaultParams);
 
   const searchApi = useCallback(
     async (searchQuery: string, currentPage: number) => {
@@ -52,6 +55,7 @@ export function useSearch<T>({
             keyword: searchQuery,
             page: currentPage,
             limit: limit,
+            ...customParams,
           },
           headers: headers,
         });
@@ -66,7 +70,7 @@ export function useSearch<T>({
         setLoading(false);
       }
     },
-    [apiUrl, limit, requiresAuth, transformResponse],
+    [apiUrl, limit, requiresAuth, transformResponse, customParams],
   );
 
   const debouncedSearch = useCallback(
@@ -99,6 +103,10 @@ export function useSearch<T>({
     searchApi(query, value - 1);
   };
 
+  useEffect(() => {
+    searchApi(query, page);
+  }, [customParams, searchApi, query, page]);
+
   return {
     query,
     setQuery,
@@ -109,5 +117,6 @@ export function useSearch<T>({
     totalPages,
     totalItems,
     handlePageChange,
+    setCustomParams,
   };
 }

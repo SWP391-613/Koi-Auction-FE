@@ -7,14 +7,22 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
 } from "@mui/material";
-import { Order } from "~/types/orders.type";
+import { Order, OrderStatus } from "~/types/orders.type";
+import { formatCurrency } from "~/utils/currencyUtils";
 
 interface OrderSearchTableProps {
   orders: Order[];
+  status: OrderStatus;
+  onStatusUpdate: (orderId: number, newStatus: OrderStatus) => void;
 }
 
-const OrderSearchTable: React.FC<OrderSearchTableProps> = ({ orders }) => {
+const OrderSearchTable: React.FC<OrderSearchTableProps> = ({
+  orders,
+  status,
+  onStatusUpdate,
+}) => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="order search table">
@@ -24,8 +32,12 @@ const OrderSearchTable: React.FC<OrderSearchTableProps> = ({ orders }) => {
             <TableCell>Customer Name</TableCell>
             <TableCell>Total Money</TableCell>
             <TableCell>Order Date</TableCell>
+            {status === OrderStatus.SHIPPED && <TableCell>Ship Date</TableCell>}
             <TableCell>Status</TableCell>
+            <TableCell>Payment Method</TableCell>
+            <TableCell>Address</TableCell>
             <TableCell>Shipping Method</TableCell>
+            <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -35,12 +47,46 @@ const OrderSearchTable: React.FC<OrderSearchTableProps> = ({ orders }) => {
                 {order.id}
               </TableCell>
               <TableCell>{`${order.first_name} ${order.last_name}`}</TableCell>
-              <TableCell>${order.total_money.toFixed(2)}</TableCell>
+              <TableCell>{formatCurrency(order.total_money)}</TableCell>
               <TableCell>
                 {new Date(order.order_date).toLocaleDateString()}
               </TableCell>
+              {status === OrderStatus.SHIPPED && (
+                <TableCell>
+                  {new Date(order.shipping_date).toLocaleDateString()}
+                </TableCell>
+              )}
               <TableCell>{order.status}</TableCell>
+              <TableCell>{order.payment_method}</TableCell>
+              <TableCell>{order.address}</TableCell>
               <TableCell>{order.shipping_method}</TableCell>
+              <TableCell>
+                {order.status === OrderStatus.PROCESSING && (
+                  <>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      onClick={() =>
+                        onStatusUpdate(order.id, OrderStatus.SHIPPED)
+                      }
+                      sx={{ mr: 1 }}
+                    >
+                      Ship
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      size="small"
+                      onClick={() =>
+                        onStatusUpdate(order.id, OrderStatus.CANCELLED)
+                      }
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                )}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

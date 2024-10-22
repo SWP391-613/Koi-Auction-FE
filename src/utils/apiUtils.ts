@@ -23,9 +23,10 @@ import {
 import { AuctionDTO } from "~/types/auctions.type";
 import { environment } from "../environments/environment";
 import { PaymentDTO } from "~/pages/detail/member/UserOrder";
-import { OrderDetail } from "~/types/orders.type";
+import { OrderDetail, OrderStatus } from "~/types/orders.type";
 import { Order } from "~/types/orders.type";
-import { feedbackDTO } from "~/pages/detail/member/Feedback";
+import { FeedbackRequest } from "~/pages/detail/member/Feedback";
+import { getUserCookieToken } from "./auth.utils";
 
 const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
 
@@ -423,7 +424,7 @@ export const placeBid = async (
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          Authorization: `Bearer ${getUserCookieToken()}`,
         },
       },
     );
@@ -472,6 +473,11 @@ export const fetchOrderDetails = async (
   try {
     const response = await axios.get(
       `${API_URL}/orders_details/order/${orderId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     );
     const orderDetails: OrderDetail[] = response.data;
 
@@ -484,6 +490,7 @@ export const fetchOrderDetails = async (
           koi: {
             name: koiData.name,
             image_url: koiData.thumbnail,
+            owner_id: koiData.owner_id, // Add this line
           },
         };
       }),
@@ -1027,7 +1034,7 @@ export const updateUserPassword = async (
 };
 
 export const submitFeedback = async (
-  feedbackDTO: feedbackDTO,
+  feedbackData: FeedbackRequest,
   token: string,
 ): Promise<void> => {
   const response = await fetch(`${API_URL}/feedbacks`, {
@@ -1036,7 +1043,7 @@ export const submitFeedback = async (
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(feedbackDTO),
+    body: JSON.stringify(feedbackData),
   });
   if (!response.ok) {
     throw new Error("Failed to submit feedback");
@@ -1068,4 +1075,46 @@ export const getOrderById = async (
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;
+};
+
+export const updateOrderStatus = async (
+  orderId: number,
+  newStatus: OrderStatus,
+) => {
+  const token = getUserCookieToken();
+  if (!token) {
+    throw new Error("No authentication token found");
+  }
+
+  try {
+    const response = await axios.put(
+      `${API_URL}/orders/${orderId}/status`,
+      { status: newStatus },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    throw error;
+  }
+};
+
+export const getFeedbackByOrderId = async (orderId: number, token: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/feedbacks/order/${orderId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching feedback:", error);
+    return null;
+  }
 };

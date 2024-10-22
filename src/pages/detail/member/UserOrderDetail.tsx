@@ -21,7 +21,7 @@ import {
   createOrderPayment,
   getOrderById,
 } from "~/utils/apiUtils";
-import { Order, OrderDetail } from "~/types/orders.type";
+import { Order, OrderDetail, OrderStatus } from "~/types/orders.type";
 import { toast, ToastContainer } from "react-toastify";
 import { getCookie } from "~/utils/cookieUtils";
 import TextField from "@mui/material/TextField";
@@ -374,23 +374,27 @@ const UserOrderDetail: React.FC = () => {
                       </Button>
                     </>
                   ) : (
+                    order.status === OrderStatus.PENDING && (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<EditIcon />}
+                        onClick={handleEditOrder}
+                      >
+                        Edit Order
+                      </Button>
+                    )
+                  )}
+                  {order.status === OrderStatus.PENDING && (
                     <Button
                       variant="contained"
-                      color="primary"
-                      startIcon={<EditIcon />}
-                      onClick={handleEditOrder}
+                      color="secondary"
+                      startIcon={<PaymentIcon />}
+                      onClick={handlePayment}
                     >
-                      Edit Order
+                      Process Payment
                     </Button>
                   )}
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<PaymentIcon />}
-                    onClick={handlePayment}
-                  >
-                    Process Payment
-                  </Button>
                 </Box>
                 {/* Feedback Section */}
                 {order && order.status !== "PENDING" && (

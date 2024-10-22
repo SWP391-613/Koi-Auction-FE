@@ -115,9 +115,7 @@ const UserOrder = () => {
     const daysSinceProcessing = Math.floor(
       (currentDate.getTime() - processingDate.getTime()) / (1000 * 3600 * 24),
     );
-    return (
-      order.status.toLowerCase() === "processing" && daysSinceProcessing >= 3
-    );
+    return order.status === OrderStatus.DELIVERED && daysSinceProcessing <= 7;
   };
 
   const handleStatusChange = (status: OrderStatus) => {

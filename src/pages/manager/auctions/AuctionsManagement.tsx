@@ -195,7 +195,7 @@ export const AuctionsManagement: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="m-5">
       <AuctionSearchComponent onSearchStateChange={handleSearchStateChange} />
       <div className="mt-3">
         <div className="flex justify-between items-center mb-6">

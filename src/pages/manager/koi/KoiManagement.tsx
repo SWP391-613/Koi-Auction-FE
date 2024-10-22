@@ -171,13 +171,11 @@ const KoiManagement = () => {
   }
 
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="m-5 overflow-x-auto">
       <AllKoiSearchComponent onSearchStateChange={handleSearchStateChange} />
       <div className="">
-        <div className="flex justify-between items-center mb-6">
-          <Typography variant="h4" gutterBottom>
-            Koi List
-          </Typography>
+        <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Koi Management</h1>
           <Button
             variant="contained"
             color="primary"

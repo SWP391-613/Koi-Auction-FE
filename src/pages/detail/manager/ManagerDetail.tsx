@@ -198,10 +198,8 @@ const ManagerDetail: React.FC = () => {
 
       <div>
         <AuctionsManagement />
-        <div className="grid grid-cols-2 gap-3">
-          <StaffManagement />
-          <BreederManagement />
-        </div>
+        <StaffManagement />
+        <BreederManagement />
         <KoiManagement />
         <MemberManagement />
       </div>

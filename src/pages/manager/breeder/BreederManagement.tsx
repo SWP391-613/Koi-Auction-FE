@@ -87,7 +87,7 @@ const BreederManagement = () => {
   }
 
   return (
-    <div className="mt-3 w-full overflow-x-auto">
+    <div className="m-5 overflow-x-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Breeder Management</h1>
         <Button

@@ -123,7 +123,7 @@ export const createNewAuction = async (
     if (axios.isAxiosError(error)) {
       // Narrowing down to AxiosError type
       const errorMessage =
-        error.response?.data?.message ||
+        error.response?.data?.reason ||
         "An error occurred during create new auction";
       throw new Error(errorMessage);
     } else {

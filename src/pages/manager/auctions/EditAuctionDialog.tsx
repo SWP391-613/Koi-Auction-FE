@@ -17,6 +17,7 @@ interface EditAuctionDialogProps {
   onClose: () => void;
   onSubmit: () => void;
   editingAuction: AuctionModel | null;
+  handleEndAuction: (auctionId: number) => void;
   onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   auctionKois: AuctionKoi[];
   onEdit: (koiId: number) => void;
@@ -29,6 +30,7 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
   onClose,
   onSubmit,
   editingAuction,
+  handleEndAuction,
   onInputChange,
   auctionKois,
   onEdit,
@@ -92,6 +94,14 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
                 />
               </div>
             </div>
+            <div className="mt-16"></div>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => handleEndAuction(editingAuction.id)}
+            >
+              End Auction
+            </Button>
           </>
         )}
       </DialogContent>

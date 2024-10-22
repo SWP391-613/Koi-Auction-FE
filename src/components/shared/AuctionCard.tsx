@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { AuctionModel } from "~/types/auctions.type";
-import { getAuctionStatus, getAuctionStatusV2 } from "~/utils/dateTimeUtils";
 import { CrudButton } from "./CrudButtonComponent";
 
 interface AuctionCardProps {
@@ -84,7 +83,6 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
 AuctionCard.propTypes = {
   auction: PropTypes.object.isRequired,
   link: PropTypes.string.isRequired,
-  hoverBgColor: PropTypes.string.isRequired,
   getStatus: PropTypes.func.isRequired,
 };
 

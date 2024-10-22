@@ -30,6 +30,7 @@ import { AUCTION_STATUS } from "~/constants/auctionStatus";
 import { getCookie } from "~/utils/cookieUtils";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import AuctionSearchComponent from "~/components/search/AuctionSearchComponent";
+import axios from "axios";
 
 export const AuctionsManagement: React.FC = () => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);
@@ -194,6 +195,40 @@ export const AuctionsManagement: React.FC = () => {
     confirm(`Delete Koi ${koiId}`);
   };
 
+  const handleEndAuction = async (auctionId: number) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to end this auction`,
+    );
+    if (!confirmed) return;
+
+    console.log("Ending auction:", auctionId);
+    console.log("Token:", token);
+
+    try {
+      await axios
+        .put(
+          `http://localhost:4000/api/v1/auctions/end/${auctionId}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+        .then(() => {
+          toast.success("Auction ended successfully");
+        });
+      // Implement the actual end auction logic here
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error.response?.data || error.message);
+        toast.error(error.response?.data?.reason);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    }
+  };
+
   return (
     <div className="m-5">
       <AuctionSearchComponent onSearchStateChange={handleSearchStateChange} />
@@ -278,6 +313,7 @@ export const AuctionsManagement: React.FC = () => {
           open={openEditDialog}
           onClose={handleCloseEditDialog}
           editingAuction={editingAuction}
+          handleEndAuction={handleEndAuction}
           auctionKois={auctionKois}
           onInputChange={handleEditInputChange}
           onSubmit={handleSubmitEditAuction}

@@ -149,7 +149,6 @@ const StaffDetail: React.FC = () => {
       <div>
         <VerifyKoiList />
         <AuctionsManagement />
-        <SendNotifications />
       </div>
     </div>
   );

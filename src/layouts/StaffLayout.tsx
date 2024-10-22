@@ -5,12 +5,14 @@ import { AuctionsManagement } from "~/pages/manager/auctions/AuctionsManagement"
 import SendNotifications from "~/components/shared/SendNotifications";
 import StaffDetail from "~/pages/detail/staff/StaffDetail";
 import DashboardLayout from "~/components/shared/DashboardLayout";
+import OrderManagement from "~/pages/manager/orders/OrderManagement";
 
 const StaffLayout: React.FC = () => {
   const navLinks = [
     { to: "/staffs", label: "Home" },
     { to: "/staffs/auctions", label: "Auctions" },
     { to: "/staffs/verify/kois", label: "Verify Koi" },
+    { to: "/staffs/orders", label: "Orders" },
     { to: "/staffs/send-notifications", label: "Send Notifications" },
   ];
 
@@ -20,6 +22,7 @@ const StaffLayout: React.FC = () => {
         <Route path="" element={<StaffDetail />} />
         <Route path="auctions" element={<AuctionsManagement />} />
         <Route path="verify/kois" element={<VerifyKoiList />} />
+        <Route path="orders" element={<OrderManagement />} />
         <Route path="send-notifications" element={<SendNotifications />} />
       </Routes>
     </DashboardLayout>

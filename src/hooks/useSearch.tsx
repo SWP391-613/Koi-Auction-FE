@@ -17,6 +17,7 @@ interface SearchHookOptions<T> {
   limit?: number;
   requiresAuth?: boolean;
   transformResponse?: (data: any) => SearchResult<T>;
+  defaultParams?: Record<string, any>;
   preload?: boolean;
   defaultQuery?: string;
 }
@@ -26,6 +27,7 @@ export function useSearch<T>({
   debounceTime = 500,
   limit = 8,
   requiresAuth = false,
+  defaultParams = {},
   transformResponse = (data) => data,
   preload = false,
   defaultQuery = "",
@@ -37,6 +39,7 @@ export function useSearch<T>({
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
+  const [customParams, setCustomParams] = useState(defaultParams);
   const initialLoadDone = useRef(false);
 
   const searchApi = useCallback(
@@ -59,6 +62,7 @@ export function useSearch<T>({
             keyword: searchQuery,
             page: currentPage,
             limit: limit,
+            ...customParams,
           },
           headers: headers,
         });
@@ -73,7 +77,7 @@ export function useSearch<T>({
         setLoading(false);
       }
     },
-    [apiUrl, limit, requiresAuth, transformResponse],
+    [apiUrl, limit, requiresAuth, transformResponse, customParams],
   );
 
   const debouncedSearch = useCallback(
@@ -106,6 +110,9 @@ export function useSearch<T>({
     searchApi(query, value - 1);
   };
 
+  useEffect(() => {
+    searchApi(query, page);
+  }, [customParams, searchApi, query, page]);
   // Preload data on mount if `preload` is true and it hasn't been done before
   useEffect(() => {
     if (preload && !initialLoadDone.current) {
@@ -113,7 +120,7 @@ export function useSearch<T>({
       initialLoadDone.current = true;
     }
   }, [preload, defaultQuery, searchApi]);
-
+  
   return {
     query,
     setQuery,
@@ -124,6 +131,7 @@ export function useSearch<T>({
     totalPages,
     totalItems,
     handlePageChange,
+    setCustomParams,
   };
 }
 

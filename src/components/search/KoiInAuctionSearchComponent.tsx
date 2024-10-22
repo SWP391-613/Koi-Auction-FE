@@ -58,8 +58,10 @@ const KoiInAuctionSearchComponent: React.FC<
           <Typography variant="body2" className="mt-3">
             Showing 1 - {results.length} of {totalItems} results.
           </Typography>
-
-          <KoiSearchGrid kois={results} />
+          <KoiSearchGrid
+            kois={results}
+            getLinkUrl={(koi) => `/auctions/${koi.auction_id}`}
+          />
           <PaginationComponent
             totalPages={totalPages}
             currentPage={page}

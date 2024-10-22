@@ -175,7 +175,7 @@ const KoiManagement = () => {
       <AllKoiSearchComponent onSearchStateChange={handleSearchStateChange} />
       <div className="">
         <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Koi Management</h1>
+          <h1 className="text-2xl font-bold">Koi Management</h1>
           <Button
             variant="contained"
             color="primary"

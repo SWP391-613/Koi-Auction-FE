@@ -57,7 +57,10 @@ const AllKoiSearchComponent: React.FC<AllKoiOwnerhComponentProps> = () => {
             Showing 1 - {results.length} of {totalItems} results.
           </Typography>
 
-          <KoiSearchGrid kois={results} />
+          <KoiSearchGrid
+            kois={results}
+            getLinkUrl={(koi) => `/kois/${koi.id}`}
+          />
           <PaginationComponent
             totalPages={totalPages}
             currentPage={page}

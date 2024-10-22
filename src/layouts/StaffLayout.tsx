@@ -8,6 +8,7 @@ import DashboardLayout from "~/components/shared/DashboardLayout";
 
 const StaffLayout: React.FC = () => {
   const navLinks = [
+    { to: "/staffs", label: "Home" },
     { to: "/staffs/auctions", label: "Auctions" },
     { to: "/staffs/verify/kois", label: "Verify Koi" },
     { to: "/staffs/send-notifications", label: "Send Notifications" },

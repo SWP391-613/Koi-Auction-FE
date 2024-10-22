@@ -22,7 +22,7 @@ const VerifyKoiList: React.FC = () => {
   const [totalKoi, setTotalKoi] = useState(0); // State to hold total koi count
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true); // To track if more pages are available
-  const itemsPerPage = 16; // Number of koi per page
+  const itemsPerPage = 8; // Number of koi per page
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { isLoggedIn } = useAuth();
@@ -170,7 +170,9 @@ const VerifyKoiList: React.FC = () => {
           <KoiUnverifiedSearchComponent
             onSearchStateChange={handleSearchStateChange}
           />
-          <Typography variant="h3">Unverified Kois</Typography>
+          <Typography variant="h3" sx={{ textAlign: "center" }}>
+            Unverified Kois
+          </Typography>
           <KoiBreederViewGrid
             kois={kois}
             handleView={handleView}

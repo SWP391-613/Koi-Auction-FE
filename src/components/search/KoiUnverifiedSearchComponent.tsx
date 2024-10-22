@@ -31,7 +31,7 @@ const KoiUnverifiedSearchComponent: React.FC<
           variant="h6"
           sx={{ textAlign: "left", marginBottom: "1rem" }}
         >
-          Search All Our Available Koi
+          Search Unverified Koi
         </Typography>
         <SearchBar
           value={query}
@@ -59,7 +59,10 @@ const KoiUnverifiedSearchComponent: React.FC<
             Showing 1 - {results.length} of {totalItems} results.
           </Typography>
 
-          <KoiSearchGrid kois={results} />
+          <KoiSearchGrid
+            kois={results}
+            getLinkUrl={(koi) => `/kois/${koi.id}`}
+          />
           <PaginationComponent
             totalPages={totalPages}
             currentPage={page}

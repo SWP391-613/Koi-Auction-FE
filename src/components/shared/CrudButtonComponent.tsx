@@ -1,17 +1,19 @@
 import React from "react";
 
 type CrudButtonProps = {
-  onClick: () => void;
+  onClick?: () => void;
   ariaLabel: string;
   svgPath: string; // Accepting a string path to the SVG file (relative to /public/icons)
-  size?: number; // Optional size for the icon
+  width?: number; // Optional size for the icon
+  height?: number; // Optional size for the icon
 };
 
 export const CrudButton: React.FC<CrudButtonProps> = ({
   onClick,
   ariaLabel,
   svgPath,
-  size = 24, // Default size for the SVG
+  width = 24,
+  height = 24,
 }) => {
   return (
     <button
@@ -23,8 +25,8 @@ export const CrudButton: React.FC<CrudButtonProps> = ({
       <img
         src={`/icons/${svgPath}`} // Using the relative path from /public/icons
         alt={ariaLabel}
-        width={size}
-        height={size}
+        width={width}
+        height={height}
         className="inline-block"
       />
     </button>

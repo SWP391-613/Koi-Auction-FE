@@ -6,7 +6,6 @@ import ScrollToTop from "react-scroll-to-top";
 import { toast } from "react-toastify";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import KoiBreederViewGrid from "~/components/search/KoiBreederViewGrid";
-import KoiSearchComponent from "~/components/search/KoiSearchComponent";
 import KoiUnverifiedSearchComponent from "~/components/search/KoiUnverifiedSearchComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import { useAuth } from "~/contexts/AuthContext";

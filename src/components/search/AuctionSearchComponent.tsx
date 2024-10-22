@@ -1,11 +1,10 @@
 import { Typography } from "@mui/material";
 import React from "react";
-import { useAuctionSearch } from "~/hooks/useAuctionSearch";
-import PaginationComponent from "../common/PaginationComponent";
-import KoiSearchGrid from "../shared/KoiSearchGrid";
-import SearchBar from "../shared/SearchBar";
-import AuctionCart from "~/pages/auctions/AuctionCart";
 import ScrollToTop from "react-scroll-to-top";
+import { useAuctionSearch } from "~/hooks/useSearch";
+import AuctionCart from "~/pages/auctions/AuctionCart";
+import PaginationComponent from "../common/PaginationComponent";
+import SearchBar from "../shared/SearchBar";
 
 interface AuctionSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
@@ -31,7 +30,7 @@ const AuctionSearchComponent: React.FC<AuctionSearchComponentProps> = () => {
           variant="h6"
           sx={{ textAlign: "left", marginBottom: "1rem" }}
         >
-          Search All Our Available Koi
+          Search All Our Auction
         </Typography>
         <SearchBar
           value={query}

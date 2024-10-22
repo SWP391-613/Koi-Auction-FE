@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import KoiBreederViewGrid from "~/components/search/KoiBreederViewGrid";
-import KoiSearchComponent from "~/components/search/KoiSearchComponent";
+import KoiOwnerSearchComponent from "~/components/search/KoiOwnerSearchComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import DepositComponent from "~/components/shared/DepositComponent";
@@ -287,7 +287,9 @@ const BreederDetail: React.FC = () => {
         <Typography variant="h5" sx={{ marginTop: "2rem", marginLeft: "1rem" }}>
           Search your koi here
         </Typography>
-        <KoiSearchComponent onSearchStateChange={handleSearchStateChange} />
+        <KoiOwnerSearchComponent
+          onSearchStateChange={handleSearchStateChange}
+        />
       </div>
       <div>
         <Typography variant="h5" sx={{ marginTop: "2rem", marginLeft: "1rem" }}>

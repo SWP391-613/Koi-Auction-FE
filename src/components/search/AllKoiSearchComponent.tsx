@@ -1,15 +1,15 @@
-import { Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import React from "react";
-import { useKoiSearch } from "~/hooks/useKoiSearch";
 import PaginationComponent from "../common/PaginationComponent";
 import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
+import { useAllKoiSearch } from "~/hooks/useSearch";
 
-interface KoiSearchComponentProps {
+interface AllKoiOwnerhComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
 }
 
-const KoiSearchComponent: React.FC<KoiSearchComponentProps> = () => {
+const AllKoiSearchComponent: React.FC<AllKoiOwnerhComponentProps> = () => {
   const {
     query,
     setQuery,
@@ -20,17 +20,36 @@ const KoiSearchComponent: React.FC<KoiSearchComponentProps> = () => {
     totalPages,
     totalItems,
     handlePageChange,
-  } = useKoiSearch(500);
+  } = useAllKoiSearch(500);
 
   return (
     <div className="container mx-auto p-4 mt-5">
-      <SearchBar
-        value={query}
-        onChange={setQuery}
-        loading={loading}
-        placeholder="Search for koi..."
-      />
-      {loading && <p className="mt-2">Searching...</p>}
+      <div className="bg-gray-200 p-4 rounded-xl">
+        <Typography
+          variant="h6"
+          sx={{ textAlign: "left", marginBottom: "1rem" }}
+        >
+          Search All Koi
+        </Typography>
+        <SearchBar
+          value={query}
+          onChange={setQuery}
+          loading={loading}
+          placeholder="Search for koi..."
+        />
+        <Typography
+          variant="body2"
+          sx={{ textAlign: "left", marginTop: "1rem" }}
+          color="error"
+        >
+          *Note: Search on name, sex, length, age, price,....
+        </Typography>
+      </div>
+      {loading && (
+        <Box display="flex" justifyContent="center" my={4}>
+          <CircularProgress />
+        </Box>
+      )}
       {error && <p className="text-red-500 mt-2">{error.message}</p>}
       {results.length > 0 && !loading && (
         <div className="mt-3 text-gray-500">
@@ -53,4 +72,4 @@ const KoiSearchComponent: React.FC<KoiSearchComponentProps> = () => {
   );
 };
 
-export default KoiSearchComponent;
+export default AllKoiSearchComponent;

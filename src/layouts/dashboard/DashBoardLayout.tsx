@@ -27,6 +27,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       >
         <List>
           <ListItem>
+            <ListItemButton component={Link} to={ROUTING_PATH.MANAGERS_HOME}>
+              <ListItemText primary="Home" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem>
             <ListItemButton component={Link} to={ROUTING_PATH.MANAGERS_KOI}>
               <ListItemText primary="Koi" />
             </ListItemButton>

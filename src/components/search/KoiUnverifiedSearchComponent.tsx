@@ -1,9 +1,9 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import React from "react";
-import { useKoiUnverifiedSearch } from "~/hooks/useKoiUnverifiedSearch";
 import PaginationComponent from "../common/PaginationComponent";
 import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
+import { useKoiUnverifiedSearch } from "~/hooks/useSearch";
 
 interface KoiUnverifiedSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;

@@ -13,6 +13,11 @@ import UserDetailDialog from "../member/UserDetailDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { faEdit, faUserCheck } from "@fortawesome/free-solid-svg-icons";
+import { AuctionsManagement } from "~/pages/manager/auctions/AuctionsManagement";
+import MemberManagement from "~/pages/manager/member/MemberManagement";
+import BreederManagement from "~/pages/manager/breeder/BreederManagement";
+import StaffManagement from "~/pages/manager/staff/StaffManagement";
+import KoiManagement from "~/pages/manager/koi/KoiManagement";
 
 const ManagerDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -94,7 +99,7 @@ const ManagerDetail: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto pt-6">
       <AccountVerificationAlert user={user} />
 
       <div className="grid grid-cols-1 md:grid-cols-3">
@@ -190,6 +195,16 @@ const ManagerDetail: React.FC = () => {
 
       {/* Modal for showing fetched user data */}
       <UserDetailDialog openModal={openModal} handleClose={handleClose} />
+
+      <div>
+        <AuctionsManagement />
+        <div className="grid grid-cols-2 gap-3">
+          <StaffManagement />
+          <BreederManagement />
+        </div>
+        <KoiManagement />
+        <MemberManagement />
+      </div>
     </div>
   );
 };

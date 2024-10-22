@@ -175,8 +175,9 @@ const StaffManagement = () => {
                   </div>
                 </div>
               </td>
-              <td className="px-4 py-3 text-sm">{staff.first_name}</td>
-              <td className="px-4 py-3 text-sm">{staff.last_name}</td>
+              <td className="px-4 py-3 text-sm">
+                {staff.first_name} {staff.last_name}
+              </td>
               <td className="px-4 py-3 text-sm">
                 {staff.phone_number || "Not provided"}
               </td>

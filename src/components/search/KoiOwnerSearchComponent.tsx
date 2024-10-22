@@ -1,17 +1,15 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import React from "react";
-import { useKoiInAuctionSearch } from "~/hooks/useSearch";
 import PaginationComponent from "../common/PaginationComponent";
 import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
+import { useKoiOwnerSearch } from "~/hooks/useSearch";
 
-interface KoiInAuctionSearchComponentProps {
+interface KoiOwnerSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
 }
 
-const KoiInAuctionSearchComponent: React.FC<
-  KoiInAuctionSearchComponentProps
-> = () => {
+const KoiOwnerSearchComponent: React.FC<KoiOwnerSearchComponentProps> = () => {
   const {
     query,
     setQuery,
@@ -22,16 +20,16 @@ const KoiInAuctionSearchComponent: React.FC<
     totalPages,
     totalItems,
     handlePageChange,
-  } = useKoiInAuctionSearch(500);
+  } = useKoiOwnerSearch(500);
 
   return (
-    <div className="container mx-auto mt-5">
+    <div className="container mx-auto p-4 mt-5">
       <div className="bg-gray-200 p-4 rounded-xl">
         <Typography
           variant="h6"
           sx={{ textAlign: "left", marginBottom: "1rem" }}
         >
-          Search All Our Available Koi
+          Search Koi
         </Typography>
         <SearchBar
           value={query}
@@ -68,10 +66,10 @@ const KoiInAuctionSearchComponent: React.FC<
         </div>
       )}
       {!loading && query && results.length === 0 && (
-        <Typography className="mt-2">No results found.</Typography>
+        <p className="mt-2">No results found.</p>
       )}
     </div>
   );
 };
 
-export default KoiInAuctionSearchComponent;
+export default KoiOwnerSearchComponent;

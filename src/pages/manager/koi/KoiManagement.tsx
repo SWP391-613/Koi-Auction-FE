@@ -1,3 +1,4 @@
+import AddIcon from "@mui/icons-material/Add";
 import {
   Alert,
   Button,
@@ -12,17 +13,17 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import LoadingComponent from "~/components/shared/LoadingComponent";
+import AllKoiSearchComponent from "~/components/search/AllKoiSearchComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { KoiDetailModel } from "~/types/kois.type";
 import { createKoi, deleteKoiById, getKoiData } from "~/utils/apiUtils";
-import { getCookie } from "~/utils/cookieUtils";
+import { getUserCookieToken } from "~/utils/auth.utils";
 import { createFormData, extractErrorMessage } from "~/utils/dataConverter";
 import PaginationComponent from "../../../components/common/PaginationComponent";
 import BreederEditKoiDialog from "./BreederEditKoiDialog";
-import AddIcon from "@mui/icons-material/Add";
 
 const KoiManagement = () => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
@@ -42,8 +43,12 @@ const KoiManagement = () => {
     age: 0,
   });
   const [koiImage, setKoiImage] = useState<File | null>(null);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const handleSearchStateChange = (isActive: boolean) => {
+    setIsSearchActive(isActive);
+  };
 
-  const accessToken = getCookie("access_token");
+  const accessToken = getUserCookieToken();
   // Handle access token early return
   useEffect(() => {
     if (!accessToken) {
@@ -167,6 +172,7 @@ const KoiManagement = () => {
 
   return (
     <div className="w-full overflow-x-auto">
+      <AllKoiSearchComponent onSearchStateChange={handleSearchStateChange} />
       <div className="">
         <div className="flex justify-between items-center mb-6">
           <Typography variant="h4" gutterBottom>

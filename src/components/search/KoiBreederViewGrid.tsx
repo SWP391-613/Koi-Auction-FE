@@ -22,8 +22,7 @@ const KoiBreederViewGrid: React.FC<KoiBreederViewGridProps> = ({
   return (
     <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {kois.map((koi: KoiDetailModel) => (
-        <Link
-          to={`/kois/${koi.id}`}
+        <div
           key={koi.id}
           className="transform overflow-hidden m-1 md:m-5 rounded-[1.5rem] bg-white shadow-md transition-transform hover:scale-102"
         >
@@ -32,15 +31,20 @@ const KoiBreederViewGrid: React.FC<KoiBreederViewGridProps> = ({
           </div>
           <div className="flex flex-col">
             <div className="relative flex md:justify-center bg-gradient-to-r from-[#1365b4] to-[#1584cb] duration-300 ease-in-out">
-              <div className="h-[17rem] w-[50%] md:h-[28rem] md:w-[23rem] flex justify-center">
-                <div className="absolute w-[30%] h-[60%] top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 md:w-[60%] md:h-[90%] md:top-1/2 md:left-1/2">
-                  <img
-                    src={koi.thumbnail}
-                    alt={koi.name}
-                    className="h-full w-full drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.2)] duration-500 hover:drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.35)] opacity-100"
-                  />
+              <Link
+                to={`/kois/${koi.id}`}
+                className="relative flex md:justify-center bg-gradient-to-r from-[#1365b4] to-[#1584cb] duration-300 ease-in-out"
+              >
+                <div className="h-[17rem] w-[50%] md:h-[28rem] md:w-[23rem] flex justify-center">
+                  <div className="absolute w-[30%] h-[60%] top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 md:w-[60%] md:h-[90%] md:top-1/2 md:left-1/2">
+                    <img
+                      src={koi.thumbnail}
+                      alt={koi.name}
+                      className="h-full w-full drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.2)] duration-500 hover:drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.35)] opacity-100"
+                    />
+                  </div>
                 </div>
-              </div>
+              </Link>
               <div className="absolute top-3 left-3 bg-opacity-50 text-white rounded-full p-3 text-lg flex items-center">
                 {koiBreeders.find((breeder) => breeder.id === koi.owner_id) && (
                   <img
@@ -88,7 +92,7 @@ const KoiBreederViewGrid: React.FC<KoiBreederViewGridProps> = ({
               </div>
             </div>
           </div>
-        </Link>
+        </div>
       ))}
     </div>
   );

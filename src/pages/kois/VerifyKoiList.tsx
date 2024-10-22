@@ -142,16 +142,22 @@ const VerifyKoiList: React.FC = () => {
         onClick={() => handleView(koi.id)}
         ariaLabel="View"
         svgPath="view.svg"
+        width={30}
+        height={30}
       />
       <CrudButton
         onClick={() => handleApprove(koi.id)}
         ariaLabel="Approve"
         svgPath="approve.svg"
+        width={30}
+        height={30}
       />
       <CrudButton
         onClick={() => handleDecline(koi.id)}
         ariaLabel="No Approve"
         svgPath="notapprove.svg"
+        width={30}
+        height={30}
       />
     </>
   );
@@ -180,15 +186,26 @@ const VerifyKoiList: React.FC = () => {
             handleDelete={handleDecline}
             renderActions={renderCrudButtons}
           />
+          <PaginationComponent
+            totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </>
       ) : (
-        <div>No Koi data available</div>
+        <div className="flex flex-col justify-center items-center h-[30rem]">
+          <Typography
+            variant="h3"
+            sx={{
+              color: "error.main",
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            No Koi data available
+          </Typography>
+        </div>
       )}
-      <PaginationComponent
-        totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
       <ScrollToTop smooth />
     </div>
   );

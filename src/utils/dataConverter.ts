@@ -14,6 +14,7 @@ export const convertDataToReadable = (method: string) => {
 // only take the first part
 
 export const prepareAuctionData = (auction: AuctionModel) => ({
+  id: auction.id,
   title: auction.title,
   start_time: convertToJavaLocalDateTime(auction.start_time),
   end_time: convertToJavaLocalDateTime(auction.end_time),

@@ -96,7 +96,7 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
             </div>
             <div className="mt-16"></div>
             <Button
-              variant="outlined"
+              variant="contained"
               color="error"
               onClick={() => handleEndAuction(editingAuction.id)}
             >
@@ -107,7 +107,9 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={onSubmit}>Save</Button>
+        <Button variant="contained" onClick={onSubmit}>
+          Save
+        </Button>
       </DialogActions>
     </Dialog>
   );

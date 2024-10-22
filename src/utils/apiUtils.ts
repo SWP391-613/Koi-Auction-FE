@@ -648,7 +648,7 @@ export const deleteAuction = async (
     if (axios.isAxiosError(error)) {
       console.error("Error deleting auction:", error.response?.data);
       throw new Error(
-        error.response?.data?.message || "An error occurred during deletion",
+        error.response?.data?.reason || "An error occurred during deletion",
       );
     } else {
       throw new Error("An unexpected error occurred");

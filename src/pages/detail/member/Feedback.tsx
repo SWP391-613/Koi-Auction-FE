@@ -1,52 +1,71 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Box, Rating, TextField, Button } from "@mui/material";
+import {
+  Typography,
+  Box,
+  Rating,
+  TextField,
+  Button,
+  Alert,
+} from "@mui/material";
 import { toast } from "react-toastify";
-import { Order, OrderDetail } from "~/types/orders.type";
-import { fetchOrderById, submitFeedback } from "../../../utils/apiUtils";
+import { Order, OrderStatus } from "~/types/orders.type";
+import {
+  fetchOrderById,
+  submitFeedback,
+  getFeedbackByOrderId,
+} from "../../../utils/apiUtils";
 import { getCookie } from "../../../utils/cookieUtils";
-import { formatCurrency } from "../../../utils/currencyUtils";
 import { useAuth } from "~/contexts/AuthContext";
+import { getUserCookieToken } from "~/utils/auth.utils";
 
-export type OrderDetailWithKoi = OrderDetail & {
-  koi: {
-    name: string;
-    image_url: string;
-  };
-};
+interface FeedbackProps {
+  orderId: string;
+}
 
-export type feedbackDTO = {
+export interface FeedbackRequest {
   content: string;
   rating: number;
   order_id: number;
   user_id: number;
-};
-
-interface FeedbackProps {
-  orderId: string;
 }
 
 const Feedback: React.FC<FeedbackProps> = ({ orderId }) => {
   const [order, setOrder] = useState<Order | null>(null);
   const [rating, setRating] = useState<number | null>(0);
   const [comment, setComment] = useState("");
+  const [existingFeedback, setExistingFeedback] =
+    useState<FeedbackRequest | null>(null);
   const user = useAuth();
+
   useEffect(() => {
-    const getOrderAndDetails = async () => {
+    const getOrderAndFeedback = async () => {
       try {
         if (orderId) {
           const fetchedOrder = await fetchOrderById(
             Number(orderId),
-            getCookie("access_token") || "",
+            getUserCookieToken() || "",
           );
           setOrder(fetchedOrder);
+
+          if (fetchedOrder.status === OrderStatus.DELIVERED) {
+            const feedbackResponse = await getFeedbackByOrderId(
+              Number(orderId),
+              getUserCookieToken() || "",
+            );
+            if (feedbackResponse && feedbackResponse.singleData) {
+              setExistingFeedback(feedbackResponse.singleData);
+              setRating(feedbackResponse.singleData.rating);
+              setComment(feedbackResponse.singleData.content);
+            }
+          }
         }
       } catch (error) {
-        console.error("Error fetching order and details:", error);
-        toast.error("Failed to fetch order details");
+        console.error("Error fetching order and feedback:", error);
+        toast.error("Failed to fetch order details or feedback");
       }
     };
 
-    getOrderAndDetails();
+    getOrderAndFeedback();
   }, [orderId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,15 +75,15 @@ const Feedback: React.FC<FeedbackProps> = ({ orderId }) => {
       return;
     }
     try {
-      const feedbackDTO: feedbackDTO = {
+      const feedbackRequest: FeedbackRequest = {
         content: comment,
         rating: rating,
         order_id: Number(orderId),
         user_id: user?.user?.id || 0,
       };
-      await submitFeedback(feedbackDTO, getCookie("access_token") || "");
+      await submitFeedback(feedbackRequest, getUserCookieToken() || "");
       toast.success("Feedback submitted successfully");
-      // Redirect or update UI as needed
+      setExistingFeedback(feedbackRequest as FeedbackRequest);
     } catch (error) {
       console.error("Error submitting feedback:", error);
       toast.error("Failed to submit feedback");
@@ -73,6 +92,31 @@ const Feedback: React.FC<FeedbackProps> = ({ orderId }) => {
 
   if (!order) {
     return <Typography>Loading...</Typography>;
+  }
+
+  if (order.status !== OrderStatus.DELIVERED) {
+    return (
+      <Alert severity="info">
+        Feedback can only be submitted for delivered orders.
+      </Alert>
+    );
+  }
+
+  if (existingFeedback) {
+    return (
+      <Box>
+        <Typography variant="h5" gutterBottom>
+          Your Feedback
+        </Typography>
+        <Box sx={{ mb: 3 }}>
+          <Typography component="legend">Rating</Typography>
+          <Rating name="read-only" value={existingFeedback.rating} readOnly />
+        </Box>
+        <Typography variant="body1" gutterBottom>
+          {existingFeedback.content}
+        </Typography>
+      </Box>
+    );
   }
 
   return (

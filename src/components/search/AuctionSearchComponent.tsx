@@ -1,17 +1,16 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import React from "react";
+import ScrollToTop from "react-scroll-to-top";
+import { useAuctionSearch } from "~/hooks/useSearch";
+import AuctionCart from "~/pages/auctions/AuctionCart";
 import PaginationComponent from "../common/PaginationComponent";
-import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
-import { useKoiUnverifiedSearch } from "~/hooks/useSearch";
 
-interface KoiUnverifiedSearchComponentProps {
+interface AuctionSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
 }
 
-const KoiUnverifiedSearchComponent: React.FC<
-  KoiUnverifiedSearchComponentProps
-> = () => {
+const AuctionSearchComponent: React.FC<AuctionSearchComponentProps> = () => {
   const {
     query,
     setQuery,
@@ -22,7 +21,7 @@ const KoiUnverifiedSearchComponent: React.FC<
     totalPages,
     totalItems,
     handlePageChange,
-  } = useKoiUnverifiedSearch(500);
+  } = useAuctionSearch(500);
 
   return (
     <div className="container mx-auto p-4 mt-5">
@@ -31,27 +30,23 @@ const KoiUnverifiedSearchComponent: React.FC<
           variant="h6"
           sx={{ textAlign: "left", marginBottom: "1rem" }}
         >
-          Search Unverified Koi
+          Search All Our Auction
         </Typography>
         <SearchBar
           value={query}
           onChange={setQuery}
           loading={loading}
-          placeholder="Search for koi..."
+          placeholder="Search for auctions..."
         />
         <Typography
           variant="body2"
           sx={{ textAlign: "left", marginTop: "1rem" }}
           color="error"
         >
-          *Note: Search on name, sex, length, age, price,....
+          *Note: Search on name, status, start date, end date,...
         </Typography>
       </div>
-      {loading && (
-        <Box display="flex" justifyContent="center" my={4}>
-          <CircularProgress />
-        </Box>
-      )}
+      {loading && <p className="mt-2">Searching...</p>}
       {error && <p className="text-red-500 mt-2">{error.message}</p>}
       {results.length > 0 && !loading && (
         <div className="mt-3 text-gray-500">
@@ -59,15 +54,13 @@ const KoiUnverifiedSearchComponent: React.FC<
             Showing 1 - {results.length} of {totalItems} results.
           </Typography>
 
-          <KoiSearchGrid
-            kois={results}
-            getLinkUrl={(koi) => `/kois/${koi.id}`}
-          />
+          <AuctionCart items={results} />
           <PaginationComponent
             totalPages={totalPages}
             currentPage={page}
             onPageChange={handlePageChange}
           />
+          <ScrollToTop smooth />
         </div>
       )}
       {!loading && query && results.length === 0 && (
@@ -77,4 +70,4 @@ const KoiUnverifiedSearchComponent: React.FC<
   );
 };
 
-export default KoiUnverifiedSearchComponent;
+export default AuctionSearchComponent;

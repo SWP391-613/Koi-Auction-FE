@@ -9,6 +9,7 @@ import OrderManagement from "~/pages/manager/orders/OrderManagement";
 
 const StaffLayout: React.FC = () => {
   const navLinks = [
+    { to: "/staffs", label: "Home" },
     { to: "/staffs/auctions", label: "Auctions" },
     { to: "/staffs/verify/kois", label: "Verify Koi" },
     { to: "/staffs/orders", label: "Orders" },

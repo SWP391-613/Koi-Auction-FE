@@ -19,13 +19,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       <Box
         component="nav"
         sx={{
-          width: "10rem",
           backgroundColor: "#686D76",
-          marginRight: 3,
           color: "white",
         }}
       >
         <List>
+          <ListItem>
+            <ListItemButton component={Link} to={ROUTING_PATH.MANAGERS_HOME}>
+              <ListItemText primary="Home" />
+            </ListItemButton>
+          </ListItem>
           <ListItem>
             <ListItemButton component={Link} to={ROUTING_PATH.MANAGERS_KOI}>
               <ListItemText primary="Koi" />

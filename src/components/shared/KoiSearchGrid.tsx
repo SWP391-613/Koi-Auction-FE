@@ -2,27 +2,34 @@ import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faTag, faStar } from "@fortawesome/free-solid-svg-icons";
-import { getCategoryName } from "~/utils/dataConverter"; // Adjust the import path as needed
+import { getCategoryName } from "~/utils/dataConverter";
 import KoiDetails from "../auctiondetail/KoiDetails";
-import { KoiInAuctionDetailModel } from "~/types/kois.type";
+import { KoiInAuctionDetailModel, KoiDetailModel } from "~/types/kois.type";
+import ScrollToTop from "react-scroll-to-top";
+import { koiBreeders } from "~/utils/data/koibreeders";
 
-interface KoiSearchGridProps {
-  kois: KoiInAuctionDetailModel[];
-  renderActions?: (koi: KoiInAuctionDetailModel) => ReactNode;
+type BaseKoiProps<T> = {
+  kois: T[];
+  renderActions?: (koi: T) => ReactNode;
   handleView?: (id: number) => void;
   handleEdit?: (id: number) => void;
   handleDelete?: (id: number) => void;
+};
+
+interface KoiSearchGridProps<T extends KoiDetailModel> extends BaseKoiProps<T> {
+  getLinkUrl: (koi: T) => string;
 }
 
-const KoiSearchGrid: React.FC<KoiSearchGridProps> = ({
+const KoiSearchGrid = <T extends KoiDetailModel>({
   kois,
   renderActions,
-}) => {
+  getLinkUrl,
+}: KoiSearchGridProps<T>) => {
   return (
     <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {kois.map((koi: KoiInAuctionDetailModel) => (
+      {kois.map((koi: T) => (
         <Link
-          to={`/auctions/${koi.auction_id}`}
+          to={getLinkUrl(koi)}
           key={koi.id}
           className="transform overflow-hidden m-1 md:m-5 rounded-[1.5rem] bg-white shadow-md transition-transform hover:scale-102"
         >
@@ -37,9 +44,17 @@ const KoiSearchGrid: React.FC<KoiSearchGridProps> = ({
                   />
                 </div>
               </div>
-              <div className="absolute top-3 left-3 bg-black bg-opacity-50 text-white rounded-full p-3 text-lg flex items-center">
-                <FontAwesomeIcon icon={faUser} className="mr-1" />
-                {koi.owner_id}
+              <div className="absolute top-3 left-3 bg-opacity-50 text-white p-3 text-lg flex items-center">
+                {koiBreeders.find((breeder) => breeder.id === koi.owner_id) && (
+                  <img
+                    src={
+                      koiBreeders.find((breeder) => breeder.id === koi.owner_id)
+                        ?.avatar_url
+                    }
+                    alt="Breeder Avatar"
+                    className="w-[25%]"
+                  />
+                )}
               </div>
               <div className="absolute bottom-9 left-2 md:bottom-2 md:left-3 text-white rounded-full p-1 text-md font-bold">
                 <FontAwesomeIcon icon={faTag} className="mr-1" />
@@ -79,6 +94,7 @@ const KoiSearchGrid: React.FC<KoiSearchGridProps> = ({
           </div>
         </Link>
       ))}
+      <ScrollToTop smooth />
     </div>
   );
 };

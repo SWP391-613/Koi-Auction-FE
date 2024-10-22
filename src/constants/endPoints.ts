@@ -1,6 +1,7 @@
 export const API_URL = "http://localhost:4000/api/v1";
 
 export const ROUTING_PATH = {
+  MANAGERS_HOME: "/managers",
   MANAGERS_KOI: "/managers/koi",
   MANAGERS_AUCTIONS: "/managers/auctions",
   MANAGERS_BREEDER: "/managers/breeder",

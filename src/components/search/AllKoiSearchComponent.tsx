@@ -3,15 +3,13 @@ import React from "react";
 import PaginationComponent from "../common/PaginationComponent";
 import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
-import { useKoiUnverifiedSearch } from "~/hooks/useSearch";
+import { useAllKoiSearch } from "~/hooks/useSearch";
 
-interface KoiUnverifiedSearchComponentProps {
+interface AllKoiOwnerhComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
 }
 
-const KoiUnverifiedSearchComponent: React.FC<
-  KoiUnverifiedSearchComponentProps
-> = () => {
+const AllKoiSearchComponent: React.FC<AllKoiOwnerhComponentProps> = () => {
   const {
     query,
     setQuery,
@@ -22,7 +20,7 @@ const KoiUnverifiedSearchComponent: React.FC<
     totalPages,
     totalItems,
     handlePageChange,
-  } = useKoiUnverifiedSearch(500);
+  } = useAllKoiSearch(500);
 
   return (
     <div className="container mx-auto p-4 mt-5">
@@ -31,7 +29,7 @@ const KoiUnverifiedSearchComponent: React.FC<
           variant="h6"
           sx={{ textAlign: "left", marginBottom: "1rem" }}
         >
-          Search Unverified Koi
+          Search All Koi
         </Typography>
         <SearchBar
           value={query}
@@ -77,4 +75,4 @@ const KoiUnverifiedSearchComponent: React.FC<
   );
 };
 
-export default KoiUnverifiedSearchComponent;
+export default AllKoiSearchComponent;

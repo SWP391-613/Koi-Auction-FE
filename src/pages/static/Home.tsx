@@ -49,7 +49,7 @@ const Home = () => {
             onClick={() => handleBreederClick(index)}
           >
             <img
-              src={breeder.logo}
+              src={breeder.avatar_url}
               alt={`${breeder.name} logo`}
               className="h-auto w-20"
             />

@@ -9,6 +9,9 @@ import { environment } from "~/environments/environment";
 import { getCookie } from "~/utils/cookieUtils";
 import "./StaffDetail.scss";
 import { sendOtp } from "~/utils/apiUtils";
+import { AuctionsManagement } from "~/pages/manager/auctions/AuctionsManagement";
+import VerifyKoiList from "~/pages/kois/VerifyKoiList";
+import SendNotifications from "~/components/shared/SendNotifications";
 
 const StaffDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -142,6 +145,11 @@ const StaffDetail: React.FC = () => {
             </Button>
           </div>
         </div>
+      </div>
+      <div>
+        <VerifyKoiList />
+        <AuctionsManagement />
+        <SendNotifications />
       </div>
     </div>
   );

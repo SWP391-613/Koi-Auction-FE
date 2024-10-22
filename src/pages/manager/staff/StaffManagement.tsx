@@ -136,7 +136,7 @@ const StaffManagement = () => {
   }, [newStaff, accessToken, handleCloseCreateDialog, refetch]);
 
   return (
-    <div className="mt-3 w-full overflow-x-auto">
+    <div className="m-5 overflow-x-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Staffs Management</h1>
         <Button
@@ -175,8 +175,9 @@ const StaffManagement = () => {
                   </div>
                 </div>
               </td>
-              <td className="px-4 py-3 text-sm">{staff.first_name}</td>
-              <td className="px-4 py-3 text-sm">{staff.last_name}</td>
+              <td className="px-4 py-3 text-sm">
+                {staff.first_name} {staff.last_name}
+              </td>
               <td className="px-4 py-3 text-sm">
                 {staff.phone_number || "Not provided"}
               </td>

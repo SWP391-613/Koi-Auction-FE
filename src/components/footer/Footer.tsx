@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="bg-[#CACBCF] p-8 text-white shadow-lg">
-      <div className="mx-auto flex justify-start gap-5 flex-col md:flex-row mb-[6rem]">
+      <div className="mx-auto flex justify-start gap-5 flex-col md:flex-row">
         <Link to="/" className="md:mb-0 flex items-center justify-center">
           <img
             src="/favicon.svg"
@@ -43,7 +43,7 @@ const Footer: React.FC = () => {
         <FooterSection title="Policy" links={policyLinks} />
         <FooterSection title="Account" links={accountLinks} />
       </div>
-      <div className="mt-8 text-center text-md font-bold text-gray-600">
+      <div className="mt-5 text-center text-md font-bold text-gray-600">
         AuctionKoi.com is a division of SelectKoi.com
       </div>
     </footer>

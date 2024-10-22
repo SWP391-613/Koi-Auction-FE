@@ -1,6 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
 import { debounce } from "@mui/material";
+import axios from "axios";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AuctionModel } from "~/types/auctions.type";
+import { KoiDetailModel, KoiInAuctionDetailModel } from "~/types/kois.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
 
 interface SearchResult<T> {
@@ -16,17 +18,21 @@ interface SearchHookOptions<T> {
   requiresAuth?: boolean;
   transformResponse?: (data: any) => SearchResult<T>;
   defaultParams?: Record<string, any>;
+  preload?: boolean;
+  defaultQuery?: string;
 }
 
 export function useSearch<T>({
   apiUrl,
-  debounceTime = 1000,
+  debounceTime = 500,
   limit = 8,
   requiresAuth = false,
-  transformResponse = (data) => data,
   defaultParams = {},
+  transformResponse = (data) => data,
+  preload = false,
+  defaultQuery = "",
 }: SearchHookOptions<T>) {
-  const [query, setQueryState] = useState("");
+  const [query, setQueryState] = useState(defaultQuery);
   const [results, setResults] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -34,6 +40,7 @@ export function useSearch<T>({
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
   const [customParams, setCustomParams] = useState(defaultParams);
+  const initialLoadDone = useRef(false);
 
   const searchApi = useCallback(
     async (searchQuery: string, currentPage: number) => {
@@ -106,7 +113,14 @@ export function useSearch<T>({
   useEffect(() => {
     searchApi(query, page);
   }, [customParams, searchApi, query, page]);
-
+  // Preload data on mount if `preload` is true and it hasn't been done before
+  useEffect(() => {
+    if (preload && !initialLoadDone.current) {
+      searchApi(defaultQuery, 0);
+      initialLoadDone.current = true;
+    }
+  }, [preload, defaultQuery, searchApi]);
+  
   return {
     query,
     setQuery,
@@ -120,3 +134,53 @@ export function useSearch<T>({
     setCustomParams,
   };
 }
+
+//in page breeder detail call this hook, to their get koi by keyword
+export const useKoiOwnerSearch = (debounceTime = 500) => {
+  return useSearch<KoiDetailModel>({
+    apiUrl: "http://localhost:4000/api/v1/kois/get-kois-owner-by-keyword",
+    requiresAuth: true,
+    preload: true,
+    defaultQuery: "ya",
+    debounceTime,
+  });
+};
+
+export const useAllKoiSearch = (debounceTime = 500) => {
+  return useSearch<KoiDetailModel>({
+    apiUrl: "http://localhost:4000/api/v1/kois/get-all-kois-by-keyword",
+    requiresAuth: true,
+    preload: false,
+    debounceTime,
+  });
+};
+
+//in page breeder detail call this hook, to their get koi by keyword
+export const useKoiUnverifiedSearch = (debounceTime = 500) => {
+  return useSearch<KoiDetailModel>({
+    apiUrl: "http://localhost:4000/api/v1/kois/get-unverified-kois-by-keyword",
+    requiresAuth: true,
+    preload: false,
+    debounceTime,
+  });
+};
+
+export const useKoiInAuctionSearch = (debounceTime = 500) => {
+  return useSearch<KoiInAuctionDetailModel>({
+    apiUrl: "http://localhost:4000/api/v1/auctionkois/get-kois-by-keyword",
+    requiresAuth: false,
+    preload: true,
+    defaultQuery: "ko",
+    debounceTime: debounceTime,
+  });
+};
+
+export const useAuctionSearch = (debounceTime = 500) => {
+  return useSearch<AuctionModel>({
+    apiUrl: "http://localhost:4000/api/v1/auctions/get-auctions-by-keyword",
+    requiresAuth: false,
+    preload: true,
+    defaultQuery: "ongoing",
+    debounceTime,
+  });
+};

@@ -22,7 +22,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   return (
     <div
-      style={{ display: "flex", alignItems: "center", marginBottom: "2rem" }}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        backgroundColor: "#f5f5f5",
+      }}
     >
       <TextField
         value={value}

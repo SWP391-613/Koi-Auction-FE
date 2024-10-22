@@ -1,28 +1,29 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faTag, faStar } from "@fortawesome/free-solid-svg-icons";
 import { getCategoryName } from "~/utils/dataConverter"; // Adjust the import path as needed
 import KoiDetails from "../auctiondetail/KoiDetails";
-import { KoiInAuctionDetailModel } from "~/types/kois.type";
-import { KoiWithAuctionKoiData } from "~/types/auctionkois.type";
-import { AuctionModel } from "~/types/auctions.type";
+import { KoiDetailModel } from "~/types/kois.type";
 import { koiBreeders } from "~/utils/data/koibreeders";
 
-interface KoiInAuctionGridProps {
-  kois: KoiWithAuctionKoiData[];
-  auction: AuctionModel;
+interface KoiBreederSearchGridProps {
+  kois: KoiDetailModel[];
+  renderActions?: (koi: KoiDetailModel) => ReactNode;
+  handleView?: (id: number) => void;
+  handleEdit?: (id: number) => void;
+  handleDelete?: (id: number) => void;
 }
 
-const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
+const KoiBreederSearchGrid: React.FC<KoiBreederSearchGridProps> = ({
   kois,
-  auction,
+  renderActions,
 }) => {
   return (
     <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {kois.map((koi: KoiWithAuctionKoiData) => (
+      {kois.map((koi: KoiDetailModel) => (
         <Link
-          to={`/auctionkois/${auction.id}/${koi.auctionKoiData.id}`}
+          to={`/kois/${koi.id}`}
           key={koi.id}
           className="transform overflow-hidden m-1 md:m-5 rounded-[1.5rem] bg-white shadow-md transition-transform hover:scale-102"
         >
@@ -82,6 +83,7 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
                   age={koi.age}
                 />
               </div>
+              {renderActions && renderActions(koi)}
             </div>
           </div>
         </Link>
@@ -90,4 +92,4 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
   );
 };
 
-export default KoiInAuctionGrid;
+export default KoiBreederSearchGrid;

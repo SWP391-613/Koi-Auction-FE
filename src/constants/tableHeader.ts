@@ -28,8 +28,7 @@ export const BREEDER_KOI_MANAGEMENT_HEADER = [
 export const STAFF_MANAGEMENT_HEADER = [
   "Id",
   "Staff",
-  "First Name",
-  "Last Name",
+  "Full Name",
   "Phone Number",
   "Email",
   "Address",

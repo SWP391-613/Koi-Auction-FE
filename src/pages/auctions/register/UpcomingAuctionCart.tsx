@@ -15,7 +15,6 @@ const UpcomingAuctionCart: React.FC<UpcomingAuctionCartProps> = ({ items }) => {
           key={auction.id}
           auction={auction}
           link={`/auctions/register/${auction.id}`}
-          hoverBgColor="bg-green-200"
           getStatus={getAuctionStatusV2}
         />
       ))}

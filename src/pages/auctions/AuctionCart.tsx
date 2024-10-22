@@ -1,4 +1,5 @@
 import React from "react";
+import ScrollToTop from "react-scroll-to-top";
 import AuctionCard from "~/components/shared/AuctionCard";
 import { AuctionModel } from "~/types/auctions.type";
 import { getAuctionStatus } from "~/utils/dateTimeUtils";
@@ -15,10 +16,10 @@ const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
           key={auction.id}
           auction={auction}
           link={`/auctions/${auction.id}`}
-          hoverBgColor="bg-red-100"
           getStatus={getAuctionStatus}
         />
       ))}
+      <ScrollToTop smooth />
     </div>
   );
 };

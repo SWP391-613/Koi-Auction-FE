@@ -21,6 +21,7 @@ const PaginationComponent: React.FC<PaginationProps> = ({
         color="primary"
         showFirstButton
         showLastButton
+        size="large"
       />
     </Box>
   );

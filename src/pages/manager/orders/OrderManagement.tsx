@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -6,6 +6,11 @@ import {
   Typography,
   CircularProgress,
   Alert,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import { useOrderSearch } from "~/hooks/useOrderSearch";
 import SearchBar from "~/components/shared/SearchBar";
@@ -13,6 +18,8 @@ import PaginationComponent from "~/components/common/PaginationComponent";
 import OrderSearchTable from "~/components/shared/OrderSearchTable";
 import { OrderStatus } from "~/types/orders.type";
 import { updateOrderStatus } from "~/utils/apiUtils"; // You'll need to create this function
+import { getOrderStatusColor } from "~/utils/colorUtils";
+import { toast } from "react-toastify";
 
 const OrderManagement: React.FC = () => {
   const {
@@ -30,17 +37,40 @@ const OrderManagement: React.FC = () => {
     refreshOrders,
   } = useOrderSearch(500);
 
-  const handleStatusUpdate = async (
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<{
+    id: number;
+    newStatus: OrderStatus;
+  } | null>(null);
+
+  const handleStatusUpdateConfirm = (
     orderId: number,
     newStatus: OrderStatus,
   ) => {
-    try {
-      await updateOrderStatus(orderId, newStatus);
-      refreshOrders(); // Refresh the order list after updating
-    } catch (error) {
-      console.error("Failed to update order status:", error);
-      // You might want to show an error message to the user here
+    setSelectedOrder({ id: orderId, newStatus });
+    setOpenDialog(true);
+  };
+
+  const handleConfirmAction = async () => {
+    if (selectedOrder) {
+      try {
+        await updateOrderStatus(selectedOrder.id, selectedOrder.newStatus);
+        refreshOrders();
+        if (selectedOrder.newStatus === OrderStatus.SHIPPED) {
+          toast.success("Order status updated to SHIPPED");
+        } else if (selectedOrder.newStatus === OrderStatus.CANCELLED) {
+          toast.success("Order status updated to CANCELLED");
+        }
+      } catch (error) {
+        console.error("Failed to update order status:", error);
+        // You might want to show an error message to the user here
+      }
     }
+    setOpenDialog(false);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
   };
 
   return (
@@ -56,6 +86,7 @@ const OrderManagement: React.FC = () => {
             variant={status === orderStatus ? "contained" : "outlined"}
             onClick={() => setStatus(orderStatus)}
             sx={{ mx: 1 }}
+            color={getOrderStatusColor(orderStatus)}
           >
             {orderStatus}
           </Button>
@@ -80,7 +111,7 @@ const OrderManagement: React.FC = () => {
           sx={{ textAlign: "left", marginTop: "1rem" }}
           color="error"
         >
-          *Note: Search on order ID, customer name, or total amount
+          *Note: Search on customer name, address, phone number,...
         </Typography>
       </Box>
 
@@ -104,8 +135,7 @@ const OrderManagement: React.FC = () => {
 
           <OrderSearchTable
             orders={results}
-            status={status}
-            onStatusUpdate={handleStatusUpdate}
+            onStatusUpdate={handleStatusUpdateConfirm}
           />
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
@@ -123,6 +153,27 @@ const OrderManagement: React.FC = () => {
           No results found.
         </Alert>
       )}
+
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Action"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to change the status of order #
+            {selectedOrder?.id} to {selectedOrder?.newStatus}?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleConfirmAction} autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

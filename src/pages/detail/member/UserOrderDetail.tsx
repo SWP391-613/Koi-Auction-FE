@@ -11,6 +11,11 @@ import {
   Paper,
   Typography,
   useTheme,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import PaymentIcon from "@mui/icons-material/Payment";
@@ -20,6 +25,7 @@ import {
   updateOrder,
   createOrderPayment,
   getOrderById,
+  confirmOrder,
 } from "~/utils/apiUtils";
 import { Order, OrderDetail, OrderStatus } from "~/types/orders.type";
 import { toast, ToastContainer } from "react-toastify";
@@ -57,6 +63,9 @@ const UserOrderDetail: React.FC = () => {
   const { user, loading: userLoading, error: userError } = useUserData();
   const [order, setOrder] = useState<Order | null>(null);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogAction, setDialogAction] = useState<string>("");
+  const [dialogMessage, setDialogMessage] = useState<string>("");
 
   const token = getUserCookieToken();
 
@@ -196,6 +205,48 @@ const UserOrderDetail: React.FC = () => {
     name: detail.koi.name,
     thumbnail: detail.koi.image_url,
   }));
+
+  const handleUpdateOrderStatus = async (newStatus: OrderStatus) => {
+    if (order && order.id) {
+      try {
+        const updatedOrder = await confirmOrder(
+          order.id,
+          newStatus,
+          getUserCookieToken() || "",
+        );
+        setOrder(updatedOrder);
+        toast.success(`Order status updated to ${newStatus} successfully`);
+      } catch (error) {
+        console.error("Error updating order status:", error);
+        toast.error("Failed to update order status. Please try again.");
+      }
+    }
+  };
+
+  const handleOpenDialog = (action: string, message: string) => {
+    setDialogAction(action);
+    setDialogMessage(message);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleConfirmAction = async () => {
+    setOpenDialog(false);
+    switch (dialogAction) {
+      case "payment":
+        await handlePayment();
+        break;
+      case "delivery":
+        await handleUpdateOrderStatus(OrderStatus.DELIVERED);
+        break;
+      case "cancel":
+        await handleUpdateOrderStatus(OrderStatus.CANCELLED);
+        break;
+    }
+  };
 
   return (
     <Container maxWidth="lg">
@@ -390,16 +441,51 @@ const UserOrderDetail: React.FC = () => {
                       variant="contained"
                       color="secondary"
                       startIcon={<PaymentIcon />}
-                      onClick={handlePayment}
+                      onClick={() =>
+                        handleOpenDialog(
+                          "payment",
+                          "Are you sure you want to process the payment for this order?",
+                        )
+                      }
                     >
                       Process Payment
                     </Button>
                   )}
+                  {order && order.status === OrderStatus.SHIPPED && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() =>
+                        handleOpenDialog(
+                          "delivery",
+                          "Are you sure you want to confirm the delivery of this order?",
+                        )
+                      }
+                    >
+                      Confirm Delivery
+                    </Button>
+                  )}
+                  {order &&
+                    (order.status === OrderStatus.PENDING ||
+                      order.status === OrderStatus.PROCESSING) && (
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() =>
+                          handleOpenDialog(
+                            "cancel",
+                            "Are you sure you want to cancel this order?",
+                          )
+                        }
+                      >
+                        Cancel Order
+                      </Button>
+                    )}
                 </Box>
                 {/* Feedback Section */}
                 {order && order.status !== "PENDING" && (
                   <Paper elevation={3} sx={{ p: 3, mt: 4 }}>
-                    <Feedback orderId={order.id.toString()} />
+                    <Feedback orderId={orderId || ""} />
                   </Paper>
                 )}
               </Grid>
@@ -407,6 +493,27 @@ const UserOrderDetail: React.FC = () => {
           </>
         )}
       </Paper>
+
+      {/* Confirmation Dialog */}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Action"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {dialogMessage}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleConfirmAction} autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <ToastContainer />
     </Container>

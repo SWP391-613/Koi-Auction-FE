@@ -1021,16 +1021,21 @@ export const submitFeedback = async (
   feedbackData: FeedbackRequest,
   token: string,
 ): Promise<void> => {
-  const response = await fetch(`${API_URL}/feedbacks`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(feedbackData),
-  });
-  if (!response.ok) {
-    throw new Error("Failed to submit feedback");
+  try {
+    const response = await axios.post(`${API_URL}/feedbacks`, feedbackData, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorMessage =
+        error.response?.data?.reason || "Failed to submit feedback";
+      throw new Error(errorMessage);
+    }
+    throw error;
   }
 };
 
@@ -1081,7 +1086,6 @@ export const updateOrderStatus = async (
         },
       },
     );
-
     return response.data;
   } catch (error) {
     console.error("Error updating order status:", error);
@@ -1097,8 +1101,32 @@ export const getFeedbackByOrderId = async (orderId: number, token: string) => {
       },
     });
     return response.data;
+  } catch (error) {}
+};
+
+export const confirmOrder = async (
+  orderId: number,
+  newStatus: OrderStatus,
+  token: string,
+): Promise<Order> => {
+  try {
+    const response = await axios.put(
+      `${API_URL}/orders/${orderId}/confirm-delivery`,
+      { status: newStatus },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      throw new Error("Failed to update order status");
+    }
   } catch (error) {
-    console.error("Error fetching feedback:", error);
-    return null;
+    console.error("Error updating order status:", error);
+    throw error;
   }
 };

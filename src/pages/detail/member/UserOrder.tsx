@@ -118,6 +118,24 @@ const UserOrder = () => {
     return order.status === OrderStatus.DELIVERED && daysSinceProcessing <= 7;
   };
 
+  const canAcceptShip = (order: Order) => {
+    const processingDate = new Date(order.shipping_date);
+    const currentDate = new Date();
+    const daysSinceProcessing = Math.floor(
+      (currentDate.getTime() - processingDate.getTime()) / (1000 * 3600 * 24),
+    );
+    return order.status === OrderStatus.SHIPPED && daysSinceProcessing <= 7;
+  };
+
+  const canConfirmOrder = (order: Order) => {
+    const processingDate = new Date(order.shipping_date);
+    const currentDate = new Date();
+    const daysSinceProcessing = Math.floor(
+      (currentDate.getTime() - processingDate.getTime()) / (1000 * 3600 * 24),
+    );
+    return order.status === OrderStatus.PENDING && daysSinceProcessing <= 7;
+  };
+
   const handleStatusChange = (status: OrderStatus) => {
     setSelectedStatus(status);
     setPage(1);
@@ -161,6 +179,7 @@ const UserOrder = () => {
               variant={selectedStatus === status ? "contained" : "outlined"}
               onClick={() => handleStatusChange(status)}
               sx={{ mx: 1 }}
+              color={getOrderStatusColor(status)}
             >
               {status}
             </Button>
@@ -346,6 +365,46 @@ const UserOrder = () => {
                         {order.shipping_address}
                       </Typography>
                     </Box>
+
+                    {canConfirmOrder(order) && (
+                      <Box
+                        sx={{
+                          mt: 2,
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Button
+                          component={RouterLink}
+                          to={`/order-detail/${order.id}`}
+                          variant="contained"
+                          color="primary"
+                          startIcon={<EditIcon />}
+                        >
+                          Confirm Order
+                        </Button>
+                      </Box>
+                    )}
+
+                    {canAcceptShip(order) && (
+                      <Box
+                        sx={{
+                          mt: 2,
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Button
+                          component={RouterLink}
+                          to={`/order-detail/${order.id}`}
+                          variant="contained"
+                          color="primary"
+                          startIcon={<LocalShippingIcon />}
+                        >
+                          SHIPPED!
+                        </Button>
+                      </Box>
+                    )}
 
                     {canLeaveFeedback(order) && (
                       <Box

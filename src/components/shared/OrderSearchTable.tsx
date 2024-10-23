@@ -14,13 +14,11 @@ import { formatCurrency } from "~/utils/currencyUtils";
 
 interface OrderSearchTableProps {
   orders: Order[];
-  status: OrderStatus;
   onStatusUpdate: (orderId: number, newStatus: OrderStatus) => void;
 }
 
 const OrderSearchTable: React.FC<OrderSearchTableProps> = ({
   orders,
-  status,
   onStatusUpdate,
 }) => {
   return (
@@ -32,7 +30,6 @@ const OrderSearchTable: React.FC<OrderSearchTableProps> = ({
             <TableCell>Customer Name</TableCell>
             <TableCell>Total Money</TableCell>
             <TableCell>Order Date</TableCell>
-            {status === OrderStatus.SHIPPED && <TableCell>Ship Date</TableCell>}
             <TableCell>Status</TableCell>
             <TableCell>Payment Method</TableCell>
             <TableCell>Address</TableCell>
@@ -51,11 +48,6 @@ const OrderSearchTable: React.FC<OrderSearchTableProps> = ({
               <TableCell>
                 {new Date(order.order_date).toLocaleDateString()}
               </TableCell>
-              {status === OrderStatus.SHIPPED && (
-                <TableCell>
-                  {new Date(order.shipping_date).toLocaleDateString()}
-                </TableCell>
-              )}
               <TableCell>{order.status}</TableCell>
               <TableCell>{order.payment_method}</TableCell>
               <TableCell>{order.address}</TableCell>
@@ -81,6 +73,7 @@ const OrderSearchTable: React.FC<OrderSearchTableProps> = ({
                       onClick={() =>
                         onStatusUpdate(order.id, OrderStatus.CANCELLED)
                       }
+                      sx={{ mr: 1 }}
                     >
                       Cancel
                     </Button>

@@ -52,10 +52,10 @@ const Feedback: React.FC<FeedbackProps> = ({ orderId }) => {
               Number(orderId),
               getUserCookieToken() || "",
             );
-            if (feedbackResponse && feedbackResponse.singleData) {
-              setExistingFeedback(feedbackResponse.singleData);
-              setRating(feedbackResponse.singleData.rating);
-              setComment(feedbackResponse.singleData.content);
+            if (feedbackResponse) {
+              setExistingFeedback(feedbackResponse);
+              setRating(feedbackResponse.rating);
+              setComment(feedbackResponse.content);
             }
           }
         }

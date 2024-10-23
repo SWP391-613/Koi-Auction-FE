@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Button, Divider, Rating, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,11 +14,15 @@ import { useAuth } from "~/contexts/AuthContext";
 import { environment } from "~/environments/environment";
 import { useUserData } from "~/hooks/useUserData";
 import { KoiDetailModel } from "~/types/kois.type";
-import { fetchKoisOfBreeder, sendOtp } from "~/utils/apiUtils";
+import { fetchKoisOfBreeder, formatDate, sendOtp } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import "./BreederDetail.scss";
 import ScrollToTop from "react-scroll-to-top";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faUserCheck } from "@fortawesome/free-solid-svg-icons";
+import UserDetailDialog from "../member/UserDetailDialog";
+import { formatCurrency } from "~/utils/currencyUtils";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -47,8 +51,16 @@ const BreederDetail: React.FC = () => {
   const userId = getCookie("user_id");
   const accessToken = getCookie("access_token");
   const [isSearchActive, setIsSearchActive] = useState(false);
+  const [openModal, setOpenModal] = useState(false); // Modal state for showing user details
+  const [showAbout, setShowAbout] = useState(true);
   const handleSearchStateChange = (isActive: boolean) => {
     setIsSearchActive(isActive);
+  };
+  const toggleAbout = () => setShowAbout(!showAbout);
+
+  // Close the modal
+  const handleClose = () => {
+    setOpenModal(false);
   };
 
   const fetchKoiData = async () => {
@@ -117,10 +129,6 @@ const BreederDetail: React.FC = () => {
       console.error("Failed to update user data:", error);
       alert("Failed to update user information. Please try again.");
     }
-  };
-
-  const handleRegisterKoiToAuction = () => {
-    navigate("/auctions/register");
   };
 
   const handleVerify = async () => {
@@ -199,90 +207,108 @@ const BreederDetail: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col justify-around mt-5">
+    <div className="container mx-auto">
       <AccountVerificationAlert user={user} />
-      <div>
-        <Typography
-          variant="h4"
-          sx={{ marginBottom: "1rem" }}
-          component="h1"
-          className="text-left"
-        >
-          Breeder Detail
-        </Typography>
-      </div>
-      <div className="flex border bg-[#F1F1F1] rounded-2xl">
-        <div className="flex p-5 flex-col justify-center gap-5 items-center w-[20rem]">
-          <img
-            src={user.avatar_url}
-            alt={`${user.first_name} ${user.last_name}`}
-            className="user-avatar"
-          />
-          <h1 className="text-2xl font-bold text-center mb-2">
-            {user.first_name} {user.last_name}
-          </h1>
-          <p className="text-green-600 font-semibold">
-            {user.status_name == "VERIFIED" ? "Your Account is Verified" : ""}
-          </p>
-          {user.status_name !== "VERIFIED" && (
-            <button onClick={handleVerify} className="verify-button">
-              Verify User
-            </button>
-          )}
-          {user.status_name === "VERIFIED" && (
-            <div className="flex flex-col gap-4 mt-4">
-              <Button
-                color="error"
-                variant="contained"
-                sx={{ marginTop: "" }}
-                onClick={handleRegisterKoiToAuction}
+      <div className="grid grid-cols-1 md:grid-cols-3 m-10 border-4 border-gray-500 rounded-xl transition-du bg-white hover:shadow-lg shadow-sm">
+        <div className=" rounded-lg flex flex-col justify-around">
+          <div className="flex flex-col p-6 items-center border-r">
+            <img
+              src={user.avatar_url}
+              alt={`${user.first_name} ${user.last_name}`}
+            />
+            <div className="flex items-center justify-center gap-5">
+              <p className="text-gray-600">{user.status_name} </p>
+              <CrudButton ariaLabel="Approve" svgPath="approve.svg" />
+            </div>
+            {user.status_name !== "VERIFIED" && (
+              <button
+                onClick={handleVerify}
+                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
               >
-                Register to Auction
-              </Button>
+                <FontAwesomeIcon icon={faUserCheck} className="mr-2" />
+                Verify Account
+              </button>
+            )}
+          </div>
+
+          <div className="pl-6 pb-6 space-y-4 border-2">
+            <div>
+              <h2 className="text-lg font-bold">Email</h2>
+              <p className="text-xl ">{user.email}</p>
             </div>
-          )}
-        </div>
-        <div className="flex flex-col flex-1 justify-between p-7 bg-white">
-          <div className="grid grid-cols-2 gap-2">
-            <div className="">
-              <p className="text-2xl font-bold">Full Name</p>
-              <p className="text-xl">{user.first_name + user.last_name}</p>
+            <div>
+              <h2 className="text-lg font-bold">Phone Number</h2>
+              <p className="text-xl ">{user.phone_number || "Not provided"}</p>
             </div>
-            <div className="">
-              <p className="text-2xl font-bold">Email</p>
-              <p className="text-xl">{user.email}</p>
+            <div>
+              <h2 className="text-lg font-bold">Address</h2>
+              <p className="text-xl ">{user.address || "Not provided"}</p>
             </div>
-            <div className="">
-              <p className="text-2xl font-bold">Date Of Birth</p>
-              <p className="text-xl">
-                {user.date_of_birth === null
-                  ? user.date_of_birth
-                  : "Not Provided"}
-              </p>
-            </div>
-            <div className="">
-              <p className="text-2xl font-bold">Phone</p>
-              <p className="text-xl">{user.phone_number || "Not provided"}</p>
-            </div>
-            <div className="">
-              <p className="text-2xl font-bold">Address</p>
-              <p className="text-xl">{user.address || "Not provided"}</p>
-            </div>
-            <div className="">
-              <p className="text-2xl font-bold ">Total Koi</p>
+            <div>
+              <p className="text-lg font-bold ">Total Koi</p>
               <p className="text-xl ">{totalKoi}</p>{" "}
-              {/* Display total number of koi */}
             </div>
           </div>
         </div>
-        <div className="bg-gray-100 flex flex-col justify-between p-10 text-center rounded-r-2xl">
-          <p className="text-2xl font-bold text-black mb-2">Account Balance</p>
-          <p className="text-2xl font-bold text-green-600">
-            ${user.account_balance.toFixed(2)}
-          </p>
-          <DepositComponent userId={user.id} token={accessToken || ""} />
+
+        {/* Display total number of koi */}
+        <div className=" md:col-span-2 rounded-lg">
+          <div className="flex justify-between items-center m-3">
+            <Typography variant="h3">
+              {user.first_name} {user.last_name}
+            </Typography>
+            <FontAwesomeIcon
+              icon={faEdit}
+              onClick={handleUpdate}
+              className="text-2xl text-gray-400 hover:cursor-pointer"
+            />
+          </div>
+          <div className="flex justify-start items-center gap-3 m-3">
+            <Typography variant="h5">5/5</Typography>
+            <Rating name="read-only" value={5} readOnly />
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="flex justify-center items-center gap-5">
+              <p className="text-xl font-bold">Account Balance:</p>
+              <p className="text-3xl text-green-600 font-bold">
+                {user.account_balance !== null
+                  ? formatCurrency(user.account_balance)
+                  : "No money"}
+              </p>
+            </div>
+            <DepositComponent
+              userId={user.id}
+              token={getCookie("access_token") || ""}
+            />
+          </div>
+
+          {/* About Button */}
+          <div className="text-left">
+            <FontAwesomeIcon icon={faUserCheck} className="mr-2" />
+            <Button onClick={toggleAbout} variant="text" color="inherit">
+              About
+            </Button>
+            <Divider variant="fullWidth" />
+          </div>
+
+          {/* Conditionally render the About section */}
+          {showAbout && (
+            <div className="mt-6 space-y-4 m-3">
+              <div className="flex gap-5 justify-between ">
+                <h2 className="text-lg font-bold">Date of Birth</h2>
+                <p>{user.date_of_birth}</p>
+              </div>
+              <div className="flex gap-5 justify-between ">
+                <h2 className="text-lg font-bold">Created At</h2>
+                <p>{formatDate(user.created_at || "")}</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Modal for showing fetched user data */}
+      <UserDetailDialog openModal={openModal} handleClose={handleClose} />
       <div>
         <Typography variant="h5" sx={{ marginTop: "2rem", marginLeft: "1rem" }}>
           Search your koi here

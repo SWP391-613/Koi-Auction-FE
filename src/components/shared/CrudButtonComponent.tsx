@@ -18,7 +18,7 @@ export const CrudButton: React.FC<CrudButtonProps> = ({
   return (
     <button
       onClick={onClick}
-      className="focus:shadow-outline-gray bg-gray-200 flex items-center justify-center rounded-lg px-2 py-2 text-sm font-medium leading-5 text-purple-100 focus:outline-none dark:text-gray-400"
+      className="focus:shadow-outline-gray hover:bg-blue-200 bg-gray-200 flex items-center justify-center rounded-lg px-2 py-2 text-sm font-medium leading-5 text-purple-100 focus:outline-none dark:text-gray-400"
       aria-label={ariaLabel}
     >
       {/* Dynamically load SVG from the public folder */}

@@ -28,7 +28,7 @@ import { Order } from "~/types/orders.type";
 import { FeedbackRequest } from "~/pages/detail/member/Feedback";
 import { getUserCookieToken } from "./auth.utils";
 
-const API_URL = `${environment.be.baseUrl}${environment.be.apiPrefix}`;
+const API_URL = `http://localhost:4000/api/v1`;
 
 export const login = async (payload: LoginDTO): Promise<UserLoginResponse> => {
   try {
@@ -215,21 +215,14 @@ export const fetchAuctionById = async (
     return createAuctionFromApi(response.data);
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error(
-        "Error fetching auction by ID:",
-        error.response?.data?.message || error.message,
+      console.error("Error fetch auction:", error.response?.data);
+      throw new Error(
+        error.response?.data?.message ||
+          "An error occurred during fetch auction",
       );
     } else {
-      if (error instanceof Error) {
-        console.error("Error fetching auction by ID:", error.message);
-      } else {
-        console.error(
-          "Error fetching auction by ID:",
-          "An unexpected error occurred",
-        );
-      }
+      throw new Error("An unexpected error occurred");
     }
-    return null;
   }
 };
 
@@ -242,8 +235,15 @@ export const fetchAuctionKoi = async (
     );
     return response.data;
   } catch (error) {
-    console.error("Error fetching auction koi data:", error);
-    throw error;
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetch auction koi:", error.response?.data);
+      throw new Error(
+        error.response?.data?.message ||
+          "An error occurred during fetch auction koi",
+      );
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
   }
 };
 
@@ -321,12 +321,12 @@ export async function getKois(
 
 export async function getKoiById(
   id: number,
-  token: string,
+  token?: string,
 ): Promise<KoiDetailModel> {
   try {
     const response = await axios.get<KoiDetailModel>(`${API_URL}/kois/${id}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${getUserCookieToken() || token}`,
       },
     });
     return response.data;
@@ -419,7 +419,7 @@ export const placeBid = async (
 ): Promise<{ isSold: boolean }> => {
   try {
     const response = await axios.post(
-      `${environment.be.baseUrl}${environment.be.apiPrefix}${environment.be.endPoint.bidding}/bid/${bid.auction_koi_id}`.trim(),
+      `${API_URL}/bidding/bid/${bid.auction_koi_id}`,
       bid,
       {
         headers: {
@@ -655,7 +655,7 @@ export const deleteAuction = async (
     if (axios.isAxiosError(error)) {
       console.error("Error deleting auction:", error.response?.data);
       throw new Error(
-        error.response?.data?.message || "An error occurred during deletion",
+        error.response?.data?.reason || "An error occurred during deletion",
       );
     } else {
       throw new Error("An unexpected error occurred");
@@ -700,8 +700,7 @@ export const createStaff = async (
 };
 
 export const deleteStaff = async (id: number, token: string): Promise<void> => {
-  const API_URL = `http://localhost:4000/api/v1/staffs/${id}`;
-  const response = await axios.delete(API_URL, {
+  const response = await axios.delete(`${API_URL}/staffs/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -715,8 +714,7 @@ export const updateStaff = async (
   staffData: Staff,
   token: string,
 ): Promise<void> => {
-  const API_URL = `http://localhost:4000/api/v1/staffs/${staffId}`;
-  const response = await axios.put(API_URL, staffData, {
+  const response = await axios.put(`${API_URL}/staffs/${staffId}`, staffData, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -729,8 +727,7 @@ export const getStaffData = async (
   staffId: number,
   token: string,
 ): Promise<any> => {
-  const API_URL = `http://localhost:4000/api/v1/staffs/${staffId}`;
-  const response = await axios.get(API_URL, {
+  const response = await axios.get(`${API_URL}/staffs/${staffId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -745,15 +742,15 @@ export const getMembersData = async (
   page: number,
   limit: number,
 ): Promise<MembersResponse> => {
-  const response = await axios.get<MembersResponse>(
-    "http://localhost:4000/api/v1/members",
-    {
-      params: {
-        page: page - 1,
-        limit: limit,
-      },
+  const response = await axios.get<MembersResponse>(`${API_URL}/members`, {
+    params: {
+      page: page - 1,
+      limit: limit,
     },
-  );
+    headers: {
+      Authorization: `Bearer ${getUserCookieToken()}`,
+    },
+  });
 
   if (response.status !== 200) {
     throw new Error("Failed to fetch members");
@@ -766,15 +763,12 @@ export const getKoiData = async (
   page: number,
   limit: number,
 ): Promise<KoisResponse> => {
-  const response = await axios.get<KoisResponse>(
-    "http://localhost:4000/api/v1/kois",
-    {
-      params: {
-        page: page - 1, // Assuming the API is zero-based
-        limit: limit,
-      },
+  const response = await axios.get<KoisResponse>(`${API_URL}/kois`, {
+    params: {
+      page: page - 1, // Assuming the API is zero-based
+      limit: limit,
     },
-  );
+  });
 
   if (response.status !== 200) {
     throw new Error("Failed to fetch kois");
@@ -787,14 +781,11 @@ export const deleteKoiById = async (
   id: number,
   accessToken: string,
 ): Promise<void> => {
-  const response = await axios.delete(
-    `http://localhost:4000/api/v1/kois/${id}`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+  const response = await axios.delete(`${API_URL}/kois/${id}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
     },
-  );
+  });
 
   if (response.status !== 204) {
     throw new Error("Failed to delete koi");
@@ -805,7 +796,7 @@ export const createKoi = async (
   formData: FormData,
 ): Promise<KoiDetailModel> => {
   const response = await axios.post<KoiDetailModel>(
-    "http://localhost:4000/api/v1/kois",
+    `${API_URL}/kois`,
     formData,
     {
       headers: {
@@ -826,15 +817,11 @@ export const updateKoi = async (
   koi: KoiDetailModel,
   accessToken: string,
 ) => {
-  const response = await axios.put(
-    `http://localhost:4000/api/v1/kois/${koiId}`,
-    koi,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+  const response = await axios.put(`${API_URL}/kois/${koiId}`, koi, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
     },
-  );
+  });
 
   if (response.status !== 200) {
     throw new Error("Failed to update koi");
@@ -844,14 +831,11 @@ export const updateKoi = async (
 };
 
 export const fetchKoi = async (koiId: number, accessToken: string) => {
-  const response = await axios.get(
-    `http://localhost:4000/api/v1/kois/${koiId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+  const response = await axios.get(`${API_URL}/kois/${koiId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
     },
-  );
+  });
 
   if (response.status !== 200) {
     throw new Error("Failed to fetch koi data");
@@ -861,15 +845,15 @@ export const fetchKoi = async (koiId: number, accessToken: string) => {
 };
 
 export const fetchBreedersData = async (page: number, itemsPerPage: number) => {
-  const response = await axios.get<BreedersResponse>(
-    "http://localhost:4000/api/v1/breeders",
-    {
-      params: {
-        page: page - 1, // Adjusting for zero-based indexing
-        limit: itemsPerPage,
-      },
+  const response = await axios.get<BreedersResponse>(`${API_URL}/breeders`, {
+    params: {
+      page: page - 1, // Adjusting for zero-based indexing
+      limit: itemsPerPage,
     },
-  );
+    headers: {
+      Authorization: `Bearer ${getUserCookieToken()}`,
+    },
+  });
 
   if (response.status !== 200) {
     throw new Error("Failed to fetch breeders");
@@ -996,7 +980,7 @@ export const postAuctionKoi = async (
 
   try {
     const response = await axios.post(
-      "http://localhost:4000/api/v1/auctionkois",
+      `${API_URL}/auctionkois`,
       auctionKoiPayload,
       {
         headers: {

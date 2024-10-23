@@ -26,8 +26,8 @@ const AddKoi = () => {
   }, [userId]);
 
   return (
-    <div className="flex flex-col gap-5">
-      <Typography variant="h3" sx={{ textAlign: "center", marginTop: "3rem" }}>
+    <div className="flex flex-col gap-5 m-5">
+      <Typography variant="h3" sx={{ textAlign: "center" }}>
         Create New Koi
       </Typography>
       <KoiCreateForm

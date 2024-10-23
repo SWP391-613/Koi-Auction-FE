@@ -1,17 +1,13 @@
 import {
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   FormControl,
-  Grid,
   InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
   Snackbar,
   TextField,
+  Typography,
 } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -171,12 +167,14 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
               name="name"
               label="Name"
               value={formData.name}
+              sx={{ backgroundColor: "white" }}
               onChange={handleInputChange}
               error={!!errors.name}
               helperText={errors.name}
             />
             <TextField
               fullWidth
+              sx={{ backgroundColor: "white" }}
               margin="normal"
               name="base_price"
               label="Base Price"
@@ -201,6 +199,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
             </FormControl>
             <TextField
               fullWidth
+              sx={{ backgroundColor: "white" }}
               margin="normal"
               name="length"
               label="Length"
@@ -212,6 +211,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
             />
             <TextField
               fullWidth
+              sx={{ backgroundColor: "white" }}
               margin="normal"
               name="age"
               label="Age"
@@ -223,6 +223,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
             />
             <TextField
               fullWidth
+              sx={{ backgroundColor: "white" }}
               margin="normal"
               name="description"
               label="Description"
@@ -250,6 +251,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
             </FormControl>
             <TextField
               fullWidth
+              sx={{ backgroundColor: "white" }}
               margin="normal"
               name="thumbnail"
               label="Thumbnail URL"
@@ -268,15 +270,15 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
               style={{ marginTop: "1rem" }}
             />
           </div>
-          <div>
+          <div className="mt-5">
             <Button onClick={onClose}>Back</Button>
             <Button onClick={handleSubmit} variant="contained" color="primary">
               Create
             </Button>
           </div>
         </div>
-        <div>
-          <h3 className="text-xl font-bold mb-4">Preview</h3>
+        <div className="ml-10">
+          <Typography variant="h4">Preview</Typography>
           <AddKoiPreviewCart items={[formData]} />
         </div>
       </div>

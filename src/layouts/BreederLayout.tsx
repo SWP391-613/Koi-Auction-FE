@@ -10,7 +10,8 @@ import AddKoi from "~/pages/detail/breeder/AddKoi";
 const BreederLayout: React.FC = () => {
   const navLinks = [
     { to: "", label: "Your Koi" },
-    { to: "add-koi", label: "Add Koi" },
+    { to: "add-koi", label: "Upload Koi" },
+    { to: "/auctions/register", label: "Register To Auction" },
     { to: "wishlist", label: "Wishlist" },
     { to: "payments/vnpay-payment-return", label: "Payments" },
   ];

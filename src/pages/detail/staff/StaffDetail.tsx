@@ -2,16 +2,15 @@ import { Button } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingComponent from "~/components/shared/LoadingComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
-import { useUserData } from "~/hooks/useUserData";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import { environment } from "~/environments/environment";
+import { useUserData } from "~/hooks/useUserData";
+import VerifyKoiList from "~/pages/kois/VerifyKoiList";
+import { AuctionsManagement } from "~/pages/manager/auctions/AuctionsManagement";
+import { sendOtp } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import "./StaffDetail.scss";
-import { sendOtp } from "~/utils/apiUtils";
-import { AuctionsManagement } from "~/pages/manager/auctions/AuctionsManagement";
-import VerifyKoiList from "~/pages/kois/VerifyKoiList";
-import SendNotifications from "~/components/shared/SendNotifications";
 
 const StaffDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();

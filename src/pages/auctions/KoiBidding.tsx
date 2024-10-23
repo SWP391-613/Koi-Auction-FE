@@ -69,7 +69,6 @@ const KoiBidding: React.FC = () => {
   );
 
   useEffect(() => {
-    if (!token) return;
     const loadData = async () => {
       try {
         const [auctionKoiDetails, auctionDetails] = await Promise.all([
@@ -87,7 +86,7 @@ const KoiBidding: React.FC = () => {
                   ? auctionKoiDetails.base_price
                   : 0),
         );
-        setKoi(await getKoiById(auctionKoiDetails.koi_id, token));
+        setKoi(await getKoiById(auctionKoiDetails.koi_id));
       } catch (error) {
         console.error("Error loading data:", error);
         toast.error("Failed to load auction details. Please try again.");

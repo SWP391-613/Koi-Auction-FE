@@ -27,10 +27,7 @@ const AuctionDetail: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
-  const token = getUserCookieToken();
   useEffect(() => {
-    if (!token) return;
-
     const fetchAuction = async () => {
       setIsLoading(true);
       setError(null);
@@ -41,7 +38,7 @@ const AuctionDetail: React.FC = () => {
         if (auctionData) {
           const auctionKoiData = await fetchAuctionKoi(auctionData.id!);
           const koiDetailsPromises = auctionKoiData.map((auctionKoi) =>
-            getKoiById(auctionKoi.koi_id, token),
+            getKoiById(auctionKoi.koi_id),
           );
           const koiDetails = await Promise.all(koiDetailsPromises);
 

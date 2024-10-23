@@ -752,6 +752,9 @@ export const getMembersData = async (
         page: page - 1,
         limit: limit,
       },
+      headers: {
+        Authorization: `Bearer ${getUserCookieToken()}`,
+      },
     },
   );
 
@@ -867,6 +870,9 @@ export const fetchBreedersData = async (page: number, itemsPerPage: number) => {
       params: {
         page: page - 1, // Adjusting for zero-based indexing
         limit: itemsPerPage,
+      },
+      headers: {
+        Authorization: `Bearer ${getUserCookieToken()}`,
       },
     },
   );

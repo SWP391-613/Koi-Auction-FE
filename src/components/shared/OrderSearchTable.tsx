@@ -79,6 +79,32 @@ const OrderSearchTable: React.FC<OrderSearchTableProps> = ({
                     </Button>
                   </>
                 )}
+                {order.status === OrderStatus.SHIPPED && (
+                  <>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      onClick={() =>
+                        onStatusUpdate(order.id, OrderStatus.DELIVERED)
+                      }
+                      sx={{ mr: 1 }}
+                    >
+                      Delivered
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      size="small"
+                      onClick={() =>
+                        onStatusUpdate(order.id, OrderStatus.CANCELLED)
+                      }
+                      sx={{ mr: 1 }}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                )}
               </TableCell>
             </TableRow>
           ))}

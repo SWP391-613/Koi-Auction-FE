@@ -451,20 +451,6 @@ const UserOrderDetail: React.FC = () => {
                       Process Payment
                     </Button>
                   )}
-                  {order && order.status === OrderStatus.SHIPPED && (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() =>
-                        handleOpenDialog(
-                          "delivery",
-                          "Are you sure you want to confirm the delivery of this order?",
-                        )
-                      }
-                    >
-                      Confirm Delivery
-                    </Button>
-                  )}
                   {order &&
                     (order.status === OrderStatus.PENDING ||
                       order.status === OrderStatus.PROCESSING) && (

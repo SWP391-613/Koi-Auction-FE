@@ -1130,3 +1130,19 @@ export const confirmOrder = async (
     throw error;
   }
 };
+
+export const createDrawOutRequest = async (
+  paymentDTO: PaymentDTO,
+  token: string,
+) => {
+  const response = await axios.post(
+    `${API_URL}/payment/create_drawout_request`,
+    paymentDTO,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  return response.data;
+};

@@ -23,6 +23,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faUserCheck } from "@fortawesome/free-solid-svg-icons";
 import UserDetailDialog from "../member/UserDetailDialog";
 import { formatCurrency } from "~/utils/currencyUtils";
+import AccountTransactionComponent from "~/components/shared/AccountTransactionComponent";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -206,6 +207,11 @@ const BreederDetail: React.FC = () => {
     }
   };
 
+  const handleTransactionSuccess = () => {
+    fetchKoiData();
+    toast.success("Transaction request sent successfully");
+  };
+
   return (
     <div className="container mx-auto">
       <AccountVerificationAlert user={user} />
@@ -276,9 +282,10 @@ const BreederDetail: React.FC = () => {
                   : "No money"}
               </p>
             </div>
-            <DepositComponent
+            <AccountTransactionComponent
               userId={user.id}
               token={getCookie("access_token") || ""}
+              onTransactionSuccess={handleTransactionSuccess}
             />
           </div>
 

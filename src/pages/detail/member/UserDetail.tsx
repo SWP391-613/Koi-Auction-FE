@@ -27,6 +27,8 @@ import {
   faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import UserDetailDialog from "./UserDetailDialog";
+import DrawOutComponent from "~/components/shared/DrawOutComponent";
+import AccountTransactionComponent from "~/components/shared/AccountTransactionComponent";
 
 const UserDetail: React.FC = () => {
   const { user, loading, error, setUser } = useUserData();
@@ -86,6 +88,12 @@ const UserDetail: React.FC = () => {
     } else {
       alert("Failed to send OTP");
     }
+  };
+
+  const handleTransactionSuccess = () => {
+    // Refresh user data or perform any necessary updates
+    // This could involve refetching the user data or updating the local state
+    alert("Transaction request sent successfully");
   };
 
   return (
@@ -156,9 +164,10 @@ const UserDetail: React.FC = () => {
                   : "No money"}
               </p>
             </div>
-            <DepositComponent
+            <AccountTransactionComponent
               userId={user.id}
               token={getCookie("access_token") || ""}
+              onTransactionSuccess={handleTransactionSuccess}
             />
           </div>
 

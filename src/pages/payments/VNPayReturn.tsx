@@ -72,67 +72,67 @@ const VNPayReturn: React.FC = () => {
     }
   }, [loading, paymentResult, navigate]);
 
-  if (loading) {
-    return <LoadingComponent />;
-  }
-
   return (
     <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
-      <Card elevation={3}>
-        <CardContent sx={{ textAlign: "center", py: 4 }}>
-          {paymentResult && (
-            <>
-              <Box sx={{ mb: 2 }}>
-                {paymentResult.success ? (
-                  <CheckCircleOutline
-                    sx={{ fontSize: 60, color: "success.main" }}
-                  />
-                ) : (
-                  <ErrorOutline sx={{ fontSize: 60, color: "error.main" }} />
+      {loading ? (
+        <LoadingComponent />
+      ) : (
+        <Card elevation={3}>
+          <CardContent sx={{ textAlign: "center", py: 4 }}>
+            {paymentResult && (
+              <>
+                <Box sx={{ mb: 2 }}>
+                  {paymentResult.success ? (
+                    <CheckCircleOutline
+                      sx={{ fontSize: 60, color: "success.main" }}
+                    />
+                  ) : (
+                    <ErrorOutline sx={{ fontSize: 60, color: "error.main" }} />
+                  )}
+                </Box>
+                <Typography
+                  variant="h5"
+                  gutterBottom
+                  fontWeight="bold"
+                  color={paymentResult.success ? "success.main" : "error.main"}
+                >
+                  {paymentResult.success
+                    ? "Payment Successful"
+                    : "Payment Failed"}
+                </Typography>
+                <Typography variant="body1" sx={{ mb: 2 }}>
+                  {paymentResult.message}
+                </Typography>
+                {paymentResult.amount && (
+                  <Typography variant="h6" sx={{ mb: 1 }}>
+                    Amount: {paymentResult.amount.toLocaleString()} VND
+                  </Typography>
                 )}
-              </Box>
-              <Typography
-                variant="h5"
-                gutterBottom
-                fontWeight="bold"
-                color={paymentResult.success ? "success.main" : "error.main"}
-              >
-                {paymentResult.success
-                  ? "Payment Successful"
-                  : "Payment Failed"}
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 2 }}>
-                {paymentResult.message}
-              </Typography>
-              {paymentResult.amount && (
-                <Typography variant="h6" sx={{ mb: 1 }}>
-                  Amount: {paymentResult.amount.toLocaleString()} VND
-                </Typography>
-              )}
-              {paymentResult.responseCode && (
-                <Typography variant="body2" color="text.secondary">
-                  Response Code: {paymentResult.responseCode}
-                </Typography>
-              )}
-              <Box
-                sx={{
-                  mt: 3,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <AccessTime
-                  sx={{ mr: 1, fontSize: 20, color: "text.secondary" }}
-                />
-                <Typography variant="body2" color="text.secondary">
-                  Redirecting in 5 seconds...
-                </Typography>
-              </Box>
-            </>
-          )}
-        </CardContent>
-      </Card>
+                {paymentResult.responseCode && (
+                  <Typography variant="body2" color="text.secondary">
+                    Response Code: {paymentResult.responseCode}
+                  </Typography>
+                )}
+                <Box
+                  sx={{
+                    mt: 3,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <AccessTime
+                    sx={{ mr: 1, fontSize: 20, color: "text.secondary" }}
+                  />
+                  <Typography variant="body2" color="text.secondary">
+                    Redirecting in 5 seconds...
+                  </Typography>
+                </Box>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </Container>
   );
 };

@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createDepositPayment, createDrawOutRequest } from "~/utils/apiUtils";
-import { PaymentDTO } from "~/pages/detail/member/UserOrder";
+import { PaymentDTO } from "~/types/orders.type";
 
 interface AccountTransactionComponentProps {
   userId: number;
@@ -25,7 +25,7 @@ const AccountTransactionComponent: React.FC<
   const [transactionType, setTransactionType] = useState<"deposit" | "drawout">(
     "deposit",
   );
-
+  const [bankNumber, setBankNumber] = useState<string>("");
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(Number(e.target.value));
   };
@@ -55,8 +55,8 @@ const AccountTransactionComponent: React.FC<
         payment_type: transactionType === "deposit" ? "DEPOSIT" : "DRAW_OUT",
         user_id: userId,
         order_id: null,
+        bank_number: transactionType === "drawout" ? bankNumber : null,
       };
-
       if (transactionType === "deposit") {
         const response = await createDepositPayment(paymentDTO, token);
         if (response.paymentUrl) {
@@ -70,10 +70,21 @@ const AccountTransactionComponent: React.FC<
         onTransactionSuccess();
       }
     } catch (error: any) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data?.message || error.message);
+      if (axios.isAxiosError(error) && error.response) {
+        const errorData = error.response.data;
+        if (errorData && typeof errorData === "object") {
+          if ("reason" in errorData) {
+            toast.error(errorData.reason);
+          } else if ("message" in errorData) {
+            toast.error(errorData.message);
+          } else {
+            toast.error("An unexpected error occurred");
+          }
+        } else {
+          toast.error(String(errorData));
+        }
       } else {
-        toast.error(error.message);
+        toast.error("An unexpected error occurred");
       }
     }
   };
@@ -107,6 +118,14 @@ const AccountTransactionComponent: React.FC<
             variant="outlined"
             InputProps={{ inputProps: { min: 1 } }}
           />
+          {transactionType === "drawout" && (
+            <TextField
+              fullWidth
+              label="Bank Number"
+              value={bankNumber}
+              onChange={(e) => setBankNumber(e.target.value)}
+            />
+          )}
         </Box>
         <Box sx={{ textAlign: "center" }}>
           <Button

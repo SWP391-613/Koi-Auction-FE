@@ -43,6 +43,7 @@ export type PaymentDTO = {
   payment_type: string;
   order_id: number | null;
   user_id: number;
+  bank_number: string | null;
 };
 
 export type OrderOfUser = {

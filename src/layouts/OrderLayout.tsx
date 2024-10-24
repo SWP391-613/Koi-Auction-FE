@@ -16,6 +16,7 @@ const OrderLayout: React.FC = () => {
       <Routes>
         <Route path="" element={<UserOrder />} />
         {/* <Route path="payments/vnpay-payment-return" element={<VNPayReturn />} /> */}
+        <Route path="order-detail/:orderId" element={<UserOrderDetail />} />
       </Routes>
     </DashboardLayout>
   );

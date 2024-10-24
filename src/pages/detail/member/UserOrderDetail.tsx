@@ -76,7 +76,7 @@ const UserOrderDetail: React.FC = () => {
 
     if (orderId) {
       setLoading(true);
-      getOrderById(parseInt(orderId), getCookie("access_token") || "")
+      getOrderById(parseInt(orderId))
         .then((order) => {
           setOrder(order);
         })
@@ -85,7 +85,7 @@ const UserOrderDetail: React.FC = () => {
           setError("Failed to fetch order");
         });
 
-      fetchOrderDetails(parseInt(orderId), token)
+      fetchOrderDetails(parseInt(orderId))
         .then((details) => {
           if (Array.isArray(details)) {
             setOrderDetails(details);
@@ -267,11 +267,7 @@ const UserOrderDetail: React.FC = () => {
           </Button>
         </Box>
 
-        {loading && (
-          <Box display="flex" justifyContent="center" my={4}>
-            <LoadingComponent />
-          </Box>
-        )}
+        {loading && <LoadingComponent />}
 
         {error && (
           <Typography color="error" mb={4}>

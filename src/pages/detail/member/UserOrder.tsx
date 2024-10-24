@@ -42,6 +42,10 @@ import { Link as RouterLink } from "react-router-dom";
 import { Order } from "~/types/orders.type";
 import { OrderStatus } from "~/types/orders.type";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { getUserCookieToken } from "~/utils/auth.utils";
+import KoiBreederSearchGrid from "~/components/shared/KoiBreederSearchGrid";
+import SearchBar from "~/components/shared/SearchBar";
 
 export type PaymentDTO = {
   payment_amount: number;
@@ -49,6 +53,12 @@ export type PaymentDTO = {
   payment_type: string;
   order_id: number | null;
   user_id: number;
+};
+
+export type OrderOfUser = {
+  item: Order[];
+  total_page: number;
+  total_item: number;
 };
 
 // Add this type to include the Koi image
@@ -67,7 +77,7 @@ const UserOrder = () => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const itemsPerPage = 8;
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus>(
-    OrderStatus.PENDING,
+    OrderStatus.ALL,
   );
   const navigate = useNavigate();
 
@@ -83,8 +93,8 @@ const UserOrder = () => {
             itemsPerPage,
             getCookie("access_token") || "",
           );
-          setOrders(response.orders);
-          setTotalPages(response.totalPages);
+          setOrders(response.item);
+          setTotalPages(response.total_page);
         } catch (err) {
           setError("Error fetching orders");
         } finally {
@@ -106,7 +116,7 @@ const UserOrder = () => {
   };
 
   const handleOrderClick = (orderId: number) => {
-    navigate(`/order-detail/${orderId}`);
+    navigate(`order-detail/${orderId}`);
   };
 
   const canLeaveFeedback = (order: Order) => {
@@ -158,9 +168,6 @@ const UserOrder = () => {
   return (
     <div className="">
       <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          My Orders
-        </Typography>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
           {Object.values(OrderStatus).map((status) => (
             <Button
@@ -182,16 +189,21 @@ const UserOrder = () => {
         </div>
       ) : (
         <>
+          <SearchBar
+            value={""}
+            onChange={() => {}}
+            loading={false}
+            placeholder="Search for orders..."
+          ></SearchBar>
           {orders.map((order) => (
             <Card
+              key={order.id}
               onClick={() => handleOrderClick(order.id)}
               sx={{
                 cursor: "pointer",
-                transition: "0.3s",
-                "&:hover": { transform: "translateY(-5px)", boxShadow: 3 },
                 display: "flex",
                 flexDirection: "row",
-                borderRadius: 2,
+                marginBottom: 2,
                 overflow: "hidden",
               }}
             >
@@ -204,16 +216,6 @@ const UserOrder = () => {
                   sx={{ objectFit: "cover" }}
                 />
               )}
-              <Box sx={{ bgcolor: theme.palette.primary.main, py: 2, px: 3 }}>
-                <Typography
-                  variant="h6"
-                  component="div"
-                  color="white"
-                  fontWeight="bold"
-                >
-                  Order #{order.id}
-                </Typography>
-              </Box>
               <CardContent
                 sx={{
                   flexGrow: 1,
@@ -225,18 +227,12 @@ const UserOrder = () => {
                 <Box
                   sx={{
                     display: "flex",
-                    justifyContent: "space-between",
+                    justifyContent: "end",
                     alignItems: "center",
                     mb: 2,
                   }}
                 >
-                  <Typography color="text.secondary" variant="body2">
-                    {new Date(order.order_date).toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </Typography>
+                  Status:
                   <Chip
                     label={order.status}
                     color={getOrderStatusColor(order.status)}
@@ -246,97 +242,70 @@ const UserOrder = () => {
                 </Box>
 
                 <Divider sx={{ my: 2 }} />
+                <div className="flex justify-between">
+                  <div>
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                      <Typography variant="body1" fontWeight="medium">
+                        Name: {order.first_name} {order.last_name}
+                      </Typography>
+                    </Box>
 
-                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                  <Avatar
-                    sx={{
-                      bgcolor: theme.palette.secondary.main,
-                      mr: 2,
-                      width: 32,
-                      height: 32,
-                    }}
-                  >
-                    <ShoppingBasketIcon fontSize="small" />
-                  </Avatar>
-                  <Typography variant="body1" fontWeight="medium">
-                    {order.first_name} {order.last_name}
-                  </Typography>
-                </Box>
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                      <Typography variant="body2">
+                        Shipping Method: {order.shipping_method}
+                      </Typography>
+                    </Box>
 
-                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                  <Avatar
-                    sx={{
-                      bgcolor: theme.palette.info.main,
-                      mr: 2,
-                      width: 32,
-                      height: 32,
-                    }}
-                  >
-                    <LocalShippingIcon fontSize="small" />
-                  </Avatar>
-                  <Typography variant="body2">
-                    {order.shipping_method}
-                  </Typography>
-                </Box>
+                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                      <Typography variant="body2">
+                        Payment Method: {order.payment_method}
+                      </Typography>
+                    </Box>
 
-                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                  <Avatar
-                    sx={{
-                      bgcolor: theme.palette.warning.main,
-                      mr: 2,
-                      width: 32,
-                      height: 32,
-                    }}
-                  >
-                    <PaymentIcon fontSize="small" />
-                  </Avatar>
-                  <Typography variant="body2">
-                    {order.payment_method}
-                  </Typography>
-                </Box>
+                    <Box
+                      sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                        }}
+                      >
+                        Shipping Address: {order.shipping_address}
+                      </Typography>
+                    </Box>
+                  </div>
 
-                <Box sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}>
-                  <Avatar
-                    sx={{
-                      bgcolor: theme.palette.error.main,
-                      mr: 2,
-                      width: 32,
-                      height: 32,
-                    }}
-                  >
-                    <HomeIcon fontSize="small" />
-                  </Avatar>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                    }}
-                  >
-                    {order.shipping_address}
-                  </Typography>
-                </Box>
+                  <Box sx={{ display: "flex", alignItems: "end", mb: 1 }}>
+                    <Typography
+                      variant="h4"
+                      fontWeight="bold"
+                      color="success.main"
+                    >
+                      {formatCurrency(order.total_money)}
+                    </Typography>
+                  </Box>
+                </div>
 
-                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                  <Avatar
-                    sx={{
-                      bgcolor: theme.palette.success.main,
-                      mr: 2,
-                      width: 32,
-                      height: 32,
-                    }}
-                  >
-                    <CreditCardIcon fontSize="small" />
-                  </Avatar>
-                  <Typography
-                    variant="h6"
-                    fontWeight="bold"
-                    color="success.main"
-                  >
-                    {formatCurrency(order.total_money)}
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 2,
+                  }}
+                >
+                  <Typography color="text.secondary" variant="body2">
+                    Order Created At:{" "}
+                    {new Date(order.order_date).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </Typography>
                 </Box>
 

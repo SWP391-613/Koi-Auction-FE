@@ -36,6 +36,8 @@ export const getAuctionStatusColor = (
 
 export const getOrderStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
+    case "all":
+      return "success";
     case "pending":
       return "warning";
     case "shipped":

@@ -1044,13 +1044,13 @@ export const getUserOrderByStatus = async (
   status: string,
   page: number,
   limit: number,
-  token: string,
+  token?: string,
 ): Promise<{ orders: Order[]; totalPages: number }> => {
   const response = await axios.get(
     `${API_URL}/orders/user/${userId}/get-sorted-orders`,
     {
       params: { keyword: status, page, limit },
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${getUserCookieToken() || token}` },
     },
   );
   return response.data;

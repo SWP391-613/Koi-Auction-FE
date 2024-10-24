@@ -25,7 +25,6 @@ import KoiBidding from "./pages/auctions/KoiBidding";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import UserDetail from "./pages/detail/member/UserDetail";
-import UserOrder from "./pages/detail/member/UserOrder";
 import KoiDetail from "./pages/kois/KoiDetail";
 import About from "./pages/static/About";
 import Home from "./pages/static/Home";
@@ -35,6 +34,7 @@ import Terms from "./pages/static/Terms";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import InternalServerError from "./components/error/NotFound";
 import BreederLayout from "./layouts/BreederLayout";
+import OrderLayout from "./layouts/OrderLayout";
 import StaffLayout from "./layouts/StaffLayout";
 import Auctions from "./pages/auctions/Auctions";
 import AddKoiToAuction from "./pages/auctions/register/AddKoiToAuction";
@@ -43,10 +43,8 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import BlogList from "./pages/blog/BlogList";
 import BlogPost from "./pages/blog/BlogPost";
 import Feedback from "./pages/detail/member/Feedback";
-import UserOrderDetail from "./pages/detail/member/UserOrderDetail";
-import VNPayReturn from "./pages/payments/VNPayReturn";
-import BreederInfo from "./pages/static/BreederInfo";
 import Kois from "./pages/kois/Kois";
+import BreederInfo from "./pages/static/BreederInfo";
 
 const TITLE = "Auction Koi";
 
@@ -125,17 +123,12 @@ function App() {
                 </Route>
                 {/* Protected routes for USER */}
                 <Route element={<ProtectedRoute />}>
-                  <Route path="/orders" element={<UserOrder />} />
-                  <Route
-                    path="/payments/vnpay-payment-return"
-                    element={<VNPayReturn />}
-                  />
-                  <Route
-                    path="/order-detail/:orderId"
-                    element={<UserOrderDetail />}
-                  />
+                  <Route path="/orders/*" element={<OrderLayout />} />
                 </Route>
-                <Route path="/feedback/:orderId" element={<Feedback />} />
+
+                <Route element={<ProtectedRoute />}>
+                  <Route path="/feedback/:orderId" element={<Feedback />} />
+                </Route>
               </Routes>
             </main>
             <Footer />

@@ -26,6 +26,7 @@ export type OrderDetail = {
 };
 
 export enum OrderStatus {
+  ALL = "ALL",
   PENDING = "PENDING",
   PROCESSING = "PROCESSING",
   SHIPPED = "SHIPPED",

@@ -1,6 +1,6 @@
-import { Order, OrderStatus } from "~/types/orders.type";
+import { Order, OrderResponse, OrderStatus } from "~/types/orders.type";
 
-export const canLeaveFeedback = (order: Order) => {
+export const canLeaveFeedback = (order: Order | OrderResponse) => {
   const processingDate = new Date(order.order_date);
   const currentDate = new Date();
   const daysSinceProcessing = Math.floor(
@@ -9,7 +9,7 @@ export const canLeaveFeedback = (order: Order) => {
   return order.status === OrderStatus.DELIVERED && daysSinceProcessing <= 7;
 };
 
-export const canAcceptShip = (order: Order) => {
+export const canAcceptShip = (order: Order | OrderResponse) => {
   const processingDate = new Date(order.shipping_date);
   const currentDate = new Date();
   const daysSinceProcessing = Math.floor(
@@ -18,7 +18,7 @@ export const canAcceptShip = (order: Order) => {
   return order.status === OrderStatus.SHIPPED && daysSinceProcessing <= 7;
 };
 
-export const canConfirmOrder = (order: Order) => {
+export const canConfirmOrder = (order: Order | OrderResponse) => {
   const processingDate = new Date(order.shipping_date);
   const currentDate = new Date();
   const daysSinceProcessing = Math.floor(

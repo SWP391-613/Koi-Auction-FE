@@ -12,7 +12,7 @@ import {
   Order,
   OrderDetail,
   OrderDetailWithKoi,
-  OrderOfUser,
+  OrderPaginationResponse,
   OrderResponse,
   OrderStatus,
   PaymentDTO,
@@ -1047,7 +1047,7 @@ export const getUserOrderByStatus = async (
   page: number,
   limit: number,
   token?: string,
-): Promise<OrderOfUser> => {
+): Promise<OrderPaginationResponse> => {
   const response = await axios.get(
     `${API_URL}/orders/user/${userId}/get-active-sorted-orders`,
     {

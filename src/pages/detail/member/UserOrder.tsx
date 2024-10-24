@@ -23,7 +23,11 @@ import PaginationComponent from "~/components/common/PaginationComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import SearchBar from "~/components/shared/SearchBar";
 import { useUserData } from "~/hooks/useUserData";
-import { OrderStatus, OrderWithKoiImage } from "~/types/orders.type";
+import {
+  OrderResponse,
+  OrderStatus,
+  OrderWithKoiImage,
+} from "~/types/orders.type";
 import { getOrderStatusColor } from "~/utils/colorUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
@@ -38,7 +42,7 @@ const UserOrder = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { user, loading: userLoading, error: userError } = useUserData();
-  const [orders, setOrders] = useState<OrderWithKoiImage[]>([]);
+  const [orders, setOrders] = useState<OrderResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
@@ -148,13 +152,16 @@ const UserOrder = () => {
                 overflow: "hidden",
               }}
             >
-              {order.koi_image && (
+              {order.order_details[0].koi.thumbnail && (
                 <CardMedia
                   component="img"
-                  height="140"
-                  image={order.koi_image}
+                  sx={{
+                    height: "auto",
+                    width: "15%",
+                    backgroundColor: "#1365b4",
+                  }}
+                  image={order.order_details[0].koi.thumbnail}
                   alt="Koi"
-                  sx={{ objectFit: "cover" }}
                 />
               )}
               <CardContent
@@ -220,16 +227,6 @@ const UserOrder = () => {
                       </Typography>
                     </Box>
                   </div>
-
-                  <Box sx={{ display: "flex", alignItems: "end", mb: 1 }}>
-                    <Typography
-                      variant="h4"
-                      fontWeight="bold"
-                      color="success.main"
-                    >
-                      {formatCurrency(order.total_money)}
-                    </Typography>
-                  </Box>
                 </div>
 
                 <Box
@@ -309,6 +306,15 @@ const UserOrder = () => {
                     </Button>
                   </Box>
                 )}
+                <Box sx={{ display: "flex", justifyContent: "end", mb: 1 }}>
+                  <Typography
+                    variant="h4"
+                    fontWeight="bold"
+                    color="success.main"
+                  >
+                    {formatCurrency(order.total_money)}
+                  </Typography>
+                </Box>
               </CardContent>
             </Card>
           ))}

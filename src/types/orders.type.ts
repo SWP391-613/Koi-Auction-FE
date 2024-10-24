@@ -45,8 +45,8 @@ export type PaymentDTO = {
   user_id: number;
 };
 
-export type OrderOfUser = {
-  item: Order[]; //OrderResponse
+export type OrderPaginationResponse = {
+  item: OrderResponse[]; //OrderResponse
   total_page: number;
   total_item: number;
 };
@@ -73,7 +73,15 @@ export type OrderResponse = {
   shipping_date: string | Date;
   payment_method: string;
   tracking_number: string;
-  order_details: OrderDetail[];
+  order_details: OrderDetailResponse[];
+};
+
+type OrderDetailResponse = {
+  id: number;
+  koi: KoiDetailModel;
+  price: number;
+  numberOfProducts: number;
+  totalMoney: number;
 };
 
 export type OrderDetailWithKoi = OrderDetail & {

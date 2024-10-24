@@ -142,18 +142,7 @@ const UserOrder = () => {
   };
 
   if (userLoading || loading) {
-    return (
-      <Container
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "80vh",
-        }}
-      >
-        <LoadingComponent />
-      </Container>
-    );
+    return <LoadingComponent />;
   }
 
   if (userError || error) {
@@ -167,7 +156,7 @@ const UserOrder = () => {
   if (!user) return <Alert severity="info">No user data found</Alert>;
 
   return (
-    <Container maxWidth="lg">
+    <div className="">
       <Box sx={{ my: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           My Orders
@@ -188,248 +177,231 @@ const UserOrder = () => {
       </Box>
 
       {orders.length === 0 ? (
-        <Box sx={{ textAlign: "center", my: 4 }}>
-          <Typography variant="h6">
-            No orders found for {selectedStatus} status
-          </Typography>
-          <Typography variant="body1" sx={{ mt: 2 }}>
-            Select a different status to view other orders
-          </Typography>
-        </Box>
+        <div className="flex justify-center">
+          <Typography variant="h6">Empty {selectedStatus} order</Typography>
+        </div>
       ) : (
         <>
-          <Grid container spacing={3}>
-            {orders.map((order) => (
-              <Grid item xs={12} sm={6} md={4} key={order.id}>
-                <Card
-                  onClick={() => handleOrderClick(order.id)}
+          {orders.map((order) => (
+            <Card
+              onClick={() => handleOrderClick(order.id)}
+              sx={{
+                cursor: "pointer",
+                transition: "0.3s",
+                "&:hover": { transform: "translateY(-5px)", boxShadow: 3 },
+                display: "flex",
+                flexDirection: "row",
+                borderRadius: 2,
+                overflow: "hidden",
+              }}
+            >
+              {order.koi_image && (
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={order.koi_image}
+                  alt="Koi"
+                  sx={{ objectFit: "cover" }}
+                />
+              )}
+              <Box sx={{ bgcolor: theme.palette.primary.main, py: 2, px: 3 }}>
+                <Typography
+                  variant="h6"
+                  component="div"
+                  color="white"
+                  fontWeight="bold"
+                >
+                  Order #{order.id}
+                </Typography>
+              </Box>
+              <CardContent
+                sx={{
+                  flexGrow: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  p: 3,
+                }}
+              >
+                <Box
                   sx={{
-                    cursor: "pointer",
-                    transition: "0.3s",
-                    "&:hover": { transform: "translateY(-5px)", boxShadow: 3 },
-                    height: "100%",
                     display: "flex",
-                    flexDirection: "column",
-                    borderRadius: 2,
-                    overflow: "hidden",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 2,
                   }}
                 >
-                  {order.koi_image && (
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image={order.koi_image}
-                      alt="Koi"
-                      sx={{ objectFit: "cover" }}
-                    />
-                  )}
-                  <Box
-                    sx={{ bgcolor: theme.palette.primary.main, py: 2, px: 3 }}
-                  >
-                    <Typography
-                      variant="h6"
-                      component="div"
-                      color="white"
-                      fontWeight="bold"
-                    >
-                      Order #{order.id}
-                    </Typography>
-                  </Box>
-                  <CardContent
+                  <Typography color="text.secondary" variant="body2">
+                    {new Date(order.order_date).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </Typography>
+                  <Chip
+                    label={order.status}
+                    color={getOrderStatusColor(order.status)}
+                    size="small"
+                    sx={{ fontWeight: "bold" }}
+                  />
+                </Box>
+
+                <Divider sx={{ my: 2 }} />
+
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <Avatar
                     sx={{
-                      flexGrow: 1,
-                      display: "flex",
-                      flexDirection: "column",
-                      p: 3,
+                      bgcolor: theme.palette.secondary.main,
+                      mr: 2,
+                      width: 32,
+                      height: 32,
                     }}
                   >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        mb: 2,
-                      }}
+                    <ShoppingBasketIcon fontSize="small" />
+                  </Avatar>
+                  <Typography variant="body1" fontWeight="medium">
+                    {order.first_name} {order.last_name}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: theme.palette.info.main,
+                      mr: 2,
+                      width: 32,
+                      height: 32,
+                    }}
+                  >
+                    <LocalShippingIcon fontSize="small" />
+                  </Avatar>
+                  <Typography variant="body2">
+                    {order.shipping_method}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: theme.palette.warning.main,
+                      mr: 2,
+                      width: 32,
+                      height: 32,
+                    }}
+                  >
+                    <PaymentIcon fontSize="small" />
+                  </Avatar>
+                  <Typography variant="body2">
+                    {order.payment_method}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: theme.palette.error.main,
+                      mr: 2,
+                      width: 32,
+                      height: 32,
+                    }}
+                  >
+                    <HomeIcon fontSize="small" />
+                  </Avatar>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                    }}
+                  >
+                    {order.shipping_address}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                  <Avatar
+                    sx={{
+                      bgcolor: theme.palette.success.main,
+                      mr: 2,
+                      width: 32,
+                      height: 32,
+                    }}
+                  >
+                    <CreditCardIcon fontSize="small" />
+                  </Avatar>
+                  <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    color="success.main"
+                  >
+                    {formatCurrency(order.total_money)}
+                  </Typography>
+                </Box>
+
+                {canConfirmOrder(order) && (
+                  <Box
+                    sx={{
+                      mt: 2,
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Button
+                      component={RouterLink}
+                      to={`/order-detail/${order.id}`}
+                      variant="contained"
+                      color="primary"
+                      startIcon={<EditIcon />}
                     >
-                      <Typography color="text.secondary" variant="body2">
-                        {new Date(order.order_date).toLocaleDateString(
-                          "en-US",
-                          {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                          },
-                        )}
-                      </Typography>
-                      <Chip
-                        label={order.status}
-                        color={getOrderStatusColor(order.status)}
-                        size="small"
-                        sx={{ fontWeight: "bold" }}
-                      />
-                    </Box>
+                      Confirm Order
+                    </Button>
+                  </Box>
+                )}
 
-                    <Divider sx={{ my: 2 }} />
-
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                      <Avatar
-                        sx={{
-                          bgcolor: theme.palette.secondary.main,
-                          mr: 2,
-                          width: 32,
-                          height: 32,
-                        }}
-                      >
-                        <ShoppingBasketIcon fontSize="small" />
-                      </Avatar>
-                      <Typography variant="body1" fontWeight="medium">
-                        {order.first_name} {order.last_name}
-                      </Typography>
-                    </Box>
-
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                      <Avatar
-                        sx={{
-                          bgcolor: theme.palette.success.main,
-                          mr: 2,
-                          width: 32,
-                          height: 32,
-                        }}
-                      >
-                        <CreditCardIcon fontSize="small" />
-                      </Avatar>
-                      <Typography
-                        variant="h6"
-                        fontWeight="bold"
-                        color="success.main"
-                      >
-                        {formatCurrency(order.total_money)}
-                      </Typography>
-                    </Box>
-
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                      <Avatar
-                        sx={{
-                          bgcolor: theme.palette.info.main,
-                          mr: 2,
-                          width: 32,
-                          height: 32,
-                        }}
-                      >
-                        <LocalShippingIcon fontSize="small" />
-                      </Avatar>
-                      <Typography variant="body2">
-                        {order.shipping_method}
-                      </Typography>
-                    </Box>
-
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                      <Avatar
-                        sx={{
-                          bgcolor: theme.palette.warning.main,
-                          mr: 2,
-                          width: 32,
-                          height: 32,
-                        }}
-                      >
-                        <PaymentIcon fontSize="small" />
-                      </Avatar>
-                      <Typography variant="body2">
-                        {order.payment_method}
-                      </Typography>
-                    </Box>
-
-                    <Box
-                      sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}
+                {canAcceptShip(order) && (
+                  <Box
+                    sx={{
+                      mt: 2,
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Button
+                      component={RouterLink}
+                      to={`/order-detail/${order.id}`}
+                      variant="contained"
+                      color="primary"
+                      startIcon={<LocalShippingIcon />}
                     >
-                      <Avatar
-                        sx={{
-                          bgcolor: theme.palette.error.main,
-                          mr: 2,
-                          width: 32,
-                          height: 32,
-                        }}
-                      >
-                        <HomeIcon fontSize="small" />
-                      </Avatar>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                        }}
-                      >
-                        {order.shipping_address}
-                      </Typography>
-                    </Box>
+                      SHIPPED!
+                    </Button>
+                  </Box>
+                )}
 
-                    {canConfirmOrder(order) && (
-                      <Box
-                        sx={{
-                          mt: 2,
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Button
-                          component={RouterLink}
-                          to={`/order-detail/${order.id}`}
-                          variant="contained"
-                          color="primary"
-                          startIcon={<EditIcon />}
-                        >
-                          Confirm Order
-                        </Button>
-                      </Box>
-                    )}
-
-                    {canAcceptShip(order) && (
-                      <Box
-                        sx={{
-                          mt: 2,
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Button
-                          component={RouterLink}
-                          to={`/order-detail/${order.id}`}
-                          variant="contained"
-                          color="primary"
-                          startIcon={<LocalShippingIcon />}
-                        >
-                          SHIPPED!
-                        </Button>
-                      </Box>
-                    )}
-
-                    {canLeaveFeedback(order) && (
-                      <Box
-                        sx={{
-                          mt: 2,
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Button
-                          component={RouterLink}
-                          to={`/order-detail/${order.id}`}
-                          variant="contained"
-                          color="primary"
-                          startIcon={<FeedbackIcon />}
-                        >
-                          Leave Feedback
-                        </Button>
-                      </Box>
-                    )}
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+                {canLeaveFeedback(order) && (
+                  <Box
+                    sx={{
+                      mt: 2,
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Button
+                      component={RouterLink}
+                      to={`/order-detail/${order.id}`}
+                      variant="contained"
+                      color="primary"
+                      startIcon={<FeedbackIcon />}
+                    >
+                      Leave Feedback
+                    </Button>
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
+          ))}
 
           <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
             <PaginationComponent
@@ -442,7 +414,7 @@ const UserOrder = () => {
       )}
 
       <ToastContainer />
-    </Container>
+    </div>
   );
 };
 

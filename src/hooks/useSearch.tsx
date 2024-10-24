@@ -17,6 +17,7 @@ interface SearchHookOptions<T> {
   debounceTime?: number;
   limit?: number;
   requiresAuth?: boolean;
+  owner_id?: number;
   transformResponse?: (data: any) => SearchResult<T>;
   preload?: boolean;
   defaultQuery?: string;
@@ -27,6 +28,7 @@ export function useSearch<T>({
   debounceTime = 500,
   limit = 8,
   requiresAuth = false,
+  owner_id,
   transformResponse = (data) => data,
   preload = false,
   defaultQuery = "",
@@ -60,6 +62,7 @@ export function useSearch<T>({
             keyword: searchQuery,
             page: currentPage,
             limit: limit,
+            owner_id: owner_id || undefined, //only send owner_id if it's provided
           },
           headers: headers,
         });
@@ -74,7 +77,7 @@ export function useSearch<T>({
         setLoading(false);
       }
     },
-    [apiUrl, limit, requiresAuth, transformResponse],
+    [apiUrl, limit, requiresAuth, transformResponse, owner_id],
   );
 
   const debouncedSearch = useCallback(
@@ -146,6 +149,20 @@ export const useKoiOwnerSearch = (debounceTime = 500) => {
     preload: true,
     defaultQuery: "ya",
     debounceTime,
+  });
+};
+
+export const useKoiOwnerSearchNotAuth = (
+  owner_id: number,
+  debounceTime = 500,
+) => {
+  return useSearch<KoiDetailModel>({
+    apiUrl: `${API_URL}/kois/get-kois-owner-by-keyword-not-auth`,
+    requiresAuth: false,
+    preload: true,
+    defaultQuery: "a",
+    debounceTime,
+    owner_id,
   });
 };
 

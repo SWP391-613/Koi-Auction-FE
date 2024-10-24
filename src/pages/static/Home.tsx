@@ -42,11 +42,11 @@ const Home = () => {
 
       {/* Image grid */}
       <div className="m-5 mb-20 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7">
-        {koiBreeders.map((breeder, index) => (
+        {koiBreeders.map((breeder) => (
           <div
-            key={index}
+            key={breeder.id}
             className="flex h-[11rem] hover:cursor-pointer w-[11rem] items-center justify-center rounded-2xl border border-gray-400 bg-gray-200 p-4 transition-shadow duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.5)]"
-            onClick={() => handleBreederClick(index)}
+            onClick={() => handleBreederClick(breeder.id)}
           >
             <img
               src={breeder.avatar_url}

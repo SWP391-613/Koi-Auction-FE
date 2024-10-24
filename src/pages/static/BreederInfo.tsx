@@ -1,11 +1,17 @@
-import React from "react";
+import { Typography } from "@mui/material";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import KoiOwnerSearchNotAuthComponent from "~/components/search/KoiOwnerSearchComponentNotAuth";
 import { koiBreeders } from "../../utils/data/koibreeders";
 
 const BreederInfo: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const breederId = parseInt(id || "0", 10);
-  const breeder = koiBreeders[breederId];
+  const breeder = koiBreeders.find((breeder) => breeder.id === breederId);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const handleSearchStateChange = (isActive: boolean) => {
+    setIsSearchActive(isActive);
+  };
 
   if (!breeder) {
     return <div>Breeder not found</div>;
@@ -46,6 +52,11 @@ const BreederInfo: React.FC = () => {
           <p className="text-gray-700">Phone: +81 XXX-XXX-XXXX</p>
         </div>
       </div>
+
+      <KoiOwnerSearchNotAuthComponent
+        owner_id={breederId}
+        onSearchStateChange={handleSearchStateChange}
+      />
     </div>
   );
 };

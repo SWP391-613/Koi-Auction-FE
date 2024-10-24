@@ -3,17 +3,16 @@ import React, { useEffect } from "react";
 import PaginationComponent from "../common/PaginationComponent";
 import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
-import { useKoiOwnerSearch } from "~/hooks/useSearch";
+import { useKoiOwnerSearchNotAuth } from "~/hooks/useSearch";
 
-interface KoiOwnerSearchComponentProps {
-  owner_id?: number;
+interface KoiOwnerSearchNotAuthComponentProps {
+  owner_id: number;
   onSearchStateChange: (isActive: boolean) => void;
 }
 
-const KoiOwnerSearchComponent: React.FC<KoiOwnerSearchComponentProps> = ({
-  owner_id,
-  onSearchStateChange,
-}) => {
+const KoiOwnerSearchNotAuthComponent: React.FC<
+  KoiOwnerSearchNotAuthComponentProps
+> = ({ owner_id, onSearchStateChange }) => {
   const {
     query,
     setQuery,
@@ -24,7 +23,7 @@ const KoiOwnerSearchComponent: React.FC<KoiOwnerSearchComponentProps> = ({
     totalPages,
     totalItems,
     handlePageChange,
-  } = useKoiOwnerSearch(owner_id, 500);
+  } = useKoiOwnerSearchNotAuth(owner_id, 500);
 
   useEffect(() => {
     onSearchStateChange(loading);
@@ -37,7 +36,7 @@ const KoiOwnerSearchComponent: React.FC<KoiOwnerSearchComponentProps> = ({
           variant="h6"
           sx={{ textAlign: "left", marginBottom: "1rem" }}
         >
-          Search Koi
+          Search Breeder's Koi
         </Typography>
         <SearchBar
           value={query}
@@ -83,4 +82,4 @@ const KoiOwnerSearchComponent: React.FC<KoiOwnerSearchComponentProps> = ({
   );
 };
 
-export default KoiOwnerSearchComponent;
+export default KoiOwnerSearchNotAuthComponent;

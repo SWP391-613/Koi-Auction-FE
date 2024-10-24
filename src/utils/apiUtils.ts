@@ -22,7 +22,7 @@ import {
 } from "~/types/users.type";
 import { AuctionDTO } from "~/types/auctions.type";
 import { environment } from "../environments/environment";
-import { PaymentDTO } from "~/pages/detail/member/UserOrder";
+import { OrderOfUser, PaymentDTO } from "~/pages/detail/member/UserOrder";
 import { OrderDetail, OrderStatus } from "~/types/orders.type";
 import { Order } from "~/types/orders.type";
 import { FeedbackRequest } from "~/pages/detail/member/Feedback";
@@ -468,14 +468,13 @@ export const fetchUserOrders = async (
 
 export const fetchOrderDetails = async (
   orderId: number,
-  token: string,
 ): Promise<OrderDetailWithKoi[]> => {
   try {
     const response = await axios.get(
       `${API_URL}/orders_details/order/${orderId}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getUserCookieToken()}`,
         },
       },
     );
@@ -484,7 +483,7 @@ export const fetchOrderDetails = async (
     // Fetch Koi data for each order detail
     const orderDetailsWithKoi = await Promise.all(
       orderDetails.map(async (detail) => {
-        const koiData = await getKoiById(detail.product_id, token);
+        const koiData = await getKoiById(detail.product_id);
         return {
           ...detail,
           koi: {
@@ -1045,9 +1044,9 @@ export const getUserOrderByStatus = async (
   page: number,
   limit: number,
   token?: string,
-): Promise<{ orders: Order[]; totalPages: number }> => {
+): Promise<OrderOfUser> => {
   const response = await axios.get(
-    `${API_URL}/orders/user/${userId}/get-sorted-orders`,
+    `${API_URL}/orders/user/${userId}/get-active-sorted-orders`,
     {
       params: { keyword: status, page, limit },
       headers: { Authorization: `Bearer ${getUserCookieToken() || token}` },
@@ -1056,12 +1055,9 @@ export const getUserOrderByStatus = async (
   return response.data;
 };
 
-export const getOrderById = async (
-  orderId: number,
-  token: string,
-): Promise<Order> => {
+export const getOrderById = async (orderId: number): Promise<Order> => {
   const response = await axios.get(`${API_URL}/orders/${orderId}`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${getUserCookieToken()}` },
   });
   return response.data;
 };
@@ -1070,19 +1066,13 @@ export const updateOrderStatus = async (
   orderId: number,
   newStatus: OrderStatus,
 ) => {
-  const token = getUserCookieToken();
-  if (!token) {
-    throw new Error("No authentication token found");
-  }
-
   try {
     const response = await axios.put(
       `${API_URL}/orders/${orderId}/status`,
       { status: newStatus },
       {
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getUserCookieToken()}`,
         },
       },
     );

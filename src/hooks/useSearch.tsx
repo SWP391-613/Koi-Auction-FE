@@ -1,6 +1,7 @@
 import { debounce } from "@mui/material";
 import axios from "axios";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { API_URL } from "~/constants/endPoints";
 import { AuctionModel } from "~/types/auctions.type";
 import { KoiDetailModel, KoiInAuctionDetailModel } from "~/types/kois.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
@@ -140,7 +141,7 @@ export function useSearch<T>({
 //in page breeder detail call this hook, to their get koi by keyword
 export const useKoiOwnerSearch = (debounceTime = 500) => {
   return useSearch<KoiDetailModel>({
-    apiUrl: "http://localhost:4000/api/v1/kois/get-kois-owner-by-keyword",
+    apiUrl: `${API_URL}/kois/get-kois-owner-by-keyword`,
     requiresAuth: true,
     preload: true,
     defaultQuery: "ya",
@@ -150,7 +151,7 @@ export const useKoiOwnerSearch = (debounceTime = 500) => {
 
 export const useAllKoiSearch = (debounceTime = 500) => {
   return useSearch<KoiDetailModel>({
-    apiUrl: "http://localhost:4000/api/v1/kois/get-all-kois-by-keyword",
+    apiUrl: `${API_URL}/kois/get-all-kois-by-keyword`,
     requiresAuth: true,
     preload: false,
     debounceTime,
@@ -160,7 +161,7 @@ export const useAllKoiSearch = (debounceTime = 500) => {
 //in page breeder detail call this hook, to their get koi by keyword
 export const useKoiUnverifiedSearch = (debounceTime = 500) => {
   return useSearch<KoiDetailModel>({
-    apiUrl: "http://localhost:4000/api/v1/kois/get-unverified-kois-by-keyword",
+    apiUrl: `${API_URL}/kois/get-unverified-kois-by-keyword`,
     requiresAuth: true,
     preload: false,
     debounceTime,
@@ -169,7 +170,7 @@ export const useKoiUnverifiedSearch = (debounceTime = 500) => {
 
 export const useKoiInAuctionSearch = (debounceTime = 500) => {
   return useSearch<KoiInAuctionDetailModel>({
-    apiUrl: "http://localhost:4000/api/v1/auctionkois/get-kois-by-keyword",
+    apiUrl: `${API_URL}/auctionkois/get-kois-by-keyword`,
     requiresAuth: false,
     preload: true,
     defaultQuery: "ko",
@@ -179,7 +180,7 @@ export const useKoiInAuctionSearch = (debounceTime = 500) => {
 
 export const useAuctionSearch = (debounceTime = 500) => {
   return useSearch<AuctionModel>({
-    apiUrl: "http://localhost:4000/api/v1/auctions/get-auctions-by-keyword",
+    apiUrl: `${API_URL}/auctions/get-auctions-by-keyword`,
     requiresAuth: false,
     preload: true,
     defaultQuery: "ongoing",

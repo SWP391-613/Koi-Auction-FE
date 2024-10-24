@@ -1,34 +1,18 @@
+import { faEdit, faUserCheck } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, Divider, Rating, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
-import DepositComponent from "~/components/shared/DepositComponent";
-import { useUserData } from "~/hooks/useUserData";
-import { formatDate, sendOtp, updateUserField } from "~/utils/apiUtils";
-import { getCookie } from "~/utils/cookieUtils";
-import LoadingComponent from "~/components/shared/LoadingComponent";
-import { extractErrorMessage } from "~/utils/dataConverter";
-import { formatCurrency } from "~/utils/currencyUtils";
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  Divider,
-  IconButton,
-  Rating,
-  TextField,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUserCheck,
-  faEdit,
-  faCheckCircle,
-} from "@fortawesome/free-solid-svg-icons";
-import UserDetailDialog from "./UserDetailDialog";
-import DrawOutComponent from "~/components/shared/DrawOutComponent";
 import AccountTransactionComponent from "~/components/shared/AccountTransactionComponent";
+import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
+import LoadingComponent from "~/components/shared/LoadingComponent";
+import { useUserData } from "~/hooks/useUserData";
+import { formatDate, sendOtp } from "~/utils/apiUtils";
+import { getCookie } from "~/utils/cookieUtils";
+import { formatCurrency } from "~/utils/currencyUtils";
+import UserDetailDialog from "./UserDetailDialog";
+import UserOrder from "./UserOrder";
 
 const UserDetail: React.FC = () => {
   const { user, loading, error, setUser } = useUserData();
@@ -198,6 +182,8 @@ const UserDetail: React.FC = () => {
 
       {/* Modal for showing fetched user data */}
       <UserDetailDialog openModal={openModal} handleClose={handleClose} />
+
+      <UserOrder />
     </div>
   );
 };

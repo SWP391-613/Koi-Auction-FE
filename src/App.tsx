@@ -45,6 +45,7 @@ import BlogPost from "./pages/blog/BlogPost";
 import Feedback from "./pages/detail/member/Feedback";
 import Kois from "./pages/kois/Kois";
 import BreederInfo from "./pages/static/BreederInfo";
+import MemberLayout from "./layouts/MemberLayout";
 
 const TITLE = "Auction Koi";
 
@@ -96,7 +97,6 @@ function App() {
 
                 {/* Protected routes for logged-in users */}
                 <Route element={<ProtectedRoute />}>
-                  <Route path="/users/:id" element={<UserDetail />} />
                   <Route
                     path="/auctions/register"
                     element={<AddKoiToAuction />}
@@ -105,28 +105,11 @@ function App() {
                     path="/auctions/register/:id"
                     element={<KoiRegisterAuctionDetail />}
                   />
-                </Route>
-
-                {/* Manager and Staff protected routes */}
-                <Route element={<ProtectedRoute />}>
+                  <Route path="/users/*" element={<MemberLayout />}></Route>
                   <Route path="/managers/*" element={<ManagerLayout />}></Route>
-                </Route>
-
-                {/* Breeder protected routes */}
-                <Route element={<ProtectedRoute />}>
                   <Route path="/breeders/*" element={<BreederLayout />}></Route>
-                </Route>
-
-                {/* Staff protected routes */}
-                <Route element={<ProtectedRoute />}>
                   <Route path="/staffs/*" element={<StaffLayout />}></Route>
-                </Route>
-                {/* Protected routes for USER */}
-                <Route element={<ProtectedRoute />}>
                   <Route path="/orders/*" element={<OrderLayout />} />
-                </Route>
-
-                <Route element={<ProtectedRoute />}>
                   <Route path="/feedback/:orderId" element={<Feedback />} />
                 </Route>
               </Routes>

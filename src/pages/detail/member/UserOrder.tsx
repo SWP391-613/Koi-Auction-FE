@@ -1,70 +1,38 @@
 import EditIcon from "@mui/icons-material/Edit";
+import FeedbackIcon from "@mui/icons-material/Feedback";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import {
   Alert,
   Box,
   Button,
   Card,
   CardContent,
+  CardMedia,
   Chip,
   Container,
-  Dialog,
-  Grid,
+  Divider,
   Typography,
   useMediaQuery,
   useTheme,
-  Avatar,
-  Divider,
-  CardMedia,
 } from "@mui/material";
-import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import LoadingComponent from "~/components/shared/LoadingComponent";
-import { useUserData } from "~/hooks/useUserData";
-import { getCookie } from "~/utils/cookieUtils";
-import {
-  createOrderPayment,
-  fetchUserOrders,
-  updateOrder,
-  getUserOrderByStatus,
-} from "../../../utils/apiUtils";
-import UserOrderDetail from "./UserOrderDetail";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import PaginationComponent from "~/components/common/PaginationComponent";
-import { formatCurrency } from "~/utils/currencyUtils";
-import PaymentIcon from "@mui/icons-material/Payment";
-import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-import HomeIcon from "@mui/icons-material/Home";
-import { getOrderStatusColor } from "~/utils/colorUtils";
-import FeedbackIcon from "@mui/icons-material/Feedback";
-import { Link as RouterLink } from "react-router-dom";
-import { Order } from "~/types/orders.type";
-import { OrderStatus } from "~/types/orders.type";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { getUserCookieToken } from "~/utils/auth.utils";
-import KoiBreederSearchGrid from "~/components/shared/KoiBreederSearchGrid";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import SearchBar from "~/components/shared/SearchBar";
-
-export type PaymentDTO = {
-  payment_amount: number;
-  payment_method: string;
-  payment_type: string;
-  order_id: number | null;
-  user_id: number;
-};
-
-export type OrderOfUser = {
-  item: Order[];
-  total_page: number;
-  total_item: number;
-};
-
-// Add this type to include the Koi image
-type OrderWithKoiImage = Order & {
-  koi_image?: string;
-};
+import { useUserData } from "~/hooks/useUserData";
+import { OrderStatus, OrderWithKoiImage } from "~/types/orders.type";
+import { getOrderStatusColor } from "~/utils/colorUtils";
+import { getCookie } from "~/utils/cookieUtils";
+import { formatCurrency } from "~/utils/currencyUtils";
+import {
+  canAcceptShip,
+  canConfirmOrder,
+  canLeaveFeedback,
+} from "~/utils/orderUtils";
+import { getUserOrderByStatus } from "../../../utils/apiUtils";
 
 const UserOrder = () => {
   const theme = useTheme();
@@ -117,33 +85,6 @@ const UserOrder = () => {
 
   const handleOrderClick = (orderId: number) => {
     navigate(`order-detail/${orderId}`);
-  };
-
-  const canLeaveFeedback = (order: Order) => {
-    const processingDate = new Date(order.order_date);
-    const currentDate = new Date();
-    const daysSinceProcessing = Math.floor(
-      (currentDate.getTime() - processingDate.getTime()) / (1000 * 3600 * 24),
-    );
-    return order.status === OrderStatus.DELIVERED && daysSinceProcessing <= 7;
-  };
-
-  const canAcceptShip = (order: Order) => {
-    const processingDate = new Date(order.shipping_date);
-    const currentDate = new Date();
-    const daysSinceProcessing = Math.floor(
-      (currentDate.getTime() - processingDate.getTime()) / (1000 * 3600 * 24),
-    );
-    return order.status === OrderStatus.SHIPPED && daysSinceProcessing <= 7;
-  };
-
-  const canConfirmOrder = (order: Order) => {
-    const processingDate = new Date(order.shipping_date);
-    const currentDate = new Date();
-    const daysSinceProcessing = Math.floor(
-      (currentDate.getTime() - processingDate.getTime()) / (1000 * 3600 * 24),
-    );
-    return order.status === OrderStatus.PENDING && daysSinceProcessing <= 7;
   };
 
   const handleStatusChange = (status: OrderStatus) => {

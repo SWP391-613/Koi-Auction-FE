@@ -1,12 +1,22 @@
 import axios, { AxiosError } from "axios";
 import { format, isToday, isTomorrow, isYesterday } from "date-fns";
 import { Bid } from "~/components/koibiddingdetail/BiddingHistory";
+import { API_URL } from "~/constants/endPoints";
 import { BidRequest } from "~/pages/auctions/KoiBidding";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/detail/breeder/BreederDetail";
-import { OrderDetailWithKoi } from "~/pages/detail/member/UserOrderDetail";
+import { FeedbackRequest } from "~/pages/detail/member/Feedback";
 import { AuctionKoi, BidMethod } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
 import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";
+import {
+  Order,
+  OrderDetail,
+  OrderDetailWithKoi,
+  OrderOfUser,
+  OrderResponse,
+  OrderStatus,
+  PaymentDTO,
+} from "~/types/orders.type";
 import {
   BreedersResponse,
   KoisResponse,
@@ -20,14 +30,8 @@ import {
   UserLoginResponse,
   UserRegisterDTO,
 } from "~/types/users.type";
-import { AuctionDTO } from "~/types/auctions.type";
 import { environment } from "../environments/environment";
-import { OrderOfUser, PaymentDTO } from "~/pages/detail/member/UserOrder";
-import { OrderDetail, OrderStatus } from "~/types/orders.type";
-import { Order } from "~/types/orders.type";
-import { FeedbackRequest } from "~/pages/detail/member/Feedback";
 import { getUserCookieToken } from "./auth.utils";
-import { API_URL } from "~/constants/endPoints";
 
 export const login = async (payload: LoginDTO): Promise<UserLoginResponse> => {
   try {
@@ -467,7 +471,7 @@ export const fetchUserOrders = async (
 
 export const fetchOrderDetails = async (
   orderId: number,
-): Promise<OrderDetailWithKoi[]> => {
+): Promise<OrderDetail[]> => {
   try {
     const response = await axios.get(
       `${API_URL}/orders_details/order/${orderId}`,
@@ -482,7 +486,7 @@ export const fetchOrderDetails = async (
     // Fetch Koi data for each order detail
     const orderDetailsWithKoi = await Promise.all(
       orderDetails.map(async (detail) => {
-        const koiData = await getKoiById(detail.product_id);
+        const koiData = await getKoiById(detail.product_id.id);
         return {
           ...detail,
           koi: {

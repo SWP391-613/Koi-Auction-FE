@@ -27,13 +27,17 @@ import {
   getOrderById,
   confirmOrder,
 } from "~/utils/apiUtils";
-import { Order, OrderDetail, OrderStatus } from "~/types/orders.type";
+import {
+  Order,
+  OrderDetail,
+  OrderStatus,
+  PaymentDTO,
+} from "~/types/orders.type";
 import { toast, ToastContainer } from "react-toastify";
 import { getCookie } from "~/utils/cookieUtils";
 import TextField from "@mui/material/TextField";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
-import { PaymentDTO } from "./UserOrder";
 import { useUserData } from "~/hooks/useUserData";
 import { useMediaQuery } from "@mui/material";
 import Feedback from "./Feedback";
@@ -43,19 +47,11 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { getUserCookieToken } from "~/utils/auth.utils";
 
-export type OrderDetailWithKoi = OrderDetail & {
-  koi: {
-    name: string;
-    image_url: string;
-    owner_id: number;
-  };
-};
-
 const UserOrderDetail: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
   const theme = useTheme();
-  const [orderDetails, setOrderDetails] = useState<OrderDetailWithKoi[]>([]);
+  const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -76,6 +72,7 @@ const UserOrderDetail: React.FC = () => {
 
     if (orderId) {
       setLoading(true);
+
       getOrderById(parseInt(orderId))
         .then((order) => {
           setOrder(order);
@@ -131,10 +128,8 @@ const UserOrderDetail: React.FC = () => {
 
         if (updatedOrder && updatedOrder.id) {
           setOrder(updatedOrder);
-          const refreshedDetails = await fetchOrderDetails(
-            updatedOrder.id,
-            token,
-          );
+
+          const refreshedDetails = await fetchOrderDetails(updatedOrder.id);
           setOrderDetails(refreshedDetails);
         }
         toast.success("Order updated successfully");
@@ -201,9 +196,9 @@ const UserOrderDetail: React.FC = () => {
   };
 
   const koiItems = orderDetails.map((detail) => ({
-    id: detail.koi.owner_id,
-    name: detail.koi.name,
-    thumbnail: detail.koi.image_url,
+    id: detail.product_id.owner_id,
+    name: detail.product_id.name,
+    thumbnail: detail.product_id.thumbnail,
   }));
 
   const handleUpdateOrderStatus = async (newStatus: OrderStatus) => {
@@ -287,7 +282,7 @@ const UserOrderDetail: React.FC = () => {
                 <Card elevation={3}>
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
-                      {orderDetails[0].koi.name}
+                      {orderDetails[0].product_id.name}
                     </Typography>
                     <Box
                       sx={{
@@ -300,8 +295,8 @@ const UserOrderDetail: React.FC = () => {
                       <CardMedia
                         component="img"
                         height="200"
-                        image={orderDetails[0].koi.image_url}
-                        alt={orderDetails[0].koi.name}
+                        image={orderDetails[0].product_id.thumbnail}
+                        alt={orderDetails[0].product_id.name}
                         sx={{ objectFit: "contain", borderRadius: 1 }}
                       />
                     </Box>

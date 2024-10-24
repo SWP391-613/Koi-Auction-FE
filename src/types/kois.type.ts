@@ -12,6 +12,8 @@ export type KoiDetailModel = {
   description: string | null;
   owner_id: number;
   category_id: number;
+  created_at?: string | Date;
+  updated_at?: string | Date;
 };
 
 // KoiModel with 'gender' instead of 'sex'

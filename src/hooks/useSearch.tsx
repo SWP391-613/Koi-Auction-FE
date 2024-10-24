@@ -1,6 +1,6 @@
 import { debounce } from "@mui/material";
 import axios from "axios";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AuctionModel } from "~/types/auctions.type";
 import { KoiDetailModel, KoiInAuctionDetailModel } from "~/types/kois.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
@@ -114,9 +114,19 @@ export function useSearch<T>({
     }
   }, [preload, defaultQuery, searchApi]);
 
+  // Memoize the results to avoid re-fetching data
+  const memoizedResults = useMemo(() => {
+    return {
+      results,
+      totalPages,
+      totalItems,
+    };
+  }, [results, totalPages, totalItems]);
+
   return {
     query,
     setQuery,
+    ...memoizedResults,
     results,
     loading,
     error,

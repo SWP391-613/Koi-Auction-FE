@@ -27,8 +27,7 @@ import { OrderDetail, OrderStatus } from "~/types/orders.type";
 import { Order } from "~/types/orders.type";
 import { FeedbackRequest } from "~/pages/detail/member/Feedback";
 import { getUserCookieToken } from "./auth.utils";
-
-const API_URL = `http://localhost:4000/api/v1`;
+import { API_URL } from "~/constants/endPoints";
 
 export const login = async (payload: LoginDTO): Promise<UserLoginResponse> => {
   try {

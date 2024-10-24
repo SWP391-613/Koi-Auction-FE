@@ -46,6 +46,7 @@ import Feedback from "./pages/detail/member/Feedback";
 import Kois from "./pages/kois/Kois";
 import BreederInfo from "./pages/static/BreederInfo";
 import MemberLayout from "./layouts/MemberLayout";
+import VNPayReturn from "./pages/payments/VNPayReturn";
 
 const TITLE = "Auction Koi";
 
@@ -110,6 +111,10 @@ function App() {
                   <Route path="/breeders/*" element={<BreederLayout />}></Route>
                   <Route path="/staffs/*" element={<StaffLayout />}></Route>
                   <Route path="/orders/*" element={<OrderLayout />} />
+                  <Route
+                    path="/payments/vnpay-payment-return"
+                    element={<VNPayReturn />}
+                  />
                   <Route path="/feedback/:orderId" element={<Feedback />} />
                 </Route>
               </Routes>

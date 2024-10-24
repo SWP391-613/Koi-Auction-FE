@@ -1081,8 +1081,11 @@ export const updateOrderStatus = async (
     );
     return response.data;
   } catch (error) {
-    console.error("Error updating order status:", error);
-    throw error;
+    if (axios.isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.message);
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
   }
 };
 

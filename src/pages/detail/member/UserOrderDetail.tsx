@@ -155,6 +155,7 @@ const UserOrderDetail: React.FC = () => {
           payment_type: "ORDER",
           order_id: order.id,
           user_id: user?.id || 0,
+          bank_number: null,
         };
 
         const paymentResponse = await createOrderPayment(

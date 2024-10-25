@@ -481,26 +481,14 @@ export const fetchOrderDetails = async (
         },
       },
     );
-    const orderDetails: OrderDetail[] = response.data;
-
-    // Fetch Koi data for each order detail
-    const orderDetailsWithKoi = await Promise.all(
-      orderDetails.map(async (detail) => {
-        const koiData = await getKoiById(detail.product_id.id);
-        return {
-          ...detail,
-          koi: {
-            name: koiData.name,
-            image_url: koiData.thumbnail,
-            owner_id: koiData.owner_id, // Add this line
-          },
-        };
-      }),
-    );
-
-    return orderDetailsWithKoi;
+    return response.data;
   } catch (error) {
-    console.error("Error fetching order details:", error);
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message ||
+          "An error occurred during fetch order details",
+      );
+    }
     throw error;
   }
 };

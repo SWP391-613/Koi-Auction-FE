@@ -32,9 +32,10 @@ export enum OrderStatus {
   ALL = "ALL",
   PENDING = "PENDING",
   PROCESSING = "PROCESSING",
-  SHIPPED = "SHIPPED",
+  SHIPPING = "SHIPPING",
   DELIVERED = "DELIVERED",
   CANCELLED = "CANCELLED",
+  COMPLETED = "COMPLETED",
 }
 
 export type PaymentDTO = {

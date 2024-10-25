@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   Box,
   Button,
@@ -46,6 +46,17 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { koiBreeders } from "~/utils/data/koibreeders";
+import { styled } from "@mui/material/styles";
+
+// Create a styled Button component
+const GrayButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.grey[800],
+  borderColor: theme.palette.grey[300],
+  "&:hover": {
+    borderColor: theme.palette.grey[500],
+  },
+}));
 
 const UserOrderDetail: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
@@ -188,19 +199,16 @@ const UserOrderDetail: React.FC = () => {
   };
 
   // Add this function to format the date
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) {
+      return "N/A";
+    }
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
     });
   };
-
-  const koiItems = orderDetails.map((detail) => ({
-    id: detail.product_id.owner_id,
-    name: detail.product_id.name,
-    thumbnail: detail.product_id.thumbnail,
-  }));
 
   const handleUpdateOrderStatus = async (newStatus: OrderStatus) => {
     if (order && order.id) {
@@ -282,9 +290,53 @@ const UserOrderDetail: React.FC = () => {
               <Grid item xs={12} md={4}>
                 <Card elevation={3}>
                   <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      {orderDetails[0].product_id.name}
-                    </Typography>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: 2,
+                      }}
+                    >
+                      <Typography variant="h6" component="div">
+                        {orderDetails[0].product_id.name}
+                      </Typography>
+                      {koiBreeders.find(
+                        (breeder) =>
+                          breeder.id === orderDetails[0].product_id.owner_id,
+                      ) && (
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <Link
+                            to={`/breeder/${orderDetails[0].product_id.owner_id}/info`}
+                            onClick={(event) => event.stopPropagation()}
+                            style={{
+                              textDecoration: "none",
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            <img
+                              src={
+                                koiBreeders.find(
+                                  (breeder) =>
+                                    breeder.id ===
+                                    orderDetails[0].product_id.owner_id,
+                                )?.avatar_url
+                              }
+                              alt="Breeder Avatar"
+                              style={{
+                                width: "60px",
+                                height: "60px",
+                                marginRight: "10px",
+                              }}
+                            />
+                            <GrayButton variant="outlined" size="small">
+                              View Shop
+                            </GrayButton>
+                          </Link>
+                        </Box>
+                      )}
+                    </Box>
                     <Box
                       sx={{
                         backgroundColor: "rgb(79 146 209)",
@@ -325,6 +377,28 @@ const UserOrderDetail: React.FC = () => {
                       Order Information
                     </Typography>
                     <Grid container spacing={3}>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          fullWidth
+                          margin="normal"
+                          name="first_name"
+                          label="First Name"
+                          value={editedOrder?.first_name || order.first_name}
+                          onChange={handleInputChange}
+                          disabled={!isEditing}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          fullWidth
+                          margin="normal"
+                          name="last_name"
+                          label="Last Name"
+                          value={editedOrder?.last_name || order.last_name}
+                          onChange={handleInputChange}
+                          disabled={!isEditing}
+                        />
+                      </Grid>
                       <Grid item xs={12} sm={6}>
                         <FormControl fullWidth margin="normal">
                           <InputLabel id="payment-method-label">
@@ -459,6 +533,20 @@ const UserOrderDetail: React.FC = () => {
                         Cancel Order
                       </Button>
                     )}
+                  {order && order.status === OrderStatus.SHIPPING && (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() =>
+                        handleOpenDialog(
+                          "delivery",
+                          "Are you sure you want to mark this order as shipped?",
+                        )
+                      }
+                    >
+                      Order Shipped
+                    </Button>
+                  )}
                 </Box>
                 {/* Feedback Section */}
                 {order && order.status !== "PENDING" && (

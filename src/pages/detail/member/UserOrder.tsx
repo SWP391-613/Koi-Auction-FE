@@ -98,6 +98,10 @@ const UserOrder = () => {
     setPage(1);
   };
 
+  const handleOrderClick = (orderId: number) => {
+    navigate(`order-detail/${orderId}`);
+  };
+
   if (userLoading || loading) {
     return <LoadingComponent />;
   }
@@ -136,7 +140,7 @@ const UserOrder = () => {
         </div>
       ) : (
         <>
-          <OrderSearchComponent onSearchStateChange={handleSearchStateChange} />
+          {/* <OrderSearchComponent onSearchStateChange={handleSearchStateChange} /> */}
           {orders.map((order) => (
             <Card
               key={order.id}

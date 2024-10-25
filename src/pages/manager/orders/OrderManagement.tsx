@@ -15,7 +15,7 @@ import {
 import { useOrderSearch } from "~/hooks/useOrderSearch";
 import SearchBar from "~/components/shared/SearchBar";
 import PaginationComponent from "~/components/common/PaginationComponent";
-import OrderSearchTable from "~/components/shared/OrderSearchGrid";
+import OrderSearchGrid from "~/components/shared/OrderSearchGrid";
 import { OrderStatus } from "~/types/orders.type";
 import { updateOrderStatus } from "~/utils/apiUtils"; // You'll need to create this function
 import { getOrderStatusColor } from "~/utils/colorUtils";
@@ -56,14 +56,10 @@ const OrderManagement: React.FC = () => {
       try {
         await updateOrderStatus(selectedOrder.id, selectedOrder.newStatus);
         refreshOrders();
-        if (selectedOrder.newStatus === OrderStatus.SHIPPED) {
-          toast.success("Order status updated to SHIPPED");
-        } else if (selectedOrder.newStatus === OrderStatus.CANCELLED) {
-          toast.success("Order status updated to CANCELLED");
-        }
+        toast.success(`Order status updated to ${selectedOrder.newStatus}`);
       } catch (error) {
         console.error("Failed to update order status:", error);
-        // You might want to show an error message to the user here
+        toast.error("Failed to update order status");
       }
     }
     setOpenDialog(false);
@@ -71,6 +67,22 @@ const OrderManagement: React.FC = () => {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
+  };
+
+  const handleStatusUpdate = async (
+    orderId: number,
+    newStatus: OrderStatus,
+  ) => {
+    setSelectedOrder({ id: orderId, newStatus });
+    setOpenDialog(true);
+  };
+
+  const handleUpdateKoiOwnerAccount = (orderId: number) => {
+    // This function will be implemented later
+    console.log(`Update Koi Owner Account for order ${orderId}`);
+    toast.info(
+      "Koi Owner Account update functionality will be implemented soon",
+    );
   };
 
   return (
@@ -133,9 +145,10 @@ const OrderManagement: React.FC = () => {
             Showing 1 - {results.length} of {totalItems} results.
           </Typography>
 
-          <OrderSearchTable
+          <OrderSearchGrid
             orders={results}
-            onStatusUpdate={handleStatusUpdateConfirm}
+            onStatusUpdate={handleStatusUpdate}
+            onUpdateKoiOwnerAccount={handleUpdateKoiOwnerAccount}
           />
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>

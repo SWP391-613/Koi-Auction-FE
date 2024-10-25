@@ -1,4 +1,5 @@
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
+import { OrderStatus } from "~/types/orders.type";
 
 export const getStatusColor = (status: string) => {
   switch (status) {
@@ -34,20 +35,22 @@ export const getAuctionStatusColor = (
   }
 };
 
-export const getOrderStatusColor = (status: string) => {
-  switch (status.toLowerCase()) {
-    case "all":
+export const getOrderStatusColor = (status: OrderStatus | string): string => {
+  switch (status.toUpperCase()) {
+    case OrderStatus.ALL:
       return "success";
-    case "pending":
+    case OrderStatus.PENDING:
       return "warning";
-    case "shipped":
-      return "info";
-    case "delivered":
-      return "success";
-    case "cancelled":
-      return "error";
-    case "processing":
+    case OrderStatus.PROCESSING:
       return "primary";
+    case OrderStatus.SHIPPING:
+      return "info";
+    case OrderStatus.DELIVERED:
+      return "success";
+    case OrderStatus.COMPLETED:
+      return "success-dark"; // A darker shade of success
+    case OrderStatus.CANCELLED:
+      return "error";
     default:
       return "default";
   }

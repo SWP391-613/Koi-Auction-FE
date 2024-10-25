@@ -182,8 +182,6 @@ const UserDetail: React.FC = () => {
 
       {/* Modal for showing fetched user data */}
       <UserDetailDialog openModal={openModal} handleClose={handleClose} />
-
-      <UserOrder />
     </div>
   );
 };

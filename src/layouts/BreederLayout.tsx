@@ -6,6 +6,7 @@ import VNPayReturn from "~/pages/payments/VNPayReturn";
 import DashboardLayout from "~/components/shared/DashboardLayout";
 import KoiWishList from "~/pages/kois/KoiWishList";
 import AddKoi from "~/pages/detail/breeder/AddKoi";
+import PaymentTransactions from "~/components/shared/PaymentTransactions";
 
 const BreederLayout: React.FC = () => {
   const navLinks = [
@@ -13,7 +14,8 @@ const BreederLayout: React.FC = () => {
     { to: "add-koi", label: "Upload Koi" },
     { to: "/auctions/register", label: "Register To Auction" },
     { to: "wishlist", label: "Wishlist" },
-    { to: "payments/vnpay-payment-return", label: "Payments" },
+    { to: "payments", label: "Payment Transactions" },
+    { to: "payments/vnpay-payment-return", label: "VNPay Return" },
   ];
 
   return (
@@ -22,6 +24,7 @@ const BreederLayout: React.FC = () => {
         <Route path="" element={<BreederDetail />} />
         <Route path="/add-koi" element={<AddKoi />} />
         <Route path="wishlist" element={<KoiWishList />} />
+        <Route path="payments" element={<PaymentTransactions />} />
         <Route path="payments/vnpay-payment-return" element={<VNPayReturn />} />
       </Routes>
     </DashboardLayout>

@@ -1,5 +1,4 @@
-import FeedbackIcon from "@mui/icons-material/Feedback";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import React from "react";
 import {
   Box,
   Button,
@@ -8,40 +7,43 @@ import {
   CardMedia,
   Chip,
   Divider,
-  Typography
+  Typography,
+  Grid,
+  Paper,
 } from "@mui/material";
-import React from "react";
-import { Link, Link as RouterLink, useNavigate } from "react-router-dom";
-import { OrderResponse } from "~/types/orders.type";
+import { Link } from "react-router-dom";
+import { OrderResponse, OrderStatus } from "~/types/orders.type";
 import { getOrderStatusColor } from "~/utils/colorUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { koiBreeders } from "~/utils/data/koibreeders";
-import {
-  canAcceptShip,
-  canConfirmOrder,
-  canLeaveFeedback,
-} from "~/utils/orderUtils";
-import { EditIcon } from "../icons/EditIcon";
+
 interface OrderSearchGridProps {
   orders: OrderResponse[];
+  onStatusUpdate: (orderId: number, newStatus: OrderStatus) => void;
 }
 
-const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({ orders }) => {
-
-  const navigate = useNavigate();
-
-  const handleOrderClick = (orderId: number) => {
-    navigate(`order-detail/${orderId}`);
-  };
+const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({
+  orders,
+  onStatusUpdate,
+}) => {
+  const LabeledInfo = ({
+    label,
+    value,
+  }: {
+    label: string;
+    value: string | number;
+  }) => (
+    <Typography variant="body2">
+      <strong>{label}:</strong> {value}
+    </Typography>
+  );
 
   return (
     <>
       {orders.map((order) => (
         <Card
           key={order.id}
-          onClick={() => handleOrderClick(order.id)}
           sx={{
-            cursor: "pointer",
             display: "flex",
             flexDirection: "row",
             marginBottom: 3,
@@ -77,6 +79,15 @@ const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({ orders }) => {
                 mb: 2,
               }}
             >
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography variant="h5" component="div" sx={{ mr: 2 }}>
+                  Order #{order.id}
+                </Typography>
+                <Chip
+                  label={order.status}
+                  color={getOrderStatusColor(order.status)}
+                />
+              </Box>
               {koiBreeders.find(
                 (breeder) => breeder.id === order.order_details[0].koi.owner.id,
               ) && (
@@ -84,7 +95,7 @@ const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({ orders }) => {
                   <Link
                     to={`/breeder/${order.order_details[0].koi.owner.id}/info`}
                     onClick={(event) => event.stopPropagation()}
-                    className="inline" // Make sure the link doesn't take full width
+                    className="inline"
                   >
                     <img
                       src={
@@ -94,178 +105,176 @@ const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({ orders }) => {
                         )?.avatar_url
                       }
                       alt="Breeder Avatar"
-                      className="w-[20%] m-0 p-0" // Ensure no extra margin or padding
+                      className="w-[40px] m-0 p-0"
                       onClick={(event) => event.stopPropagation()}
                     />
                   </Link>
                   <Link
-                    to={`/breeder/${order.order_details[0].koi.owner.id}/info`} // Same link for the button
+                    to={`/breeder/${order.order_details[0].koi.owner.id}/info`}
                     onClick={(event) => event.stopPropagation()}
                     className="inline-block"
                   >
-                    <Button variant="outlined" color="#808080" sx={{ mt: 1 }}>
+                    <Button variant="outlined" color="primary" sx={{ mt: 1 }}>
                       View Shop
                     </Button>
                   </Link>
                 </div>
               )}
-              <Chip
-                label={order.status}
-                color={getOrderStatusColor(order.status)}
-                size="small"
-                sx={{ fontWeight: "bold" }}
-              />
             </Box>
 
             <Divider sx={{ my: 2 }} />
-            <div className="flex justify-between">
-              <div>
-                <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-                  <Typography variant="h3" fontWeight="medium">
-                    {order.order_details[0].koi.name}
-                  </Typography>
-                </Box>
 
-                {/* <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                      <Typography variant="body2">
-                        Shipping Method: {order.shipping_method}
-                      </Typography>
-                    </Box>
-
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                      <Typography variant="body2">
-                        Payment Method: {order.payment_method}
-                      </Typography>
-                    </Box> */}
-
-                <Box sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={4}>
+                <Paper
+                  elevation={3}
+                  sx={{ p: 2, height: "100%", backgroundColor: "#f0f8ff" }}
+                >
                   <Typography
-                    variant="body2"
-                    sx={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                    }}
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    gutterBottom
                   >
-                    Shipping Address: {order.shipping_address}
+                    Customer Info
                   </Typography>
-                </Box>
-              </div>
-            </div>
+                  <LabeledInfo
+                    label="Name"
+                    value={`${order.first_name} ${order.last_name}`}
+                  />
+                  <LabeledInfo label="Phone" value={order.phone_number} />
+                  <LabeledInfo label="Email" value={order.email} />
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Paper
+                  elevation={3}
+                  sx={{ p: 2, height: "100%", backgroundColor: "#fff0f5" }}
+                >
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    gutterBottom
+                  >
+                    Koi Details
+                  </Typography>
+                  <LabeledInfo
+                    label="Name"
+                    value={order.order_details[0].koi.name}
+                  />
+                  <LabeledInfo
+                    label="Quantity"
+                    value={order.order_details[0].numberOfProducts}
+                  />
+                  <Box sx={{ mt: 2 }}></Box>
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Paper
+                  elevation={3}
+                  sx={{ p: 2, height: "100%", backgroundColor: "#f0fff0" }}
+                >
+                  <Typography
+                    variant="subtitle1"
+                    fontWeight="bold"
+                    gutterBottom
+                  >
+                    Shipping Info
+                  </Typography>
+                  <LabeledInfo label="Address" value={order.shipping_address} />
+                  <LabeledInfo label="Method" value={order.shipping_method} />
+                </Paper>
+              </Grid>
+            </Grid>
 
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 1,
-                alignItems: "start",
-                mb: 2,
-              }}
-            >
-              <Typography variant="body2">Quantity: x1</Typography>
-              <Chip
-                label="Refund free in 15days"
-                color="primary"
-                variant="outlined"
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                Order Details
+              </Typography>
+              <LabeledInfo
+                label="Payment Method"
+                value={order.payment_method}
+              />
+              <LabeledInfo
+                label="Order Date"
+                value={new Date(order.order_date).toLocaleDateString()}
+              />
+              <LabeledInfo
+                label="Shipping Date"
+                value={new Date(order.shipping_date).toLocaleDateString()}
               />
             </Box>
 
-            {canConfirmOrder(order) && (
-              <Box
-                sx={{
-                  mt: 2,
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <Button
-                  component={RouterLink}
-                  to={`/order-detail/${order.id}`}
-                  variant="contained"
-                  color="primary"
-                  startIcon={<EditIcon />}
-                >
-                  Confirm Order
-                </Button>
-              </Box>
-            )}
-
-            {canAcceptShip(order) && (
-              <Box
-                sx={{
-                  mt: 2,
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <Button
-                  component={RouterLink}
-                  to={`/order-detail/${order.id}`}
-                  variant="contained"
-                  color="primary"
-                  startIcon={<LocalShippingIcon />}
-                >
-                  SHIPPED!
-                </Button>
-              </Box>
-            )}
-
-            {canLeaveFeedback(order) && (
-              <Box
-                sx={{
-                  mt: 2,
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <Button
-                  component={RouterLink}
-                  to={`/order-detail/${order.id}`}
-                  variant="contained"
-                  color="primary"
-                  startIcon={<FeedbackIcon />}
-                >
-                  Leave Feedback
-                </Button>
-              </Box>
-            )}
-            <Divider sx={{ my: 2 }} />
             <Box
               sx={{
+                mt: "auto",
                 display: "flex",
+                justifyContent: "space-between",
                 alignItems: "center",
-                justifyContent: "end",
-                mb: 1,
               }}
             >
-              Total Money: &nbsp;
-              <Typography variant="h4" fontWeight="bold" color="#1365b4">
-                {formatCurrency(order.total_money)}
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "start",
-                justifyContent: "center",
-              }}
-            >
-              <Typography color="#808080" variant="body2">
-                Order created at:{" "}
-                {new Date(order.order_date).toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </Typography>
-
-              <Typography variant="body2" fontWeight="normal" color="#808080">
-                Only click Received when you have <br />
-                received the product without any problem.
-              </Typography>
+              {order.status === OrderStatus.PROCESSING && (
+                <>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() =>
+                      onStatusUpdate(order.id, OrderStatus.SHIPPING)
+                    }
+                  >
+                    Ship Order
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() =>
+                      onStatusUpdate(order.id, OrderStatus.CANCELLED)
+                    }
+                  >
+                    Cancel Order
+                  </Button>
+                </>
+              )}
+              {order.status === OrderStatus.SHIPPING && (
+                <>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() =>
+                      onStatusUpdate(order.id, OrderStatus.DELIVERED)
+                    }
+                  >
+                    Mark as Delivered
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() =>
+                      onStatusUpdate(order.id, OrderStatus.CANCELLED)
+                    }
+                  >
+                    Cancel Order
+                  </Button>
+                </>
+              )}
+              {order.status === OrderStatus.DELIVERED && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() =>
+                    onStatusUpdate(order.id, OrderStatus.COMPLETED)
+                  }
+                >
+                  Mark as Completed
+                </Button>
+              )}
+              <div className="flex flex-row justify-between items-end">
+                <Typography variant="h6" fontWeight="bold">
+                  Price:
+                </Typography>
+                <Typography variant="h4" fontWeight="bold" color="primary">
+                  {formatCurrency(order.total_money)}
+                </Typography>
+              </div>
             </Box>
           </CardContent>
         </Card>

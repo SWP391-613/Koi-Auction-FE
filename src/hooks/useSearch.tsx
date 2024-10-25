@@ -4,7 +4,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { API_URL } from "~/constants/endPoints";
 import { AuctionModel } from "~/types/auctions.type";
 import { KoiDetailModel, KoiInAuctionDetailModel } from "~/types/kois.type";
+import { OrderResponse } from "~/types/orders.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { getCookie } from "~/utils/cookieUtils";
 
 interface SearchResult<T> {
   item: T[];
@@ -201,6 +203,15 @@ export const useAuctionSearch = (debounceTime = 500) => {
     requiresAuth: false,
     preload: true,
     defaultQuery: "ongoing",
+    debounceTime,
+  });
+};
+
+export const useUserOrderSearch = (debounceTime = 500) => {
+  return useSearch<OrderResponse>({
+    apiUrl: `${API_URL}/orders/search-user-orders-by-keyword`,
+    requiresAuth: true,
+    preload: false,
     debounceTime,
   });
 };

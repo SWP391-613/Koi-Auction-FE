@@ -15,7 +15,7 @@ import {
 import { useOrderSearch } from "~/hooks/useOrderSearch";
 import SearchBar from "~/components/shared/SearchBar";
 import PaginationComponent from "~/components/common/PaginationComponent";
-import OrderSearchTable from "~/components/shared/OrderSearchTable";
+import OrderSearchTable from "~/components/shared/OrderSearchGrid";
 import { OrderStatus } from "~/types/orders.type";
 import { updateOrderStatus } from "~/utils/apiUtils"; // You'll need to create this function
 import { getOrderStatusColor } from "~/utils/colorUtils";

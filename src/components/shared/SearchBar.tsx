@@ -35,10 +35,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
         variant="outlined"
         fullWidth
         InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              {loading && <CircularProgress size={20} color="inherit" />}
-              <SearchIcon color="action" />
+          startAdornment: (
+            <InputAdornment position="start">
+              {loading ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : (
+                <SearchIcon color="action" />
+              )}
             </InputAdornment>
           ),
         }}

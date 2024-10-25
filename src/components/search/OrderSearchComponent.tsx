@@ -1,84 +1,74 @@
-// import { Typography, Button, Box } from "@mui/material";
-// import React, { useState, useEffect } from "react";
-// import { useOrderSearch } from "~/hooks/useOrderSearch";
-// import PaginationComponent from "../common/PaginationComponent";
-// import SearchBar from "../shared/SearchBar";
-// import { OrderStatus } from "~/types/orders.type";
-// import OrderSearchTable from "../shared/OrderSearchTable";
+import { Box, Typography } from "@mui/material";
+import React, { useEffect } from "react";
+import { useUserOrderSearch } from "~/hooks/useSearch";
+import PaginationComponent from "../common/PaginationComponent";
+import OrderSearchGrid from "../shared/OrderSearchGrid";
+import SearchBar from "../shared/SearchBar";
+import ScrollToTop from "react-scroll-to-top";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-// interface OrderSearchComponentProps {
-//   onSearchStateChange: (isActive: boolean) => void;
-// }
+interface OrderSearchComponentProps {
+  onSearchStateChange: (isActive: boolean) => void;
+}
 
-// const OrderSearchComponent: React.FC<OrderSearchComponentProps> = ({
-//   onSearchStateChange,
-// }) => {
-//   const [status, setStatus] = useState<OrderStatus>(OrderStatus.PENDING);
-//   const {
-//     query,
-//     setQuery,
-//     results,
-//     loading,
-//     error,
-//     page,
-//     totalPages,
-//     totalItems,
-//     handlePageChange,
-//     setCustomParams,
-//   } = useOrderSearch(500);
+const OrderSearchComponent: React.FC<OrderSearchComponentProps> = ({
+  onSearchStateChange,
+}) => {
+  const {
+    query,
+    setQuery,
+    results,
+    loading,
+    error,
+    page,
+    totalPages,
+    totalItems,
+    handlePageChange,
+  } = useUserOrderSearch(500);
 
-//   const handleStatusChange = (newStatus: OrderStatus) => {
-//     setStatus(newStatus);
-//     setCustomParams({ status: newStatus });
-//   };
+  useEffect(() => {
+    onSearchStateChange(loading);
+  }, [loading, onSearchStateChange]);
 
-//   useEffect(() => {
-//     onSearchStateChange(query.length > 0);
-//   }, [query, onSearchStateChange]);
+  useEffect(() => {
+    onSearchStateChange(query.length > 0);
+  }, [query, onSearchStateChange]);
 
-//   return (
-//     <div className="container mx-auto p-4 mt-5">
-//       <div className="flex items-center space-x-4 mb-4">
-//         <SearchBar
-//           value={query}
-//           onChange={setQuery}
-//           loading={loading}
-//           placeholder="Search for orders..."
-//         />
-//       </div>
-//       <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-//         {Object.values(OrderStatus).map((orderStatus) => (
-//           <Button
-//             key={orderStatus}
-//             variant={status === orderStatus ? "contained" : "outlined"}
-//             onClick={() => handleStatusChange(orderStatus)}
-//             sx={{ mx: 1 }}
-//           >
-//             {orderStatus}
-//           </Button>
-//         ))}
-//       </Box>
-//       {loading && <p className="mt-2">Searching...</p>}
-//       {error && <p className="text-red-500 mt-2">{error.message}</p>}
-//       {results.length > 0 && !loading && (
-//         <>
-//           <Typography variant="body2" className="mt-3 mb-3">
-//             Total Items: {totalItems}
-//           </Typography>
+  return (
+    <div className="container mx-auto p-4 mt-5">
+      <div className="bg-gray-200 p-4 rounded-xl">
+        <SearchBar
+          value={query}
+          onChange={setQuery}
+          loading={loading}
+          placeholder="You can search on Shop name, OrderId, Status, or Koi Name"
+        />
+      </div>
+      {loading && <p className="mt-2">Searching...</p>}
+      {error && <p className="text-red-500 mt-2">{error.message}</p>}
+      {results.length > 0 && !loading && (
+        <>
+          <Typography variant="body2" className="mt-3">
+            Showing 1 - {results.length} of {totalItems} results.
+          </Typography>
 
-//           <OrderSearchTable orders={results} />
-//           <PaginationComponent
-//             totalPages={totalPages}
-//             currentPage={page}
-//             onPageChange={handlePageChange}
-//           />
-//         </>
-//       )}
-//       {!loading && query && results.length === 0 && (
-//         <p className="mt-2">No results found.</p>
-//       )}
-//     </div>
-//   );
-// };
+          <OrderSearchGrid orders={results} />
+          <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+            <PaginationComponent
+              totalPages={totalPages}
+              currentPage={page}
+              onPageChange={handlePageChange}
+            />
+          </Box>
+          <ScrollToTop smooth />
+        </>
+      )}
+      {!loading && query && results.length === 0 && (
+        <p className="mt-2">No results found.</p>
+      )}
+    </div>
+  );
+};
 
-// export default OrderSearchComponent;
+export default OrderSearchComponent;

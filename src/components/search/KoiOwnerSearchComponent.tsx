@@ -24,7 +24,7 @@ const KoiOwnerSearchComponent: React.FC<KoiOwnerSearchComponentProps> = ({
     totalPages,
     totalItems,
     handlePageChange,
-  } = useKoiOwnerSearch(owner_id, 500);
+  } = useKoiOwnerSearch(500);
 
   useEffect(() => {
     onSearchStateChange(loading);

@@ -38,6 +38,7 @@ import {
 } from "~/utils/orderUtils";
 import { getUserOrderByStatus } from "../../../utils/apiUtils";
 import { koiBreeders } from "~/utils/data/koibreeders";
+import OrderSearchComponent from "~/components/search/OrderSearchComponent";
 
 const UserOrder = () => {
   const theme = useTheme();
@@ -52,6 +53,10 @@ const UserOrder = () => {
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus>(
     OrderStatus.ALL,
   );
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const handleSearchStateChange = (isActive: boolean) => {
+    setIsSearchActive(isActive);
+  };
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -86,10 +91,6 @@ const UserOrder = () => {
     value: number,
   ) => {
     setPage(value);
-  };
-
-  const handleOrderClick = (orderId: number) => {
-    navigate(`order-detail/${orderId}`);
   };
 
   const handleStatusChange = (status: OrderStatus) => {
@@ -135,12 +136,7 @@ const UserOrder = () => {
         </div>
       ) : (
         <>
-          <SearchBar
-            value={""}
-            onChange={() => {}}
-            loading={false}
-            placeholder="Search for orders..."
-          ></SearchBar>
+          <OrderSearchComponent onSearchStateChange={handleSearchStateChange} />
           {orders.map((order) => (
             <Card
               key={order.id}
@@ -149,7 +145,7 @@ const UserOrder = () => {
                 cursor: "pointer",
                 display: "flex",
                 flexDirection: "row",
-                marginBottom: 3,
+                margin: 3,
                 overflow: "hidden",
               }}
             >

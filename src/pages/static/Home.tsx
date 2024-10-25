@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "~/contexts/AuthContext";
-import NavigateButton from "../../components/shared/NavigateButton";
+import FancyButton from "../../components/shared/FancyButton";
 import { koiBreeders } from "../../utils/data/koibreeders";
 
 const Home = () => {
@@ -27,16 +27,18 @@ const Home = () => {
       </div>
       <div className="mb-20 flex h-20 w-5/6 items-center justify-center">
         {!isLoggedIn && (
-          <NavigateButton
+          <FancyButton
             text="Register"
+            hoverText="Join Now"
             to="/register"
-            className="mr-4 mt-10 flex h-[4rem] w-full max-w-[300px] items-center justify-center rounded-2xl bg-red-500 px-4 py-2 text-2xl font-semibold text-white hover:bg-red-600"
+            className="mr-4 mt-10 w-full max-w-[300px]"
           />
         )}
-        <NavigateButton
+        <FancyButton
           text="View Auction"
+          hoverText="Bid"
           to="/auctions"
-          className="mt-10 flex h-[4rem] w-full max-w-[300px] items-center justify-center rounded-2xl bg-blue-500 px-4 py-2 text-2xl font-semibold text-white hover:bg-blue-600"
+          className="mt-10 w-full max-w-[300px]"
         />
       </div>
 

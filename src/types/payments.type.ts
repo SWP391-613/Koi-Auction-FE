@@ -1,9 +1,9 @@
 import { UserDetailsResponse } from "./users.type";
 
 export enum PaymentStatus {
+  ALL = "ALL", // for search
   PENDING = "PENDING",
   SUCCESS = "SUCCESS",
-  FAILED = "FAILED",
   REFUNDED = "REFUNDED",
 }
 
@@ -22,7 +22,7 @@ export enum PaymentMethod {
 export type PaymentResponse = {
   id: number;
   payment_amount: number;
-  payment_date: [number, number, number, number, number, number, number?];
+  payment_date: string | Date;
   payment_method: PaymentMethod;
   payment_status: PaymentStatus;
   order_id: number | null;

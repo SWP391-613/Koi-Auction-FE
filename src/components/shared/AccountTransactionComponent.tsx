@@ -39,9 +39,7 @@ const AccountTransactionComponent: React.FC<
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleTransaction = async (type: "deposit" | "withdraw") => {
     if (amount <= 0) {
       toast.error("Amount must be greater than 0.");
       return;
@@ -91,7 +89,7 @@ const AccountTransactionComponent: React.FC<
 
   return (
     <Box sx={{ maxWidth: 400, margin: "0 auto", padding: 2 }}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => handleTransaction("deposit")}>
         <ToggleButtonGroup
           color="primary"
           value={transactionType}

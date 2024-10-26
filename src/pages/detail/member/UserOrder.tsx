@@ -23,11 +23,7 @@ import PaginationComponent from "~/components/common/PaginationComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import SearchBar from "~/components/shared/SearchBar";
 import { useUserData } from "~/hooks/useUserData";
-import {
-  OrderResponse,
-  OrderStatus,
-  OrderWithKoiImage,
-} from "~/types/orders.type";
+import { OrderResponse, OrderStatus } from "~/types/orders.type";
 import { getOrderStatusColor } from "~/utils/colorUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
@@ -39,6 +35,7 @@ import {
 import { getUserOrderByStatus } from "../../../utils/apiUtils";
 import { koiBreeders } from "~/utils/data/koibreeders";
 import OrderSearchComponent from "~/components/search/OrderSearchComponent";
+import { getUserCookieToken } from "~/utils/auth.utils";
 
 const UserOrder = () => {
   const theme = useTheme();
@@ -69,7 +66,7 @@ const UserOrder = () => {
             selectedStatus,
             page - 1,
             itemsPerPage,
-            getCookie("access_token") || "",
+            getUserCookieToken() || "",
           );
           setOrders(response.item);
           setTotalPages(response.total_page);

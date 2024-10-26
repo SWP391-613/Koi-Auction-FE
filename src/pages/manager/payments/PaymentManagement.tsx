@@ -12,17 +12,18 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { useOrderSearch } from "~/hooks/useEntitySearch";
+import { usePaymentSearch } from "~/hooks/useEntitySearch";
 import SearchBar from "~/components/shared/SearchBar";
 import PaginationComponent from "~/components/common/PaginationComponent";
-import OrderSearchGrid from "~/components/shared/OrderSearchGrid";
-import { OrderStatus } from "~/types/orders.type";
-import { updateOrderStatus } from "~/utils/apiUtils"; // You'll need to create this function
-import { getOrderStatusColor } from "~/utils/colorUtils";
+import PaymentSearchGrid from "~/components/shared/PaymentSearchGrid";
+import { PaymentStatus } from "~/types/payments.type";
+// import { updatePaymentStatus } from "~/utils/apiUtils"; // You'll need to create this function
+import { getPaymentStatusColor } from "~/utils/colorUtils";
 import { toast } from "react-toastify";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { updatePaymentStatus } from "~/utils/apiUtils";
 
-const OrderManagement: React.FC = () => {
+const PaymentManagement: React.FC = () => {
   const {
     query,
     setQuery,
@@ -36,35 +37,35 @@ const OrderManagement: React.FC = () => {
     totalItems,
     handlePageChange,
     refreshEntities,
-  } = useOrderSearch(500);
+  } = usePaymentSearch(500);
 
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<{
+  const [selectedPayment, setSelectedPayment] = useState<{
     id: number;
-    newStatus: OrderStatus;
+    newStatus: PaymentStatus;
   } | null>(null);
 
   const handleStatusUpdateConfirm = (
-    orderId: number,
-    newStatus: OrderStatus,
+    paymentId: number,
+    newStatus: PaymentStatus,
   ) => {
-    setSelectedOrder({ id: orderId, newStatus });
+    setSelectedPayment({ id: paymentId, newStatus });
     setOpenDialog(true);
   };
 
   const handleConfirmAction = async () => {
-    if (selectedOrder) {
+    if (selectedPayment) {
       try {
-        await updateOrderStatus(
-          selectedOrder.id,
-          selectedOrder.newStatus,
+        await updatePaymentStatus(
+          selectedPayment.id,
+          selectedPayment.newStatus,
           getUserCookieToken() || "",
         );
         refreshEntities();
-        toast.success(`Order status updated to ${selectedOrder.newStatus}`);
+        toast.success(`Payment status updated to ${selectedPayment.newStatus}`);
       } catch (error) {
-        console.error("Failed to update order status:", error);
-        toast.error("Failed to update order status");
+        console.error("Failed to update payment status:", error);
+        toast.error("Failed to update payment status");
       }
     }
     setOpenDialog(false);
@@ -74,38 +75,22 @@ const OrderManagement: React.FC = () => {
     setOpenDialog(false);
   };
 
-  const handleStatusUpdate = async (
-    orderId: number,
-    newStatus: OrderStatus,
-  ) => {
-    setSelectedOrder({ id: orderId, newStatus });
-    setOpenDialog(true);
-  };
-
-  const handleUpdateKoiOwnerAccount = (orderId: number) => {
-    // This function will be implemented later
-    console.log(`Update Koi Owner Account for order ${orderId}`);
-    toast.info(
-      "Koi Owner Account update functionality will be implemented soon",
-    );
-  };
-
   return (
     <Container maxWidth="lg">
       <Typography variant="h4" component="h1" gutterBottom>
-        Order Management
+        Payment Management
       </Typography>
 
       <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-        {Object.values(OrderStatus).map((orderStatus) => (
+        {Object.values(PaymentStatus).map((paymentStatus) => (
           <Button
-            key={orderStatus}
-            variant={status === orderStatus ? "contained" : "outlined"}
-            onClick={() => setStatus(orderStatus)}
+            key={paymentStatus}
+            variant={status === paymentStatus ? "contained" : "outlined"}
+            onClick={() => setStatus(paymentStatus)}
             sx={{ mx: 1 }}
-            color={getOrderStatusColor(orderStatus)}
+            color={getPaymentStatusColor(paymentStatus)}
           >
-            {orderStatus}
+            {paymentStatus}
           </Button>
         ))}
       </Box>
@@ -115,20 +100,20 @@ const OrderManagement: React.FC = () => {
           variant="h6"
           sx={{ textAlign: "left", marginBottom: "1rem" }}
         >
-          Search Orders
+          Search Payments
         </Typography>
         <SearchBar
           value={query}
           onChange={setQuery}
           loading={loading}
-          placeholder="Search for orders..."
+          placeholder="Search for payments..."
         />
         <Typography
           variant="body2"
           sx={{ textAlign: "left", marginTop: "1rem" }}
           color="error"
         >
-          *Note: Search on customer name, address, phone number,...
+          *Note: Search on payment ID, customer name, amount, bank number,...
         </Typography>
       </Box>
 
@@ -150,9 +135,9 @@ const OrderManagement: React.FC = () => {
             Showing 1 - {results.length} of {totalItems} results.
           </Typography>
 
-          <OrderSearchGrid
-            orders={results}
-            onStatusUpdate={handleStatusUpdate}
+          <PaymentSearchGrid
+            payments={results}
+            onStatusUpdate={handleStatusUpdateConfirm}
           />
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
@@ -180,8 +165,8 @@ const OrderManagement: React.FC = () => {
         <DialogTitle id="alert-dialog-title">{"Confirm Action"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to change the status of order #
-            {selectedOrder?.id} to {selectedOrder?.newStatus}?
+            Are you sure you want to change the status of payment #
+            {selectedPayment?.id} to {selectedPayment?.newStatus}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -195,4 +180,4 @@ const OrderManagement: React.FC = () => {
   );
 };
 
-export default OrderManagement;
+export default PaymentManagement;

@@ -6,7 +6,7 @@ import SendNotifications from "~/components/shared/SendNotifications";
 import StaffDetail from "~/pages/detail/staff/StaffDetail";
 import DashboardLayout from "~/components/shared/DashboardLayout";
 import OrderManagement from "~/pages/manager/orders/OrderManagement";
-import StaffPaymentManagement from "~/pages/manager/payments/StaffPaymentManagement";
+import PaymentManagement from "~/pages/manager/payments/PaymentManagement";
 
 const StaffLayout: React.FC = () => {
   const navLinks = [
@@ -25,7 +25,7 @@ const StaffLayout: React.FC = () => {
         <Route path="auctions" element={<AuctionsManagement />} />
         <Route path="verify/kois" element={<VerifyKoiList />} />
         <Route path="orders" element={<OrderManagement />} />
-        <Route path="payments" element={<StaffPaymentManagement />} />
+        <Route path="payments" element={<PaymentManagement />} />
         <Route path="send-notifications" element={<SendNotifications />} />
       </Routes>
     </DashboardLayout>

@@ -12,7 +12,6 @@ import { formatDate, sendOtp } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import UserDetailDialog from "./UserDetailDialog";
-import UserOrder from "./UserOrder";
 
 const UserDetail: React.FC = () => {
   const { user, loading, error, setUser } = useUserData();
@@ -74,11 +73,7 @@ const UserDetail: React.FC = () => {
     }
   };
 
-  const handleTransactionSuccess = () => {
-    // Refresh user data or perform any necessary updates
-    // This could involve refetching the user data or updating the local state
-    alert("Transaction request sent successfully");
-  };
+  const handleTransactionSuccess = async () => {};
 
   return (
     <div className="container mx-auto p-6">

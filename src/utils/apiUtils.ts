@@ -32,6 +32,10 @@ import {
 } from "~/types/users.type";
 import { environment } from "../environments/environment";
 import { getUserCookieToken } from "./auth.utils";
+import {
+  PaymentPaginationResponse,
+  PaymentStatus,
+} from "~/types/payments.type";
 
 export const login = async (payload: LoginDTO): Promise<UserLoginResponse> => {
   try {
@@ -511,7 +515,7 @@ export const createDepositPayment = async (
 ) => {
   try {
     const response = await axios.post(
-      `${API_URL}/payment/create_deposit_payment`,
+      `${API_URL}/payments/create_deposit_payment`,
       paymentRequest,
       {
         headers: {
@@ -885,7 +889,7 @@ export const createCashOrderPayment = async (
 ): Promise<any> => {
   try {
     const response = await axios.post(
-      `${API_URL}/payment/cash/create_order_payment`,
+      `${API_URL}/payments/cash/create_order_payment`,
       paymentRequest,
       {
         headers: {
@@ -906,7 +910,7 @@ export const createOnlineOrderPayment = async (
 ): Promise<any> => {
   try {
     const response = await axios.post(
-      `${API_URL}/payment/vnpay/create_order_payment`,
+      `${API_URL}/payments/vnpay/create_order_payment`,
       paymentRequest,
       {
         headers: {
@@ -927,7 +931,7 @@ export const createOrderPayment = async (
 ): Promise<any> => {
   try {
     const response = await axios.post(
-      `${API_URL}/payment/create_order_payment`,
+      `${API_URL}/payments/create_order_payment`,
       paymentDTO,
       {
         headers: {
@@ -1056,14 +1060,15 @@ export const getOrderById = async (orderId: number): Promise<Order> => {
 export const updateOrderStatus = async (
   orderId: number,
   newStatus: OrderStatus,
+  token?: string,
 ) => {
   try {
     const response = await axios.put(
-      `${API_URL}/orders/${orderId}/status`,
+      `${API_URL}/orders/${orderId}/update-order-status`,
       { status: newStatus },
       {
         headers: {
-          Authorization: `Bearer ${getUserCookieToken()}`,
+          Authorization: `Bearer ${token}`,
         },
       },
     );
@@ -1120,7 +1125,7 @@ export const createDrawOutRequest = async (
   token: string,
 ) => {
   const response = await axios.post(
-    `${API_URL}/payment/create_drawout_request`,
+    `${API_URL}/payments/create_drawout_request`,
     paymentDTO,
     {
       headers: {
@@ -1129,4 +1134,46 @@ export const createDrawOutRequest = async (
     },
   );
   return response.data;
+};
+
+export const getUserPaymentHistoryByStatus = async (
+  user_id: number,
+  status: string,
+  page: number,
+  limit: number,
+  token?: string,
+): Promise<PaymentPaginationResponse> => {
+  const response = await axios.get(
+    `${API_URL}/payments/user/${user_id}/get-sorted-payments`,
+    {
+      params: { status: status, page, limit },
+      headers: { Authorization: `Bearer ${getUserCookieToken() || token}` },
+    },
+  );
+  return response.data;
+};
+
+export const updatePaymentStatus = async (
+  paymentId: number,
+  newStatus: PaymentStatus,
+  token?: string,
+) => {
+  try {
+    const response = await axios.put(
+      `${API_URL}/payments/${paymentId}/update-payment-status`,
+      { status: newStatus },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.message);
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
+  }
 };

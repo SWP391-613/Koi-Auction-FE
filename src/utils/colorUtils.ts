@@ -1,5 +1,6 @@
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
 import { OrderStatus } from "~/types/orders.type";
+import { PaymentStatus } from "~/types/payments.type";
 
 export const getStatusColor = (status: string) => {
   switch (status) {
@@ -51,6 +52,23 @@ export const getOrderStatusColor = (status: OrderStatus | string): string => {
       return "success-dark"; // A darker shade of success
     case OrderStatus.CANCELLED:
       return "error";
+    default:
+      return "default";
+  }
+};
+
+export const getPaymentStatusColor = (
+  status: PaymentStatus | string,
+): string => {
+  switch (status.toUpperCase()) {
+    case PaymentStatus.ALL:
+      return "primary";
+    case PaymentStatus.SUCCESS:
+      return "success";
+    case PaymentStatus.PENDING:
+      return "warning";
+    case PaymentStatus.REFUNDED:
+      return "info";
     default:
       return "default";
   }

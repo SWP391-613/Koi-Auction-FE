@@ -1,12 +1,11 @@
-import { Box, Typography } from "@mui/material";
 import React, { useEffect } from "react";
-import { useUserOrderSearch } from "~/hooks/useSearch";
+import { Box, Typography, Button } from "@mui/material";
+import { useOrderSearch } from "~/hooks/useEntitySearch";
 import PaginationComponent from "../common/PaginationComponent";
 import OrderSearchGrid from "../shared/OrderSearchGrid";
 import SearchBar from "../shared/SearchBar";
 import ScrollToTop from "react-scroll-to-top";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { OrderStatus } from "~/types/orders.type";
 
 interface OrderSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
@@ -18,6 +17,8 @@ const OrderSearchComponent: React.FC<OrderSearchComponentProps> = ({
   const {
     query,
     setQuery,
+    status,
+    setStatus,
     results,
     loading,
     error,
@@ -25,7 +26,8 @@ const OrderSearchComponent: React.FC<OrderSearchComponentProps> = ({
     totalPages,
     totalItems,
     handlePageChange,
-  } = useUserOrderSearch(500);
+    refreshEntities,
+  } = useOrderSearch(500);
 
   useEffect(() => {
     onSearchStateChange(loading);
@@ -34,6 +36,15 @@ const OrderSearchComponent: React.FC<OrderSearchComponentProps> = ({
   useEffect(() => {
     onSearchStateChange(query.length > 0);
   }, [query, onSearchStateChange]);
+
+  const handleStatusUpdate = async (
+    orderId: number,
+    newStatus: OrderStatus,
+  ) => {
+    // Implement your API call to update the order status here
+    // After successful update:
+    refreshEntities();
+  };
 
   return (
     <div className="container mx-auto p-4 mt-5">
@@ -44,6 +55,18 @@ const OrderSearchComponent: React.FC<OrderSearchComponentProps> = ({
           loading={loading}
           placeholder="You can search on Shop name, OrderId, Status, or Koi Name"
         />
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          {Object.values(OrderStatus).map((orderStatus) => (
+            <Button
+              key={orderStatus}
+              variant={status === orderStatus ? "contained" : "outlined"}
+              onClick={() => setStatus(orderStatus)}
+              sx={{ mx: 1 }}
+            >
+              {orderStatus}
+            </Button>
+          ))}
+        </Box>
       </div>
       {loading && <p className="mt-2">Searching...</p>}
       {error && <p className="text-red-500 mt-2">{error.message}</p>}
@@ -53,7 +76,10 @@ const OrderSearchComponent: React.FC<OrderSearchComponentProps> = ({
             Showing 1 - {results.length} of {totalItems} results.
           </Typography>
 
-          <OrderSearchGrid orders={results} />
+          <OrderSearchGrid
+            orders={results}
+            onStatusUpdate={handleStatusUpdate}
+          />
           <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
             <PaginationComponent
               totalPages={totalPages}

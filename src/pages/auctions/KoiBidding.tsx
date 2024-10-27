@@ -17,6 +17,7 @@ import {
   fetchAuctionById,
   fetchAuctionKoiDetails,
   getKoiById,
+  getUserHighestBidInAuctionKoi,
   placeBid,
 } from "~/utils/apiUtils";
 import {
@@ -56,6 +57,7 @@ const KoiBidding: React.FC = () => {
   const [latestBid, setLatestBid] = useState<Bid | null>(null);
   const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [userHighestBid, setUserHighestBid] = useState<number | null>(null);
   const navigate = useNavigate();
   const token = getUserCookieToken();
 
@@ -87,13 +89,19 @@ const KoiBidding: React.FC = () => {
                   : 0),
         );
         setKoi(await getKoiById(auctionKoiDetails.koi_id));
+        await getUserHighestBidInAuctionKoi(
+          Number(auctionKoiId),
+          user?.id || 0,
+        ).then((response) => {
+          setUserHighestBid(response.bid_amount);
+        });
       } catch (error) {
         console.error("Error loading data:", error);
         toast.error("Failed to load auction details. Please try again.");
       }
     };
     loadData();
-  }, [auctionId, auctionKoiId, latestBid]);
+  }, [auctionId, auctionKoiId, latestBid, userHighestBid]);
 
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
@@ -223,13 +231,13 @@ const KoiBidding: React.FC = () => {
             <img
               src={koi.thumbnail}
               alt="Main"
-              className="w-20 cursor-pointer rounded-md object-cover"
+              className="w-20 cursor-pointer rounded-md object-cover bg-gradient-to-r from-[#1365b4] to-[#1584cb]"
               onClick={() => setSelectedMedia(koi.thumbnail)}
             />
             <img
               src={koi.thumbnail}
               alt="Main"
-              className="w-20 cursor-pointer rounded-md object-cover"
+              className="w-20 cursor-pointer rounded-md object-cover bg-gradient-to-r from-[#1365b4] to-[#1584cb]"
               onClick={() => setSelectedMedia(koi.thumbnail)}
             />
             {/* {koi.additional_images?.map((img, index) => (
@@ -322,7 +330,7 @@ const KoiBidding: React.FC = () => {
               />
               <span className="text-green-500 text-2xl">
                 <label htmlFor="Your Highest Bid">
-                  Your Highest Bid: {formatCurrency(auctionKoi.current_bid)}
+                  Your Highest Bid: {formatCurrency(userHighestBid || 0)}
                 </label>
               </span>
             </div>

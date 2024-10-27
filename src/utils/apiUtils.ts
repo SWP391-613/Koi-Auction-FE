@@ -1173,3 +1173,18 @@ export const updatePaymentStatus = async (
     }
   }
 };
+
+export const getUserHighestBidInAuctionKoi = async (
+  auctionKoiId: number,
+  userId: number,
+): Promise<Bid> => {
+  const response = await axios.get(
+    `${API_URL}/bidding/${auctionKoiId}/${userId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${getUserCookieToken()}`,
+      },
+    },
+  );
+  return response.data;
+};

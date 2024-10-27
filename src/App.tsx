@@ -24,7 +24,6 @@ import AuctionDetail from "./pages/auctions/AuctionDetail";
 import KoiBidding from "./pages/auctions/KoiBidding";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import UserDetail from "./pages/detail/member/UserDetail";
 import KoiDetail from "./pages/kois/KoiDetail";
 import About from "./pages/static/About";
 import Home from "./pages/static/Home";
@@ -32,9 +31,11 @@ import Privacy from "./pages/static/Privacy";
 import Terms from "./pages/static/Terms";
 // Types
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import InternalServerError from "./components/error/NotFound";
+import InternalServerError from "./components/error/InternalServerError";
 import BreederLayout from "./layouts/BreederLayout";
+import MemberLayout from "./layouts/MemberLayout";
 import OrderLayout from "./layouts/OrderLayout";
+import PaymentLayout from "./layouts/PaymentLayout";
 import StaffLayout from "./layouts/StaffLayout";
 import Auctions from "./pages/auctions/Auctions";
 import AddKoiToAuction from "./pages/auctions/register/AddKoiToAuction";
@@ -43,12 +44,10 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import BlogList from "./pages/blog/BlogList";
 import BlogPost from "./pages/blog/BlogPost";
 import Feedback from "./pages/detail/member/Feedback";
-import Kois from "./pages/kois/Kois";
-import BreederInfo from "./pages/static/BreederInfo";
-import MemberLayout from "./layouts/MemberLayout";
-import VNPayReturn from "./pages/payments/VNPayReturn";
 import UserOrderDetail from "./pages/detail/member/UserOrderDetail";
-import PaymentLayout from "./layouts/PaymentLayout";
+import Kois from "./pages/kois/Kois";
+import VNPayReturn from "./pages/payments/VNPayReturn";
+import BreederInfo from "./pages/static/BreederInfo";
 
 const TITLE = "Auction Koi";
 
@@ -96,7 +95,6 @@ function App() {
                 <Route path="/blog" element={<BlogList />} />
                 <Route path="/blog/:id" element={<BlogPost />} />
                 <Route path="/kois" element={<Kois />} />
-                <Route path="/kois/:id" element={<KoiDetail />} />
 
                 {/* Protected routes for logged-in users */}
                 <Route element={<ProtectedRoute />}>
@@ -108,6 +106,7 @@ function App() {
                     path="/auctions/register/:id"
                     element={<KoiRegisterAuctionDetail />}
                   />
+                  <Route path="/kois/:id" element={<KoiDetail />} />
                   <Route path="/users/*" element={<MemberLayout />}></Route>
                   <Route path="/managers/*" element={<ManagerLayout />}></Route>
                   <Route path="/breeders/*" element={<BreederLayout />}></Route>

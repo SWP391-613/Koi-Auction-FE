@@ -66,7 +66,6 @@ const KoiOwnerSearchNotAuthComponent: React.FC<
 
           <KoiSearchGrid
             kois={results}
-            getLinkUrl={(koi) => `/kois/${koi.id}`}
           />
           <PaginationComponent
             totalPages={totalPages}

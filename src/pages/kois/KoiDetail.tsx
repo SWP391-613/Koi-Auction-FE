@@ -40,11 +40,11 @@ const KoiDetail: React.FC = () => {
   const navigate = useNavigate();
   const token = getUserCookieToken();
   useEffect(() => {
-    if (!token) return;
+    if (!token) navigate("/notfound");
 
     const fetchKoiData = async () => {
       try {
-        const response = await getKoiById(parseInt(id || ""), token);
+        const response = await getKoiById(parseInt(id || ""));
 
         if (!response) {
           navigate("/notfound");
@@ -60,7 +60,7 @@ const KoiDetail: React.FC = () => {
     };
 
     fetchKoiData();
-  }, [id, navigate]);
+  }, [id, token, navigate]);
 
   const handleEdit = useCallback(() => {
     setOpenEditDialog(true);

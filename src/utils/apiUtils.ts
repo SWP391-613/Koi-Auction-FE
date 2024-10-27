@@ -331,11 +331,7 @@ export async function getKoiById(
   token?: string,
 ): Promise<KoiDetailModel> {
   try {
-    const response = await axios.get<KoiDetailModel>(`${API_URL}/kois/${id}`, {
-      headers: {
-        Authorization: `Bearer ${getUserCookieToken() || token}`,
-      },
-    });
+    const response = await axios.get<KoiDetailModel>(`${API_URL}/kois/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching koi data:", error);

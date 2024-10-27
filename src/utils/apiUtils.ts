@@ -1155,13 +1155,13 @@ export const getUserPaymentHistoryByStatus = async (
 
 export const updatePaymentStatus = async (
   paymentId: number,
-  newStatus: PaymentStatus,
+  paymentStatus: PaymentStatus,
   token?: string,
 ) => {
   try {
     const response = await axios.put(
       `${API_URL}/payments/${paymentId}/update-payment-status`,
-      { status: newStatus },
+      { status: paymentStatus },
       {
         headers: {
           Authorization: `Bearer ${token}`,

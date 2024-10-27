@@ -19,7 +19,7 @@ import PaymentSearchGrid from "~/components/shared/PaymentSearchGrid";
 import { PaymentStatus } from "~/types/payments.type";
 // import { updatePaymentStatus } from "~/utils/apiUtils"; // You'll need to create this function
 import { getPaymentStatusColor } from "~/utils/colorUtils";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { updatePaymentStatus } from "~/utils/apiUtils";
 
@@ -176,6 +176,7 @@ const PaymentManagement: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <ToastContainer />
     </Container>
   );
 };

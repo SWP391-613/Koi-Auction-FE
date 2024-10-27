@@ -35,27 +35,6 @@ const formatPaymentDate = (dateArray: number[]): string => {
   });
 };
 
-const isValidButtonColor = (
-  color: string,
-): color is
-  | "inherit"
-  | "primary"
-  | "secondary"
-  | "success"
-  | "error"
-  | "info"
-  | "warning" => {
-  return [
-    "inherit",
-    "primary",
-    "secondary",
-    "success",
-    "error",
-    "info",
-    "warning",
-  ].includes(color);
-};
-
 const PaymentTransactions: React.FC = () => {
   const { user } = useUserData();
   const [payments, setPayments] = useState<PaymentResponse[]>([]);
@@ -136,11 +115,7 @@ const PaymentTransactions: React.FC = () => {
             variant={selectedStatus === status ? "contained" : "outlined"}
             onClick={() => handleStatusChange(status)}
             sx={{ mx: 1 }}
-            color={
-              isValidButtonColor(getPaymentStatusColor(status))
-                ? getPaymentStatusColor(status)
-                : "primary"
-            }
+            color={getPaymentStatusColor(status)}
           >
             {status}
           </Button>

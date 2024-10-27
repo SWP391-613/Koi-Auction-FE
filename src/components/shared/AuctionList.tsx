@@ -45,7 +45,6 @@ const AuctionList: React.FC<AuctionListProps> = ({
         setHasMorePages(fetchedAuctions.length === itemsPerPage);
       } catch (error) {
         console.error("Error fetching auctions:", error);
-        setError("Failed to load auctions. Please try again later.");
         setAuctions([]);
       } finally {
         setIsLoading(false);

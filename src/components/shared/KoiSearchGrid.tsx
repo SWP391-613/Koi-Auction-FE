@@ -17,7 +17,7 @@ type BaseKoiProps<T> = {
 };
 
 interface KoiSearchGridProps<T extends KoiDetailModel> extends BaseKoiProps<T> {
-  getLinkUrl?: (koi: T) => string;  // Made optional
+  getLinkUrl?: (koi: T) => string; // Made optional
 }
 
 const KoiSearchGrid = <T extends KoiDetailModel>({

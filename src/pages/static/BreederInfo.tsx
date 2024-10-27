@@ -1,25 +1,59 @@
-import { Typography } from "@mui/material";
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import KoiOwnerSearchNotAuthComponent from "~/components/search/KoiOwnerSearchComponentNotAuth";
 import { koiBreeders } from "../../utils/data/koibreeders";
+import LoadingComponent from "~/components/shared/LoadingComponent";
+import NavigateButton from "~/components/shared/NavigateButton";
+import { Box } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const BreederInfo: React.FC = () => {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const breederId = parseInt(id || "0", 10);
-  const breeder = koiBreeders.find((breeder) => breeder.id === breederId);
+  const [breeder, setBreeder] = useState<(typeof koiBreeders)[0] | null>(null);
   const [isSearchActive, setIsSearchActive] = useState(false);
+
   const handleSearchStateChange = (isActive: boolean) => {
     setIsSearchActive(isActive);
   };
 
+  useEffect(() => {
+    if (!id) return;
+
+    const breederId = parseInt(id, 10);
+    const foundBreeder = koiBreeders.find((b) => b.id === breederId);
+
+    if (!foundBreeder) {
+      navigate("/notfound");
+      return;
+    }
+
+    setBreeder(foundBreeder);
+  }, [id, navigate]);
+
   if (!breeder) {
-    return <div>Breeder not found</div>;
+    return <LoadingComponent />;
   }
 
   return (
     <div className="container mx-auto mt-8 px-4 mb-8">
-      <div className="rounded-lg bg-white p-6 shadow-lg">
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "start",
+          marginBottom: "1rem",
+        }}
+      >
+        <NavigateButton
+          to="/"
+          icon={<FontAwesomeIcon icon={faArrowLeft} />}
+          text="Back to homepage"
+          className="rounded bg-gray-300 px-5 py-3 text-lg text-black transition hover:bg-gray-200"
+        />
+      </Box>
+
+      <div className="rounded-lg bg-white p-6">
         <div className="mb-6 flex items-center">
           <img
             src={breeder.avatar_url}
@@ -54,7 +88,7 @@ const BreederInfo: React.FC = () => {
       </div>
 
       <KoiOwnerSearchNotAuthComponent
-        owner_id={breederId}
+        owner_id={breeder.id}
         onSearchStateChange={handleSearchStateChange}
       />
     </div>

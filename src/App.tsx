@@ -48,6 +48,7 @@ import UserOrderDetail from "./pages/detail/member/UserOrderDetail";
 import Kois from "./pages/kois/Kois";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import BreederInfo from "./pages/static/BreederInfo";
+import PageTransition from "./components/shared/PageTransition";
 
 const TITLE = "Auction Koi";
 
@@ -72,29 +73,124 @@ function App() {
             <main className="flex-grow">
               <Routes>
                 {/* Public routes */}
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/privacy" element={<Privacy />} />
-                <Route path="/terms" element={<Terms />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                <Route
+                  path="/"
+                  element={
+                    <PageTransition>
+                      <Home />
+                    </PageTransition>
+                  }
+                />
+                <Route
+                  path="/about"
+                  element={
+                    <PageTransition>
+                      <About />
+                    </PageTransition>
+                  }
+                />
+                <Route
+                  path="/privacy"
+                  element={
+                    <PageTransition>
+                      <Privacy />
+                    </PageTransition>
+                  }
+                />
+                <Route
+                  path="/terms"
+                  element={
+                    <PageTransition>
+                      <Terms />
+                    </PageTransition>
+                  }
+                />
+                <Route
+                  path="/login"
+                  element={
+                    <PageTransition>
+                      <Login />
+                    </PageTransition>
+                  }
+                />
+                <Route
+                  path="/register"
+                  element={
+                    <PageTransition>
+                      <Register />
+                    </PageTransition>
+                  }
+                />
                 <Route path="/notfound" element={<NotFound />} />
                 <Route
                   path="/internal-server-error"
                   element={<InternalServerError />}
                 />
-                <Route path="/otp-verification" element={<OtpVerification />} />
-                <Route path="/auctions" element={<Auctions />} />
-                <Route path="/auctions/:id" element={<AuctionDetail />} />
+                <Route
+                  path="/otp-verification"
+                  element={
+                    <PageTransition>
+                      <OtpVerification />
+                    </PageTransition>
+                  }
+                />
+                <Route
+                  path="/auctions"
+                  element={
+                    <PageTransition>
+                      <Auctions />
+                    </PageTransition>
+                  }
+                />
+                <Route
+                  path="/auctions/:id"
+                  element={
+                    <PageTransition>
+                      <AuctionDetail />
+                    </PageTransition>
+                  }
+                />
                 <Route
                   path="/auctionkois/:auctionId/:auctionKoiId"
-                  element={<KoiBidding />}
+                  element={
+                    <PageTransition>
+                      <KoiBidding />
+                    </PageTransition>
+                  }
                 />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/breeder/:id/info" element={<BreederInfo />} />
-                <Route path="/blog" element={<BlogList />} />
-                <Route path="/blog/:id" element={<BlogPost />} />
-                <Route path="/kois" element={<Kois />} />
+                <Route
+                  path="/breeder/:id/info"
+                  element={
+                    <PageTransition>
+                      <BreederInfo />
+                    </PageTransition>
+                  }
+                />
+                <Route
+                  path="/blog"
+                  element={
+                    <PageTransition>
+                      <BlogList />
+                    </PageTransition>
+                  }
+                />
+                <Route
+                  path="/blog/:id"
+                  element={
+                    <PageTransition>
+                      <BlogPost />
+                    </PageTransition>
+                  }
+                />
+                <Route
+                  path="/kois"
+                  element={
+                    <PageTransition>
+                      <Kois />
+                    </PageTransition>
+                  }
+                />
 
                 {/* Protected routes for logged-in users */}
                 <Route element={<ProtectedRoute />}>
@@ -106,20 +202,70 @@ function App() {
                     path="/auctions/register/:id"
                     element={<KoiRegisterAuctionDetail />}
                   />
-                  <Route path="/kois/:id" element={<KoiDetail />} />
-                  <Route path="/users/*" element={<MemberLayout />}></Route>
-                  <Route path="/managers/*" element={<ManagerLayout />}></Route>
-                  <Route path="/breeders/*" element={<BreederLayout />}></Route>
-                  <Route path="/staffs/*" element={<StaffLayout />}></Route>
-                  <Route path="/orders/*" element={<OrderLayout />} />
+                  <Route
+                    path="/kois/:id"
+                    element={
+                      <PageTransition>
+                        <KoiDetail />
+                      </PageTransition>
+                    }
+                  />
+                  <Route
+                    path="/users/*"
+                    element={
+                      <PageTransition>
+                        <MemberLayout />
+                      </PageTransition>
+                    }
+                  ></Route>
+                  <Route
+                    path="/managers/*"
+                    element={
+                      <PageTransition>
+                        <ManagerLayout />
+                      </PageTransition>
+                    }
+                  ></Route>
+                  <Route
+                    path="/breeders/*"
+                    element={
+                      <PageTransition>
+                        <BreederLayout />
+                      </PageTransition>
+                    }
+                  ></Route>
+                  <Route
+                    path="/staffs/*"
+                    element={
+                      <PageTransition>
+                        <StaffLayout />
+                      </PageTransition>
+                    }
+                  ></Route>
+                  <Route
+                    path="/orders/*"
+                    element={
+                      <PageTransition>
+                        <OrderLayout />
+                      </PageTransition>
+                    }
+                  />
                   <Route path="/payments/*" element={<PaymentLayout />} />
                   <Route
                     path="/order-detail/:id"
-                    element={<UserOrderDetail />}
+                    element={
+                      <PageTransition>
+                        <UserOrderDetail />
+                      </PageTransition>
+                    }
                   />
                   <Route
                     path="/payments/vnpay-payment-return"
-                    element={<VNPayReturn />}
+                    element={
+                      <PageTransition>
+                        <VNPayReturn />
+                      </PageTransition>
+                    }
                   />
                   <Route path="/feedback/:orderId" element={<Feedback />} />
                 </Route>

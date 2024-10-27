@@ -53,7 +53,6 @@ const AuctionDetail: React.FC = () => {
         }
       } catch (err) {
         console.error("Error fetching auction details:", err);
-        setError("Failed to load auction details. Please try again later.");
       } finally {
         setIsLoading(false);
       }

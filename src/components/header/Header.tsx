@@ -17,9 +17,12 @@ import {
   faLock,
   faCartShopping,
   faBook,
+  faChevronLeft,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import classNames from "classnames"; // Install this package for easier class management
 import { motion, AnimatePresence } from "framer-motion";
+import Tooltip from "@mui/material/Tooltip";
 
 // Define interfaces for navigation and account buttons
 interface NavButton {
@@ -33,43 +36,54 @@ interface HeaderButtonProps {
   button: NavButton;
   isActive: boolean;
   onClick?: () => void;
+  isCollapsed: boolean;
 }
 
 const HeaderButton: React.FC<HeaderButtonProps> = ({
   button,
   isActive,
   onClick,
+  isCollapsed,
 }) => {
   const baseClasses =
     "flex items-center rounded-full font-bold px-4 py-2 hover:text-white transition duration-300 ease-in-out";
   const activeClasses = "bg-[#4f92d1] text-white hover:text-white";
   const inactiveClasses =
-    "text-gray-600 bg-gray-200 hover:bg-[#4f92d1] hover:text-white";
+    "text-gray-400 hover:bg-[#4f92d1] hover:text-white";
+
+  const buttonContent = (
+    <>
+      {button.icon}
+      {!isCollapsed && <span className="ml-2">{button.text}</span>}
+    </>
+  );
 
   if (button.to) {
     return (
-      <Link
-        to={button.to}
-        className={classNames(
-          baseClasses,
-          isActive ? activeClasses : inactiveClasses,
-        )}
-        onClick={onClick}
-      >
-        {button.icon}
-        <span className="ml-2">{button.text}</span>
-      </Link>
+      <Tooltip title={isCollapsed ? button.text : ""} placement="right">
+        <Link
+          to={button.to}
+          className={classNames(
+            baseClasses,
+            isActive ? activeClasses : inactiveClasses,
+          )}
+          onClick={onClick}
+        >
+          {buttonContent}
+        </Link>
+      </Tooltip>
     );
   }
 
   return (
-    <button
-      onClick={button.onClick}
-      className={classNames(baseClasses, inactiveClasses)}
-    >
-      {button.icon}
-      <span className="ml-2 hidden md:flex">{button.text}</span>
-    </button>
+    <Tooltip title={isCollapsed ? button.text : ""} placement="right">
+      <button
+        onClick={button.onClick}
+        className={classNames(baseClasses, inactiveClasses)}
+      >
+        {buttonContent}
+      </button>
+    </Tooltip>
   );
 };
 
@@ -165,6 +179,7 @@ const Header = () => {
   const { isLoggedIn, authLogout } = useAuth();
   const [isNavOpen, setIsNavOpen] = useState(false);
   const { user, loading, error } = useUserData();
+  const [isNavCollapsed, setIsNavCollapsed] = useState(false);
 
   // Define navigation and account buttons
   const navButtons: NavButton[] = useMemo(() => {
@@ -287,71 +302,57 @@ const Header = () => {
   const toggleNav = () => setIsNavOpen(!isNavOpen);
   const closeNav = () => setIsNavOpen(false);
 
+  // Toggle navigation collapse
+  const toggleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
+
   return (
-    <header className="sticky top-0 bg-gray-200 px-4 py-1 shadow-md z-50 transition-all duration-300 box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;">
-      <div className="mx-auto flex max-w-8xl items-center justify-between">
-        {/* Logo and Title */}
+    <nav className={`fixed left-0 top-0 flex h-full ${isNavCollapsed ? 'w-20' : 'w-64'} flex-col bg-[#1E2640] text-white transition-all duration-300`}>
+      <div className="p-4 flex justify-between items-center">
         <button
           onClick={() => navigate("/")}
-          id="home"
-          className="bg-transparent hover:bg-transparent flex items-center"
+          className={`flex items-center text-xl font-bold ${isNavCollapsed ? 'justify-center' : ''}`}
         >
-          <img src="/favicon.svg" alt="Koi Auction Logo" className="w-8" />
-          <h1 className="ml-2 text-xl font-bold text-red-500 hidden lg:flex">
-            Koi Auction
-          </h1>
+          <img src="/favicon.svg" alt="Koi Auction Logo" className="w-8 mr-2" />
+          {!isNavCollapsed && <span>KoiAuction</span>}
         </button>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex md:gap-3">
-          {navButtons.map((button, index) => (
-            <HeaderButton
-              key={index}
-              button={button}
-              isActive={button.to ? isActive(button.to) : false}
-            />
-          ))}
-        </nav>
-
-        {/* Desktop Account Buttons */}
-        <div className="hidden md:flex md:gap-6">
-          {accountButtons.map((button, index) => (
-            <HeaderButton
-              key={index}
-              button={button}
-              isActive={false}
-              onClick={() => {
-                if (button.onClick) {
-                  button.onClick();
-                }
-                closeNav();
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Mobile Menu Button */}
         <button
-          className="md:hidden bg-gray-200 rounded-2xl p-2"
-          onClick={toggleNav}
-          aria-label="Toggle navigation menu"
+          onClick={toggleNavCollapse}
+          className="text-white hover:text-gray-300 transition-colors duration-200"
         >
-          <FontAwesomeIcon
-            icon={isNavOpen ? faTimes : faBars}
-            className="h-6 w-6 text-gray-600"
-          />
+          <FontAwesomeIcon icon={isNavCollapsed ? faChevronRight : faChevronLeft} />
         </button>
       </div>
-
-      {/* Mobile Slide-Out Menu */}
-      <Sidebar
-        isOpen={isNavOpen}
-        onClose={closeNav}
-        navButtons={navButtons}
-        accountButtons={accountButtons}
-        isActive={isActive}
-      />
-    </header>
+      
+      <div className="flex-grow overflow-y-auto">
+        <ul className="space-y-2 px-4">
+          {navButtons.map((button, index) => (
+            <li key={index}>
+              <HeaderButton
+                button={button}
+                isActive={button.to ? isActive(button.to) : false}
+                isCollapsed={isNavCollapsed}
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+      
+      <div className="mt-auto p-4">
+        {accountButtons.map((button, index) => (
+          <HeaderButton
+            key={index}
+            button={button}
+            isActive={false}
+            isCollapsed={isNavCollapsed}
+            onClick={() => {
+              if (button.onClick) {
+                button.onClick();
+              }
+            }}
+          />
+        ))}
+      </div>
+    </nav>
   );
 };
 

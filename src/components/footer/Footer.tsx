@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="bg-[#CACBCF] p-8 text-white shadow-lg">
+    <footer className="bg-[#CACBCF] p-8 text-white shadow-lg pl-80">
       <div className="mx-auto flex justify-start gap-5 flex-col md:flex-row">
         <Link to="/" className="md:mb-0 flex items-center justify-center">
           <img

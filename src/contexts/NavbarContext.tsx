@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
 interface NavbarContextType {
   isNavCollapsed: boolean;
@@ -11,7 +11,7 @@ export function NavbarProvider({ children }: { children: React.ReactNode }) {
   const [isNavCollapsed, setIsNavCollapsed] = useState(false);
 
   const toggleNavCollapse = () => {
-    setIsNavCollapsed(prev => !prev);
+    setIsNavCollapsed((prev) => !prev);
   };
 
   return (
@@ -24,7 +24,7 @@ export function NavbarProvider({ children }: { children: React.ReactNode }) {
 export function useNavbar() {
   const context = useContext(NavbarContext);
   if (context === undefined) {
-    throw new Error('useNavbar must be used within a NavbarProvider');
+    throw new Error("useNavbar must be used within a NavbarProvider");
   }
   return context;
 }

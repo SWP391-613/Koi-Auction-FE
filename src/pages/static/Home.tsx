@@ -29,7 +29,9 @@ const Home = () => {
         </div>
 
         <div className="mb-4 mt-5 text-center text-white">
-          <p className="mb-5 text-5xl font-bold">Your Direct Connection To The</p>
+          <p className="mb-5 text-5xl font-bold">
+            Your Direct Connection To The
+          </p>
           <p className="text-5xl font-bold">
             Top <span className="text-orange-500">Japanese</span> Koi Breeders
           </p>

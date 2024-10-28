@@ -10,7 +10,7 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { Link } from "react-router-dom";
 import FooterSection from "./FooterSection";
 import { FooterLinkProps } from "./FooterTypes";
-import { useNavbar } from '../../contexts/NavbarContext';
+import { useNavbar } from "../../contexts/NavbarContext";
 
 const Footer: React.FC = () => {
   const { isNavCollapsed } = useNavbar();
@@ -32,7 +32,9 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className={`bg-[#CACBCF] p-8 text-white shadow-lg ${isNavCollapsed ? 'pl-24' : 'pl-72'} transition-all duration-300`}>
+    <footer
+      className={`bg-[#CACBCF] p-8 text-white shadow-lg ${isNavCollapsed ? "pl-24" : "pl-72"} transition-all duration-300`}
+    >
       <div className="mx-auto flex justify-start gap-5 flex-col md:flex-row">
         <Link to="/" className="md:mb-0 flex items-center justify-center">
           <img

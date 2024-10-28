@@ -24,7 +24,7 @@ import {
 import classNames from "classnames"; // Install this package for easier class management
 import { motion, AnimatePresence } from "framer-motion";
 import Tooltip from "@mui/material/Tooltip";
-import { useNavbar } from '../../contexts/NavbarContext';
+import { useNavbar } from "../../contexts/NavbarContext";
 
 // Define interfaces for navigation and account buttons
 interface NavButton {
@@ -50,8 +50,7 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
   const baseClasses =
     "flex items-center rounded-full font-bold px-4 py-2 hover:text-white transition duration-300 ease-in-out";
   const activeClasses = "bg-[#4f92d1] text-white hover:text-white";
-  const inactiveClasses =
-    "text-gray-400 hover:bg-[#4f92d1] hover:text-white";
+  const inactiveClasses = "text-gray-400 hover:bg-[#4f92d1] hover:text-white";
 
   const buttonContent = (
     <>
@@ -306,11 +305,13 @@ const Header = () => {
   const closeNav = () => setIsNavOpen(false);
 
   return (
-    <nav className={`fixed left-0 top-0 flex h-full ${isNavCollapsed ? 'w-20' : 'w-64'} flex-col bg-[#1E2640] text-white transition-all duration-300`}>
+    <nav
+      className={`fixed left-0 top-0 flex h-full ${isNavCollapsed ? "w-20" : "w-64"} flex-col bg-[#1E2640] text-white transition-all duration-300`}
+    >
       <div className="p-4 flex justify-between items-center">
         <button
           onClick={() => navigate("/")}
-          className={`flex items-center text-xl font-bold ${isNavCollapsed ? 'justify-center' : ''}`}
+          className={`flex items-center text-xl font-bold ${isNavCollapsed ? "justify-center" : ""}`}
         >
           <img src="/favicon.svg" alt="Koi Auction Logo" className="w-8 mr-2" />
           {!isNavCollapsed && <span>KoiAuction</span>}
@@ -319,10 +320,12 @@ const Header = () => {
           onClick={toggleNavCollapse}
           className="text-white hover:text-gray-300 transition-colors duration-200"
         >
-          <FontAwesomeIcon icon={isNavCollapsed ? faChevronRight : faChevronLeft} />
+          <FontAwesomeIcon
+            icon={isNavCollapsed ? faChevronRight : faChevronLeft}
+          />
         </button>
       </div>
-      
+
       <div className="flex-grow overflow-y-auto">
         <ul className="space-y-2 px-4">
           {navButtons.map((button, index) => (
@@ -336,7 +339,7 @@ const Header = () => {
           ))}
         </ul>
       </div>
-      
+
       <div className="mt-auto p-4">
         {accountButtons.map((button, index) => (
           <HeaderButton

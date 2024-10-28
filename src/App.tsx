@@ -10,11 +10,14 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Context providers
 import { AuthProvider } from "./contexts/AuthContext";
+import { NavbarProvider } from "./contexts/NavbarContext";
+import { useNavbar } from "./contexts/NavbarContext";
 
 // Components
 import ProtectedRoute from "./components/common/ProtectedRoute";
-import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
+import Footer from "./components/footer/Footer";
+import NavBar from "./components/navbar/NavBar";
 
 // Pages
 import NotFound from "./components/error/NotFound";
@@ -59,7 +62,9 @@ const theme = createTheme({
   },
 });
 
-function App() {
+function AppContent() {
+  const { isNavCollapsed } = useNavbar();
+  
   return (
     <HelmetProvider>
       <AuthProvider>
@@ -67,8 +72,8 @@ function App() {
           <CssBaseline />
           <div className="flex flex-col min-h-screen">
             <div className="flex flex-grow">
-              <Header />
-              <main className="flex-1 ml-64 p-8">
+              <NavBar />
+              <main className={`flex-1 ${isNavCollapsed ? 'ml-20' : 'ml-64'} transition-all duration-300`}>
                 <Routes>
                   {/* Public routes */}
                   <Route
@@ -278,6 +283,14 @@ function App() {
         <SpeedInsights />
       </AuthProvider>
     </HelmetProvider>
+  );
+}
+
+function App() {
+  return (
+    <NavbarProvider>
+      <AppContent />
+    </NavbarProvider>
   );
 }
 

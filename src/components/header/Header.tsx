@@ -1,18 +1,62 @@
-import React, { useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavbar } from "../../contexts/NavbarContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faBook, faCartShopping, faFire, faFish, faHouse, faLock, faQuestion, faScrewdriver, faSearch, faSun } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCartShopping,
+  faFish,
+  faLock,
+  faScrewdriver,
+  faSearch,
+  faClock,
+} from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUserData } from "~/hooks/useUserData";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
+const Clock = () => {
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-lg shadow-sm">
+      <div className="flex items-center justify-center w-10 h-10 bg-blue-500 rounded-full">
+        <FontAwesomeIcon icon={faClock} className="h-5 w-5 text-white" />
+      </div>
+      <div className="flex flex-col">
+        <div className="text-base font-semibold text-gray-700">
+          {time.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+          })}
+        </div>
+        <div className="text-xs text-gray-500">
+          {time.toLocaleDateString('vi-VN', {
+            weekday: 'short',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          }).replace(',', '')}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Header = () => {
   const { isNavCollapsed } = useNavbar();
   const { user } = useUserData();
   const { isLoggedIn, authLogout } = useAuth();
   const navigate = useNavigate();
-
 
   return (
     <header
@@ -29,6 +73,11 @@ const Header = () => {
       `}
     >
       <div className="flex items-center justify-between h-full px-6">
+        {/* Clock - Moved before search bar */}
+        <div className="mr-4">
+          <Clock />
+        </div>
+
         {/* Search Bar */}
         <div className="flex-1 max-w-2xl">
           <div className="relative">
@@ -46,24 +95,9 @@ const Header = () => {
 
         {/* Right Side Icons */}
         <div className="flex items-center space-x-6">
-          {/* Theme Toggle */}
-          <button className="p-2 hover:bg-gray-100 rounded-full">
-            <FontAwesomeIcon icon={faSun} className="text-gray-600" />
-          </button>
-
-          {/* Notifications */}
-          <div className="relative">
-            <button className="p-2 hover:bg-gray-100 rounded-full">
-              <FontAwesomeIcon icon={faBell} className="text-gray-600" />
-              <span className="absolute top-0 right-0 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                2
-              </span>
-            </button>
-          </div>
-
           {/* Cart/Role Icon */}
           <div className="relative">
-            <button 
+            <button
               onClick={() => {
                 if (isLoggedIn && user) {
                   switch (user.role_name) {
@@ -96,7 +130,6 @@ const Header = () => {
             >
               {isLoggedIn && user ? (
                 <>
-                  {/* Show different icons based on role */}
                   {user.role_name === "manager" && (
                     <FontAwesomeIcon icon={faLock} className="h-6 w-6 text-gray-600" />
                   )}
@@ -109,9 +142,6 @@ const Header = () => {
                   {user.role_name === "member" && (
                     <FontAwesomeIcon icon={faCartShopping} className="h-6 w-6 text-gray-600" />
                   )}
-                  <span className="absolute top-0 right-0 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    5
-                  </span>
                 </>
               ) : (
                 <FontAwesomeIcon icon={faCartShopping} className="h-6 w-6 text-gray-600" />
@@ -127,9 +157,12 @@ const Header = () => {
             >
               <span className="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-40"></span>
               <div className="flex items-center">
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 438.549 438.549">
-                <path d="M318.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-120 120c-12.5 12.5-12.5 32.8 0 45.3l16 16c12.5 12.5 32.8 12.5 45.3 0l4-4L325.4 293.4l-4 4c-12.5 12.5-12.5 32.8 0 45.3l16 16c12.5 12.5 32.8 12.5 45.3 0l120-120c12.5-12.5 12.5-32.8 0-45.3l-16-16c-12.5-12.5-32.8-12.5-45.3 0l-4 4L330.6 74.6l4-4c12.5-12.5 12.5-32.8 0-45.3l-16-16zm-152 288c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l48 48c12.5 12.5 32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-1.4-1.4L272 285.3 226.7 240 168 298.7l-1.4-1.4z"/>
-                </svg> 
+                <svg
+                  className="w-4 h-4 fill-current"
+                  viewBox="0 0 438.549 438.549"
+                >
+                  <path d="M318.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-120 120c-12.5 12.5-12.5 32.8 0 45.3l16 16c12.5 12.5 32.8 12.5 45.3 0l4-4L325.4 293.4l-4 4c-12.5 12.5-12.5 32.8 0 45.3l16 16c12.5 12.5 32.8 12.5 45.3 0l120-120c12.5-12.5 12.5-32.8 0-45.3l-16-16c-12.5-12.5-32.8-12.5-45.3 0l-4 4L330.6 74.6l4-4c12.5-12.5 12.5-32.8 0-45.3l-16-16zm-152 288c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l48 48c12.5 12.5 32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-1.4-1.4L272 285.3 226.7 240 168 298.7l-1.4-1.4z" />
+                </svg>
                 {/* đây là icon github */}
                 <span className="ml-1 text-white">BID NOW</span>
               </div>

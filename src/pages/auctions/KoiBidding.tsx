@@ -172,10 +172,7 @@ const KoiBidding: React.FC = () => {
   return (
     <div className="container mx-auto">
       <div className="ml-10 mt-6">
-        <NavigateButton
-          to={`/auctions/${auctionId}`}
-          text="Back to Auction"
-        />
+        <NavigateButton to={`/auctions/${auctionId}`} text="Back to Auction" />
       </div>
       <div className="m-5 flex flex-col gap-4 md:flex-row">
         {/* Koi Image and Media Gallery */}

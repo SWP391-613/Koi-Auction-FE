@@ -179,7 +179,7 @@ const Header = () => {
   const location = useLocation();
   const { isLoggedIn, authLogout } = useAuth();
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const { user, loading, error } = useUserData();
+  const { user } = useUserData();
   const { isNavCollapsed, toggleNavCollapse } = useNavbar(); // Sử dụng context
 
   // Define navigation and account buttons

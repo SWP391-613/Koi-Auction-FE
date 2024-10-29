@@ -32,20 +32,22 @@ const Clock = () => {
       </div>
       <div className="flex flex-col">
         <div className="text-base font-semibold text-gray-700">
-          {time.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
+          {time.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
           })}
         </div>
         <div className="text-xs text-gray-500">
-          {time.toLocaleDateString('vi-VN', {
-            weekday: 'short',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-          }).replace(',', '')}
+          {time
+            .toLocaleDateString("vi-VN", {
+              weekday: "short",
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })
+            .replace(",", "")}
         </div>
       </div>
     </div>
@@ -131,20 +133,35 @@ const Header = () => {
               {isLoggedIn && user ? (
                 <>
                   {user.role_name === "manager" && (
-                    <FontAwesomeIcon icon={faLock} className="h-6 w-6 text-gray-600" />
+                    <FontAwesomeIcon
+                      icon={faLock}
+                      className="h-6 w-6 text-gray-600"
+                    />
                   )}
                   {user.role_name === "staff" && (
-                    <FontAwesomeIcon icon={faScrewdriver} className="h-6 w-6 text-gray-600" />
+                    <FontAwesomeIcon
+                      icon={faScrewdriver}
+                      className="h-6 w-6 text-gray-600"
+                    />
                   )}
                   {user.role_name === "breeder" && (
-                    <FontAwesomeIcon icon={faFish} className="h-6 w-6 text-gray-600" />
+                    <FontAwesomeIcon
+                      icon={faFish}
+                      className="h-6 w-6 text-gray-600"
+                    />
                   )}
                   {user.role_name === "member" && (
-                    <FontAwesomeIcon icon={faCartShopping} className="h-6 w-6 text-gray-600" />
+                    <FontAwesomeIcon
+                      icon={faCartShopping}
+                      className="h-6 w-6 text-gray-600"
+                    />
                   )}
                 </>
               ) : (
-                <FontAwesomeIcon icon={faCartShopping} className="h-6 w-6 text-gray-600" />
+                <FontAwesomeIcon
+                  icon={faCartShopping}
+                  className="h-6 w-6 text-gray-600"
+                />
               )}
             </button>
           </div>

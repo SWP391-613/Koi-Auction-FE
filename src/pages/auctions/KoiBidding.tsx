@@ -174,9 +174,7 @@ const KoiBidding: React.FC = () => {
       <div className="ml-10 mt-6">
         <NavigateButton
           to={`/auctions/${auctionId}`}
-          icon={<FontAwesomeIcon icon={faArrowLeft} />}
           text="Back to Auction"
-          className="rounded bg-gray-200 px-5 py-3 text-lg text-black transition hover:bg-gray-200"
         />
       </div>
       <div className="m-5 flex flex-col gap-4 md:flex-row">

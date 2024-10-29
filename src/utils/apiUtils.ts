@@ -1188,4 +1188,3 @@ export const getUserHighestBidInAuctionKoi = async (
   );
   return response.data;
 };
-

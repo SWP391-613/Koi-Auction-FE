@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import { KoiDetailModel } from "~/types/kois.type";
 import { getKoiData } from "~/utils/apiUtils";
+import { motion } from "framer-motion";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -116,6 +117,37 @@ const Home = () => {
     );
   };
 
+  const heroTextVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const buttonVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    },
+    hover: {
+      scale: 1.05,
+      transition: {
+        duration: 0.2,
+        ease: "easeInOut"
+      }
+    }
+  };
+
   return (
     <div>
       <div className="relative min-h-screen">
@@ -133,39 +165,79 @@ const Home = () => {
         <div className="relative z-20 container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-screen items-center">
             {/* Left Content */}
-            <div className="pt-20 lg:pt-0">
-              <h2 className="text-red-600 text-xl mb-4">
+            <motion.div 
+              className="pt-20 lg:pt-0"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                visible: {
+                  transition: {
+                    staggerChildren: 0.2 // Mỗi element sẽ hiện sau element trước 0.2s
+                  }
+                }
+              }}
+            >
+              <motion.h2 
+                variants={heroTextVariants}
+                className="text-red-600 text-xl mb-4"
+              >
                 Welcome to Koi Auction
-              </h2>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+              </motion.h2>
+              
+              <motion.h1 
+                variants={heroTextVariants}
+                className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight"
+              >
                 Your Direct Connection To The
                 <br />
-                Top <span className="text-orange-500">Japanese</span> Koi
-                Breeders
-              </h1>
-              <p className="text-white mb-8 max-w-xl">
-                We are always pioneering in applying information technology to
-                auction activities.
-              </p>
+                Top <motion.span
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 1, duration: 0.5 }}
+                  className="text-orange-500"
+                >
+                  Japanese
+                </motion.span> Koi Breeders
+              </motion.h1>
+              
+              <motion.p 
+                variants={heroTextVariants}
+                className="text-white mb-8 max-w-xl"
+              >
+                We are always pioneering in applying information technology to auction activities.
+              </motion.p>
 
               {/* Buttons section */}
-              <div className="flex flex-col sm:flex-row gap-4">
+              <motion.div 
+                variants={buttonVariants}
+                className="flex flex-col sm:flex-row gap-4"
+              >
                 {!isLoggedIn && (
+                  <motion.div
+                    whileHover="hover"
+                    variants={buttonVariants}
+                  >
+                    <FancyButton
+                      text="Join Now"
+                      hoverText="Join Now"
+                      to="/register"
+                      className="w-full sm:w-auto"
+                    />
+                  </motion.div>
+                )}
+                <motion.div
+                  whileHover="hover"
+                  variants={buttonVariants}
+                >
                   <FancyButton
-                    text="Join Now"
-                    hoverText="Join Now"
-                    to="/register"
+                    text="View Auction"
+                    hoverText="Bid Now"
+                    to="/auctions"
                     className="w-full sm:w-auto"
                   />
-                )}
-                <FancyButton
-                  text="View Auction"
-                  hoverText="Bid Now"
-                  to="/auctions"
-                  className="w-full sm:w-auto"
-                />
-              </div>
-            </div>
+                </motion.div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </div>

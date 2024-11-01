@@ -1,357 +1,232 @@
-import React, { useState, useMemo } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import Avatar from "@mui/material/Avatar";
-import { useAuth } from "../../contexts/AuthContext";
-import { useUserData } from "../../hooks/useUserData";
+import React, { useState, useEffect } from "react";
+import { useNavbar } from "../../contexts/NavbarContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBars,
-  faTimes,
-  faFire,
-  faHouse,
-  faQuestion,
-  faUser,
-  faSignOutAlt,
-  faFish,
-  faScrewdriver,
-  faLock,
   faCartShopping,
-  faBook,
+  faFish,
+  faLock,
+  faScrewdriver,
+  faSearch,
+  faClock,
 } from "@fortawesome/free-solid-svg-icons";
-import classNames from "classnames"; // Install this package for easier class management
-import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../../contexts/AuthContext";
+import { useUserData } from "~/hooks/useUserData";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 
-// Define interfaces for navigation and account buttons
-interface NavButton {
-  text: string;
-  to?: string;
-  onClick?: () => void;
-  icon?: JSX.Element;
-}
+const Clock = () => {
+  const [time, setTime] = useState(new Date());
 
-interface HeaderButtonProps {
-  button: NavButton;
-  isActive: boolean;
-  onClick?: () => void;
-}
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
 
-const HeaderButton: React.FC<HeaderButtonProps> = ({
-  button,
-  isActive,
-  onClick,
-}) => {
-  const baseClasses =
-    "flex items-center rounded-full font-bold px-4 py-2 hover:text-white transition duration-300 ease-in-out";
-  const activeClasses = "bg-[#4f92d1] text-white hover:text-white";
-  const inactiveClasses =
-    "text-gray-600 bg-gray-200 hover:bg-[#4f92d1] hover:text-white";
-
-  if (button.to) {
-    return (
-      <Link
-        to={button.to}
-        className={classNames(
-          baseClasses,
-          isActive ? activeClasses : inactiveClasses,
-        )}
-        onClick={onClick}
-      >
-        {button.icon}
-        <span className="ml-2">{button.text}</span>
-      </Link>
-    );
-  }
+    return () => clearInterval(timer);
+  }, []);
 
   return (
-    <button
-      onClick={button.onClick}
-      className={classNames(baseClasses, inactiveClasses)}
-    >
-      {button.icon}
-      <span className="ml-2 hidden md:flex">{button.text}</span>
-    </button>
-  );
-};
-
-const Sidebar: React.FC<{
-  isOpen: boolean;
-  onClose: () => void;
-  navButtons: NavButton[];
-  accountButtons: NavButton[];
-  isActive: (path: string) => boolean; // Added this line
-}> = ({ isOpen, onClose, navButtons, accountButtons, isActive }) => {
-  // Added isActive here
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ x: "100%" }}
-          animate={{ x: 0 }}
-          exit={{ x: "100%" }}
-          transition={{ type: "tween", duration: 0.3 }}
-          className="fixed inset-y-0 right-0 z-50 w-72 bg-white shadow-lg md:hidden overflow-y-auto"
-        >
-          <div className="flex flex-col h-full bg-gray-100">
-            <div className="flex justify-end p-4">
-              <button
-                onClick={onClose}
-                aria-label="Close navigation menu"
-                className="bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors duration-200"
-              >
-                <FontAwesomeIcon
-                  icon={faTimes}
-                  className="h-6 w-6 text-gray-600"
-                />
-              </button>
-            </div>
-            <div className="px-4 py-2 flex-grow bg-gray-100">
-              <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">
-                Navigation
-              </h2>
-              <nav>
-                <ul className="space-y-4">
-                  {navButtons.map((button, index) => (
-                    <li key={index}>
-                      <Link
-                        to={button.to ?? ""}
-                        className={`flex items-center p-3 rounded-lg ${
-                          button.to && isActive(button.to)
-                            ? "bg-blue-50 text-blue-700"
-                            : "text-gray-700 hover:bg-gray-50"
-                        } transition-colors duration-150`}
-                        onClick={onClose}
-                      >
-                        {button.icon} &nbsp;
-                        <span className="text-lg">{button.text}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-              <h2 className="text-2xl font-bold mt-8 mb-6 text-gray-800 border-b pb-2">
-                Account
-              </h2>
-              <nav>
-                <ul className="space-y-4">
-                  {accountButtons.map((button, index) => (
-                    <li key={index}>
-                      <Link
-                        to={button.to ?? ""}
-                        className={`flex items-center p-3 rounded-lg ${
-                          button.to && isActive(button.to)
-                            ? "bg-blue-50 text-blue-700"
-                            : "text-gray-700 hover:bg-gray-50"
-                        } transition-colors duration-150`}
-                        onClick={onClose}
-                      >
-                        {button.icon} &nbsp;
-                        <span className="text-lg">{button.text}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <div className="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-lg shadow-sm">
+      <div className="flex items-center justify-center w-10 h-10 bg-blue-500 rounded-full">
+        <FontAwesomeIcon icon={faClock} className="h-5 w-5 text-white" />
+      </div>
+      <div className="flex flex-col">
+        <div className="text-base font-semibold text-gray-700">
+          {time.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
+          })}
+        </div>
+        <div className="text-xs text-gray-500">
+          {time
+            .toLocaleDateString("vi-VN", {
+              weekday: "short",
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })
+            .replace(",", "")}
+        </div>
+      </div>
+    </div>
   );
 };
 
 const Header = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { isNavCollapsed } = useNavbar();
+  const { user } = useUserData();
   const { isLoggedIn, authLogout } = useAuth();
-  const [isNavOpen, setIsNavOpen] = useState(false);
-  const { user, loading, error } = useUserData();
+  const navigate = useNavigate();
 
-  // Define navigation and account buttons
-  const navButtons: NavButton[] = useMemo(() => {
-    const baseButtons = [
-      {
-        text: "Home",
-        to: "/",
-        icon: <FontAwesomeIcon icon={faHouse} />,
-      },
-      {
-        text: "Auctions",
-        to: "/auctions",
-        icon: <FontAwesomeIcon icon={faFire} />,
-      },
-      {
-        text: "Kois",
-        to: "/kois",
-        icon: <FontAwesomeIcon icon={faFish} />,
-      },
-      {
-        text: "Blogs",
-        to: "/blog",
-        icon: <FontAwesomeIcon icon={faBook} />,
-      },
-      {
-        text: "About",
-        to: "/about",
-        icon: <FontAwesomeIcon icon={faQuestion} />,
-      },
-    ];
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const { scrollY } = useScroll();
 
-    if (isLoggedIn && user) {
-      const role = user.role_name; // Assuming the first role is the primary role
-      switch (role) {
-        case "manager":
-          baseButtons.push({
-            text: "Manager",
-            to: "/managers",
-            icon: <FontAwesomeIcon icon={faLock} />,
-          });
-          break;
-        case "staff":
-          baseButtons.push({
-            text: "Staff",
-            to: "/staffs",
-            icon: <FontAwesomeIcon icon={faScrewdriver} />,
-          });
-          break;
-        case "breeder":
-          baseButtons.push({
-            text: "Breeder",
-            to: "/breeders",
-            icon: <FontAwesomeIcon icon={faFish} />,
-          });
-          break;
-        case "member":
-          baseButtons.push({
-            text: "Orders",
-            to: "/orders",
-            icon: <FontAwesomeIcon icon={faCartShopping} />,
-          });
-          break;
-        // Add more cases for other roles if needed
-      }
-    }
-
-    return baseButtons;
-  }, [isLoggedIn, user]);
-
-  const accountButtons: NavButton[] = useMemo(() => {
-    if (isLoggedIn && user) {
-      const getMyAccountUrl = () => {
-        switch (user.role_name) {
-          case "breeder":
-            return "/breeders";
-          case "staff":
-            return "/staffs"; //notice the s at the end
-          case "manager":
-            return "/managers";
-          default:
-            return `/users/${user.id}`;
-        }
-      };
-
-      return [
-        {
-          // do like switch case
-          text: "My Account",
-          to: getMyAccountUrl(),
-          icon: <FontAwesomeIcon icon={faUser} />,
-        },
-        {
-          text: "Log Out",
-          onClick: () => {
-            authLogout();
-            navigate("/");
-          },
-          icon: <FontAwesomeIcon icon={faSignOutAlt} />,
-        },
-      ];
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const currentScrollY = latest;
+    if (currentScrollY < lastScrollY) {
+      setIsVisible(true);
     } else {
-      return [
-        {
-          text: "Sign up",
-          to: "/register",
-        },
-        {
-          text: "Login",
-          to: "/login",
-          icon: <FontAwesomeIcon icon={faUser} />,
-        },
-      ];
+      setIsVisible(false);
     }
-  }, [isLoggedIn, user, authLogout, navigate]);
-
-  // Determine if a path is active
-  const isActive = (path: string) => location.pathname === path;
-
-  // Toggle navigation menu
-  const toggleNav = () => setIsNavOpen(!isNavOpen);
-  const closeNav = () => setIsNavOpen(false);
+    setLastScrollY(currentScrollY);
+  });
 
   return (
-    <header className="sticky top-0 bg-gray-200 px-4 py-1 shadow-md z-50 transition-all duration-300 box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;">
-      <div className="mx-auto flex max-w-8xl items-center justify-between">
-        {/* Logo and Title */}
-        <button
-          onClick={() => navigate("/")}
-          id="home"
-          className="bg-transparent hover:bg-transparent flex items-center"
-        >
-          <img src="/favicon.svg" alt="Koi Auction Logo" className="w-8" />
-          <h1 className="ml-2 text-xl font-bold text-red-500 hidden lg:flex">
-            Koi Auction
-          </h1>
-        </button>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex md:gap-3">
-          {navButtons.map((button, index) => (
-            <HeaderButton
-              key={index}
-              button={button}
-              isActive={button.to ? isActive(button.to) : false}
-            />
-          ))}
-        </nav>
-
-        {/* Desktop Account Buttons */}
-        <div className="hidden md:flex md:gap-6">
-          {accountButtons.map((button, index) => (
-            <HeaderButton
-              key={index}
-              button={button}
-              isActive={false}
-              onClick={() => {
-                if (button.onClick) {
-                  button.onClick();
-                }
-                closeNav();
-              }}
-            />
-          ))}
+    <motion.header
+      initial={{ y: 0 }}
+      animate={{ y: isVisible ? 0 : -100 }}
+      transition={{ duration: 0.3 }}
+      className={`
+        fixed top-0
+        ${isNavCollapsed ? "left-20" : "left-64"} 
+        right-0
+        h-16 
+        bg-white 
+        shadow-sm
+        z-10 
+        transition-all 
+        duration-300
+      `}
+    >
+      <div className="flex items-center justify-between h-full px-6">
+        {/* Clock - Moved before search bar */}
+        <div className="mr-4">
+          <Clock />
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden bg-gray-200 rounded-2xl p-2"
-          onClick={toggleNav}
-          aria-label="Toggle navigation menu"
-        >
-          <FontAwesomeIcon
-            icon={isNavOpen ? faTimes : faBars}
-            className="h-6 w-6 text-gray-600"
-          />
-        </button>
-      </div>
+        {/* Search Bar */}
+        <div className="flex-1 max-w-2xl">
+          <div className="relative">
+            <FontAwesomeIcon
+              icon={faSearch}
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            />
+            <input
+              type="text"
+              placeholder="Search auctions, koi, or breeders..."
+              className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+        </div>
 
-      {/* Mobile Slide-Out Menu */}
-      <Sidebar
-        isOpen={isNavOpen}
-        onClose={closeNav}
-        navButtons={navButtons}
-        accountButtons={accountButtons}
-        isActive={isActive}
-      />
-    </header>
+        {/* Right Side Icons */}
+        <div className="flex items-center space-x-6">
+          {/* Cart/Role Icon */}
+          <div className="relative">
+            <button
+              onClick={() => {
+                if (isLoggedIn && user) {
+                  switch (user.role_name) {
+                    case "manager":
+                      navigate("/managers");
+                      break;
+                    case "staff":
+                      navigate("/staffs");
+                      break;
+                    case "breeder":
+                      navigate("/breeders");
+                      break;
+                    case "member":
+                      navigate("/orders");
+                      break;
+                  }
+                } else {
+                  toast.warning("Please login to access this feature!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                  });
+                }
+              }}
+              className="p-2 hover:bg-gray-100 rounded-full"
+            >
+              {isLoggedIn && user ? (
+                <>
+                  {user.role_name === "manager" && (
+                    <FontAwesomeIcon
+                      icon={faLock}
+                      className="h-6 w-6 text-gray-600"
+                    />
+                  )}
+                  {user.role_name === "staff" && (
+                    <FontAwesomeIcon
+                      icon={faScrewdriver}
+                      className="h-6 w-6 text-gray-600"
+                    />
+                  )}
+                  {user.role_name === "breeder" && (
+                    <FontAwesomeIcon
+                      icon={faFish}
+                      className="h-6 w-6 text-gray-600"
+                    />
+                  )}
+                  {user.role_name === "member" && (
+                    <FontAwesomeIcon
+                      icon={faCartShopping}
+                      className="h-6 w-6 text-gray-600"
+                    />
+                  )}
+                </>
+              ) : (
+                <FontAwesomeIcon
+                  icon={faCartShopping}
+                  className="h-6 w-6 text-gray-600"
+                />
+              )}
+            </button>
+          </div>
+
+          {/* User Profile */}
+          <div className="flex items-center space-x-3">
+            <div className="relative">
+              {/* Border animation container */}
+              <div className="absolute -inset-[2px] rounded-md bg-gradient-to-r from-red-600 via-yellow-500 to-red-600 opacity-75 blur-sm transition-all group-hover:opacity-100 animate-border-flow"></div>
+              
+              {/* Main button */}
+              <button
+                onClick={() => navigate("/login")}
+                className="relative flex overflow-hidden items-center text-sm font-medium bg-black text-white shadow hover:bg-black/90 h-9 px-4 py-2 max-w-52 whitespace-pre md:flex group w-full justify-center gap-2 rounded-md transition-all duration-300 ease-out"
+              >
+                <span className="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-40"></span>
+                <div className="flex items-center">
+                  <svg
+                    className="w-4 h-4 fill-current"
+                    viewBox="0 0 438.549 438.549"
+                  >
+                    <path d="M318.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-120 120c-12.5 12.5-12.5 32.8 0 45.3l16 16c12.5 12.5 32.8 12.5 45.3 0l4-4L325.4 293.4l-4 4c-12.5 12.5-12.5 32.8 0 45.3l16 16c12.5 12.5 32.8 12.5 45.3 0l120-120c12.5-12.5 12.5-32.8 0-45.3l-16-16c-12.5-12.5-32.8-12.5-45.3 0l-4 4L330.6 74.6l4-4c12.5-12.5 12.5-32.8 0-45.3l-16-16zm-152 288c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l48 48c12.5 12.5 32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-1.4-1.4L272 285.3 226.7 240 168 298.7l-1.4-1.4z" />
+                  </svg>
+                  <span className="ml-1 text-white">BID NOW</span>
+                </div>
+                <div className="ml-2 flex items-center gap-1 text-sm md:flex">
+                  <svg
+                    className="w-4 h-4 text-gray-500 transition-all duration-300 group-hover:text-yellow-300"
+                    data-slot="icon"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clipRule="evenodd"
+                      d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+                      fillRule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </motion.header>
   );
 };
 

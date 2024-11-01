@@ -9,10 +9,9 @@ import {
   Typography,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as yup from "yup";
-import NavigateButton from "~/components/shared/NavigateButton";
 import { LoginDTO } from "~/types/users.type";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import { loginValidationSchema } from "~/utils/validation.utils";
@@ -149,11 +148,12 @@ const Login: React.FC = () => {
             Don&apos;t have an account?
           </Typography>
 
-          <NavigateButton
-            text="Register here"
+          <Link
             to="/register"
-            className="ml-2 rounded px-4 py-2 font-bold text-blue-500 bg-white hover:bg-white"
-          />
+            className="ml-2 text-blue-500 hover:text-blue-700 font-semibold transition-colors duration-200"
+          >
+            Register here
+          </Link>
         </div>
       </form>
     </AuthFormContainer>

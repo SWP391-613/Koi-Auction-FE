@@ -44,11 +44,11 @@ interface HeaderButtonProps {
 }
 
 const HeaderButton: React.FC<HeaderButtonProps> = ({
-                                                     button,
-                                                     isActive,
-                                                     onClick,
-                                                     isCollapsed,
-                                                   }) => {
+  button,
+  isActive,
+  onClick,
+  isCollapsed,
+}) => {
   const baseClasses =
     "flex items-center rounded-full font-bold px-4 py-2 hover:text-white transition duration-300 ease-in-out";
   const activeClasses = "bg-[#4f92d1] text-white hover:text-white";

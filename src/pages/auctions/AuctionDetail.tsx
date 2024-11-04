@@ -16,6 +16,7 @@ import {
 } from "~/utils/apiUtils"; // Assume we have this API function
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { getAuctionStatusV2 } from "~/utils/dateTimeUtils";
+import KoiRegisterAuctionDetail from "./register/KoiRegisterAuctionDetail";
 
 const AuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();
@@ -90,36 +91,37 @@ const AuctionDetail: React.FC = () => {
   return (
     <>
       <div className="flex flex-col p-5">
-        <div className="mb-5 flex flex-col pt-3 pl-6 justify-between">
-          <Typography variant="h6">
-            Name: &nbsp;
-            <span className="text-2xl font-semibold text-black">
-              {auction.title}
-            </span>
-          </Typography>
-          <Typography variant="h6">
-            Status: &nbsp;
-            <FontAwesomeIcon icon={faClock} className="mr-2 text-blue-500" />
-            <span className="text-xl text-black glow-text">
-              {getAuctionStatusV2(
-                auction.start_time.toString(),
-                auction.end_time.toString(),
-              )}
-            </span>
-          </Typography>
-          <Typography variant="h6">
-            Start Time: &nbsp;
-            <span className="text-xl text-black">
-              {auction.start_time.toString()}
-            </span>
-          </Typography>
-          <Typography variant="h6">
-            End Time: &nbsp;
-            <span className="text-xl text-black">
-              {auction.end_time.toString()}
-            </span>
-          </Typography>
-        </div>
+        <KoiRegisterAuctionDetail />
+        {/*<div className="mb-5 flex flex-col pt-3 pl-6 justify-between">*/}
+        {/*  <Typography variant="h6">*/}
+        {/*    Name: &nbsp;*/}
+        {/*    <span className="text-2xl font-semibold text-black">*/}
+        {/*      {auction.title}*/}
+        {/*    </span>*/}
+        {/*  </Typography>*/}
+        {/*  <Typography variant="h6">*/}
+        {/*    Status: &nbsp;*/}
+        {/*    <FontAwesomeIcon icon={faClock} className="mr-2 text-blue-500" />*/}
+        {/*    <span className="text-xl text-black glow-text">*/}
+        {/*      {getAuctionStatusV2(*/}
+        {/*        auction.start_time.toString(),*/}
+        {/*        auction.end_time.toString(),*/}
+        {/*      )}*/}
+        {/*    </span>*/}
+        {/*  </Typography>*/}
+        {/*  <Typography variant="h6">*/}
+        {/*    Start Time: &nbsp;*/}
+        {/*    <span className="text-xl text-black">*/}
+        {/*      {auction.start_time.toString()}*/}
+        {/*    </span>*/}
+        {/*  </Typography>*/}
+        {/*  <Typography variant="h6">*/}
+        {/*    End Time: &nbsp;*/}
+        {/*    <span className="text-xl text-black">*/}
+        {/*      {auction.end_time.toString()}*/}
+        {/*    </span>*/}
+        {/*  </Typography>*/}
+        {/*</div>*/}
         <KoiInAuctionGrid kois={koiWithAuctionKoiData} auction={auction} />
       </div>
     </>

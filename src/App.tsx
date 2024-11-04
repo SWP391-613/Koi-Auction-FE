@@ -4,6 +4,9 @@ import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // import first
 
+// Cloudinary config
+import { Cloudinary } from "@cloudinary/url-gen";
+
 // Vercel integrations
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
@@ -59,6 +62,13 @@ const theme = createTheme({
   typography: {
     fontFamily:
       '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+  },
+});
+
+// Khởi tạo Cloudinary instance
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME, // Thêm vào .env: VITE_CLOUDINARY_CLOUD_NAME=dbke1s5nm
   },
 });
 
@@ -277,7 +287,7 @@ function AppContent() {
                           </PageTransition>
                         }
                       />
-                      {/*<Route path="/feedback/:orderId" element={<Feedback />} />*/}
+                      <Route path="/feedback/:orderId" element={<Feedback />} />
                     </Route>
                   </Routes>
                 </div>

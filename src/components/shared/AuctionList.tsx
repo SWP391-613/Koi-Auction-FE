@@ -17,11 +17,11 @@ interface AuctionListProps {
 }
 
 const AuctionList: React.FC<AuctionListProps> = ({
-  fetchAuctionsData,
-  cartComponent: CartComponent,
-  emptyMessage,
-  itemsPerPage = 18,
-}) => {
+                                                   fetchAuctionsData,
+                                                   cartComponent: CartComponent,
+                                                   emptyMessage,
+                                                   itemsPerPage = 18,
+                                                 }) => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true);

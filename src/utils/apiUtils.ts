@@ -189,6 +189,9 @@ export const fetchAuctionsByStatus = async (
 
     const response = await axios.get(`${API_URL}/auctions/koi_register`, {
       params: { page, limit, status },
+      headers: {
+        Authorization: `Bearer ${getUserCookieToken()}`,
+      },
     });
 
     // Map the response data to Auction model
@@ -225,7 +228,7 @@ export const fetchAuctionById = async (
       console.error("Error fetch auction:", error.response?.data);
       throw new Error(
         error.response?.data?.message ||
-          "An error occurred during fetch auction",
+        "An error occurred during fetch auction",
       );
     } else {
       throw new Error("An unexpected error occurred");
@@ -246,7 +249,7 @@ export const fetchAuctionKoi = async (
       console.error("Error fetch auction koi:", error.response?.data);
       throw new Error(
         error.response?.data?.message ||
-          "An error occurred during fetch auction koi",
+        "An error occurred during fetch auction koi",
       );
     } else {
       throw new Error("An unexpected error occurred");
@@ -486,7 +489,7 @@ export const fetchOrderDetails = async (
     if (axios.isAxiosError(error)) {
       throw new Error(
         error.response?.data?.message ||
-          "An error occurred during fetch order details",
+        "An error occurred during fetch order details",
       );
     }
     throw error;
@@ -524,7 +527,7 @@ export const createDepositPayment = async (
     if (axios.isAxiosError(err)) {
       throw new Error(
         err.response?.data?.message ||
-          "An error occurred during payment creation",
+        "An error occurred during payment creation",
       );
     }
   }
@@ -592,7 +595,7 @@ export const verifyOtpToVerifyUser = async (
       console.error("Error verifying OTP:", error.response?.data);
       throw new Error(
         error.response?.data?.message ||
-          "An error occurred during verification",
+        "An error occurred during verification",
       );
     } else {
       throw new Error("An unexpected error occurred");
@@ -620,7 +623,7 @@ export const verifyOtpIsCorrect = async (
       console.error("Error verifying OTP:", error.response?.data);
       throw new Error(
         error.response?.data?.message ||
-          "An error occurred during verification",
+        "An error occurred during verification",
       );
     } else {
       throw new Error("An unexpected error occurred");

@@ -3,19 +3,22 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "~/contexts/AuthContext";
 import FancyButton from "../../components/shared/FancyButton";
 import { koiBreeders } from "../../utils/data/koibreeders";
-import imageBackground from "../../assets/imageBackground.jpg";
 import { generateBlogPostsPreview } from "~/utils/data/blog.data";
 import { format } from "date-fns";
 import { useState, useEffect } from "react";
 import { KoiDetailModel } from "~/types/kois.type";
 import { getKoiData } from "~/utils/apiUtils";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { AdvancedVideo } from "@cloudinary/react";
+import { Cloudinary } from "@cloudinary/url-gen";
 
 const Home = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const [randomKois, setRandomKois] = useState<KoiDetailModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { scrollYProgress } = useScroll();
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
   useEffect(() => {
     const fetchRandomKois = async () => {
@@ -96,7 +99,7 @@ const Home = () => {
               <button
                 onClick={() => navigate(`/kois/${koi.id}`)}
                 type="button"
-                className="mt-6 flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-emerald-500 hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-4 py-2 overflow-hidden border-2 rounded-full group"
+                className="mt-6 flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-blue-500 hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-4 py-2 overflow-hidden border-2 rounded-full group"
               >
                 Explore
                 <svg
@@ -119,104 +122,118 @@ const Home = () => {
 
   const heroTextVariants = {
     hidden: { opacity: 0, x: -50 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       x: 0,
       transition: {
         duration: 0.8,
-        ease: "easeOut"
-      }
-    }
+        ease: "easeOut",
+      },
+    },
   };
 
   const buttonVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: {
         duration: 0.5,
-        ease: "easeOut"
-      }
+        ease: "easeOut",
+      },
     },
     hover: {
       scale: 1.05,
       transition: {
         duration: 0.2,
-        ease: "easeInOut"
-      }
-    }
+        ease: "easeInOut",
+      },
+    },
   };
+
+  const cld = new Cloudinary({
+    cloud: {
+      cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
+    },
+  });
+
+  const myVideo = cld.video("background_dbkstv").quality("auto").format("auto");
 
   return (
     <div>
-      <div className="relative min-h-screen">
-        {/* Background with gradient */}
-        <div className="absolute inset-0 z-0">
+      <div className="relative min-h-screen overflow-hidden">
+        <motion.div
+          className="absolute inset-0 z-0"
+          style={{ y: backgroundY }}
+          initial={false}
+        >
           <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/90 to-transparent z-10" />
-          <img
-            src={imageBackground}
-            alt="Background"
+          <AdvancedVideo
+            cldVid={myVideo}
+            autoPlay
+            muted
+            loop
+            playsInline
             className="object-cover w-full h-full"
           />
-        </div>
+        </motion.div>
 
         {/* Main Content */}
         <div className="relative z-20 container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-screen items-center">
             {/* Left Content */}
-            <motion.div 
+            <motion.div
               className="pt-20 lg:pt-0"
               initial="hidden"
               animate="visible"
               variants={{
                 visible: {
                   transition: {
-                    staggerChildren: 0.2 // Mỗi element sẽ hiện sau element trước 0.2s
-                  }
-                }
+                    staggerChildren: 0.2, // Mỗi element sẽ hiện sau element trước 0.2s
+                  },
+                },
               }}
             >
-              <motion.h2 
+              <motion.h2
                 variants={heroTextVariants}
                 className="text-red-600 text-xl mb-4"
               >
                 Welcome to Koi Auction
               </motion.h2>
-              
-              <motion.h1 
+
+              <motion.h1
                 variants={heroTextVariants}
                 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight"
               >
                 Your Direct Connection To The
                 <br />
-                Top <motion.span
+                Top{" "}
+                <motion.span
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 1, duration: 0.5 }}
-                  className="text-orange-500"
+                  className="text-red-600"
                 >
                   Japanese
-                </motion.span> Koi Breeders
+                </motion.span>{" "}
+                Koi Breeders
               </motion.h1>
-              
-              <motion.p 
+
+              <motion.p
                 variants={heroTextVariants}
                 className="text-white mb-8 max-w-xl"
               >
-                We are always pioneering in applying information technology to auction activities.
+                We are always pioneering in applying information technology to
+                auction activities.
               </motion.p>
 
               {/* Buttons section */}
-              <motion.div 
+              <motion.div
                 variants={buttonVariants}
                 className="flex flex-col sm:flex-row gap-4"
               >
                 {!isLoggedIn && (
-                  <motion.div
-                    whileHover="hover"
-                    variants={buttonVariants}
-                  >
+                  <motion.div whileHover="hover" variants={buttonVariants}>
                     <FancyButton
                       text="Join Now"
                       hoverText="Join Now"
@@ -225,10 +242,7 @@ const Home = () => {
                     />
                   </motion.div>
                 )}
-                <motion.div
-                  whileHover="hover"
-                  variants={buttonVariants}
-                >
+                <motion.div whileHover="hover" variants={buttonVariants}>
                   <FancyButton
                     text="View Auction"
                     hoverText="Bid Now"

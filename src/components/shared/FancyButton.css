@@ -1,11 +1,11 @@
 /* From Uiverse.io by marcelodolza */
 .button {
   --white: #ffffff; /* Màu trắng */
-  --blue-100: #a0d8e1; /* Màu xanh nước biển nhạt */
-  --blue-200: #7ec6d4; /* Màu xanh nước biển */
-  --blue-300: #4db8c8; /* Màu xanh nước biển đậm */
-  --blue-400: #0095b7; /* Màu xanh nước biển đậm hơn */
-  --blue-500: #007a8c; /* Màu xanh nước biển tối */
+  --blue-100: #4766f3; /* Màu xanh nước biển nhạt */
+  --blue-200: #2943d4; /* Màu xanh nước biển */
+  --blue-300: #1f22bb; /* Màu xanh nước biển đậm */
+  --blue-400: #0c22a1; /* Màu xanh nước biển đậm hơn */
+  --blue-500: #00095a; /* Màu xanh nước biển tối */
   --radius: 18px;
 
   border-radius: var(--radius);

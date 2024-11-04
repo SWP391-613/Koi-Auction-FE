@@ -4,6 +4,8 @@ import Avatar from "@mui/material/Avatar";
 import { useAuth } from "../../contexts/AuthContext";
 import { useUserData } from "../../hooks/useUserData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import SecurityIcon from "@mui/icons-material/Security";
+import DescriptionIcon from "@mui/icons-material/Description";
 import {
   faBars,
   faTimes,
@@ -42,11 +44,11 @@ interface HeaderButtonProps {
 }
 
 const HeaderButton: React.FC<HeaderButtonProps> = ({
-  button,
-  isActive,
-  onClick,
-  isCollapsed,
-}) => {
+                                                     button,
+                                                     isActive,
+                                                     onClick,
+                                                     isCollapsed,
+                                                   }) => {
   const baseClasses =
     "flex items-center rounded-full font-bold px-4 py-2 hover:text-white transition duration-300 ease-in-out";
   const activeClasses = "bg-[#4f92d1] text-white hover:text-white";
@@ -212,41 +214,6 @@ const Header = () => {
       },
     ];
 
-    if (isLoggedIn && user) {
-      const role = user.role_name; // Assuming the first role is the primary role
-      switch (role) {
-        case "manager":
-          baseButtons.push({
-            text: "Manager",
-            to: "/managers",
-            icon: <FontAwesomeIcon icon={faLock} />,
-          });
-          break;
-        case "staff":
-          baseButtons.push({
-            text: "Staff",
-            to: "/staffs",
-            icon: <FontAwesomeIcon icon={faScrewdriver} />,
-          });
-          break;
-        case "breeder":
-          baseButtons.push({
-            text: "Breeder",
-            to: "/breeders",
-            icon: <FontAwesomeIcon icon={faFish} />,
-          });
-          break;
-        case "member":
-          baseButtons.push({
-            text: "Orders",
-            to: "/orders",
-            icon: <FontAwesomeIcon icon={faCartShopping} />,
-          });
-          break;
-        // Add more cases for other roles if needed
-      }
-    }
-
     return baseButtons;
   }, [isLoggedIn, user]);
 
@@ -268,17 +235,14 @@ const Header = () => {
       return [
         {
           // do like switch case
-          text: "My Account",
+          text: "Privacy Policy",
           to: getMyAccountUrl(),
-          icon: <FontAwesomeIcon icon={faUser} />,
+          icon: <SecurityIcon />,
         },
         {
-          text: "Log Out",
-          onClick: () => {
-            authLogout();
-            navigate("/");
-          },
-          icon: <FontAwesomeIcon icon={faSignOutAlt} />,
+          text: "Terms and Conditions",
+          to: "/terms",
+          icon: <DescriptionIcon />,
         },
       ];
     } else {
@@ -340,7 +304,7 @@ const Header = () => {
         </ul>
       </div>
 
-      <div className="mt-auto p-4">
+      <div className="border-t-4 border-gray-700/50 mt-auto p-4">
         {accountButtons.map((button, index) => (
           <HeaderButton
             key={index}

@@ -277,7 +277,7 @@ function AppContent() {
                           </PageTransition>
                         }
                       />
-                      <Route path="/feedback/:orderId" element={<Feedback />} />
+                      {/*<Route path="/feedback/:orderId" element={<Feedback />} />*/}
                     </Route>
                   </Routes>
                 </div>

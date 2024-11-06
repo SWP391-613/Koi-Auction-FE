@@ -1,3 +1,4 @@
+import { animate } from "framer-motion";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -6,12 +7,14 @@ interface NavigateButtonProps {
   to: string;
   icon?: JSX.Element;
   className?: string;
+  animatedIcon?: boolean;
 }
 
 const NavigateButton: React.FC<NavigateButtonProps> = ({
   text = "Go Back",
   to,
   className = "",
+  animatedIcon = true,
 }) => {
   const navigate = useNavigate();
 
@@ -38,7 +41,7 @@ const NavigateButton: React.FC<NavigateButtonProps> = ({
           />
         </svg>
       </div>
-      <p className="translate pl-14">{text}</p>
+      {animatedIcon && <p className="translate pl-14">{text}</p>}
     </button>
   );
 };

@@ -11,6 +11,7 @@ import { koiBreeders } from "~/utils/data/koibreeders";
 type BaseKoiProps<T> = {
   kois: T[];
   renderActions?: (koi: T) => ReactNode;
+  buttonEffect?: (koi: T) => ReactNode;
   handleView?: (id: number) => void;
   handleEdit?: (id: number) => void;
   handleDelete?: (id: number) => void;
@@ -24,6 +25,7 @@ const KoiSearchGrid = <T extends KoiDetailModel>({
   kois,
   renderActions,
   getLinkUrl,
+  buttonEffect,
 }: KoiSearchGridProps<T>) => {
   return (
     <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -109,6 +111,8 @@ const KoiSearchGrid = <T extends KoiDetailModel>({
                 />
               </div>
               {renderActions && renderActions(koi)}
+              {/* Render buttonEffect with koi.id */}
+              {buttonEffect && buttonEffect(koi)}
             </div>
           </div>
         </div>

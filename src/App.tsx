@@ -208,93 +208,93 @@ function AppContent() {
                       </PageTransition>
                     }
                   />
+                  <Route
+                    path="/auth"
+                    element={
+                      <PageTransition>
+                        <AuthContainer />
+                      </PageTransition>
+                    }
+                  />
+
+                  {/* Protected routes for logged-in users */}
+                  <Route element={<ProtectedRoute />}>
                     <Route
-                      path="/auth"
+                      path="/auctions/register"
+                      element={<AddKoiToAuction />}
+                    />
+                    <Route
+                      path="/auctions/register/:id"
+                      element={<KoiRegisterAuctionDetail />}
+                    />
+                    <Route
+                      path="/kois/:id"
                       element={
                         <PageTransition>
-                          <AuthContainer />
+                          <KoiDetail />
                         </PageTransition>
                       }
                     />
-
-                    {/* Protected routes for logged-in users */}
-                    <Route element={<ProtectedRoute />}>
-                      <Route
-                        path="/auctions/register"
-                        element={<AddKoiToAuction />}
-                      />
-                      <Route
-                        path="/auctions/register/:id"
-                        element={<KoiRegisterAuctionDetail />}
-                      />
-                      <Route
-                        path="/kois/:id"
-                        element={
-                          <PageTransition>
-                            <KoiDetail />
-                          </PageTransition>
-                        }
-                      />
-                      <Route
-                        path="/users/*"
-                        element={
-                          <PageTransition>
-                            <MemberLayout />
-                          </PageTransition>
-                        }
-                      ></Route>
-                      <Route
-                        path="/managers/*"
-                        element={
-                          <PageTransition>
-                            <ManagerLayout />
-                          </PageTransition>
-                        }
-                      ></Route>
-                      <Route
-                        path="/breeders/*"
-                        element={
-                          <PageTransition>
-                            <BreederLayout />
-                          </PageTransition>
-                        }
-                      ></Route>
-                      <Route
-                        path="/staffs/*"
-                        element={
-                          <PageTransition>
-                            <StaffLayout />
-                          </PageTransition>
-                        }
-                      ></Route>
-                      <Route
-                        path="/orders/*"
-                        element={
-                          <PageTransition>
-                            <OrderLayout />
-                          </PageTransition>
-                        }
-                      />
-                      <Route path="/payments/*" element={<PaymentLayout />} />
-                      <Route
-                        path="/order-detail/:id"
-                        element={
-                          <PageTransition>
-                            <UserOrderDetail />
-                          </PageTransition>
-                        }
-                      />
-                      <Route
-                        path="/payments/vnpay-payment-return"
-                        element={
-                          <PageTransition>
-                            <VNPayReturn />
-                          </PageTransition>
-                        }
-                      />
-                      <Route path="/feedback/:orderId" element={<Feedback />} />
-                    </Route>
-                  </Routes>
+                    <Route
+                      path="/users/*"
+                      element={
+                        <PageTransition>
+                          <MemberLayout />
+                        </PageTransition>
+                      }
+                    ></Route>
+                    <Route
+                      path="/managers/*"
+                      element={
+                        <PageTransition>
+                          <ManagerLayout />
+                        </PageTransition>
+                      }
+                    ></Route>
+                    <Route
+                      path="/breeders/*"
+                      element={
+                        <PageTransition>
+                          <BreederLayout />
+                        </PageTransition>
+                      }
+                    ></Route>
+                    <Route
+                      path="/staffs/*"
+                      element={
+                        <PageTransition>
+                          <StaffLayout />
+                        </PageTransition>
+                      }
+                    ></Route>
+                    <Route
+                      path="/orders/*"
+                      element={
+                        <PageTransition>
+                          <OrderLayout />
+                        </PageTransition>
+                      }
+                    />
+                    <Route path="/payments/*" element={<PaymentLayout />} />
+                    <Route
+                      path="/order-detail/:id"
+                      element={
+                        <PageTransition>
+                          <UserOrderDetail />
+                        </PageTransition>
+                      }
+                    />
+                    <Route
+                      path="/payments/vnpay-payment-return"
+                      element={
+                        <PageTransition>
+                          <VNPayReturn />
+                        </PageTransition>
+                      }
+                    />
+                    <Route path="/feedback/:orderId" element={<Feedback />} />
+                  </Route>
+                </Routes>
               </main>
             </div>
             <Footer />

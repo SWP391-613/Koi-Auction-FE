@@ -55,6 +55,7 @@ import Kois from "./pages/kois/Kois";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import BreederInfo from "./pages/static/BreederInfo";
 import PageTransition from "./components/shared/PageTransition";
+import AuthContainer from "./pages/auth/AuthContainer";
 
 const TITLE = "Auction Koi";
 
@@ -208,6 +209,14 @@ function AppContent() {
                       element={
                         <PageTransition>
                           <Kois />
+                        </PageTransition>
+                      }
+                    />
+                    <Route
+                      path="/auth"
+                      element={
+                        <PageTransition>
+                          <AuthContainer />
                         </PageTransition>
                       }
                     />

@@ -104,9 +104,10 @@ const OtpVerification: React.FC = () => {
           />
         ))}
       </div>
-      <span class="text-zinc-500 text-[12px] text-center"
-      >Please enter the 6-digits one time password (OTP) that we sent to your
-      registered email</span>
+      <span class="text-zinc-500 text-[12px] text-center">
+        Please enter the 6-digits one time password (OTP) that we sent to your
+        registered email
+      </span>
       <button
         onClick={handleSubmit}
         className="mt-4 bg-sky-500 text-white py-2 px-4 rounded-md hover:bg-sky-600/80 transition duration-300"

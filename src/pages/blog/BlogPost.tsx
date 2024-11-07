@@ -19,7 +19,7 @@ const BlogPost: React.FC = () => {
         icon={<FontAwesomeIcon icon={faArrowLeft} />}
         text="Back to Blog"
         to="/blog"
-        className="mb-4 text-blue-500"
+        className="mb-4 text-sky-500"
       />
       <article className="prose prose-lg mx-auto flex flex-col items-center mb-20">
         <h1 className="text-2xl">{post.title}</h1>

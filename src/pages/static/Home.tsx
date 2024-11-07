@@ -11,6 +11,7 @@ import { getKoiData } from "~/utils/apiUtils";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { AdvancedVideo } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
+import KoiSearchGrid from "~/components/shared/KoiSearchGrid";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const Home = () => {
     const fetchRandomKois = async () => {
       try {
         setIsLoading(true);
-        const response = await getKoiData(1, 4);
+        const response = await getKoiData(1, 8);
         console.log("API Response:", response);
         setRandomKois(response.item || []);
       } catch (error) {
@@ -45,78 +46,29 @@ const Home = () => {
     const { user } = useAuth();
 
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {kois.map((koi, index) => (
-          <div
-            key={`${koi.id}-${index}`}
-            className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+      <KoiSearchGrid
+        kois={kois}
+        getLinkUrl={(koi) => `/kois/${koi.id}`}
+        buttonEffect={(koi) => (
+          <button
+            onClick={() => navigate(`/kois/${koi.id}`)}
+            type="button"
+            className="mt-6 flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-blue-500 hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-4 py-2 overflow-hidden border-2 rounded-full group"
           >
-            {/* Ảnh Koi */}
-            <div className="relative h-64 bg-[#4086c7] overflow-hidden">
-              {koi.thumbnail ? (
-                <img
-                  src={koi.thumbnail}
-                  alt={koi.name}
-                  className="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full">
-                  <span className="text-white">No Image</span>
-                </div>
-              )}
-            </div>
-
-            {/* Thông tin Koi */}
-            <div className="p-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                {koi.name}
-              </h2>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Length</span>
-                  <span className="font-semibold text-gray-800">
-                    {koi.length} cm
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Sex</span>
-                  <span className="font-semibold text-gray-800">{koi.sex}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Age</span>
-                  <span className="font-semibold text-gray-800">
-                    {koi.age} years
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Category</span>
-                  <span className="font-semibold text-gray-800">
-                    {koi.category_id}
-                  </span>
-                </div>
-              </div>
-              {/* Nút Explore với animation */}
-              <button
-                onClick={() => navigate(`/kois/${koi.id}`)}
-                type="button"
-                className="mt-6 flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-blue-500 hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-4 py-2 overflow-hidden border-2 rounded-full group"
-              >
-                Explore
-                <svg
-                  className="w-8 h-8 justify-end group-hover:rotate-90 group-hover:bg-gray-50 text-gray-50 ease-linear duration-300 rounded-full border border-gray-700 group-hover:border-none p-2 rotate-45"
-                  viewBox="0 0 16 19"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M7 18C7 18.5523 7.44772 19 8 19C8.55228 19 9 18.5523 9 18H7ZM8.70711 0.292893C8.31658 -0.0976311 7.68342 -0.0976311 7.29289 0.292893L0.928932 6.65685C0.538408 7.04738 0.538408 7.68054 0.928932 8.07107C1.31946 8.46159 1.95262 8.46159 2.34315 8.07107L8 2.41421L13.6569 8.07107C14.0474 8.46159 14.6805 8.46159 15.0711 8.07107C15.4616 7.68054 15.4616 7.04738 15.0711 6.65685L8.70711 0.292893ZM9 18L9 1H7L7 18H9Z"
-                    className="fill-gray-800 group-hover:fill-gray-800"
-                  ></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+            Explore
+            <svg
+              className="w-8 h-8 justify-end group-hover:rotate-90 group-hover:bg-gray-50 text-gray-50 ease-linear duration-300 rounded-full border border-gray-700 group-hover:border-none p-2 rotate-45"
+              viewBox="0 0 16 19"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7 18C7 18.5523 7.44772 19 8 19C8.55228 19 9 18.5523 9 18H7ZM8.70711 0.292893C8.31658 -0.0976311 7.68342 -0.0976311 7.29289 0.292893L0.928932 6.65685C0.538408 7.04738 0.538408 7.68054 0.928932 8.07107C1.31946 8.46159 1.95262 8.46159 2.34315 8.07107L8 2.41421L13.6569 8.07107C14.0474 8.46159 14.6805 8.46159 15.0711 8.07107C15.4616 7.68054 15.4616 7.04738 15.0711 6.65685L8.70711 0.292893ZM9 18L9 1H7L7 18H9Z"
+                className="fill-gray-800 group-hover:fill-gray-800"
+              ></path>
+            </svg>
+          </button>
+        )}
+      />
     );
   };
 
@@ -283,7 +235,7 @@ const Home = () => {
 
       <div>
         {/* Partner Breeders section */}
-        <div className="py-16 px-4">
+        <div className="py-4 px-4">
           <div className="container mx-auto">
             {/* Section Title with decorative arrows */}
             <div className="text-center mb-12">
@@ -295,18 +247,21 @@ const Home = () => {
             </div>
 
             {/* Partners Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
               {koiBreeders.map((breeder) => (
                 <div
                   key={breeder.id}
-                  className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 p-6 flex items-center justify-center cursor-pointer"
+                  className="bg-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-4 flex flex-col items-center justify-center cursor-pointer"
                   onClick={() => handleBreederClick(breeder.id)}
                 >
                   <img
                     src={breeder.avatar_url}
                     alt={`${breeder.name} logo`}
-                    className="h-12 w-auto object-contain"
+                    className="h-20 w-auto object-contain mb-2"
                   />
+                  <p className="text-center font-medium text-gray-700">
+                    {breeder.name}
+                  </p>
                 </div>
               ))}
             </div>
@@ -315,7 +270,7 @@ const Home = () => {
       </div>
 
       {/* News Section */}
-      <div className="py-16 px-4 bg-gray-50">
+      <div className="py-8 px-4">
         <div className="container mx-auto">
           {/* Section Title */}
           <div className="text-center mb-12">
@@ -328,7 +283,7 @@ const Home = () => {
 
           {/* News Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {generateBlogPostsPreview(4).map((post) => (
+            {generateBlogPostsPreview(6).map((post) => (
               <Link
                 key={post.id}
                 to={`/blog/${post.id}`}
@@ -357,6 +312,17 @@ const Home = () => {
                 </div>
               </Link>
             ))}
+          </div>
+
+          {/* See more button */}
+
+          <div className="text-center mt-8">
+            <Link
+              to="/blog"
+              className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 hover:underline transition-all duration-300 inline-block"
+            >
+              See more news
+            </Link>
           </div>
         </div>
       </div>

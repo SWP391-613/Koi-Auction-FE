@@ -23,10 +23,10 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({
-                                                           title,
-                                                           navLinks,
-                                                           children,
-                                                         }) => {
+  title,
+  navLinks,
+  children,
+}) => {
   const location = useLocation();
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
 

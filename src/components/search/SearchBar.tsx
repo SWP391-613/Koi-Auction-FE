@@ -13,7 +13,7 @@ export const SearchBar = () => {
         <input
           type="text"
           placeholder="Search auctions, koi, or breeders..."
-          className="bg-gray-300  w-full pl-10 pr-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:border-blue-500"
+          className="bg-white  w-full pl-10 pr-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:border-blue-500"
         />
       </div>
     </div>

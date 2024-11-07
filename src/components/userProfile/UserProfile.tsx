@@ -59,7 +59,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
         {!isLoggedIn ? (
           <button
             onClick={() => navigate("/login")}
-            className="relative flex overflow-hidden items-center text-sm font-medium bg-black text-white shadow hover:bg-black/90 h-9 px-4 py-2 max-w-52 whitespace-pre md:flex group w-full justify-center gap-2 rounded-md transition-all duration-300 ease-out"
+            className="relative flex overflow-hidden items-center text-sm font-medium bg-[#CF0A0A] text-white shadow hover:bg-black/90 h-9 px-4 py-2 max-w-52 whitespace-pre md:flex group w-full justify-center gap-2 rounded-md transition-all duration-300 ease-out"
           >
             <span className="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-40"></span>
             <div className="flex items-center">
@@ -73,7 +73,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
             </div>
             <div className="ml-2 flex items-center gap-1 text-sm md:flex">
               <svg
-                className="w-4 h-4 text-gray-500 transition-all duration-300 group-hover:text-yellow-300"
+                className="w-4 h-4 text-white transition-all duration-300 group-hover:text-yellow-300"
                 data-slot="icon"
                 aria-hidden="true"
                 fill="currentColor"

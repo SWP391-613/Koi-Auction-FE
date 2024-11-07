@@ -248,13 +248,8 @@ const Header = () => {
     } else {
       return [
         {
-          text: "Sign up",
-          to: "/register",
-          icon: <FontAwesomeIcon icon={faRightToBracket} />,
-        },
-        {
           text: "Login",
-          to: "/login",
+          to: "/auth",
           icon: <FontAwesomeIcon icon={faUser} />,
         },
       ];

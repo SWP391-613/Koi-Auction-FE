@@ -5,10 +5,10 @@ import FancyButton from "../../components/shared/FancyButton";
 import { koiBreeders } from "../../utils/data/koibreeders";
 import { generateBlogPostsPreview } from "~/utils/data/blog.data";
 import { format } from "date-fns";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { KoiDetailModel } from "~/types/kois.type";
 import { getKoiData } from "~/utils/apiUtils";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { AdvancedVideo } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
 import KoiSearchGrid from "~/components/shared/KoiSearchGrid";
@@ -20,6 +20,16 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { scrollYProgress } = useScroll();
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+
+  // Add refs for scroll sections
+  const featuredRef = useRef(null);
+  const breedersRef = useRef(null);
+  const newsRef = useRef(null);
+  
+  // Check if sections are in view
+  const isFeaturedInView = useInView(featuredRef, { once: true, margin: "-100px" });
+  const isBreedersInView = useInView(breedersRef, { once: true, margin: "-100px" });
+  const isNewsInView = useInView(newsRef, { once: true, margin: "-100px" });
 
   useEffect(() => {
     const fetchRandomKois = async () => {
@@ -209,7 +219,13 @@ const Home = () => {
       </div>
 
       {/* Featured Kois Section */}
-      <div className="py-16 px-4 bg-white">
+      <motion.div 
+        ref={featuredRef}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: isFeaturedInView ? 1 : 0, y: isFeaturedInView ? 0 : 50 }}
+        transition={{ duration: 0.6 }}
+        className="py-16 px-4 bg-white"
+      >
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="flex items-center justify-center gap-3 text-3xl font-bold text-gray-900">
@@ -231,48 +247,63 @@ const Home = () => {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
 
-      <div>
-        {/* Partner Breeders section */}
-        <div className="py-4 px-4">
-          <div className="container mx-auto">
-            {/* Section Title with decorative arrows */}
-            <div className="text-center mb-12">
-              <h2 className="flex items-center justify-center gap-3 text-3xl font-bold text-gray-900">
-                <span className="text-red-600">→</span>
-                Our Partner Breeders
-                <span className="text-red-600">←</span>
-              </h2>
-            </div>
-
-            {/* Partners Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
-              {koiBreeders.map((breeder) => (
-                <div
-                  key={breeder.id}
-                  className="bg-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-4 flex flex-col items-center justify-center cursor-pointer"
-                  onClick={() => handleBreederClick(breeder.id)}
-                >
-                  <img
-                    src={breeder.avatar_url}
-                    alt={`${breeder.name} logo`}
-                    className="h-20 w-auto object-contain mb-2"
-                  />
-                  <p className="text-center font-medium text-gray-700">
-                    {breeder.name}
-                  </p>
-                </div>
-              ))}
-            </div>
+      {/* Partner Breeders section */}
+      <motion.div
+        ref={breedersRef}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: isBreedersInView ? 1 : 0, y: isBreedersInView ? 0 : 50 }}
+        transition={{ duration: 0.6 }}
+        className="py-4 px-4"
+      >
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="flex items-center justify-center gap-3 text-3xl font-bold text-gray-900">
+              <span className="text-red-600">→</span>
+              Our Partner Breeders
+              <span className="text-red-600">←</span>
+            </h2>
           </div>
+
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isBreedersInView ? 1 : 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4"
+          >
+            {koiBreeders.map((breeder, index) => (
+              <motion.div
+                key={breeder.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: isBreedersInView ? 1 : 0, y: isBreedersInView ? 0 : 20 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="bg-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-4 flex flex-col items-center justify-center cursor-pointer"
+                onClick={() => handleBreederClick(breeder.id)}
+              >
+                <img
+                  src={breeder.avatar_url}
+                  alt={`${breeder.name} logo`}
+                  className="h-20 w-auto object-contain mb-2"
+                />
+                <p className="text-center font-medium text-gray-700">
+                  {breeder.name}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* News Section */}
-      <div className="py-8 px-4">
+      <motion.div
+        ref={newsRef}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: isNewsInView ? 1 : 0, y: isNewsInView ? 0 : 50 }}
+        transition={{ duration: 0.6 }}
+        className="py-8 px-4"
+      >
         <div className="container mx-auto">
-          {/* Section Title */}
           <div className="text-center mb-12">
             <h2 className="flex items-center justify-center gap-3 text-3xl font-bold text-gray-900">
               <span className="text-red-600">→</span>
@@ -281,51 +312,64 @@ const Home = () => {
             </h2>
           </div>
 
-          {/* News Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {generateBlogPostsPreview(6).map((post) => (
-              <Link
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isNewsInView ? 1 : 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+            {generateBlogPostsPreview(6).map((post, index) => (
+              <motion.div
                 key={post.id}
-                to={`/blog/${post.id}`}
-                className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: isNewsInView ? 1 : 0, y: isNewsInView ? 0 : 20 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                {/* Date Badge */}
-                <div className="relative">
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-md text-sm">
-                    {format(new Date(), "dd/MM/yyyy")}
+                <Link
+                  to={`/blog/${post.id}`}
+                  className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300"
+                >
+                  {/* Date Badge */}
+                  <div className="relative">
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-md text-sm">
+                      {format(new Date(), "dd/MM/yyyy")}
+                    </div>
                   </div>
-                </div>
 
-                {/* Content */}
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold mb-2 line-clamp-2 group-hover:text-red-600 transition-colors">
-                    {post.title}
-                  </h3>
-                  <p className="text-gray-600 text-sm line-clamp-2">
-                    {post.excerpt}
-                  </p>
-                </div>
-              </Link>
+                  {/* Content */}
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold mb-2 line-clamp-2 group-hover:text-red-600 transition-colors">
+                      {post.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm line-clamp-2">
+                      {post.excerpt}
+                    </p>
+                  </div>
+                </Link>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
-          {/* See more button */}
-
-          <div className="text-center mt-8">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isNewsInView ? 1 : 0 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            className="text-center mt-8"
+          >
             <Link
               to="/blog"
               className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 hover:underline transition-all duration-300 inline-block"
             >
               See more news
             </Link>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

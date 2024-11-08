@@ -14,6 +14,7 @@ import { routeUserToEachPage } from "~/components/auth/RoleBasedRoute";
 import FormField from "~/components/forms/FormField";
 import CheckboxField from "~/components/forms/CheckboxField";
 import styles from "./styles.module.css";
+import { Typography } from "@mui/material";
 
 const SocialLinks = () => (
   <div className={styles.socialContainer}>
@@ -149,12 +150,13 @@ const LoginForm = () => {
         control={control}
         errors={errors}
       />
-      <SocialLinks />
-      <div>
-        <div className="flex items-center justify-between mt-[-4]">
-          <span className="w-1/5 border-b dark:border-gray-600 md:w-1/2 mx-auto"></span>
-        </div>
-        <button className={styles.formButton}>Sign In</button>
+      <button className={styles.formButton}>Sign In</button>
+      <div className="flex flex-col items-center">
+        <span className="w-1/5 border-b dark:border-gray-600 md:w-1/2 mx-auto"></span>
+        <Typography variant="h6" className="text-gray-500">
+          Or continue with
+        </Typography>
+        <SocialLinks />
       </div>
     </form>
   );
@@ -197,79 +199,77 @@ const RegisterForm = () => {
   };
 
   return (
-    <div>
-      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <h1 className={styles.title}>Create Account</h1>
+    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <h1 className={styles.title}>Sign Up</h1>
 
-        <div className={styles.nameFieldsContainer}>
-          <div className={styles.inputGroup}>
-            <FormField
-              name="first_name"
-              label="First Name"
-              control={control}
-              errors={errors}
-            />
-          </div>
-          <div className={styles.inputGroup}>
-            <FormField
-              name="last_name"
-              label="Last Name"
-              control={control}
-              errors={errors}
-            />
-          </div>
-        </div>
-
+      <div className={styles.nameFieldsContainer}>
         <div className={styles.inputGroup}>
           <FormField
-            name="email"
-            label="Email Address"
-            type="email"
+            name="first_name"
+            label="First Name"
             control={control}
             errors={errors}
           />
         </div>
-
         <div className={styles.inputGroup}>
           <FormField
-            name="password"
-            label="Password"
-            type="password"
+            name="last_name"
+            label="Last Name"
             control={control}
             errors={errors}
           />
         </div>
+      </div>
 
-        <div className={styles.inputGroup}>
-          <FormField
-            name="confirm_password"
-            label="Confirm Password"
-            type="password"
-            control={control}
-            errors={errors}
-          />
-        </div>
+      <div className={styles.inputGroup}>
+        <FormField
+          name="email"
+          label="Email Address"
+          type="email"
+          control={control}
+          errors={errors}
+        />
+      </div>
 
-        <div className={styles.checkboxGroup}>
-          <CheckboxField
-            name="acceptPolicy"
-            label="I agree to the terms and policy"
-            control={control}
-            errors={errors}
-          />
-        </div>
-        <div className={styles.checkboxGroup}>
-          <CheckboxField
-            name="receiveEmailNotifications"
-            label="Send me promotional emails about AuctionKoi auctions"
-            control={control}
-            errors={errors}
-          />
-        </div>
+      <div className={styles.inputGroup}>
+        <FormField
+          name="password"
+          label="Password"
+          type="password"
+          control={control}
+          errors={errors}
+        />
+      </div>
 
-        <button className={styles.formButton}>Create Account</button>
-      </form>
-    </div>
+      <div className={styles.inputGroup}>
+        <FormField
+          name="confirm_password"
+          label="Confirm Password"
+          type="password"
+          control={control}
+          errors={errors}
+        />
+      </div>
+
+      <div className={styles.checkboxGroup}>
+        <CheckboxField
+          name="acceptPolicy"
+          label="I agree to the terms and policy"
+          control={control}
+          errors={errors}
+        />
+      </div>
+      <div className={styles.checkboxGroup}>
+        <CheckboxField
+          name="receiveEmailNotifications"
+          label="Send me promotional emails about AuctionKoi auctions"
+          control={control}
+          errors={errors}
+        />
+      </div>
+
+      <button className={styles.formButton}>Submit</button>
+    </form>
   );
 };
 

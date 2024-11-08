@@ -31,7 +31,7 @@ const KoiOwnerSearchComponent: React.FC<KoiOwnerSearchComponentProps> = ({
   }, [loading, onSearchStateChange]);
 
   return (
-    <div className="container mx-auto p-4 mt-5">
+    <div className="container mx-auto p-4 mt-10">
       <div className="bg-gray-200 p-4 rounded-xl">
         <Typography
           variant="h6"

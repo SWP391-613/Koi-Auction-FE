@@ -16,21 +16,6 @@ const Header = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
 
-  // Scroll logic
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const { scrollY } = useScroll();
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    const currentScrollY = latest;
-    if (currentScrollY < lastScrollY) {
-      setIsVisible(true);
-    } else {
-      setIsVisible(false);
-    }
-    setLastScrollY(currentScrollY);
-  });
-
   const handleRoleIconClick = () => {
     if (isLoggedIn && user) {
       switch (user.role_name) {
@@ -63,11 +48,10 @@ const Header = () => {
   return (
     <motion.header
       initial={{ y: 0 }}
-      animate={{ y: isVisible ? 0 : -100 }}
       transition={{ duration: 0.3 }}
       className={`
         fixed top-0
-        ${isNavCollapsed ? "left-20" : "left-64"}
+        ${isNavCollapsed ? "left-20" : "left-60"}
         right-0
         h-16
         bg-gray-300

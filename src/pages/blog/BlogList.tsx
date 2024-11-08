@@ -5,7 +5,7 @@ import { generateBlogPostsPreview } from "~/utils/data/blog.data";
 
 const BlogList: React.FC = () => {
   return (
-    <div className="container mx-auto mt-8 px-4">
+    <div className="container mx-auto mt-8 p-4 mt-10">
       <h1 className="mb-8 text-4xl font-bold">Koi Blog</h1>
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {generateBlogPostsPreview(20).map((post, index) => (

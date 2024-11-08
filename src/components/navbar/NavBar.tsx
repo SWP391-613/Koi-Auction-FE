@@ -265,7 +265,7 @@ const Header = () => {
 
   return (
     <nav
-      className={`fixed left-0 top-0 flex h-full ${isNavCollapsed ? "w-20" : "w-64"} flex-col bg-[#1E2640] text-white transition-all duration-300`}
+      className={`fixed left-0 top-0 flex h-full ${isNavCollapsed ? "w-20" : "w-60"} flex-col bg-[#1E2640] text-white transition-all duration-300`}
     >
       <div className="p-4 flex justify-between items-center">
         <button

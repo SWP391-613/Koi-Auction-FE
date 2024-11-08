@@ -85,7 +85,7 @@ function AppContent() {
             <div className="flex flex-grow">
               <NavBar />
               <main
-                className={`flex-1 ${isNavCollapsed ? "ml-20" : "ml-64"} pt-16 transition-all duration-300`}
+                className={`flex-1 ${isNavCollapsed ? "ml-20" : "ml-60"} pt-16 transition-all duration-300`}
               >
                 <Header />
                 <Routes>

@@ -164,7 +164,7 @@ const Home = () => {
             >
               <motion.h2
                 variants={heroTextVariants}
-                className="text-red-600 text-xl mb-4"
+                className="text-red-600 text-2xl mb-4"
               >
                 Welcome to Koi Auction
               </motion.h2>
@@ -187,10 +187,7 @@ const Home = () => {
                 Koi Breeders
               </motion.h1>
 
-              <motion.p
-                variants={heroTextVariants}
-                className="text-white mb-8 max-w-xl"
-              >
+              <motion.p variants={heroTextVariants} className="text-white mb-8">
                 We are always pioneering in applying information technology to
                 auction activities.
               </motion.p>

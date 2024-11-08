@@ -205,7 +205,7 @@ const Home = () => {
                     <FancyButton
                       text="Join Now"
                       hoverText="Join Now"
-                      to="/register"
+                      to="/auth"
                       className="w-full sm:w-auto"
                     />
                   </motion.div>

@@ -25,10 +25,16 @@ const Home = () => {
   const featuredRef = useRef(null);
   const breedersRef = useRef(null);
   const newsRef = useRef(null);
-  
+
   // Check if sections are in view
-  const isFeaturedInView = useInView(featuredRef, { once: true, margin: "-100px" });
-  const isBreedersInView = useInView(breedersRef, { once: true, margin: "-100px" });
+  const isFeaturedInView = useInView(featuredRef, {
+    once: true,
+    margin: "-100px",
+  });
+  const isBreedersInView = useInView(breedersRef, {
+    once: true,
+    margin: "-100px",
+  });
   const isNewsInView = useInView(newsRef, { once: true, margin: "-100px" });
 
   useEffect(() => {
@@ -219,10 +225,13 @@ const Home = () => {
       </div>
 
       {/* Featured Kois Section */}
-      <motion.div 
+      <motion.div
         ref={featuredRef}
         initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: isFeaturedInView ? 1 : 0, y: isFeaturedInView ? 0 : 50 }}
+        animate={{
+          opacity: isFeaturedInView ? 1 : 0,
+          y: isFeaturedInView ? 0 : 50,
+        }}
         transition={{ duration: 0.6 }}
         className="py-16 px-4 bg-white"
       >
@@ -253,7 +262,10 @@ const Home = () => {
       <motion.div
         ref={breedersRef}
         initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: isBreedersInView ? 1 : 0, y: isBreedersInView ? 0 : 50 }}
+        animate={{
+          opacity: isBreedersInView ? 1 : 0,
+          y: isBreedersInView ? 0 : 50,
+        }}
         transition={{ duration: 0.6 }}
         className="py-4 px-4"
       >
@@ -266,7 +278,7 @@ const Home = () => {
             </h2>
           </div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: isBreedersInView ? 1 : 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -276,7 +288,10 @@ const Home = () => {
               <motion.div
                 key={breeder.id}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: isBreedersInView ? 1 : 0, y: isBreedersInView ? 0 : 20 }}
+                animate={{
+                  opacity: isBreedersInView ? 1 : 0,
+                  y: isBreedersInView ? 0 : 20,
+                }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-4 flex flex-col items-center justify-center cursor-pointer"
                 onClick={() => handleBreederClick(breeder.id)}
@@ -312,7 +327,7 @@ const Home = () => {
             </h2>
           </div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: isNewsInView ? 1 : 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -322,7 +337,10 @@ const Home = () => {
               <motion.div
                 key={post.id}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: isNewsInView ? 1 : 0, y: isNewsInView ? 0 : 20 }}
+                animate={{
+                  opacity: isNewsInView ? 1 : 0,
+                  y: isNewsInView ? 0 : 20,
+                }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <Link

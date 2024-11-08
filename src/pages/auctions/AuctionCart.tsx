@@ -8,7 +8,7 @@ interface AuctionCartProps {
   items: AuctionModel[];
 }
 
-const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
+export const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
   return (
     <div className="koi-container grid grid-cols-1 gap-3 p-5 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3">
       {items.map((auction) => (
@@ -24,4 +24,18 @@ const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {
   );
 };
 
-export default AuctionCart;
+export const AuctionRegisterCart: React.FC<AuctionCartProps> = ({ items }) => {
+  return (
+    <div className="koi-container grid grid-cols-1 gap-3 p-5 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3">
+      {items.map((auction) => (
+        <AuctionCard
+          key={auction.id}
+          auction={auction}
+          link={`/auctions/register/${auction.id}`}
+          getStatus={getAuctionStatus}
+        />
+      ))}
+      <ScrollToTop smooth />
+    </div>
+  );
+};

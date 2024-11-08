@@ -1,10 +1,10 @@
 import { Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { AuctionModel } from "~/types/auctions.type";
-import AuctionSearchComponent from "../search/AuctionSearchComponent";
+import AuctionUpcomingSearchComponent from "../search/AuctionUpcomingSearchComponent";
 import LoadingComponent from "./LoadingComponent";
 
-interface AuctionListProps {
+interface AuctionUpcomingListProps {
   fetchAuctionsData: (
     page: number,
     itemsPerPage: number,
@@ -14,7 +14,7 @@ interface AuctionListProps {
   itemsPerPage?: number;
 }
 
-const AuctionList: React.FC<AuctionListProps> = ({
+const AuctionUpcomingList: React.FC<AuctionUpcomingListProps> = ({
   fetchAuctionsData,
   cartComponent: CartComponent,
   emptyMessage,
@@ -107,7 +107,7 @@ const AuctionList: React.FC<AuctionListProps> = ({
             </div>
           ) : (
             <>
-              <AuctionSearchComponent
+              <AuctionUpcomingSearchComponent
                 onSearchStateChange={handleSearchStateChange}
               />
             </>
@@ -118,4 +118,4 @@ const AuctionList: React.FC<AuctionListProps> = ({
   );
 };
 
-export default AuctionList;
+export default AuctionUpcomingList;

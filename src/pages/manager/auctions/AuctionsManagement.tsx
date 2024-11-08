@@ -22,6 +22,7 @@ import {
   deleteAuction,
   fetchAuctionKoi,
   fetchAuctions,
+  updateAuction,
 } from "~/utils/apiUtils";
 import { extractErrorMessage, prepareAuctionData } from "~/utils/dataConverter";
 import AddAuctionDialog from "./AddAuctionDialog";
@@ -31,12 +32,15 @@ import { getCookie } from "~/utils/cookieUtils";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import AuctionSearchComponent from "~/components/search/AuctionSearchComponent";
 import axios from "axios";
+import { convertTimestamp } from "~/utils/dateTimeUtils";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 
 export const AuctionsManagement: React.FC = () => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true);
   const itemsPerPage = 9;
+  const [isLoading, setIsLoading] = useState(true);
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [newAuction, setNewAuction] = useState({
@@ -66,10 +70,12 @@ export const AuctionsManagement: React.FC = () => {
 
   useEffect(() => {
     if (!token) {
+      setIsLoading(false);
       return;
     }
 
     const loadAuctions = async () => {
+      setIsLoading(true);
       try {
         const fetchedAuctions = await fetchAuctions(
           currentPage - 1,
@@ -82,11 +88,21 @@ export const AuctionsManagement: React.FC = () => {
       } catch (error) {
         console.error("Error fetching auctions:", error);
         setAuctions([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     loadAuctions();
   }, [currentPage, token]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingComponent />
+      </div>
+    );
+  }
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -165,10 +181,17 @@ export const AuctionsManagement: React.FC = () => {
     setEditingAuction((prev) => (prev ? { ...prev, [name]: value } : null));
   };
 
-  const handleSubmitEditAuction = () => {
+  const handleSubmitEditAuction = async () => {
     if (editingAuction) {
-      console.log("Submitting edited auction:", editingAuction);
-      // Implement the actual update logic here
+      const data = {
+        ...editingAuction,
+        start_time: convertTimestamp(editingAuction.start_time as string),
+        end_time: convertTimestamp(editingAuction.end_time as string),
+      };
+
+      console.log("Submitting edited auction:", data);
+      await updateAuction(editingAuction.id!, data);
+      toast.success("Auction updated successfully");
       handleCloseEditDialog();
     }
   };

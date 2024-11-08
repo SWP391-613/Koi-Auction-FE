@@ -2620,13 +2620,6 @@ framer-motion@^11.11.10:
   dependencies:
     tslib "^2.4.0"
 
-framer-motion@^11.11.9:
-  version "11.11.10"
-  resolved "https://registry.npmjs.org/framer-motion/-/framer-motion-11.11.10.tgz"
-  integrity sha512-061Bt1jL/vIm+diYIiA4dP/Yld7vD47ROextS7ESBW5hr4wQFhxB5D5T5zAc3c/5me3cOa+iO5LqhA38WDln/A==
-  dependencies:
-    tslib "^2.4.0"
-
 fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
@@ -3255,9 +3248,9 @@ keyv@^4.5.3:
     classnames "^2.3.1"
     date-fns "^4.1.0"
     dotenv "^16.4.5"
-    framer-motion "^11.11.9"
+    framer-motion "^11.11.10"
     husky "^9.1.5"
-    koiproject "file:../../.cache/yarn/v6/npm-koiproject-0.0.0-d8f5fd6c-a852-416d-97d4-b4acfa4e6c94-1729998850814/node_modules/koiproject"
+    koiproject "file:C:/Users/Admin/AppData/Local/Yarn/Cache/v6/npm-koiproject-0.0.0-4f7f50d7-49e0-46b7-b795-1acdcb26c110-1731060089315/node_modules/koiproject"
     prop-types "^15.8.1"
     react "^18.3.1"
     react-dom "^18.3.1"

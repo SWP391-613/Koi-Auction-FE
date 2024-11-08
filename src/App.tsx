@@ -32,13 +32,13 @@ import Terms from "./pages/static/Terms";
 // Types
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import InternalServerError from "./components/error/InternalServerError";
+import PageTransition from "./components/shared/PageTransition";
 import BreederLayout from "./layouts/BreederLayout";
 import MemberLayout from "./layouts/MemberLayout";
 import OrderLayout from "./layouts/OrderLayout";
 import PaymentLayout from "./layouts/PaymentLayout";
 import StaffLayout from "./layouts/StaffLayout";
 import Auctions from "./pages/auctions/Auctions";
-import AddKoiToAuction from "./pages/auctions/register/AddKoiToAuction";
 import KoiRegisterAuctionDetail from "./pages/auctions/register/KoiRegisterAuctionDetail";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import BlogList from "./pages/blog/BlogList";
@@ -48,9 +48,8 @@ import UserOrderDetail from "./pages/detail/member/UserOrderDetail";
 import Kois from "./pages/kois/Kois";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import BreederInfo from "./pages/static/BreederInfo";
-import PageTransition from "./components/shared/PageTransition";
 
-const TITLE = "Auction Koi";
+const TITLE = "Koi Auction";
 
 const theme = createTheme({
   typography: {
@@ -70,7 +69,7 @@ function App() {
               <title>{TITLE}</title>
             </Helmet>
             <Header />
-            <main className="flex-grow">
+            <main className="flex-grow mt-5">
               <Routes>
                 {/* Public routes */}
                 <Route
@@ -194,10 +193,6 @@ function App() {
 
                 {/* Protected routes for logged-in users */}
                 <Route element={<ProtectedRoute />}>
-                  <Route
-                    path="/auctions/register"
-                    element={<AddKoiToAuction />}
-                  />
                   <Route
                     path="/auctions/register/:id"
                     element={<KoiRegisterAuctionDetail />}

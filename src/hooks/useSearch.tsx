@@ -207,6 +207,16 @@ export const useAuctionSearch = (debounceTime = 500) => {
   });
 };
 
+export const useAuctionUpComingSearch = (debounceTime = 500) => {
+  return useSearch<AuctionModel>({
+    apiUrl: `${API_URL}/auctions/get-auctions-by-keyword`,
+    requiresAuth: true,
+    preload: true,
+    defaultQuery: "upcoming",
+    debounceTime,
+  });
+};
+
 export const useUserOrderSearch = (debounceTime = 500) => {
   return useSearch<OrderResponse>({
     apiUrl: `${API_URL}/orders/search-user-orders-by-keyword`,

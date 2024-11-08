@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import KoiBreederViewGrid from "~/components/search/KoiBreederViewGrid";
 import KoiUnverifiedSearchComponent from "~/components/search/KoiUnverifiedSearchComponent";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import { useAuth } from "~/contexts/AuthContext";
 import { environment } from "~/environments/environment";
 import { KoiDetailModel } from "~/types/kois.type";
@@ -31,6 +32,12 @@ const KoiWishList: React.FC = () => {
   const handleView = (id: number) => {
     navigate(`/kois/${id}`);
   };
+
+  // if(isLoading){
+  //   return (
+  //     <LoadingComponent/>
+  //   )
+  // }
 
   const fetchKoiData = useCallback(async () => {
     if (!accessToken) {

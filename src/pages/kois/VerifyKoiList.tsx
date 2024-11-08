@@ -8,6 +8,7 @@ import PaginationComponent from "~/components/common/PaginationComponent";
 import KoiBreederViewGrid from "~/components/search/KoiBreederViewGrid";
 import KoiUnverifiedSearchComponent from "~/components/search/KoiUnverifiedSearchComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import { useAuth } from "~/contexts/AuthContext";
 import { environment } from "~/environments/environment";
 import { KoiDetailModel } from "~/types/kois.type";
@@ -23,7 +24,7 @@ const VerifyKoiList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true); // To track if more pages are available
   const itemsPerPage = 8; // Number of koi per page
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ const VerifyKoiList: React.FC = () => {
   };
 
   const handleApprove = async (id: number) => {
+    setLoading(true);
     try {
       await axios.put(
         `http://localhost:4000/api/v1/kois/status/${id}`,
@@ -56,6 +58,8 @@ const VerifyKoiList: React.FC = () => {
     } catch (error) {
       const errorMessage = extractErrorMessage(error, "Failed to approve Koi");
       toast.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -88,12 +92,12 @@ const VerifyKoiList: React.FC = () => {
   const fetchKoiData = useCallback(async () => {
     if (!accessToken) {
       setError("No access token available");
-      setIsLoading(false);
+      setLoading(false);
       return;
     }
 
     try {
-      setIsLoading(true);
+      setLoading(true);
       const API_URL =
         import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
       const response = await axios.get<KoisResponse>(`${API_URL}/kois/status`, {
@@ -118,7 +122,7 @@ const VerifyKoiList: React.FC = () => {
       console.error("Cannot fetch Koi data:", error);
       setError("Failed to fetch Koi data");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   }, [accessToken, currentPage, itemsPerPage]);
 
@@ -128,8 +132,12 @@ const VerifyKoiList: React.FC = () => {
     }
   }, [isLoggedIn, userId, accessToken, fetchKoiData]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingComponent />
+      </div>
+    );
   }
 
   if (error) {

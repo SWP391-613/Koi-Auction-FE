@@ -1,6 +1,6 @@
 import React from "react";
 import { fetchAuctions } from "~/utils/apiUtils";
-import AuctionCart from "./AuctionCart";
+import { AuctionCart } from "./AuctionCart";
 import AuctionList from "~/components/shared/AuctionList";
 
 const Auctions: React.FC = () => {

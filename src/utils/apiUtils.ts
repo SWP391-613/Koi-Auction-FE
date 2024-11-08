@@ -7,7 +7,11 @@ import { KoiOfBreeder as KoisOfBreeder } from "~/pages/detail/breeder/BreederDet
 import { FeedbackRequest } from "~/pages/detail/member/Feedback";
 import { AuctionKoi, BidMethod } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
-import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";
+import {
+  KoiDetailModel,
+  KoiTrackingStatus,
+  UpdateKoiDTO,
+} from "~/types/kois.type";
 import {
   Order,
   OrderDetail,
@@ -45,7 +49,7 @@ export const login = async (payload: LoginDTO): Promise<UserLoginResponse> => {
     if (axios.isAxiosError(error)) {
       // Narrowing down to AxiosError type
       const errorMessage =
-        error.response?.data?.message || "An error occurred during login";
+        error.response?.data?.reason || "An error occurred during login";
       throw new Error(errorMessage);
     } else {
       // Generic fallback error message
@@ -189,6 +193,9 @@ export const fetchAuctionsByStatus = async (
 
     const response = await axios.get(`${API_URL}/auctions/koi_register`, {
       params: { page, limit, status },
+      headers: {
+        Authorization: `Bearer ${getUserCookieToken()}`,
+      },
     });
 
     // Map the response data to Auction model
@@ -628,6 +635,31 @@ export const verifyOtpIsCorrect = async (
   }
 };
 
+export const updateAuction = async (
+  id: number,
+  auction: AuctionModel,
+): Promise<void> => {
+  try {
+    const response = await axios.put(`${API_URL}/auctions/${id}`, auction, {
+      headers: {
+        Authorization: `Bearer ${getUserCookieToken()}`,
+      },
+    });
+    if (response.status === 200) {
+      console.log("Auction update successfully");
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error deleting auction:", error.response?.data);
+      throw new Error(
+        error.response?.data?.reason || "An error occurred during deletion",
+      );
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
+  }
+};
+
 export const deleteAuction = async (
   id: number,
   accessToken: string,
@@ -802,14 +834,10 @@ export const createKoi = async (
   return response.data;
 };
 
-export const updateKoi = async (
-  koiId: number,
-  koi: KoiDetailModel,
-  accessToken: string,
-) => {
+export const updateKoi = async (koiId: number, koi: UpdateKoiDTO) => {
   const response = await axios.put(`${API_URL}/kois/${koiId}`, koi, {
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${getUserCookieToken()}`,
     },
   });
 
@@ -820,10 +848,10 @@ export const updateKoi = async (
   return response.data;
 };
 
-export const fetchKoi = async (koiId: number, accessToken: string) => {
+export const fetchKoi = async (koiId: number) => {
   const response = await axios.get(`${API_URL}/kois/${koiId}`, {
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${getUserCookieToken()}`,
     },
   });
 

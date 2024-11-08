@@ -39,11 +39,11 @@ const KoiSearchGrid = <T extends KoiDetailModel>({
           transition={{
             duration: 0.5,
             delay: index * 0.1, // Each card appears with a slight delay
-            ease: "easeOut"
+            ease: "easeOut",
           }}
           className="transform overflow-hidden m-1 md:m-5 rounded-[1.5rem] bg-white shadow-md transition-all hover:scale-102"
         >
-          <motion.div 
+          <motion.div
             className="flex flex-col"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
@@ -54,7 +54,7 @@ const KoiSearchGrid = <T extends KoiDetailModel>({
                   to={getLinkUrl(koi)}
                   className="relative flex md:justify-center bg-gradient-to-r from-[#1365b4] to-[#1584cb] duration-300 ease-in-out"
                 >
-                  <motion.div 
+                  <motion.div
                     className="h-[17rem] w-[50%] md:h-[28rem] md:w-[23rem] flex justify-center"
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.3 }}
@@ -71,7 +71,7 @@ const KoiSearchGrid = <T extends KoiDetailModel>({
                   </motion.div>
                 </Link>
               ) : (
-                <motion.div 
+                <motion.div
                   className="h-[17rem] w-[50%] md:h-[28rem] md:w-[23rem] flex justify-center"
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.3 }}
@@ -88,7 +88,7 @@ const KoiSearchGrid = <T extends KoiDetailModel>({
                 </motion.div>
               )}
 
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
@@ -96,14 +96,17 @@ const KoiSearchGrid = <T extends KoiDetailModel>({
               >
                 {koiBreeders.find((breeder) => breeder.id === koi.owner_id) && (
                   <img
-                    src={koiBreeders.find((breeder) => breeder.id === koi.owner_id)?.avatar_url}
+                    src={
+                      koiBreeders.find((breeder) => breeder.id === koi.owner_id)
+                        ?.avatar_url
+                    }
                     alt="Breeder Avatar"
                     className="w-[25%]"
                   />
                 )}
               </motion.div>
 
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
@@ -127,7 +130,7 @@ const KoiSearchGrid = <T extends KoiDetailModel>({
                 ))}
               </div>
             </div>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}

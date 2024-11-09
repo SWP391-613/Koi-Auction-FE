@@ -10,11 +10,11 @@ interface FancyButtonProps {
 }
 
 const FancyButton: React.FC<FancyButtonProps> = ({
-  text,
-  hoverText,
-  to,
-  className = "",
-}) => {
+                                                   text,
+                                                   hoverText,
+                                                   to,
+                                                   className = "",
+                                                 }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {

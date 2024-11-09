@@ -1,15 +1,15 @@
 import React from "react";
-import {Helmet, HelmetProvider} from "react-helmet-async";
-import {Route, Routes} from "react-router-dom";
-import {ToastContainer} from "react-toastify";
+import { Helmet, HelmetProvider } from "react-helmet-async";
+import { Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // import first
 
 // Vercel integrations
-import {Analytics} from "@vercel/analytics/react";
-import {SpeedInsights} from "@vercel/speed-insights/react";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Context providers
-import {AuthProvider} from "./contexts/AuthContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import { NavbarProvider } from "./contexts/NavbarContext";
 import { useNavbar } from "./contexts/NavbarContext";
 
@@ -33,7 +33,7 @@ import Home from "./pages/static/Home";
 import Privacy from "./pages/static/Privacy";
 import Terms from "./pages/static/Terms";
 // Types
-import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import InternalServerError from "./components/error/InternalServerError";
 import PageTransition from "./components/shared/PageTransition";
 import BreederLayout from "./layouts/BreederLayout";
@@ -68,7 +68,7 @@ function AppContent() {
     <HelmetProvider>
       <AuthProvider>
         <ThemeProvider theme={theme}>
-          <CssBaseline/>
+          <CssBaseline />
           <div className="flex flex-col min-h-screen">
             <Helmet>
               <title>{TITLE}</title>
@@ -76,15 +76,17 @@ function AppContent() {
             <div className="flex flex-col min-h-screen">
               <NavBar />
               <div className="flex flex-grow">
-                <Header/>
-                <main className={`flex-1 ${isNavCollapsed ? "ml-20" : "ml-60"} pt-16 transition-all duration-300`}>
+                <Header />
+                <main
+                  className={`flex-1 ${isNavCollapsed ? "ml-20" : "ml-60"} pt-16 transition-all duration-300`}
+                >
                   <Routes>
                     {/* Public routes */}
                     <Route
                       path="/"
                       element={
                         <PageTransition>
-                          <Home/>
+                          <Home />
                         </PageTransition>
                       }
                     />
@@ -92,7 +94,7 @@ function AppContent() {
                       path="/about"
                       element={
                         <PageTransition>
-                          <About/>
+                          <About />
                         </PageTransition>
                       }
                     />
@@ -100,7 +102,7 @@ function AppContent() {
                       path="/privacy"
                       element={
                         <PageTransition>
-                          <Privacy/>
+                          <Privacy />
                         </PageTransition>
                       }
                     />
@@ -108,7 +110,7 @@ function AppContent() {
                       path="/terms"
                       element={
                         <PageTransition>
-                          <Terms/>
+                          <Terms />
                         </PageTransition>
                       }
                     />
@@ -116,7 +118,7 @@ function AppContent() {
                       path="/login"
                       element={
                         <PageTransition>
-                          <Login/>
+                          <Login />
                         </PageTransition>
                       }
                     />
@@ -124,20 +126,20 @@ function AppContent() {
                       path="/register"
                       element={
                         <PageTransition>
-                          <Register/>
+                          <Register />
                         </PageTransition>
                       }
                     />
-                    <Route path="/notfound" element={<NotFound/>}/>
+                    <Route path="/notfound" element={<NotFound />} />
                     <Route
                       path="/internal-server-error"
-                      element={<InternalServerError/>}
+                      element={<InternalServerError />}
                     />
                     <Route
                       path="/otp-verification"
                       element={
                         <PageTransition>
-                          <OtpVerification/>
+                          <OtpVerification />
                         </PageTransition>
                       }
                     />
@@ -145,7 +147,7 @@ function AppContent() {
                       path="/auctions"
                       element={
                         <PageTransition>
-                          <Auctions/>
+                          <Auctions />
                         </PageTransition>
                       }
                     />
@@ -153,7 +155,7 @@ function AppContent() {
                       path="/auctions/:id"
                       element={
                         <PageTransition>
-                          <AuctionDetail/>
+                          <AuctionDetail />
                         </PageTransition>
                       }
                     />
@@ -161,16 +163,19 @@ function AppContent() {
                       path="/auctionkois/:auctionId/:auctionKoiId"
                       element={
                         <PageTransition>
-                          <KoiBidding/>
+                          <KoiBidding />
                         </PageTransition>
                       }
                     />
-                    <Route path="/forgot-password" element={<ForgotPassword/>}/>
+                    <Route
+                      path="/forgot-password"
+                      element={<ForgotPassword />}
+                    />
                     <Route
                       path="/breeder/:id/info"
                       element={
                         <PageTransition>
-                          <BreederInfo/>
+                          <BreederInfo />
                         </PageTransition>
                       }
                     />
@@ -178,7 +183,7 @@ function AppContent() {
                       path="/blog"
                       element={
                         <PageTransition>
-                          <BlogList/>
+                          <BlogList />
                         </PageTransition>
                       }
                     />
@@ -186,7 +191,7 @@ function AppContent() {
                       path="/blog/:id"
                       element={
                         <PageTransition>
-                          <BlogPost/>
+                          <BlogPost />
                         </PageTransition>
                       }
                     />
@@ -194,22 +199,22 @@ function AppContent() {
                       path="/kois"
                       element={
                         <PageTransition>
-                          <Kois/>
+                          <Kois />
                         </PageTransition>
                       }
                     />
 
                     {/* Protected routes for logged-in users */}
-                    <Route element={<ProtectedRoute/>}>
+                    <Route element={<ProtectedRoute />}>
                       <Route
                         path="/auctions/register/:id"
-                        element={<KoiRegisterAuctionDetail/>}
+                        element={<KoiRegisterAuctionDetail />}
                       />
                       <Route
                         path="/kois/:id"
                         element={
                           <PageTransition>
-                            <KoiDetail/>
+                            <KoiDetail />
                           </PageTransition>
                         }
                       />
@@ -217,7 +222,7 @@ function AppContent() {
                         path="/users/*"
                         element={
                           <PageTransition>
-                            <MemberLayout/>
+                            <MemberLayout />
                           </PageTransition>
                         }
                       ></Route>
@@ -225,7 +230,7 @@ function AppContent() {
                         path="/managers/*"
                         element={
                           <PageTransition>
-                            <ManagerLayout/>
+                            <ManagerLayout />
                           </PageTransition>
                         }
                       ></Route>
@@ -233,7 +238,7 @@ function AppContent() {
                         path="/breeders/*"
                         element={
                           <PageTransition>
-                            <BreederLayout/>
+                            <BreederLayout />
                           </PageTransition>
                         }
                       ></Route>
@@ -241,7 +246,7 @@ function AppContent() {
                         path="/staffs/*"
                         element={
                           <PageTransition>
-                            <StaffLayout/>
+                            <StaffLayout />
                           </PageTransition>
                         }
                       ></Route>
@@ -249,16 +254,16 @@ function AppContent() {
                         path="/orders/*"
                         element={
                           <PageTransition>
-                            <OrderLayout/>
+                            <OrderLayout />
                           </PageTransition>
                         }
                       />
-                      <Route path="/payments/*" element={<PaymentLayout/>}/>
+                      <Route path="/payments/*" element={<PaymentLayout />} />
                       <Route
                         path="/order-detail/:id"
                         element={
                           <PageTransition>
-                            <UserOrderDetail/>
+                            <UserOrderDetail />
                           </PageTransition>
                         }
                       />
@@ -266,22 +271,22 @@ function AppContent() {
                         path="/payments/vnpay-payment-return"
                         element={
                           <PageTransition>
-                            <VNPayReturn/>
+                            <VNPayReturn />
                           </PageTransition>
                         }
                       />
-                      <Route path="/feedback/:orderId" element={<Feedback/>}/>
+                      <Route path="/feedback/:orderId" element={<Feedback />} />
                     </Route>
                   </Routes>
                 </main>
               </div>
-              <Footer/>
+              <Footer />
             </div>
-            <ToastContainer/>
+            <ToastContainer />
           </div>
         </ThemeProvider>
-        <Analytics/>
-        <SpeedInsights/>
+        <Analytics />
+        <SpeedInsights />
       </AuthProvider>
     </HelmetProvider>
   );

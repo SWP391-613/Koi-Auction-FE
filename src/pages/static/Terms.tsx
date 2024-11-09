@@ -20,6 +20,12 @@ const Terms: React.FC = () => {
         "To access certain features of the Site and participate in koi auctions, you will need to register an account with fkoi88.me. By registering, you warrant that you have provided true and accurate information and agree to keep your account information up-to-date.",
     },
     {
+      title: "Breeder Registration",
+      content:
+        "To register as a breeder on our Site, you must provide your name, contact information, and a detailed description of your koi breeding practices.\n" +
+        "Please contact us at contact@fkoi88.me for more information. You agree to provide accurate and truthful information about your koi and to comply with all applicable laws and regulations. We will respond to your registration request within 7 business days.",
+    },
+    {
       title: "Koi Registration to Auction",
       content:
         "To register a koi to auction, you must provide a detailed description of the koi, including its appearance, size, and any other relevant information. You agree to provide accurate and truthful information about the koi and to comply with all applicable laws and regulations. We claim 10% of the koi's base price as our service fee.",

@@ -329,7 +329,7 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
           >
-            {generateBlogPostsPreview(6).map((post, index) => (
+            {generateBlogPostsPreview(8).map((post, index) => (
               <motion.div
                 key={post.id}
                 initial={{ opacity: 0, y: 20 }}

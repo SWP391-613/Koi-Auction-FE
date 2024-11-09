@@ -15,6 +15,7 @@ import { AddNewKoiDTO } from "~/types/kois.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { categoryMap } from "~/utils/dataConverter";
 import AddKoiPreviewCart from "./AddKoiPreviewCart";
+import { toast, ToastContainer } from "react-toastify";
 
 interface KoiCreatePopupForm {
   open?: boolean;
@@ -137,8 +138,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
       onClose();
     } catch (error) {
       console.error("Error creating koi:", error);
-      setSnackbarMessage("Error creating koi. Please try again.");
-      setSnackbarOpen(true);
+      toast.error((error as any).response.data.reason);
     }
   };
 
@@ -280,6 +280,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
         onClose={() => setSnackbarOpen(false)}
         message={snackbarMessage}
       />
+      <ToastContainer />
     </>
   );
 };

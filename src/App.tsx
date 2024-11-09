@@ -51,6 +51,7 @@ import UserOrderDetail from "./pages/detail/member/UserOrderDetail";
 import Kois from "./pages/kois/Kois";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import BreederInfo from "./pages/static/BreederInfo";
+import { number } from "prop-types";
 
 const TITLE = "Koi Auction";
 
@@ -275,7 +276,10 @@ function AppContent() {
                           </PageTransition>
                         }
                       />
-                      <Route path="/feedback/:orderId" element={<Feedback />} />
+                      <Route
+                        path="/feedback/:orderId"
+                        element={<Feedback orderId={""} />}
+                      />
                     </Route>
                   </Routes>
                 </main>

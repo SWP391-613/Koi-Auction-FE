@@ -66,7 +66,7 @@ const Header = () => {
           <Clock />
         </div>
 
-        <SearchBar />
+        {/* <SearchBar /> */}
 
         <div className="flex items-center space-x-6 ">
           <RoleIcon

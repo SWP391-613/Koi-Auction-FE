@@ -8,7 +8,6 @@ import KoiBreederViewGrid from "~/components/search/KoiBreederViewGrid";
 import KoiOwnerSearchComponent from "~/components/search/KoiOwnerSearchComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
-import DepositComponent from "~/components/shared/DepositComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { useAuth } from "~/contexts/AuthContext";
 import { environment } from "~/environments/environment";

@@ -61,7 +61,7 @@ const KoiBidding: React.FC = () => {
   const [userHighestBid, setUserHighestBid] = useState<number | null>(null);
   const navigate = useNavigate();
   const token = getUserCookieToken();
-  const [viewMode, setViewMode] = useState<'list' | 'chart'>('list');
+  const [viewMode, setViewMode] = useState<"list" | "chart">("list");
 
   const isAuctionOngoing = useCallback(
     () => auction?.status === AUCTION_STATUS.ONGOING,
@@ -349,8 +349,8 @@ const KoiBidding: React.FC = () => {
                           type="radio"
                           className="sr-only peer"
                           name="view-mode"
-                          checked={viewMode === 'list'}
-                          onChange={() => setViewMode('list')}
+                          checked={viewMode === "list"}
+                          onChange={() => setViewMode("list")}
                         />
                         <div
                           className="w-6 h-6 bg-transparent border-2 border-blue-500 rounded-full 
@@ -361,14 +361,14 @@ const KoiBidding: React.FC = () => {
                         ></div>
                         <span className="ml-2 text-gray-700">List View</span>
                       </label>
-                      
+
                       <label className="relative flex items-center cursor-pointer">
                         <input
                           type="radio"
                           className="sr-only peer"
                           name="view-mode"
-                          checked={viewMode === 'chart'}
-                          onChange={() => setViewMode('chart')}
+                          checked={viewMode === "chart"}
+                          onChange={() => setViewMode("chart")}
                         />
                         <div
                           className="w-6 h-6 bg-transparent border-2 border-green-500 rounded-full 
@@ -383,7 +383,7 @@ const KoiBidding: React.FC = () => {
                   </div>
                   <div className="rounded-2xl bg-gray-300 p-4 max-h-[50rem] overflow-auto">
                     <div className="max-h-full overflow-auto">
-                      {viewMode === 'list' ? (
+                      {viewMode === "list" ? (
                         <BiddingHistory
                           auctionKoiId={auctionKoi.id}
                           latestBid={latestBid}

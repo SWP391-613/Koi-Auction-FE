@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -7,12 +7,12 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from 'recharts';
-import { fetchBidHistory } from '~/utils/apiUtils';
-import { formatCurrency } from '~/utils/currencyUtils';
-import { format } from 'date-fns';
-import { Bid } from '../koibiddingdetail/BiddingHistory';
-import LoadingComponent from '../shared/LoadingComponent';
+} from "recharts";
+import { fetchBidHistory } from "~/utils/apiUtils";
+import { formatCurrency } from "~/utils/currencyUtils";
+import { format } from "date-fns";
+import { Bid } from "../koibiddingdetail/BiddingHistory";
+import LoadingComponent from "../shared/LoadingComponent";
 
 interface BiddingChartProps {
   auctionKoiId: number;
@@ -38,7 +38,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const BiddingChart: React.FC<BiddingChartProps> = ({ auctionKoiId, latestBid }) => {
+const BiddingChart: React.FC<BiddingChartProps> = ({
+  auctionKoiId,
+  latestBid,
+}) => {
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,13 +50,13 @@ const BiddingChart: React.FC<BiddingChartProps> = ({ auctionKoiId, latestBid }) 
       try {
         const history = await fetchBidHistory(auctionKoiId);
         const formattedData = history.map((bid: Bid) => ({
-          time: format(new Date(bid.bid_time), 'HH:mm:ss'),
+          time: format(new Date(bid.bid_time), "HH:mm:ss"),
           amount: bid.bid_amount,
           bidder: bid.bidder_name,
         }));
         setChartData(formattedData);
       } catch (error) {
-        console.error('Error loading bidding history:', error);
+        console.error("Error loading bidding history:", error);
       } finally {
         setLoading(false);
       }
@@ -64,7 +67,7 @@ const BiddingChart: React.FC<BiddingChartProps> = ({ auctionKoiId, latestBid }) 
 
   if (loading) return <LoadingComponent />;
 
-  const maxBid = Math.max(...chartData.map(data => data.amount));
+  const maxBid = Math.max(...chartData.map((data) => data.amount));
   const yAxisMax = maxBid * 1.2;
 
   return (
@@ -76,11 +79,11 @@ const BiddingChart: React.FC<BiddingChartProps> = ({ auctionKoiId, latestBid }) 
             top: 20,
             right: 30,
             left: 20,
-            bottom: 60
+            bottom: 60,
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis 
+          <XAxis
             dataKey="time"
             angle={-45}
             textAnchor="end"
@@ -93,16 +96,15 @@ const BiddingChart: React.FC<BiddingChartProps> = ({ auctionKoiId, latestBid }) 
             tickFormatter={(value) => formatCurrency(value)}
             fontSize={12}
             allowDataOverflow={false}
-            ticks={Array.from(
-              { length: 6 },
-              (_, i) => Math.round(yAxisMax * i / 5)
+            ticks={Array.from({ length: 6 }, (_, i) =>
+              Math.round((yAxisMax * i) / 5),
             )}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Line 
-            type="monotone" 
-            dataKey="amount" 
-            stroke="#8884d8" 
+          <Line
+            type="monotone"
+            dataKey="amount"
+            stroke="#8884d8"
             strokeWidth={2}
             dot={{ r: 4 }}
             activeDot={{ r: 8 }}
@@ -111,7 +113,7 @@ const BiddingChart: React.FC<BiddingChartProps> = ({ auctionKoiId, latestBid }) 
         </LineChart>
       </ResponsiveContainer>
     </div>
-  );    
-}
+  );
+};
 
 export default BiddingChart;

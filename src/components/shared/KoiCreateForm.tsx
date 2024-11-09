@@ -260,7 +260,6 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
               error={!!errors.thumbnail}
               helperText={errors.thumbnail}
             />
-
           </div>
           <div className="mt-5">
             <Button onClick={onClose}>Back</Button>

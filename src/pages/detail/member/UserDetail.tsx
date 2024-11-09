@@ -73,7 +73,28 @@ const UserDetail: React.FC = () => {
     }
   };
 
-  const handleTransactionSuccess = async () => {};
+  const handleTransactionSuccess = async () => {
+    // Refresh user data after successful transaction
+    try {
+      const userId = getCookie("user_id");
+      const accessToken = getCookie("access_token");
+
+      if (!userId || !accessToken) {
+        navigate("/notfound");
+        return;
+      }
+
+      const response = await axios.get(
+        `http://localhost:4000/api/v1/users/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        },
+      );
+      setUser(response.data);
+    } catch (error) {
+      console.error("Failed to refresh user data", error);
+    }
+  };
 
   return (
     <div className="container mx-auto p-6">

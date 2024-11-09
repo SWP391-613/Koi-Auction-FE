@@ -36,6 +36,7 @@ import { formatCurrency } from "~/utils/currencyUtils";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "~/constants/message";
 import CountdownClock from "~/components/auctions/CountdownClock";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import BiddingChart from "~/components/biddingChart/BiddingChart";
 
 // Define the BidRequest interface
 export type BidRequest = {
@@ -60,6 +61,7 @@ const KoiBidding: React.FC = () => {
   const [userHighestBid, setUserHighestBid] = useState<number | null>(null);
   const navigate = useNavigate();
   const token = getUserCookieToken();
+  const [viewMode, setViewMode] = useState<'list' | 'chart'>('list');
 
   const isAuctionOngoing = useCallback(
     () => auction?.status === AUCTION_STATUS.ONGOING,
@@ -339,13 +341,59 @@ const KoiBidding: React.FC = () => {
               (auction.status !== AUCTION_STATUS.ONGOING ||
                 auctionKoi.bid_method !== "SEALED_BID") && (
                 <>
-                  <h3 className="mb-2 text-xl font-semibold">Bid History</h3>
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="text-xl font-semibold">Bid History</h3>
+                    <div className="flex space-x-4">
+                      <label className="relative flex items-center cursor-pointer">
+                        <input
+                          type="radio"
+                          className="sr-only peer"
+                          name="view-mode"
+                          checked={viewMode === 'list'}
+                          onChange={() => setViewMode('list')}
+                        />
+                        <div
+                          className="w-6 h-6 bg-transparent border-2 border-blue-500 rounded-full 
+                          peer-checked:bg-blue-500 peer-checked:border-blue-500 
+                          peer-hover:shadow-lg peer-hover:shadow-blue-500/50 
+                          peer-checked:shadow-lg peer-checked:shadow-blue-500/50 
+                          transition duration-300 ease-in-out"
+                        ></div>
+                        <span className="ml-2 text-gray-700">List View</span>
+                      </label>
+                      
+                      <label className="relative flex items-center cursor-pointer">
+                        <input
+                          type="radio"
+                          className="sr-only peer"
+                          name="view-mode"
+                          checked={viewMode === 'chart'}
+                          onChange={() => setViewMode('chart')}
+                        />
+                        <div
+                          className="w-6 h-6 bg-transparent border-2 border-green-500 rounded-full 
+                          peer-checked:bg-green-500 peer-checked:border-green-500 
+                          peer-hover:shadow-lg peer-hover:shadow-green-500/50 
+                          peer-checked:shadow-lg peer-checked:shadow-green-500/50 
+                          transition duration-300 ease-in-out"
+                        ></div>
+                        <span className="ml-2 text-gray-700">Chart View</span>
+                      </label>
+                    </div>
+                  </div>
                   <div className="rounded-2xl bg-gray-300 p-4 max-h-[50rem] overflow-auto">
                     <div className="max-h-full overflow-auto">
-                      <BiddingHistory
-                        auctionKoiId={auctionKoi.id}
-                        latestBid={latestBid}
-                      />
+                      {viewMode === 'list' ? (
+                        <BiddingHistory
+                          auctionKoiId={auctionKoi.id}
+                          latestBid={latestBid}
+                        />
+                      ) : (
+                        <BiddingChart
+                          auctionKoiId={auctionKoi.id}
+                          latestBid={latestBid}
+                        />
+                      )}
                     </div>
                   </div>
                 </>

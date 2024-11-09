@@ -112,14 +112,6 @@ const AuctionList: React.FC<AuctionListProps> = ({
               <AuctionSearchComponent
                 onSearchStateChange={handleSearchStateChange}
               />
-              {/* <div> */}
-              {/* <CartComponent items={auctions} /> */}
-              {/* <PaginationComponent
-                  totalPages={hasMorePages ? currentPage + 1 : currentPage}
-                  currentPage={currentPage}
-                  onPageChange={handlePageChange}
-                /> */}
-              {/* </div> */}
             </>
           )}
         </>

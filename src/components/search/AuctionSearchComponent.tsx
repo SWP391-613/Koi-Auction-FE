@@ -24,10 +24,10 @@ const AuctionSearchComponent: React.FC<AuctionSearchComponentProps> = () => {
   } = useAuctionSearch(500);
 
   return (
-    <div className="container mx-auto p-4 mt-5">
+    <div className="container mx-auto p-4 mt-14">
       <div className="bg-gray-200 p-4 rounded-xl">
         <Typography
-          variant="h6"
+          variant="h5"
           sx={{ textAlign: "left", marginBottom: "1rem" }}
         >
           Search All Our Auction

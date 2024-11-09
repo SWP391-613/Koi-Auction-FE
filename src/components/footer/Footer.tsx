@@ -40,7 +40,7 @@ const Footer: React.FC = () => {
           <img
             src="/favicon.svg"
             alt="Koi Auction Logo"
-            className="w-24 max-w-full"
+            className="w-24 max-w-full sm:w-20"
           />
         </Link>
 

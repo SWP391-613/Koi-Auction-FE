@@ -23,6 +23,7 @@ import {
 } from "~/types/orders.type";
 import {
   BreedersResponse,
+  KoiInAuctionResponse,
   KoisResponse,
   MembersResponse,
 } from "~/types/paginated.types";
@@ -791,6 +792,29 @@ export const getKoiData = async (
       limit: limit,
     },
   });
+
+  if (response.status !== 200) {
+    throw new Error("Failed to fetch kois");
+  }
+
+  return response.data;
+};
+
+export const getKoiInAuctionData = async (
+  keyword: string,
+  page: number,
+  limit: number,
+): Promise<KoiInAuctionResponse> => {
+  const response = await axios.get<KoiInAuctionResponse>(
+    `${API_URL}/auctionkois/get-kois-by-keyword`,
+    {
+      params: {
+        keyword,
+        page: page - 1, // Assuming the API is zero-based
+        limit,
+      },
+    },
+  );
 
   if (response.status !== 200) {
     throw new Error("Failed to fetch kois");

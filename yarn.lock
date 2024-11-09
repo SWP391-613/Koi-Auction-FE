@@ -3250,7 +3250,7 @@ keyv@^4.5.3:
     dotenv "^16.4.5"
     framer-motion "^11.11.10"
     husky "^9.1.5"
-    koiproject "file:C:/Users/Admin/AppData/Local/Yarn/Cache/v6/npm-koiproject-0.0.0-4f7f50d7-49e0-46b7-b795-1acdcb26c110-1731060089315/node_modules/koiproject"
+    koiproject "file:C:/Users/Work/AppData/Local/Yarn/Cache/v6/npm-koiproject-0.0.0-a2662c76-297a-4a00-844a-613ac81da5d4-1731126072713/node_modules/koiproject"
     prop-types "^15.8.1"
     react "^18.3.1"
     react-dom "^18.3.1"
@@ -4537,9 +4537,9 @@ v8-compile-cache-lib@^3.0.1:
   resolved "https://registry.npmjs.org/v8-compile-cache-lib/-/v8-compile-cache-lib-3.0.1.tgz"
   integrity sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==
 
-vite@^5.4.6:
+vite@^5.4.10:
   version "5.4.10"
-  resolved "https://registry.npmjs.org/vite/-/vite-5.4.10.tgz"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-5.4.10.tgz#d358a7bd8beda6cf0f3b7a450a8c7693a4f80c18"
   integrity sha512-1hvaPshuPUtxeQ0hsVH3Mud0ZanOLwVTneA1EgbAM5LhaZEqyPWGRQ7BtaMvUrTDeEaC8pxtj6a6jku3x4z6SQ==
   dependencies:
     esbuild "^0.21.3"

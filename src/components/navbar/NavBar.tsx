@@ -44,11 +44,11 @@ interface HeaderButtonProps {
 }
 
 const HeaderButton: React.FC<HeaderButtonProps> = ({
-                                                     button,
-                                                     isActive,
-                                                     onClick,
-                                                     isCollapsed,
-                                                   }) => {
+  button,
+  isActive,
+  onClick,
+  isCollapsed,
+}) => {
   const baseClasses =
     "flex items-center rounded-full font-bold px-4 py-2 hover:text-white transition duration-300 ease-in-out";
   const activeClasses = "bg-[#4f92d1] text-white hover:text-white";
@@ -278,7 +278,7 @@ const Header = () => {
         <button
           onClick={toggleNavCollapse}
           className="text-white hover:text-gray-300 transition-colors duration-200"
-          title={isNavCollapsed ? "Mở menu" : "Đóng menu"}
+          title={isNavCollapsed ? "Show more" : "Hide"}
         >
           <FontAwesomeIcon
             icon={isNavCollapsed ? faChevronRight : faChevronLeft}

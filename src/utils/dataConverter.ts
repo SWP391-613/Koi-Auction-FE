@@ -1,4 +1,4 @@
-import { AuctionModel } from "~/types/auctions.type";
+import { AddNewAuctionDTO, AuctionModel } from "~/types/auctions.type";
 import { convertToJavaLocalDateTime } from "./dateTimeUtils";
 import axios from "axios";
 import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";
@@ -13,8 +13,7 @@ export const convertDataToReadable = (method: string) => {
 
 // only take the first part
 
-export const prepareAuctionData = (auction: AuctionModel) => ({
-  id: auction.id,
+export const prepareAuctionData = (auction: AddNewAuctionDTO) => ({
   title: auction.title,
   start_time: convertToJavaLocalDateTime(auction.start_time),
   end_time: convertToJavaLocalDateTime(auction.end_time),

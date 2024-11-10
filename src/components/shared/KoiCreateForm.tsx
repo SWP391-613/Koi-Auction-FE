@@ -16,7 +16,7 @@ import { getUserCookieToken } from "~/utils/auth.utils";
 import { categoryMap } from "~/utils/dataConverter";
 import AddKoiPreviewCart from "./AddKoiPreviewCart";
 import { toast, ToastContainer } from "react-toastify";
-import { koiName } from "~/utils/data/koiName";
+import { koiName } from "~/utils/data/fixedTitleName";
 
 interface KoiCreatePopupForm {
   open?: boolean;

@@ -296,7 +296,6 @@ function AppContent() {
             </div>
             <ToastContainer />
           </div>
-          <ToastContainer />
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />

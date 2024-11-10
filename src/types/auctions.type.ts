@@ -17,4 +17,6 @@ export type AuctionModel = {
   auctioneer_id: number;
 };
 
+export type AddNewAuctionDTO = Omit<AuctionModel, "id" | "end_time_countdown">;
+
 export type AUCTION_STATUS = "UPCOMING" | "ONGOING" | "ENDED";

@@ -114,21 +114,6 @@ export const AuctionsManagement: React.FC = () => {
     setNewAuction((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmitNewAuction = async () => {
-    const auctionData = prepareAuctionData(newAuction);
-    console.log("Data to be submitted:", auctionData);
-    try {
-      await createNewAuction(auctionData, token!);
-      toast.success("Auction added successfully");
-      console.log("Auction added successfully");
-      handleCloseAddDialog();
-    } catch (error) {
-      const errorMessage = extractErrorMessage(error, "Failed to add auction");
-      console.error(errorMessage);
-      toast.error(errorMessage);
-    }
-  };
-
   const handleEditAuction = async (auction: AuctionModel) => {
     setEditingAuction(auction);
     try {
@@ -306,7 +291,6 @@ export const AuctionsManagement: React.FC = () => {
           onClose={handleCloseAddDialog}
           newAuction={newAuction}
           onInputChange={handleInputChange}
-          onSubmit={handleSubmitNewAuction}
         />
 
         <EditAuctionDialog

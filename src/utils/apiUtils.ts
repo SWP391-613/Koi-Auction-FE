@@ -6,7 +6,7 @@ import { BidRequest } from "~/pages/auctions/KoiBidding";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/detail/breeder/BreederDetail";
 import { FeedbackRequest } from "~/pages/detail/member/Feedback";
 import { AuctionKoi, BidMethod } from "~/types/auctionkois.type";
-import { AuctionModel } from "~/types/auctions.type";
+import { AddNewAuctionDTO, AuctionModel } from "~/types/auctions.type";
 import {
   KoiDetailModel,
   KoiTrackingStatus,
@@ -118,13 +118,12 @@ export const createAuctionFromApi = (apiData: AuctionModel): AuctionModel => {
 };
 
 export const createNewAuction = async (
-  newAuction: AuctionModel,
-  token: string,
-): Promise<AuctionModel> => {
+  newAuction: AddNewAuctionDTO,
+): Promise<AddNewAuctionDTO> => {
   try {
     const response = await axios.post(`${API_URL}/auctions`, newAuction, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${getUserCookieToken()}`,
       },
     });
 

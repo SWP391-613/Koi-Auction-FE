@@ -67,3 +67,26 @@ export const koiName = [
   "Kujaku",
   "Kin Hi Utsuri",
 ];
+
+export const auctionName = [
+  "Vintage Art Auction",
+  "Luxury Watches Auction",
+  "Classic Car Auction",
+  "Rare Antiques Auction",
+  "Designer Fashion Auction",
+  "Exotic Pets Auction",
+  "Modern Art Collection Auction",
+  "Sports Memorabilia Auction",
+  "Historic Coins Auction",
+  "High-End Jewelry Auction",
+  "Gourmet Wine Auction",
+  "Collectible Stamps Auction",
+  "Real Estate Auction",
+  "Furniture & Décor Auction",
+  "Private Estate Auction",
+  "Technology Gadgets Auction",
+  "Music Instruments Auction",
+  "Movie Memorabilia Auction",
+  "Luxury Furniture Auction",
+  "Exclusive Experiences Auction",
+];

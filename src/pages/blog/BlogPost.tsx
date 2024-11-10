@@ -15,7 +15,7 @@ const BlogPost: React.FC = () => {
   }
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="min-h-screen px-4 py-12 sm:px-6 lg:px-8"
@@ -41,7 +41,7 @@ const BlogPost: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <div className="prose prose-lg mx-auto">
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -50,7 +50,7 @@ const BlogPost: React.FC = () => {
               {post.title}
             </motion.h1>
 
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.6 }}

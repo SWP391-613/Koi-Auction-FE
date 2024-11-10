@@ -126,7 +126,7 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
             <KoiDetailItem
               icon={faWallet}
               label="Your Balance"
-              value={`$${user.account_balance.toFixed(2)}`}
+              value={`${user.account_balance.toLocaleString('vi-VN')} ₫`}
               bgColor="bg-yellow-200"
               textColor="text-green-700"
             />

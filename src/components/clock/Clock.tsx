@@ -14,7 +14,7 @@ export const Clock = () => {
 
   return (
     <div className="flex items-center gap-3 bg-gray-300  px-4 py-2 rounded-lg shadow-sm">
-      <div className="flex items-center justify-center w-10 h-10 bg-blue-700 rounded-full">
+      <div className="flex items-center justify-center w-10 h-10 bg-blue-900 rounded-full">
         <FontAwesomeIcon icon={faClock} className="h-5 w-5 text-white" />
       </div>
       <div className="flex flex-col">

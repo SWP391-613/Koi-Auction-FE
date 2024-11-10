@@ -337,10 +337,10 @@ const Home = () => {
                   opacity: isNewsInView ? 1 : 0,
                   y: isNewsInView ? 0 : 50,
                 }}
-                transition={{ 
+                transition={{
                   duration: 0.6,
                   delay: index * 0.1, // Giữ delay để tạo hiệu ứng lần lượt
-                  ease: "easeOut"  // Thêm easing để chuyển động mượt mà hơn
+                  ease: "easeOut", // Thêm easing để chuyển động mượt mà hơn
                 }}
               >
                 <Link

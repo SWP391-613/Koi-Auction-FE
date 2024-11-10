@@ -10,13 +10,13 @@ const BlogList: React.FC = () => {
   return (
     <div className="min-h-screen px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl">
-        <motion.div 
+        <motion.div
           ref={headerRef}
           className="rounded-2xl bg-white/80 backdrop-blur-sm p-8 shadow-xl ring-1 ring-black/5 mb-8"
           initial={{ opacity: 0, y: 50 }}
-          animate={{ 
+          animate={{
             opacity: isHeaderInView ? 1 : 0,
-            y: isHeaderInView ? 0 : 50
+            y: isHeaderInView ? 0 : 50,
           }}
           transition={{ duration: 0.6 }}
         >
@@ -31,9 +31,9 @@ const BlogList: React.FC = () => {
         <div className="space-y-8">
           {generateBlogPostsPreview(20).map((post, index) => {
             const postRef = useRef(null);
-            const isPostInView = useInView(postRef, { 
+            const isPostInView = useInView(postRef, {
               once: true,
-              margin: "-100px"
+              margin: "-100px",
             });
 
             return (
@@ -41,13 +41,13 @@ const BlogList: React.FC = () => {
                 key={post.id}
                 ref={postRef}
                 initial={{ opacity: 0, y: 50 }}
-                animate={{ 
+                animate={{
                   opacity: isPostInView ? 1 : 0,
-                  y: isPostInView ? 0 : 50
+                  y: isPostInView ? 0 : 50,
                 }}
-                transition={{ 
+                transition={{
                   duration: 0.6,
-                  ease: "easeOut"
+                  ease: "easeOut",
                 }}
                 className="rounded-2xl bg-white/80 backdrop-blur-sm p-6 shadow-xl ring-1 ring-black/5"
               >

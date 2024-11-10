@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -39,9 +39,9 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 const BiddingChart: React.FC<BiddingChartProps> = ({
-                                                     auctionKoiId,
-                                                     latestBid,
-                                                   }) => {
+  auctionKoiId,
+  latestBid,
+}) => {
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [loading, setLoading] = useState(true);
 

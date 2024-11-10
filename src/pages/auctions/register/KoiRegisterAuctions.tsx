@@ -1,12 +1,13 @@
 import React from "react";
+import AuctionList from "~/components/shared/AuctionList";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
 import { fetchAuctionsByStatus } from "~/utils/apiUtils";
 import UpcomingAuctionCart from "./UpcomingAuctionCart";
-import AuctionList from "~/components/shared/AuctionList";
+import AuctionUpcomingList from "~/components/shared/AuctionUpcomingList";
 
 const KoiRegisterAuctions: React.FC = () => {
   return (
-    <AuctionList
+    <AuctionUpcomingList
       fetchAuctionsData={(page, itemsPerPage) =>
         fetchAuctionsByStatus(page, itemsPerPage, AUCTION_STATUS.UPCOMING)
       } // Fetch auctions with specific status

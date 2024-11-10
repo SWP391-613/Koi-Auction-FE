@@ -100,3 +100,13 @@ export const convertToJavaLocalDateTime = (date: Date | string): string => {
   }
   return date.replace("T", " ") + ":00.000000";
 };
+
+export function convertTimestamp(inputStr: string): string {
+  // Replace 'T' with a space
+  let result = inputStr.replace("T", " ");
+
+  // Ensure milliseconds have six digits by appending '000' at the end
+  result = result + "000";
+
+  return result;
+}

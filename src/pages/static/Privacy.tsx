@@ -9,7 +9,7 @@ const Privacy: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen px-4 py-12 sm:px-6 lg:px-8">
       <motion.div
         className="mx-auto max-w-4xl space-y-8"
         initial={{ opacity: 0 }}

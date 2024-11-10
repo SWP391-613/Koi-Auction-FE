@@ -7,7 +7,6 @@ import PaymentTransactions from "~/components/shared/PaymentTransactions";
 
 const MemberLayout: React.FC = () => {
   const navLinks = [
-    { to: "", label: "Profile" },
     { to: "/orders", label: "My Orders" },
     { to: "/payments", label: "Payment Transactions" },
   ];

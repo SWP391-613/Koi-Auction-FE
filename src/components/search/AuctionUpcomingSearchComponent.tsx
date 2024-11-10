@@ -1,16 +1,18 @@
 import { Typography } from "@mui/material";
 import React from "react";
 import ScrollToTop from "react-scroll-to-top";
-import { useAuctionSearch } from "~/hooks/useSearch";
-import { AuctionCart } from "~/pages/auctions/AuctionCart";
+import { useAuctionUpComingSearch } from "~/hooks/useSearch";
+import { AuctionRegisterCart } from "~/pages/auctions/AuctionCart";
 import PaginationComponent from "../common/PaginationComponent";
 import SearchBar from "../shared/SearchBar";
 
-interface AuctionSearchComponentProps {
+interface AuctionUpcomingSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
 }
 
-const AuctionSearchComponent: React.FC<AuctionSearchComponentProps> = () => {
+const AuctionUpcomingSearchComponent: React.FC<
+  AuctionUpcomingSearchComponentProps
+> = () => {
   const {
     query,
     setQuery,
@@ -21,7 +23,7 @@ const AuctionSearchComponent: React.FC<AuctionSearchComponentProps> = () => {
     totalPages,
     totalItems,
     handlePageChange,
-  } = useAuctionSearch(500);
+  } = useAuctionUpComingSearch(500);
 
   return (
     <div className="container mx-auto p-4 mt-14">
@@ -54,7 +56,8 @@ const AuctionSearchComponent: React.FC<AuctionSearchComponentProps> = () => {
             Showing 1 - {results.length} of {totalItems} results.
           </Typography>
 
-          <AuctionCart items={results} />
+          <AuctionRegisterCart items={results} />
+
           <PaginationComponent
             totalPages={totalPages}
             currentPage={page}
@@ -70,4 +73,4 @@ const AuctionSearchComponent: React.FC<AuctionSearchComponentProps> = () => {
   );
 };
 
-export default AuctionSearchComponent;
+export default AuctionUpcomingSearchComponent;

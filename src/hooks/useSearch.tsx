@@ -162,7 +162,7 @@ export const useKoiOwnerSearchNotAuth = (
     apiUrl: `${API_URL}/kois/get-kois-owner-by-keyword-not-auth`,
     requiresAuth: false,
     preload: true,
-    defaultQuery: "a",
+    defaultQuery: "",
     debounceTime,
     owner_id,
   });
@@ -192,8 +192,8 @@ export const useKoiInAuctionSearch = (debounceTime = 500) => {
     apiUrl: `${API_URL}/auctionkois/get-kois-by-keyword`,
     requiresAuth: false,
     preload: true,
-    defaultQuery: "ko",
-    debounceTime: debounceTime,
+    defaultQuery: "",
+    debounceTime,
   });
 };
 
@@ -202,7 +202,17 @@ export const useAuctionSearch = (debounceTime = 500) => {
     apiUrl: `${API_URL}/auctions/get-auctions-by-keyword`,
     requiresAuth: false,
     preload: true,
-    defaultQuery: "ongoing",
+    defaultQuery: "",
+    debounceTime,
+  });
+};
+
+export const useAuctionUpComingSearch = (debounceTime = 500) => {
+  return useSearch<AuctionModel>({
+    apiUrl: `${API_URL}/auctions/get-auctions-by-keyword`,
+    requiresAuth: true,
+    preload: true,
+    defaultQuery: "upcoming",
     debounceTime,
   });
 };

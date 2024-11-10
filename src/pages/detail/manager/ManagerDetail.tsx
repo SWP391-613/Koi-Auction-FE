@@ -99,7 +99,7 @@ const ManagerDetail: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto pt-6">
+    <div className="flex flex-col justify-around m-10">
       <AccountVerificationAlert user={user} />
 
       <div className="grid grid-cols-1 md:grid-cols-3">

@@ -39,7 +39,8 @@ const AccountTransactionComponent: React.FC<
     }
   };
 
-  const handleTransaction = async (e: React.FormEvent) => {
+
+  const handleTransaction = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (amount <= 0) {

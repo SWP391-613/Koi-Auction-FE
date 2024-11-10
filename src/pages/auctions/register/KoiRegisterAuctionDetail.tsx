@@ -1,15 +1,6 @@
-import {
-  faCakeCandles,
-  faEarthAsia,
-  faRuler,
-  faStar,
-  faTag,
-  faUser,
-  faVenusMars,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import KoiInAuctionGrid from "~/components/shared/KoiInAuctionGrid";
 import { useAuth } from "~/contexts/AuthContext";
 import { AuctionKoi, KoiWithAuctionKoiData } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
@@ -17,14 +8,12 @@ import {
   fetchAuctionById,
   fetchAuctionKoi,
   getKoiById,
-} from "~/utils/apiUtils"; // Assume we have this API function
+} from "~/utils/apiUtils";
 import { getAuctionStatusColor } from "~/utils/colorUtils";
-import { formatCurrency } from "~/utils/currencyUtils";
-import { convertDataToReadable } from "~/utils/dataConverter";
+import { getCookie } from "~/utils/cookieUtils";
 import { getAuctionStatusV2 } from "~/utils/dateTimeUtils";
 import BreederKoiManagement from "./BreederKoiManagement";
-import { getCookie } from "~/utils/cookieUtils";
-import KoiInAuctionGrid from "~/components/shared/KoiInAuctionGrid";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 
 const KoiRegisterAuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();
@@ -33,6 +22,8 @@ const KoiRegisterAuctionDetail: React.FC = () => {
   const [koiWithAuctionKoiData, setKoiWithAuctionKoiData] = useState<
     KoiWithAuctionKoiData[]
   >([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const token = getCookie("access_token");
 
@@ -40,26 +31,48 @@ const KoiRegisterAuctionDetail: React.FC = () => {
     if (!token) return;
 
     const fetchAuction = async () => {
-      const auctionData = await fetchAuctionById(Number(id));
-      setAuction(auctionData);
+      setLoading(true); // Set loading to true before starting the fetch
+      try {
+        const auctionData = await fetchAuctionById(Number(id));
+        setAuction(auctionData);
 
-      if (auctionData) {
-        const auctionKoiData = await fetchAuctionKoi(auctionData.id!);
-        const koiDetailsPromises = auctionKoiData.map(
-          (auctionKoi: AuctionKoi) => getKoiById(auctionKoi.koi_id, token),
-        );
-        const koiDetails = await Promise.all(koiDetailsPromises);
+        if (auctionData) {
+          const auctionKoiData = await fetchAuctionKoi(auctionData.id!);
+          const koiDetailsPromises = auctionKoiData.map(
+            (auctionKoi: AuctionKoi) => getKoiById(auctionKoi.koi_id, token),
+          );
+          const koiDetails = await Promise.all(koiDetailsPromises);
 
-        const combined = koiDetails.map((koiDetail, index) => ({
-          ...koiDetail,
-          auctionKoiData: auctionKoiData[index],
-        }));
+          const combined = koiDetails.map((koiDetail, index) => ({
+            ...koiDetail,
+            auctionKoiData: auctionKoiData[index],
+          }));
 
-        setKoiWithAuctionKoiData(combined);
+          setKoiWithAuctionKoiData(combined);
+        } else {
+          setError("No Upcoming Auction Found.");
+        }
+      } catch (err) {
+        setError("Error fetching auction data.");
+      } finally {
+        setLoading(false); // Set loading to false once the fetch is done
       }
     };
+
     fetchAuction();
   }, [id, token]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingComponent />
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="py-8 text-center text-red-500">{error}</div>;
+  }
 
   if (!auction) {
     return (

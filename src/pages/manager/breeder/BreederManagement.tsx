@@ -72,9 +72,9 @@ const BreederManagement = () => {
 
   if (loading) {
     return (
-      <Container>
+      <div className="flex justify-center items-center h-screen">
         <LoadingComponent />
-      </Container>
+      </div>
     );
   }
 

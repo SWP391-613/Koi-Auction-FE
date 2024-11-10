@@ -278,7 +278,7 @@ const Header = () => {
         <button
           onClick={toggleNavCollapse}
           className="text-white hover:text-gray-300 transition-colors duration-200"
-          title={isNavCollapsed ? "Mở menu" : "Đóng menu"}
+          title={isNavCollapsed ? "Show more" : "Hide"}
         >
           <FontAwesomeIcon
             icon={isNavCollapsed ? faChevronRight : faChevronLeft}

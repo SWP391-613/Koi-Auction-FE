@@ -1,6 +1,16 @@
+import { AdvancedVideo } from "@cloudinary/react";
+import { Cloudinary } from "@cloudinary/url-gen";
+import { format } from "date-fns";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import KoiSearchGrid from "~/components/shared/KoiSearchGrid";
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "~/contexts/AuthContext";
+import { KoiInAuctionDetailModel } from "~/types/kois.type";
+import { getKoiInAuctionData } from "~/utils/apiUtils";
+import { generateBlogPostsPreview } from "~/utils/data/blog.data";
 import FancyButton from "../../components/shared/FancyButton";
 import { koiBreeders } from "../../utils/data/koibreeders";
 import { generateBlogPostsPreview } from "~/utils/data/blog.data";
@@ -16,7 +26,7 @@ import KoiSearchGrid from "~/components/shared/KoiSearchGrid";
 const Home = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
-  const [randomKois, setRandomKois] = useState<KoiDetailModel[]>([]);
+  const [randomKois, setRandomKois] = useState<KoiInAuctionDetailModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { scrollYProgress } = useScroll();
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
@@ -41,7 +51,7 @@ const Home = () => {
     const fetchRandomKois = async () => {
       try {
         setIsLoading(true);
-        const response = await getKoiData(1, 8);
+        const response = await getKoiInAuctionData("", 1, 12);
         console.log("API Response:", response);
         setRandomKois(response.item || []);
       } catch (error) {
@@ -57,17 +67,17 @@ const Home = () => {
     navigate(`/breeder/${breederId}/info`);
   };
 
-  const FeaturedKoiCard = ({ kois }: { kois: KoiDetailModel[] }) => {
+  const FeaturedKoiCard = ({ kois }: { kois: KoiInAuctionDetailModel[] }) => {
     const navigate = useNavigate();
     const { user } = useAuth();
 
     return (
       <KoiSearchGrid
         kois={kois}
-        getLinkUrl={(koi) => `/kois/${koi.id}`}
+        getLinkUrl={(koi) => `/auctions/${koi.auction_id}`}
         buttonEffect={(koi) => (
           <button
-            onClick={() => navigate(`/kois/${koi.id}`)}
+            onClick={() => navigate(`/auctions/${koi.auction_id}`)}
             type="button"
             className="mt-6 flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-blue-500 hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-4 py-2 overflow-hidden border-2 rounded-full group"
           >
@@ -330,7 +340,7 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
           >
-            {generateBlogPostsPreview(6).map((post, index) => (
+            {generateBlogPostsPreview(8).map((post, index) => (
               <motion.div
                 key={post.id}
                 initial={{ opacity: 0, y: 20 }}

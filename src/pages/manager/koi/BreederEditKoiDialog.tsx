@@ -5,14 +5,13 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Snackbar,
   TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { KoiDetailModel } from "~/types/kois.type"; // Adjust the import path as needed
+import { KoiDetailModel, UpdateKoiDTO } from "~/types/kois.type"; // Adjust the import path as needed
 import { fetchKoi, updateKoi } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils"; // Adjust the import path as needed
 import { extractErrorMessage, getCategoryName } from "~/utils/dataConverter";
@@ -32,7 +31,7 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
   onClose,
   koiId,
 }) => {
-  const [koi, setKoi] = useState<KoiDetailModel | null>(null);
+  const [koi, setKoi] = useState<UpdateKoiDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
@@ -59,7 +58,7 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
     if (!accessToken) return;
 
     try {
-      const data = await fetchKoi(koiId, accessToken); // Use the utility function
+      const data = await fetchKoi(koiId); // Use the utility function
       setKoi(data);
     } catch (err) {
       const errorMessage = extractErrorMessage(err, "Failed to fetch koi data");
@@ -78,11 +77,13 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
   const handleUpdateKoi = async () => {
     if (!koi) return;
 
+    console.log("data: ", koi);
+
     const accessToken = getAccessToken();
     if (!accessToken) return;
 
     try {
-      await updateKoi(koiId, koi, accessToken); // Use the utility function
+      await updateKoi(koiId, koi); // Use the utility function
       setSnackbar({ open: true, message: "Koi updated successfully" });
       onClose();
     } catch (err) {
@@ -101,10 +102,10 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              height: 200,
+              height: 100,
+              width: 100,
             }}
           >
-            log
             <LoadingComponent />
           </Box>
         </DialogContent>
@@ -241,12 +242,6 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
           </Button>
         </DialogActions>
       </Dialog>
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-        message={snackbar.message}
-      />
     </>
   );
 };

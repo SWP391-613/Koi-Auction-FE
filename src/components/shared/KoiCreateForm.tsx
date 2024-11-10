@@ -15,6 +15,7 @@ import { AddNewKoiDTO } from "~/types/kois.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { categoryMap } from "~/utils/dataConverter";
 import AddKoiPreviewCart from "./AddKoiPreviewCart";
+import { toast, ToastContainer } from "react-toastify";
 
 interface KoiCreatePopupForm {
   open?: boolean;
@@ -137,8 +138,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
       onClose();
     } catch (error) {
       console.error("Error creating koi:", error);
-      setSnackbarMessage("Error creating koi. Please try again.");
-      setSnackbarOpen(true);
+      toast.error((error as any).response.data.reason);
     }
   };
 
@@ -260,15 +260,6 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
               error={!!errors.thumbnail}
               helperText={errors.thumbnail}
             />
-            <input
-              id="koiImageUpload"
-              type="file"
-              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-              accept="image/*"
-              aria-label="Upload Koi Image"
-              onChange={handleFileChange}
-              style={{ marginTop: "1rem" }}
-            />
           </div>
           <div className="mt-5">
             <Button onClick={onClose}>Back</Button>
@@ -289,6 +280,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
         onClose={() => setSnackbarOpen(false)}
         message={snackbarMessage}
       />
+      <ToastContainer />
     </>
   );
 };

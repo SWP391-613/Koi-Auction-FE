@@ -47,6 +47,14 @@ const MemberManagement = () => {
     fetchMembers();
   }, [page, itemsPerPage]);
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingComponent />
+      </div>
+    );
+  }
+
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number,

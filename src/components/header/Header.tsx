@@ -65,9 +65,6 @@ const Header = () => {
         <div className="mr-4">
           <Clock />
         </div>
-
-        <SearchBar />
-
         <div className="flex items-center space-x-6 ">
           <RoleIcon
             isLoggedIn={isLoggedIn}

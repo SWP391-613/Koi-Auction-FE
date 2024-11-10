@@ -42,3 +42,18 @@ export type KoiSearchResult = {
   total_item: number;
   item: KoiInAuctionDetailModel[];
 };
+
+export type UpdateKoiDTO = {
+  id: number;
+  age: number;
+  base_price: number;
+  category_id: number;
+  description: string;
+  name: string;
+  is_display: number;
+  length: number;
+  owner_id: number;
+  sex: KoiGender;
+  status_name: KoiTrackingStatus;
+  thumbnail: string;
+};

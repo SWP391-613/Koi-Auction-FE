@@ -7,7 +7,7 @@ const BlogList: React.FC = () => {
   return (
     <div className="min-h-screen px-4 py-12 sm:px-6 lg:px-8">
       <motion.div
-        className="mx-auto max-w-4xl"
+        className="max-w-7xl mx-auto"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}

@@ -56,6 +56,21 @@ import UserOrderDetail from "./pages/detail/member/UserOrderDetail";
 import Kois from "./pages/kois/Kois";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import BreederInfo from "./pages/static/BreederInfo";
+import KoiWishList from "./pages/kois/KoiWishList";
+import StaffDetail from "./pages/detail/staff/StaffDetail";
+import BreederDetail from "./pages/detail/breeder/BreederDetail";
+import UserDetail from "./pages/detail/member/UserDetail";
+import ManagerDetail from "./pages/detail/manager/ManagerDetail";
+import UserOrder from "./pages/detail/member/UserOrder";
+import PaymentTransactions from "./components/shared/PaymentTransactions";
+import VerifyKoiList from "./pages/kois/VerifyKoiList";
+import OrderManagement from "./pages/manager/orders/OrderManagement";
+import PaymentManagement from "./pages/manager/payments/PaymentManagement";
+import SendNotifications from "./components/shared/SendNotifications";
+import AddKoi from "./pages/detail/breeder/AddKoi";
+import KoiRegisterAuctions from "./pages/auctions/register/KoiRegisterAuctions";
+import { AuctionsManagement } from "./pages/manager/auctions/AuctionsManagement";
+import DetailNavbar from "./components/shared/DetailNavbar";
 
 const TITLE = "Koi Auction";
 
@@ -91,6 +106,7 @@ function AppContent() {
                 <main
                   className={`flex-1 ${isNavCollapsed ? "ml-20" : "ml-60"} pt-16 transition-all duration-300`}
                 >
+                  <DetailNavbar />
                   <Routes>
                     {/* Public routes */}
                     <Route
@@ -237,46 +253,38 @@ function AppContent() {
                           </PageTransition>
                         }
                       />
-                      <Route
-                        path="/users/*"
-                        element={
-                          <PageTransition>
-                            <MemberLayout />
-                          </PageTransition>
-                        }
-                      ></Route>
-                      <Route
-                        path="/managers/*"
-                        element={
-                          <PageTransition>
-                            <ManagerLayout />
-                          </PageTransition>
-                        }
-                      ></Route>
-                      <Route
-                        path="/breeders/*"
-                        element={
-                          <PageTransition>
-                            <BreederLayout />
-                          </PageTransition>
-                        }
-                      ></Route>
-                      <Route
-                        path="/staffs/*"
-                        element={
-                          <PageTransition>
-                            <StaffLayout />
-                          </PageTransition>
-                        }
-                      ></Route>
-                      <Route
-                        path="/orders/*"
-                        element={
-                          <PageTransition>
-                            <OrderLayout />
-                          </PageTransition>
-                        }
-                      />
+                      <Route path="/users/*">
+                        <Route path=":id" element={<UserDetail />} />
+                        <Route path="orders" element={<UserOrder />} />
+                        <Route path="payments" element={<PaymentTransactions />} />
+                      </Route>
+                      <Route path="/managers/*">
+                        <Route path="" element={<ManagerDetail />} />
+                        <Route path="auctions" element={<AuctionsManagement />} />
+                        <Route path="verify/kois" element={<VerifyKoiList />} />
+                        <Route path="orders" element={<OrderManagement />} />
+                        <Route path="payments" element={<PaymentManagement />} />
+                        <Route path="send-notifications" element={<SendNotifications />} />
+                      </Route>
+                      <Route path="/breeders/*">
+                        <Route path="" element={<BreederDetail />} />
+                        <Route path="add-koi" element={<AddKoi />} />
+                        <Route path="auctions/register" element={<KoiRegisterAuctions />} />
+                        <Route path="wishlist" element={<KoiWishList />} />
+                        <Route path="payments" element={<PaymentTransactions />} />
+                      </Route>
+                      <Route path="/staffs/*">
+                        <Route path="" element={<StaffDetail />} />
+                        <Route path="auctions" element={<AuctionsManagement />} />
+                        <Route path="verify/kois" element={<VerifyKoiList />} />
+                        <Route path="orders" element={<OrderManagement />} />
+                        <Route path="payments" element={<PaymentManagement />} />
+                        <Route path="send-notifications" element={<SendNotifications />} />
+                      </Route>
+                      <Route path="/orders/*">
+                        <Route path="" element={<UserOrder />} />
+                        <Route path="order-detail/:orderId" element={<UserOrderDetail />} />
+                      </Route>
                       <Route path="/payments/*" element={<PaymentLayout />} />
                       <Route
                         path="/order-detail/:id"

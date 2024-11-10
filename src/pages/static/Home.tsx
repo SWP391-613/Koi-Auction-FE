@@ -2,26 +2,15 @@ import { AdvancedVideo } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { format } from "date-fns";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
+import { default as React, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import KoiSearchGrid from "~/components/shared/KoiSearchGrid";
-import React from "react";
-import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "~/contexts/AuthContext";
 import { KoiInAuctionDetailModel } from "~/types/kois.type";
 import { getKoiInAuctionData } from "~/utils/apiUtils";
 import { generateBlogPostsPreview } from "~/utils/data/blog.data";
 import FancyButton from "../../components/shared/FancyButton";
 import { koiBreeders } from "../../utils/data/koibreeders";
-import { generateBlogPostsPreview } from "~/utils/data/blog.data";
-import { format } from "date-fns";
-import { useState, useEffect, useRef } from "react";
-import { KoiDetailModel } from "~/types/kois.type";
-import { getKoiData } from "~/utils/apiUtils";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
-import { AdvancedVideo } from "@cloudinary/react";
-import { Cloudinary } from "@cloudinary/url-gen";
-import KoiSearchGrid from "~/components/shared/KoiSearchGrid";
 
 const Home = () => {
   const navigate = useNavigate();

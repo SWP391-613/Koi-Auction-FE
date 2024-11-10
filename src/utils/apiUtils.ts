@@ -1240,3 +1240,27 @@ export const getUserHighestBidInAuctionKoi = async (
   );
   return response.data;
 };
+
+export const sendRequestUpdateRole = async (role: string) => {
+  try {
+    const response = await axios.get(
+      `http://localhost:4000/api/v1/mail/update-role?updateRole=${role}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getUserCookieToken()}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error send update role email", error.response?.data);
+      throw new Error(
+        error.response?.data?.message ||
+          "An error occurred during send update role email",
+      );
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
+  }
+};

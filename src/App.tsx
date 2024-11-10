@@ -4,6 +4,9 @@ import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // import first
 
+// Cloudinary config
+import { Cloudinary } from "@cloudinary/url-gen";
+
 // Vercel integrations
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
@@ -15,8 +18,8 @@ import { useNavbar } from "./contexts/NavbarContext";
 
 // Components
 import ProtectedRoute from "./components/common/ProtectedRoute";
-import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
+import Footer from "./components/footer/Footer";
 import NavBar from "./components/navbar/NavBar";
 
 // Pages
@@ -32,6 +35,7 @@ import About from "./pages/static/About";
 import Home from "./pages/static/Home";
 import Privacy from "./pages/static/Privacy";
 import Terms from "./pages/static/Terms";
+
 // Types
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import InternalServerError from "./components/error/InternalServerError";
@@ -52,6 +56,9 @@ import Kois from "./pages/kois/Kois";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import BreederInfo from "./pages/static/BreederInfo";
 import { number } from "prop-types";
+import PageTransition from "./components/shared/PageTransition";
+import AuthContainer from "./pages/auth/AuthContainer";
+
 
 const TITLE = "Koi Auction";
 
@@ -59,6 +66,13 @@ const theme = createTheme({
   typography: {
     fontFamily:
       '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+  },
+});
+
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME, // Thêm vào .env: VITE_CLOUDINARY_CLOUD_NAME=dbke1s5nm
   },
 });
 
@@ -288,6 +302,7 @@ function AppContent() {
             </div>
             <ToastContainer />
           </div>
+          <ToastContainer />
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />

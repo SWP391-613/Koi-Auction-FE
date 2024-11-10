@@ -3,7 +3,7 @@ import React from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Typography } from "@mui/material";
 import { Control, FieldErrors, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import NavigateButton from "~/components/shared/NavigateButton";
 import { UserRegisterDTO } from "~/types/users.type";
@@ -134,11 +134,12 @@ const Register: React.FC = () => {
             Already have an account?
           </Typography>
 
-          <NavigateButton
-            text="Login here"
+          <Link
             to="/login"
-            className="ml-2 rounded px-4 py-2 font-bold text-blue-500 bg-white hover:bg-white"
-          />
+            className="ml-2 text-blue-500 hover:text-blue-700 font-semibold transition-colors duration-200"
+          >
+            Login here
+          </Link>
         </div>
       </form>
     </AuthFormContainer>

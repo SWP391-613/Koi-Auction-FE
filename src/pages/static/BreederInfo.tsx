@@ -48,7 +48,7 @@ const BreederInfo: React.FC = () => {
         <NavigateButton
           to="/"
           icon={<FontAwesomeIcon icon={faArrowLeft} />}
-          text="Back to homepage"
+          text=""
           className="rounded bg-gray-300 px-5 py-3 text-lg text-black transition hover:bg-gray-200"
         />
       </Box>

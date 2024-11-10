@@ -20,6 +20,15 @@ module.exports = {
         192: "48rem", // 768px
         208: "52rem", // 832px
       },
+      keyframes: {
+        "border-flow": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+        },
+      },
+      animation: {
+        "border-flow": "border-flow 3s ease infinite",
+      },
     },
   },
   plugins: [],

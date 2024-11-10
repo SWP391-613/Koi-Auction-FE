@@ -9,6 +9,7 @@ import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { MEMBER_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { Member } from "~/types/users.type";
 import { getMembersData } from "~/utils/apiUtils";
+import { formatCurrency } from "~/utils/currencyUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 
 const MemberManagement = () => {
@@ -157,7 +158,9 @@ const MemberManagement = () => {
               </td>
               <td className="px-4 py-3 text-sm">{member.is_subscription}</td>
               <td className="px-4 py-3 text-sm">{member.date_of_birth}</td>
-              <td className="px-4 py-3 text-sm">{member.account_balance}</td>
+              <td className="px-4 py-3 text-sm">
+                {formatCurrency(member.account_balance)}
+              </td>
               <td className="px-4 py-3 text-sm">
                 <div className="flex items-center space-x-4 text-sm">
                   <CrudButton

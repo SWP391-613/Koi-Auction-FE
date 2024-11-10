@@ -48,6 +48,7 @@ import FormControl from "@mui/material/FormControl";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { koiBreeders } from "~/utils/data/koibreeders";
 import { styled } from "@mui/material/styles";
+import { formatCurrency } from "~/utils/currencyUtils";
 
 // Create a styled Button component
 const GrayButton = styled(Button)(({ theme }) => ({
@@ -358,8 +359,8 @@ const UserOrderDetail: React.FC = () => {
                       {formatDate(order.order_date)}
                     </Typography>
                     <Typography variant="body1" gutterBottom>
-                      <strong>Total Amount:</strong> $
-                      {totalOrderAmount.toFixed(2)}
+                      <strong>Total Amount:</strong>{" "}
+                      {formatCurrency(totalOrderAmount)}
                     </Typography>
                     <Typography variant="body1">
                       <strong>Est. Ship Date:</strong>{" "}

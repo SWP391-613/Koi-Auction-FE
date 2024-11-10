@@ -24,6 +24,7 @@ import { getUserCookieToken } from "~/utils/auth.utils";
 import { createFormData, extractErrorMessage } from "~/utils/dataConverter";
 import PaginationComponent from "../../../components/common/PaginationComponent";
 import BreederEditKoiDialog from "./BreederEditKoiDialog";
+import { formatCurrency } from "~/utils/currencyUtils";
 
 const KoiManagement = () => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
@@ -232,7 +233,9 @@ const KoiManagement = () => {
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.base_price || "N/A"}
+                          {koi.base_price == 0
+                            ? "N/A"
+                            : formatCurrency(koi.base_price)}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">

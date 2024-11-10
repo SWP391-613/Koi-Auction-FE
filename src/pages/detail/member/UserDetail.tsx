@@ -2,20 +2,22 @@ import { faEdit, faUserCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Divider, Rating, Typography } from "@mui/material";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AccountTransactionComponent from "~/components/shared/AccountTransactionComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { useUserData } from "~/hooks/useUserData";
-import { formatDate, sendOtp } from "~/utils/apiUtils";
+import { formatDate, sendOtp, sendRequestUpdateRole } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import UserDetailDialog from "./UserDetailDialog";
-import { Toast, ToastContainer } from "react-toastify/dist/components";
+import { getUserCookieToken } from "~/utils/auth.utils";
+import { toast, ToastContainer } from "react-toastify";
 
 const UserDetail: React.FC = () => {
   const { user, loading, error, setUser } = useUserData();
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState(false); // Modal state for showing user details
   const [fetchedUser, setFetchedUser] = useState<any>(null);
   const navigate = useNavigate();
@@ -74,6 +76,26 @@ const UserDetail: React.FC = () => {
     }
   };
 
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  const handleSubmitRole = async (role: string) => {
+    if (!user) return;
+
+    try {
+      await sendRequestUpdateRole(role);
+      toast.success("Role updated successfully");
+    } catch (error) {
+      console.error("Error updating role:", error);
+      toast.error("Failed to update role");
+    }
+  };
+
   const handleTransactionSuccess = async () => {
     // Refresh user data after successful transaction
     try {
@@ -122,6 +144,23 @@ const UserDetail: React.FC = () => {
                   Verify Account
                 </button>
               )}
+
+              <div>
+                {user.status_name === "VERIFIED" && (
+                  <button
+                    onClick={handleOpenModal}
+                    className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500 transition"
+                  >
+                    <FontAwesomeIcon icon={faUserCheck} className="mr-2" />
+                    Update My Role
+                  </button>
+                )}
+                <RoleSelectionModal
+                  isOpen={isModalOpen}
+                  onClose={handleCloseModal}
+                  onSubmit={handleSubmitRole}
+                />
+              </div>
             </div>
 
             <div className="mt-6 space-y-4">
@@ -202,8 +241,72 @@ const UserDetail: React.FC = () => {
 
         {/* Modal for showing fetched user data */}
         <UserDetailDialog openModal={openModal} handleClose={handleClose} />
+        <ToastContainer />
       </div>
     </>
+  );
+};
+
+interface RoleSelectionModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (role: string) => void;
+}
+
+const RoleSelectionModal: React.FC<RoleSelectionModalProps> = ({
+  isOpen,
+  onClose,
+  onSubmit,
+}) => {
+  const [selectedRole, setSelectedRole] = useState<string>("");
+
+  const handleRoleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedRole(event.target.value);
+  };
+
+  const handleSubmit = () => {
+    if (selectedRole) {
+      onSubmit(selectedRole);
+    }
+    onClose();
+  };
+
+  return (
+    <div
+      className={`fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center ${
+        isOpen ? "" : "hidden"
+      }`}
+    >
+      <div className="bg-white p-8 rounded-lg shadow-lg">
+        <h2 className="text-xl font-bold mb-4">Select Role to Update</h2>
+        <div className="mb-4">
+          <label className="block mb-2">Choose a role:</label>
+          <select
+            value={selectedRole}
+            onChange={handleRoleChange}
+            className="border border-gray-300 p-2 rounded-md w-full"
+          >
+            <option value="">Select Role</option>
+            <option value="BREEDER">Breeder</option>
+            <option value="STAFF">Staff</option>
+          </select>
+        </div>
+        <div className="flex justify-end">
+          <button
+            onClick={handleSubmit}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md mr-2"
+          >
+            Submit
+          </button>
+          <button
+            onClick={onClose}
+            className="bg-gray-400 text-white px-4 py-2 rounded-md"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -13,13 +13,12 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Context providers
 import { AuthProvider } from "./contexts/AuthContext";
-import { NavbarProvider } from "./contexts/NavbarContext";
-import { useNavbar } from "./contexts/NavbarContext";
+import { NavbarProvider, useNavbar } from "./contexts/NavbarContext";
 
 // Components
 import ProtectedRoute from "./components/common/ProtectedRoute";
-import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
+import Header from "./components/header/Header";
 import NavBar from "./components/navbar/NavBar";
 
 // Pages
@@ -55,9 +54,6 @@ import UserOrderDetail from "./pages/detail/member/UserOrderDetail";
 import Kois from "./pages/kois/Kois";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import BreederInfo from "./pages/static/BreederInfo";
-import { number } from "prop-types";
-import PageTransition from "./components/shared/PageTransition";
-import AuthContainer from "./pages/auth/AuthContainer";
 
 
 const TITLE = "Koi Auction";

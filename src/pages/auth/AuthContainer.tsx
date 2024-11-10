@@ -17,6 +17,7 @@ import styles from "./styles.module.css";
 import { Typography } from "@mui/material";
 import * as yup from "yup";
 import { sendOtpForgotPassword } from "~/utils/apiUtils";
+import { motion } from "framer-motion";
 
 const SocialLinks = () => (
   <div className={styles.socialContainer}>
@@ -349,16 +350,38 @@ const AuthContainer = () => {
   const [isActive, setIsActive] = useState(false);
 
   return (
-    <div className={styles.wrapper}>
-      <div className={`${styles.container} ${isActive ? styles.active : ""}`}>
-        <div className={`${styles.formContainer} ${styles.signUp}`}>
-          <RegisterForm />
-        </div>
-        <div className={`${styles.formContainer} ${styles.signIn}`}>
-          <LoginForm />
-        </div>
-        <Overlay isActive={isActive} onToggle={setIsActive} />
-      </div>
+    <div className={styles.full}>
+      <motion.div
+        className={styles.wrapper}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          className={`${styles.container} ${isActive ? styles.active : ""}`}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <motion.div
+            className={`${styles.formContainer} ${styles.signUp}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <RegisterForm />
+          </motion.div>
+          <motion.div
+            className={`${styles.formContainer} ${styles.signIn}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <LoginForm />
+          </motion.div>
+          <Overlay isActive={isActive} onToggle={setIsActive} />
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

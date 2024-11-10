@@ -332,23 +332,27 @@ const Home = () => {
             {generateBlogPostsPreview(8).map((post, index) => (
               <motion.div
                 key={post.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 50 }}
                 animate={{
                   opacity: isNewsInView ? 1 : 0,
-                  y: isNewsInView ? 0 : 20,
+                  y: isNewsInView ? 0 : 50,
                 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{ 
+                  duration: 0.6,
+                  delay: index * 0.1, // Giữ delay để tạo hiệu ứng lần lượt
+                  ease: "easeOut"  // Thêm easing để chuyển động mượt mà hơn
+                }}
               >
                 <Link
                   to={`/blog/${post.id}`}
-                  className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300"
+                  className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
                 >
                   {/* Date Badge */}
-                  <div className="relative">
+                  <div className="relative overflow-hidden">
                     <img
                       src={post.image}
                       alt={post.title}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-md text-sm">
                       {format(new Date(), "dd/MM/yyyy")}
@@ -357,7 +361,7 @@ const Home = () => {
 
                   {/* Content */}
                   <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-2 line-clamp-2 group-hover:text-red-600 transition-colors">
+                    <h3 className="text-lg font-semibold mb-2 line-clamp-2 group-hover:text-red-600 transition-colors duration-300">
                       {post.title}
                     </h3>
                     <p className="text-gray-600 text-sm line-clamp-2">

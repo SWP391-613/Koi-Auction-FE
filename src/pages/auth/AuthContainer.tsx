@@ -15,6 +15,8 @@ import FormField from "~/components/forms/FormField";
 import CheckboxField from "~/components/forms/CheckboxField";
 import styles from "./styles.module.css";
 import { Typography } from "@mui/material";
+import * as yup from "yup";
+import { sendOtpForgotPassword } from "~/utils/apiUtils";
 
 const SocialLinks = () => (
   <div className={styles.socialContainer}>
@@ -108,6 +110,31 @@ const LoginForm = () => {
     },
   });
 
+  const handleForgotPassword = async () => {
+    const email = getValues("email");
+    if (!email || !(await yup.string().email().isValid(email))) {
+      toast.error("Please enter a valid email address to reset your password.");
+      return;
+    }
+
+    try {
+      const response = await sendOtpForgotPassword(email);
+      if (response.status === 200) {
+        navigate("/otp-verification", {
+          state: {
+            email,
+            from: "login",
+            statusCode: 200,
+          },
+        });
+      } else {
+        toast.error("Failed to send OTP");
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred.");
+    }
+  };
+
   const onSubmit = async (data) => {
     try {
       const response = await login(data);
@@ -144,12 +171,21 @@ const LoginForm = () => {
         control={control}
         errors={errors}
       />
-      <CheckboxField
-        name="rememberMe"
-        label="Remember me"
-        control={control}
-        errors={errors}
-      />
+      <div className="flex justify-between items-center w-full">
+        <button
+          type="button"
+          onClick={handleForgotPassword}
+          className="text-sm text-blue-500 hover:text-blue-700 transition-colors duration-200"
+        >
+          Forgot password?
+        </button>
+        <CheckboxField
+          name="rememberMe"
+          label="Remember me"
+          control={control}
+          errors={errors}
+        />
+      </div>
       <button className={styles.formButton}>Sign In</button>
       <div className="flex flex-col items-center">
         <span className="w-1/5 border-b dark:border-gray-600 md:w-1/2 mx-auto"></span>

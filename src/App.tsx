@@ -29,6 +29,8 @@ import AuctionDetail from "./pages/auctions/AuctionDetail";
 import KoiBidding from "./pages/auctions/KoiBidding";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import AuthContainer from "./pages/auth/AuthContainer";
+
 import KoiDetail from "./pages/kois/KoiDetail";
 import About from "./pages/static/About";
 import Home from "./pages/static/Home";
@@ -136,6 +138,14 @@ function AppContent() {
                       element={
                         <PageTransition>
                           <Register />
+                        </PageTransition>
+                      }
+                    />
+                    <Route
+                      path="/auth"
+                      element={
+                        <PageTransition>
+                          <AuthContainer />
                         </PageTransition>
                       }
                     />

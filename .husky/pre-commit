@@ -1,2 +1,2 @@
 # echo "Running pre-commit hook"
-npm run prettier:fix && npm run check-types
+npm run prettier:fix

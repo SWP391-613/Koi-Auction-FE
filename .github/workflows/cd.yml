@@ -2,7 +2,9 @@ name: CD for Koi-Auction-FE
 
 on:
   push:
-    branches: ["main", "production"]
+    branches: ["main", "production", "develop"]
+  pull_request:
+    branches: ["develop"]
 
 jobs:
   build-and-deploy:
@@ -14,13 +16,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
-          cache: "npm"
+          cache: "yarn"
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install
 
       - name: Build the project
-        run: npm run build
+        run: yarn run build:prod
 
       - name: Deploy to Production Repo
         env:
@@ -51,6 +53,7 @@ jobs:
 
           # Commit and push changes
           cd production-repo
+          git pull
           git add .
           # Check if there are changes to commit
           if git diff --staged --quiet; then

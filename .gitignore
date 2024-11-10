@@ -26,3 +26,6 @@ dist-ssr
 .vercel
 # Environments
 .env
+
+# Ignore the package-lock.json file prevent conflict with yarn.lock file
+package-lock.json

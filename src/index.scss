@@ -24,30 +24,6 @@ body {
   flex-direction: column;
 }
 
-a {
-  color: #5352ed;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-a:hover {
-  color: #3d3bd4;
-}
-
-button {
-  cursor: pointer;
-  border: none;
-  background-color: #5352ed;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #3d3bd4;
-}
-
 h1,
 h2,
 h3,
@@ -56,57 +32,4 @@ h5,
 h6 {
   margin-top: 0;
   font-weight: 600;
-}
-
-body.dark-mode {
-  background-color: #1a1d21;
-  color: #e0e0e0;
-}
-
-body.dark-mode .grid-container {
-  background-color: #0d1117;
-}
-
-body.dark-mode .brand-item {
-  background-color: #2a2e35;
-}
-
-body.dark-mode .brand-name {
-  color: #e0e0e0;
-}
-
-body.dark-mode .brand-item:hover .brand-name {
-  color: #58a6ff;
-}
-
-body.dark-mode .header-container {
-  background-color: #161b22;
-}
-
-body.dark-mode .nav-link {
-  color: #c9d1d9;
-}
-
-body.dark-mode .nav-link:hover,
-body.dark-mode .nav-link:focus,
-body.dark-mode .nav-link.active {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .footer-container {
-  background-color: #0d1117;
-  color: #fff;
-}
-
-body.dark-mode .footer-link {
-  background: #212121;
-  color: white;
-}
-
-body.dark-mode .footer-link:hover {
-  background: #000;
-}
-
-body.dark-mode .footer-bottom {
-  color: #a4b0be;
 }

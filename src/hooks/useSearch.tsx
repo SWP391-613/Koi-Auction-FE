@@ -149,7 +149,7 @@ export const useKoiOwnerSearch = (debounceTime = 500) => {
     apiUrl: `${API_URL}/kois/get-kois-owner-by-keyword`,
     requiresAuth: true,
     preload: true,
-    defaultQuery: "ya",
+    defaultQuery: "",
     debounceTime,
   });
 };

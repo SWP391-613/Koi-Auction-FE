@@ -15,7 +15,7 @@ const AddKoiPreviewCart: React.FC<AddKoiPreviewCartProps> = ({ items }) => {
           key={index}
           className="m-2 transform overflow-hidden rounded-lg bg-white shadow-lg transition-transform hover:scale-105"
         >
-          <div className="flex h-full">
+          <div className="flex h-full w-[35rem]">
             <div className="flex w-[35%] items-center justify-center bg-[#4086c7]">
               {koi.thumbnail ? (
                 <img
@@ -27,7 +27,7 @@ const AddKoiPreviewCart: React.FC<AddKoiPreviewCartProps> = ({ items }) => {
                 <span className="m-16 text-xl text-white">No Image Found</span>
               )}
             </div>
-            <div className="flex flex-col h-full">
+            <div className="mt-5 ml-5 flex flex-col h-full">
               <div className="p-4 flex-grow">
                 <h2 className="mb-3 text-2xl font-semibold">{koi.name}</h2>
                 <div

@@ -16,6 +16,7 @@ import { getUserCookieToken } from "~/utils/auth.utils";
 import { categoryMap } from "~/utils/dataConverter";
 import AddKoiPreviewCart from "./AddKoiPreviewCart";
 import { toast, ToastContainer } from "react-toastify";
+import { koiName } from "~/utils/data/koiName";
 
 interface KoiCreatePopupForm {
   open?: boolean;
@@ -31,13 +32,13 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
   owner_id,
 }) => {
   const [formData, setFormData] = useState<AddNewKoiDTO>({
-    name: "",
+    name: "Select a name",
     base_price: 0,
     thumbnail: "",
-    gender: "",
+    gender: "FEMALE",
     length: 0,
     age: 0,
-    description: "",
+    description: "Enter description here...",
     category_id: 0,
     owner_id: 0,
     status_name: "UNVERIFIED",
@@ -51,6 +52,13 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
   useEffect(() => {
     setFormData((prevData) => ({ ...prevData, owner_id }));
   }, [owner_id]);
+
+  const handleDropdownChange = (event: SelectChangeEvent<string>) => {
+    setFormData({
+      ...formData,
+      name: event.target.value, // Update the name field in formData
+    });
+  };
 
   const handleInputChange = (
     e:
@@ -89,8 +97,8 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
     }
 
     // Validate length
-    if (formData.length <= 0) {
-      newErrors.length = "Length must be greater than 0";
+    if (formData.length <= 0 || formData.length >= 125) {
+      newErrors.length = "Length must be greater than 0 and less than 125";
     }
 
     // Validate age
@@ -142,96 +150,44 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
     }
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prevData) => ({
-          ...prevData,
-          thumbnail: reader.result as string,
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
     <>
       <div className="flex">
         <div className="flex flex-col">
           <div>
-            <TextField
-              fullWidth
-              margin="normal"
-              name="name"
-              label="Name"
-              value={formData.name}
-              sx={{ backgroundColor: "white" }}
-              onChange={handleInputChange}
-              error={!!errors.name}
-              helperText={errors.name}
-            />
-            <TextField
-              fullWidth
-              sx={{ backgroundColor: "white" }}
-              margin="normal"
-              name="base_price"
-              label="Base Price"
-              type="number"
-              value={formData.base_price}
-              onChange={handleInputChange}
-              error={!!errors.base_price}
-              helperText={errors.base_price}
-            />
-            <FormControl fullWidth margin="normal" error={!!errors.gender}>
-              <InputLabel>Gender</InputLabel>
-              <Select
-                name="gender"
-                value={formData.gender}
-                onChange={handleInputChange}
-              >
-                <MenuItem value="MALE">Male</MenuItem>
-                <MenuItem value="FEMALE">Female</MenuItem>
-                <MenuItem value="UNKNOWN">Unknown</MenuItem>
-              </Select>
-              {errors.gender && <p style={{ color: "red" }}>{errors.gender}</p>}
-            </FormControl>
-            <TextField
-              fullWidth
-              sx={{ backgroundColor: "white" }}
-              margin="normal"
-              name="length"
-              label="Length"
-              type="number"
-              value={formData.length}
-              onChange={handleInputChange}
-              error={!!errors.length}
-              helperText={errors.length}
-            />
-            <TextField
-              fullWidth
-              sx={{ backgroundColor: "white" }}
-              margin="normal"
-              name="age"
-              label="Age"
-              type="number"
-              value={formData.age}
-              onChange={handleInputChange}
-              error={!!errors.age}
-              helperText={errors.age}
-            />
-            <TextField
-              fullWidth
-              sx={{ backgroundColor: "white" }}
-              margin="normal"
-              name="description"
-              label="Description"
-              multiline
-              rows={3}
-              value={formData.description}
-              onChange={handleInputChange}
-            />
+            {/* Dropdown for koi names */}
+            <div className="flex gap-5">
+              <FormControl fullWidth margin="normal" error={!!errors.name}>
+                <InputLabel>Name</InputLabel>
+                <Select
+                  name="name"
+                  value={formData.name}
+                  onChange={handleDropdownChange}
+                >
+                  {koiName.map((koiName, index) => (
+                    <MenuItem key={index} value={koiName}>
+                      {koiName}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
+              </FormControl>
+              <FormControl fullWidth margin="normal" error={!!errors.gender}>
+                <InputLabel>Gender</InputLabel>
+                <Select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleInputChange}
+                >
+                  <MenuItem value="MALE">Male</MenuItem>
+                  <MenuItem value="FEMALE">Female</MenuItem>
+                  <MenuItem value="UNKNOWN">Unknown</MenuItem>
+                </Select>
+                {errors.gender && (
+                  <p style={{ color: "red" }}>{errors.gender}</p>
+                )}
+              </FormControl>
+            </div>
             <FormControl fullWidth margin="normal" error={!!errors.category_id}>
               <InputLabel>Category</InputLabel>
               <Select
@@ -249,6 +205,32 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
                 <p style={{ color: "red" }}>{errors.category_id}</p>
               )}
             </FormControl>
+            <div className="flex gap-5">
+              <TextField
+                fullWidth
+                sx={{ backgroundColor: "white" }}
+                margin="normal"
+                name="length"
+                label="Length"
+                type="number"
+                value={formData.length}
+                onChange={handleInputChange}
+                error={!!errors.length}
+                helperText={errors.length}
+              />
+              <TextField
+                fullWidth
+                sx={{ backgroundColor: "white" }}
+                margin="normal"
+                name="age"
+                label="Age"
+                type="number"
+                value={formData.age}
+                onChange={handleInputChange}
+                error={!!errors.age}
+                helperText={errors.age}
+              />
+            </div>
             <TextField
               fullWidth
               sx={{ backgroundColor: "white" }}
@@ -259,6 +241,29 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
               onChange={handleInputChange}
               error={!!errors.thumbnail}
               helperText={errors.thumbnail}
+            />
+            <TextField
+              fullWidth
+              sx={{ backgroundColor: "white" }}
+              margin="normal"
+              name="base_price"
+              label="Base Price (VND)"
+              type="number"
+              value={formData.base_price}
+              onChange={handleInputChange}
+              error={!!errors.base_price}
+              helperText={errors.base_price}
+            />
+            <TextField
+              fullWidth
+              sx={{ backgroundColor: "white" }}
+              margin="normal"
+              name="description"
+              label="Description"
+              multiline
+              rows={3}
+              value={formData.description}
+              onChange={handleInputChange}
             />
           </div>
           <div className="mt-5">

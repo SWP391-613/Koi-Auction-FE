@@ -53,7 +53,7 @@ export type UpdateKoiDTO = {
   is_display: number;
   length: number;
   owner_id: number;
-  sex: KoiGender;
+  sex: "MALE" | "FEMALE" | "UNKNOWN";
   status_name: KoiTrackingStatus;
   thumbnail: string;
 };

@@ -71,7 +71,7 @@ const AuctionDetail: React.FC = () => {
 
   if (isLoading) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -84,7 +84,7 @@ const AuctionDetail: React.FC = () => {
 
   if (error) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="py-8 text-center text-red-500"
@@ -96,7 +96,7 @@ const AuctionDetail: React.FC = () => {
 
   if (!auction) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="py-8 text-center text-red-500"
@@ -150,15 +150,18 @@ const AuctionDetail: React.FC = () => {
             <Typography variant="h6">
               Status: &nbsp;
               <motion.span
-                animate={{ 
+                animate={{
                   scale: [1, 1.1, 1],
-                  transition: { 
-                    repeat: Infinity, 
-                    duration: 2 
-                  }
+                  transition: {
+                    repeat: Infinity,
+                    duration: 2,
+                  },
                 }}
               >
-                <FontAwesomeIcon icon={faClock} className="mr-2 text-blue-500" />
+                <FontAwesomeIcon
+                  icon={faClock}
+                  className="mr-2 text-blue-500"
+                />
               </motion.span>
               <span className="text-xl text-black glow-text">
                 {getAuctionStatusV2(

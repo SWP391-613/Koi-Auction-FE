@@ -1,7 +1,6 @@
-import { Box, Typography } from "@mui/material";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import DashboardLayout from "./dashboard/DashBoardLayout";
+import ManagerDetail from "../pages/detail/manager/ManagerDetail";
 import KoiDetail from "../pages/kois/KoiDetail";
 import { AuctionsManagement } from "../pages/manager/auctions/AuctionsManagement";
 import BreederManagement from "../pages/manager/breeder/BreederManagement";
@@ -9,7 +8,7 @@ import KoiManagement from "../pages/manager/koi/KoiManagement";
 import MemberManagement from "../pages/manager/member/MemberManagement";
 import Settings from "../pages/manager/settings/Settings";
 import StaffManagement from "../pages/manager/staff/StaffManagement";
-import ManagerDetail from "../pages/detail/manager/ManagerDetail";
+import DashboardLayout from "./dashboard/DashBoardLayout";
 
 function ManagerLayout() {
   return (

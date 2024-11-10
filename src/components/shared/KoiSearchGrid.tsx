@@ -43,6 +43,9 @@ const KoiSearchGrid = <T extends KoiDetailModel>({
           }}
           className="transform overflow-hidden m-1 md:m-5 rounded-[1.5rem] bg-white shadow-md transition-all hover:scale-102"
         >
+          <div className="flex justify-end bg-gray-200">
+            {renderActions && renderActions(koi)}
+          </div>
           <motion.div
             className="flex flex-col"
             whileHover={{ scale: 1.02 }}
@@ -150,7 +153,6 @@ const KoiSearchGrid = <T extends KoiDetailModel>({
                   age={koi.age}
                 />
               </div>
-              {renderActions && renderActions(koi)}
               {/* Render buttonEffect with koi.id */}
               {buttonEffect && buttonEffect(koi)}
             </motion.div>

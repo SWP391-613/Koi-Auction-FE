@@ -87,7 +87,7 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
           },
         },
       );
-      setStaffList((prevList) => [...prevList, ...response.data.item]);
+      setStaffList(response.data.item);
       setTotalPages(response.data.total_page);
     } catch (error) {
       console.error("Error fetching staff list:", error);
@@ -112,12 +112,6 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
     navigate,
     page,
   ]);
-
-  const handleLoadMore = () => {
-    if (page < totalPages) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  };
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -201,11 +195,6 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
           </Select>
         </FormControl>
         {loading && <CircularProgress />}
-        {page < totalPages && (
-          <Button onClick={handleLoadMore} disabled={loading}>
-            Load More Staff
-          </Button>
-        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>

@@ -859,17 +859,22 @@ export const createKoi = async (
 };
 
 export const updateKoi = async (koiId: number, koi: UpdateKoiDTO) => {
-  const response = await axios.put(`${API_URL}/kois/${koiId}`, koi, {
-    headers: {
-      Authorization: `Bearer ${getUserCookieToken()}`,
-    },
-  });
-
-  if (response.status !== 200) {
-    throw new Error("Failed to update koi");
+  try {
+    const response = await axios.put(`${API_URL}/kois/${koiId}`, koi, {
+      headers: {
+        Authorization: `Bearer ${getUserCookieToken()}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.error(
+        "Error update koi's breeder:",
+        error.response?.data?.message || error.message,
+      );
+    }
+    throw error;
   }
-
-  return response.data;
 };
 
 export const fetchKoi = async (koiId: number) => {

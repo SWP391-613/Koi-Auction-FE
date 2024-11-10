@@ -17,7 +17,7 @@ const Auctions: React.FC = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
       >
-        <motion.h1 
+        <motion.h1
           className="text-3xl font-bold text-center my-8"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}

@@ -55,7 +55,6 @@ import Kois from "./pages/kois/Kois";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import BreederInfo from "./pages/static/BreederInfo";
 
-
 const TITLE = "Koi Auction";
 
 const theme = createTheme({
@@ -64,7 +63,6 @@ const theme = createTheme({
       '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
   },
 });
-
 
 const cld = new Cloudinary({
   cloud: {

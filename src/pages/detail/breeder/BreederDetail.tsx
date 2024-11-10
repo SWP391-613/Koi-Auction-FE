@@ -196,7 +196,7 @@ const BreederDetail: React.FC = () => {
       );
 
       if (response.status === 200) {
-        toast.success("Koi deleted successfully");
+        toast.success("Your Koi deleted successfully");
         setCurrentPage(1);
         fetchKoiData();
       }
@@ -321,25 +321,11 @@ const BreederDetail: React.FC = () => {
         </Typography>
         <KoiOwnerSearchComponent
           onSearchStateChange={handleSearchStateChange}
-        />
-      </div>
-      <div>
-        <Typography variant="h5" sx={{ marginTop: "2rem", marginLeft: "1rem" }}>
-          All Koi
-        </Typography>
-        <KoiBreederViewGrid
-          kois={kois}
-          handleView={() => {}}
           handleEdit={handleEdit}
           handleDelete={handleDelete}
           renderActions={renderCrudButtons}
         />
       </div>
-      <PaginationComponent
-        totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
       <ScrollToTop smooth />
     </div>
   );

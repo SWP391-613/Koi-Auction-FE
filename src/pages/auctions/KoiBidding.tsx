@@ -85,10 +85,10 @@ const KoiBidding: React.FC = () => {
           auctionKoi?.bid_method === "SEALED_BID"
             ? 0
             : auctionKoiDetails.current_bid +
-            auctionKoiDetails.bid_step +
-            (auctionKoiDetails.current_bid === 0
-              ? auctionKoiDetails.base_price
-              : 0),
+                auctionKoiDetails.bid_step +
+                (auctionKoiDetails.current_bid === 0
+                  ? auctionKoiDetails.base_price
+                  : 0),
         );
         setKoi(await getKoiById(auctionKoiDetails.koi_id));
         await getUserHighestBidInAuctionKoi(

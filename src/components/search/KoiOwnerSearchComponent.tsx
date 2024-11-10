@@ -1,18 +1,25 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import PaginationComponent from "../common/PaginationComponent";
 import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
 import { useKoiOwnerSearch } from "~/hooks/useSearch";
+import { KoiDetailModel } from "~/types/kois.type";
 
 interface KoiOwnerSearchComponentProps {
   owner_id?: number;
+  renderActions?: (koi: KoiDetailModel) => ReactNode;
+  handleEdit?: (id: number) => void;
+  handleDelete?: (id: number) => void;
   onSearchStateChange: (isActive: boolean) => void;
 }
 
 const KoiOwnerSearchComponent: React.FC<KoiOwnerSearchComponentProps> = ({
   owner_id,
   onSearchStateChange,
+  handleEdit, // Add this
+  handleDelete, // Add this
+  renderActions, // Also add renderActions if needed
 }) => {
   const {
     query,
@@ -68,6 +75,9 @@ const KoiOwnerSearchComponent: React.FC<KoiOwnerSearchComponentProps> = ({
           <KoiSearchGrid
             kois={results}
             getLinkUrl={(koi) => `/kois/${koi.id}`}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+            renderActions={renderActions}
           />
           <PaginationComponent
             totalPages={totalPages}

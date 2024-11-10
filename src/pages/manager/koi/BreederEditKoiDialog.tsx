@@ -9,9 +9,9 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { KoiDetailModel, UpdateKoiDTO } from "~/types/kois.type"; // Adjust the import path as needed
+import { UpdateKoiDTO } from "~/types/kois.type"; // Adjust the import path as needed
 import { fetchKoi, updateKoi } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils"; // Adjust the import path as needed
 import { extractErrorMessage, getCategoryName } from "~/utils/dataConverter";
@@ -77,8 +77,6 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
   const handleUpdateKoi = async () => {
     if (!koi) return;
 
-    console.log("data: ", koi);
-
     const accessToken = getAccessToken();
     if (!accessToken) return;
 
@@ -86,10 +84,11 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
       await updateKoi(koiId, koi); // Use the utility function
       setSnackbar({ open: true, message: "Koi updated successfully" });
       onClose();
+      fetchKoiData();
     } catch (err) {
       const errorMessage = extractErrorMessage(err, "Failed to update koi");
-      toast.error(errorMessage); // Notify user of the error
-      setError(errorMessage); // Set error state
+      toast.error(errorMessage);
+      setError(errorMessage);
     }
   };
 
@@ -184,7 +183,7 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
             <Box sx={{ display: "flex", gap: 2 }}>
               <TextField
                 name="base_price"
-                label="Base Price (USD)"
+                label="Base Price (VND)"
                 type="number"
                 fullWidth
                 variant="outlined"
@@ -242,6 +241,7 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
           </Button>
         </DialogActions>
       </Dialog>
+      <ToastContainer />
     </>
   );
 };

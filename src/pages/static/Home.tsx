@@ -11,11 +11,18 @@ import { getKoiInAuctionData } from "~/utils/apiUtils";
 import { generateBlogPostsPreview } from "~/utils/data/blog.data";
 import FancyButton from "../../components/shared/FancyButton";
 import { koiBreeders } from "../../utils/data/koibreeders";
+import { BreedersResponse } from "~/types/paginated.types";
+import axios from "axios";
 
 const Home = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const [randomKois, setRandomKois] = useState<KoiInAuctionDetailModel[]>([]);
+  const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>({
+    total_page: 0,
+    total_item: 0,
+    item: [],
+  });
   const [isLoading, setIsLoading] = useState(true);
   const { scrollYProgress } = useScroll();
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
@@ -49,7 +56,26 @@ const Home = () => {
         setIsLoading(false);
       }
     };
+
+    const fetchAllBreeders = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/v1/breeders`,
+          {
+            params: {
+              page: 0,
+              limit: 20,
+            },
+          },
+        );
+        setKoiBreeders(response.data || []);
+      } catch (error) {
+        console.error("Error fetching breeders:", error);
+      }
+    };
+
     fetchRandomKois();
+    fetchAllBreeders();
   }, []);
 
   const handleBreederClick = (breederId: number) => {
@@ -280,28 +306,29 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4"
           >
-            {koiBreeders.map((breeder, index) => (
-              <motion.div
-                key={breeder.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{
-                  opacity: isBreedersInView ? 1 : 0,
-                  y: isBreedersInView ? 0 : 20,
-                }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-4 flex flex-col items-center justify-center cursor-pointer"
-                onClick={() => handleBreederClick(breeder.id)}
-              >
-                <img
-                  src={breeder.avatar_url}
-                  alt={`${breeder.name} logo`}
-                  className="h-20 w-auto object-contain mb-2"
-                />
-                <p className="text-center font-medium text-gray-700">
-                  {breeder.name}
-                </p>
-              </motion.div>
-            ))}
+            {koiBreeders?.item?.length > 0 &&
+              koiBreeders.item.map((breeder, index) => (
+                <motion.div
+                  key={`${breeder.id}-${index}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{
+                    opacity: isBreedersInView ? 1 : 0,
+                    y: isBreedersInView ? 0 : 20,
+                  }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="bg-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-4 flex flex-col items-center justify-center cursor-pointer"
+                  onClick={() => handleBreederClick(breeder.id)}
+                >
+                  <img
+                    src={breeder.avatar_url}
+                    alt={`${breeder.first_name} logo`}
+                    className="h-20 w-auto object-contain mb-2"
+                  />
+                  <p className="text-center font-medium text-gray-700">
+                    {breeder.first_name}
+                  </p>
+                </motion.div>
+              ))}
           </motion.div>
         </div>
       </motion.div>

@@ -1,17 +1,21 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
-import React from "react";
+import React, { ReactNode } from "react";
+import { useKoiUnverifiedSearch } from "~/hooks/useSearch";
+import { KoiDetailModel } from "~/types/kois.type";
 import PaginationComponent from "../common/PaginationComponent";
 import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
-import { useKoiUnverifiedSearch } from "~/hooks/useSearch";
 
 interface KoiUnverifiedSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
+  renderActions?: (koi: KoiDetailModel) => ReactNode;
+  handleEdit?: (id: number) => void;
+  handleDelete?: (id: number) => void;
 }
 
 const KoiUnverifiedSearchComponent: React.FC<
   KoiUnverifiedSearchComponentProps
-> = () => {
+> = ({ onSearchStateChange, handleEdit, handleDelete, renderActions }) => {
   const {
     query,
     setQuery,
@@ -62,6 +66,9 @@ const KoiUnverifiedSearchComponent: React.FC<
           <KoiSearchGrid
             kois={results}
             getLinkUrl={(koi) => `/kois/${koi.id}`}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+            renderActions={renderActions}
           />
           <PaginationComponent
             totalPages={totalPages}

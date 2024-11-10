@@ -15,9 +15,7 @@ import {
 import {
   Order,
   OrderDetail,
-  OrderDetailWithKoi,
   OrderPaginationResponse,
-  OrderResponse,
   OrderStatus,
   PaymentDTO,
 } from "~/types/orders.type";
@@ -28,6 +26,10 @@ import {
   MembersResponse,
 } from "~/types/paginated.types";
 import {
+  PaymentPaginationResponse,
+  PaymentStatus,
+} from "~/types/payments.type";
+import {
   LoginDTO,
   Staff,
   StaffRegisterDTO,
@@ -37,10 +39,6 @@ import {
 } from "~/types/users.type";
 import { environment } from "../environments/environment";
 import { getUserCookieToken } from "./auth.utils";
-import {
-  PaymentPaginationResponse,
-  PaymentStatus,
-} from "~/types/payments.type";
 
 export const login = async (payload: LoginDTO): Promise<UserLoginResponse> => {
   try {
@@ -1262,6 +1260,30 @@ export const sendRequestUpdateRole = async (role: string) => {
       throw new Error(
         error.response?.data?.message ||
           "An error occurred during send update role email",
+      );
+    } else {
+      throw new Error("An unexpected error occurred");
+    }
+  }
+};
+
+export const endAuctionEmergency = async (auctionId: number) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:4000/api/v1/auctions/end/${auctionId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${getUserCookieToken()}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error end auction", error.response?.data);
+      throw new Error(
+        error.response?.data?.reason || "An error occurred during end auction",
       );
     } else {
       throw new Error("An unexpected error occurred");

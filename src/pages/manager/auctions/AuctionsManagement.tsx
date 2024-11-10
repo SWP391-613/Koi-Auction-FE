@@ -20,6 +20,7 @@ import { AuctionModel } from "~/types/auctions.type";
 import {
   createNewAuction,
   deleteAuction,
+  endAuctionEmergency,
   fetchAuctionKoi,
   fetchAuctions,
 } from "~/utils/apiUtils";
@@ -186,31 +187,13 @@ export const AuctionsManagement: React.FC = () => {
     );
     if (!confirmed) return;
 
-    console.log("Ending auction:", auctionId);
-    console.log("Token:", token);
-
     try {
-      await axios
-        .put(
-          `http://localhost:4000/api/v1/auctions/end/${auctionId}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        )
-        .then(() => {
-          toast.success("Auction ended successfully");
-        });
-      // Implement the actual end auction logic here
+      await endAuctionEmergency(auctionId);
+      toast.success("Auction ended successfully");
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("Axios error:", error.response?.data || error.message);
-        toast.error(error.response?.data?.reason);
-      } else {
-        console.error("Unexpected error:", error);
-      }
+      const errorMessage = extractErrorMessage(error, "Failed to end auction");
+      console.error(errorMessage);
+      toast.error(errorMessage);
     }
   };
 

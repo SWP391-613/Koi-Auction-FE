@@ -180,26 +180,12 @@ const VerifyKoiList: React.FC = () => {
   return (
     <div>
       {kois.length > 0 ? (
-        <>
-          <KoiUnverifiedSearchComponent
-            onSearchStateChange={handleSearchStateChange}
-          />
-          <Typography variant="h3" sx={{ textAlign: "center" }}>
-            Unverified Kois
-          </Typography>
-          <KoiBreederViewGrid
-            kois={kois}
-            handleView={handleView}
-            handleEdit={handleApprove}
-            handleDelete={handleDecline}
-            renderActions={renderCrudButtons}
-          />
-          <PaginationComponent
-            totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
-        </>
+        <KoiUnverifiedSearchComponent
+          onSearchStateChange={handleSearchStateChange}
+          handleEdit={handleApprove}
+          handleDelete={handleDecline}
+          renderActions={renderCrudButtons}
+        />
       ) : (
         <div className="flex flex-col justify-center items-center h-[30rem]">
           <Typography

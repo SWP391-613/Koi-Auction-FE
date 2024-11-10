@@ -11,23 +11,22 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import { AddNewKoiDTO } from "~/types/kois.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { koiName } from "~/utils/data/fixedTitleName";
 import { categoryMap } from "~/utils/dataConverter";
 import AddKoiPreviewCart from "./AddKoiPreviewCart";
-import { toast, ToastContainer } from "react-toastify";
-import { koiName } from "~/utils/data/fixedTitleName";
 
 interface KoiCreatePopupForm {
   open?: boolean;
-  onClose: () => void;
   onSuccess: () => void;
   owner_id: number;
 }
 
 const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
   open,
-  onClose,
   onSuccess,
   owner_id,
 }) => {
@@ -48,6 +47,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     setFormData((prevData) => ({ ...prevData, owner_id }));
@@ -143,7 +143,6 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
       setSnackbarMessage("Koi created successfully!");
       setSnackbarOpen(true);
       onSuccess();
-      onClose();
     } catch (error) {
       console.error("Error creating koi:", error);
       toast.error((error as any).response.data.reason);
@@ -267,7 +266,15 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
             />
           </div>
           <div className="mt-5">
-            <Button onClick={onClose}>Back</Button>
+            <Button
+              onClick={() => {
+                setTimeout(() => {
+                  navigate("/breeders");
+                }, 1000);
+              }}
+            >
+              Back
+            </Button>
             <Button onClick={handleSubmit} variant="contained" color="primary">
               Create
             </Button>

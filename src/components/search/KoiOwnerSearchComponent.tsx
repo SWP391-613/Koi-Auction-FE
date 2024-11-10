@@ -7,15 +7,13 @@ import { useKoiOwnerSearch } from "~/hooks/useSearch";
 import { KoiDetailModel } from "~/types/kois.type";
 
 interface KoiOwnerSearchComponentProps {
-  owner_id?: number;
+  onSearchStateChange: (isActive: boolean) => void;
   renderActions?: (koi: KoiDetailModel) => ReactNode;
   handleEdit?: (id: number) => void;
   handleDelete?: (id: number) => void;
-  onSearchStateChange: (isActive: boolean) => void;
 }
 
 const KoiOwnerSearchComponent: React.FC<KoiOwnerSearchComponentProps> = ({
-  owner_id,
   onSearchStateChange,
   handleEdit, // Add this
   handleDelete, // Add this
@@ -57,7 +55,7 @@ const KoiOwnerSearchComponent: React.FC<KoiOwnerSearchComponentProps> = ({
           sx={{ textAlign: "left", marginTop: "1rem" }}
           color="error"
         >
-          *Note: Search on name, sex, length, age, price,....
+          *Note: Search on name, sex, length, age, price, description....
         </Typography>
       </div>
       {loading && (

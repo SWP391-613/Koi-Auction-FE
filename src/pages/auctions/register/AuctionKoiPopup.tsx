@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
 import {
-  Modal,
-  Button,
-  TextField,
-  MenuItem,
-  Typography,
   Box,
+  Button,
   FormHelperText,
+  MenuItem,
+  Modal,
+  TextField,
+  Typography,
 } from "@mui/material"; // Ensure you have Material-UI installed
+import React, { useEffect, useState } from "react";
 import { BidMethod } from "~/types/auctionkois.type";
 
 interface AuctionKoiPopupProps {
@@ -68,6 +68,13 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
       setCeilPriceError(
         `Ceiling price must be greater than the current base price of $${basePrice}.`,
       );
+    } else if (
+      (bidMethod === "ASCENDING_BID" || bidMethod === "DESCENDING_BID") &&
+      ceilPrice === 0
+    ) {
+      setCeilPriceError(
+        `Ceiling price is required for ${bidMethod} bid method.`,
+      );
     } else {
       setCeilPriceError("");
     }
@@ -103,6 +110,21 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
         </Typography>
 
         <TextField
+          label="Bid Method"
+          select
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={bidMethod}
+          onChange={(e) => setBidMethod(e.target.value as BidMethod)}
+        >
+          <MenuItem value="ASCENDING_BID">Ascending Bid</MenuItem>
+          <MenuItem value="DESCENDING_BID">Descending Bid</MenuItem>
+          <MenuItem value="SEALED_BID">Sealed Bid</MenuItem>
+          <MenuItem value="FIXED_PRICE">Fixed Price</MenuItem>
+        </TextField>
+
+        <TextField
           label="Base Price ($)"
           type="number"
           variant="outlined"
@@ -129,21 +151,6 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
           error={!!errorMessage} // Show error if exists
         />
         {errorMessage && <FormHelperText error>{errorMessage}</FormHelperText>}
-
-        <TextField
-          label="Bid Method"
-          select
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={bidMethod}
-          onChange={(e) => setBidMethod(e.target.value as BidMethod)}
-        >
-          <MenuItem value="ASCENDING_BID">Ascending Bid</MenuItem>
-          <MenuItem value="DESCENDING_BID">Descending Bid</MenuItem>
-          <MenuItem value="SEALED_BID">Sealed Bid</MenuItem>
-          <MenuItem value="FIXED_PRICE">Fixed Price</MenuItem>
-        </TextField>
 
         <TextField
           label="Ceiling Price ($)"

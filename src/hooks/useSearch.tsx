@@ -182,7 +182,8 @@ export const useKoiUnverifiedSearch = (debounceTime = 500) => {
   return useSearch<KoiDetailModel>({
     apiUrl: `${API_URL}/kois/get-unverified-kois-by-keyword`,
     requiresAuth: true,
-    preload: false,
+    preload: true,
+    defaultQuery: "",
     debounceTime,
   });
 };

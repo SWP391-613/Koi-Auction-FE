@@ -12,12 +12,6 @@ const AddKoi = () => {
     }, 3000);
   };
 
-  const handleBack = () => {
-    setTimeout(() => {
-      navigate("/breeders");
-    }, 1000);
-  };
-
   const userId = getCookie("user_id");
   useEffect(() => {
     if (!userId) {
@@ -31,7 +25,6 @@ const AddKoi = () => {
         Create New Koi
       </Typography>
       <KoiCreateForm
-        onClose={handleBack}
         onSuccess={handleKoiCreated}
         owner_id={parseInt(userId!)}
       />

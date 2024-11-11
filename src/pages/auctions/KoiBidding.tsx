@@ -405,9 +405,9 @@ const KoiBidding: React.FC = () => {
         <Typography
           className={`text-lg ${isConnected ? "text-green-500" : "text-red-500"}`}
         >
-          {isConnected
+          {/* {isConnected
             ? WEB_SOCKET_MESSAGE.CONNECTED
-            : WEB_SOCKET_MESSAGE.DISCONNECTED}
+            : WEB_SOCKET_MESSAGE.DISCONNECTED} */}
         </Typography>
       )}
       <ToastContainer />

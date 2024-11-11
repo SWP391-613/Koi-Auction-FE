@@ -650,7 +650,7 @@ export const updateAuction = async (
     if (axios.isAxiosError(error)) {
       console.error("Error update auction:", error.response?.data);
       throw new Error(
-        error.response?.data?.reason || "An error occurred during update",
+        error.response?.data?.message || "An error occurred during update",
       );
     } else {
       throw new Error("An unexpected error occurred");

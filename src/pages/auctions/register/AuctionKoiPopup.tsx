@@ -24,7 +24,7 @@ interface AuctionKoiPopupProps {
   ) => void;
 }
 
-const MIN_BID_STEP = 5;
+const MIN_BID_STEP = 50000;
 const auctionNeedCeilingPrice: string[] = ["DESCENDING_BID", "ASCENDING_BID"];
 
 const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({

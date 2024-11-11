@@ -350,7 +350,7 @@ const UserOrder = () => {
                     mb: 1,
                   }}
                 >
-                  Total Money: &nbsp;
+                  Total Shipping Fee: &nbsp;
                   <Typography variant="h4" fontWeight="bold" color="#1365b4">
                     {formatCurrency(order.total_money)}
                   </Typography>

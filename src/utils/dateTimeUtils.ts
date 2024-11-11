@@ -110,3 +110,22 @@ export function convertTimestamp(inputStr: string): string {
 
   return result;
 }
+
+//2024-11-20T20:05 -> 2024-10-30T14:41:38.679
+export function formatDateTimeString(dateTime: string): string {
+  // Split date and time if there's a 'T'
+  let [date, time] = dateTime.split("T");
+
+  // Ensure the time has the seconds part ":38" and microseconds ".670000"
+  if (!time.includes(":")) {
+    time += ":00"; // Add seconds if missing
+  }
+
+  // Add the milliseconds and microseconds ".670000"
+  if (!time.includes(".")) {
+    time += ":00.670000"; // Add microseconds if missing
+  }
+
+  // Combine date and time with a space instead of 'T'
+  return `${date} ${time}`;
+}

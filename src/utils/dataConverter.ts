@@ -1,5 +1,9 @@
 import { AddNewAuctionDTO, AuctionModel } from "~/types/auctions.type";
-import { convertToJavaLocalDateTime } from "./dateTimeUtils";
+import {
+  convertTimestamp,
+  convertToJavaLocalDateTime,
+  formatDateTimeString,
+} from "./dateTimeUtils";
 import axios from "axios";
 import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";
 
@@ -17,6 +21,14 @@ export const prepareAuctionData = (auction: AddNewAuctionDTO) => ({
   title: auction.title,
   start_time: convertToJavaLocalDateTime(auction.start_time),
   end_time: convertToJavaLocalDateTime(auction.end_time),
+  status: auction.status,
+  auctioneer_id: auction.auctioneer_id,
+});
+
+export const prepareUpdateAuctionData = (auction: AddNewAuctionDTO) => ({
+  title: auction.title,
+  start_time: formatDateTimeString(auction.start_time as string),
+  end_time: formatDateTimeString(auction.end_time as string),
   status: auction.status,
   auctioneer_id: auction.auctioneer_id,
 });

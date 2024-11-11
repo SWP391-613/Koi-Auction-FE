@@ -19,7 +19,6 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
   kois,
   auction,
 }) => {
-
   const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>({
     total_page: 0,
     total_item: 0,
@@ -42,7 +41,7 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
       console.error("Error fetching breeders:", error);
     }
   };
-  
+
   fetchAllBreeders();
   return (
     <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -64,11 +63,14 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
                 </div>
               </div>
               <div className="absolute top-3 left-3 bg-opacity-50 text-white rounded-full p-3 text-lg flex items-center">
-                {koiBreeders.item.find((breeder) => breeder.id === koi.owner_id) && (
+                {koiBreeders.item.find(
+                  (breeder) => breeder.id === koi.owner_id,
+                ) && (
                   <img
                     src={
-                      koiBreeders.item.find((breeder) => breeder.id === koi.owner_id)
-                        ?.avatar_url
+                      koiBreeders.item.find(
+                        (breeder) => breeder.id === koi.owner_id,
+                      )?.avatar_url
                     }
                     alt="Breeder Avatar"
                     className="w-[25%]"

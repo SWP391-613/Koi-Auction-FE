@@ -22,7 +22,7 @@ interface EditAuctionDialogProps {
   auctionKois: AuctionKoi[];
   onEdit: (koiId: number) => void;
   onDelete: (koiId: number) => void;
-  formatDateForInput: (date: Date) => string;
+  formatDateForInput: (date: string) => string;
 }
 
 const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
@@ -64,7 +64,7 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
               InputLabelProps={{
                 shrink: true,
               }}
-              value={formatDateForInput(editingAuction.start_time as Date)}
+              value={formatDateForInput(editingAuction.start_time as string)}
               onChange={onInputChange}
             />
             <TextField
@@ -77,7 +77,7 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
               InputLabelProps={{
                 shrink: true,
               }}
-              value={formatDateForInput(editingAuction.end_time as Date)}
+              value={formatDateForInput(editingAuction.end_time as string)}
               onChange={onInputChange}
             />
             <div className="mt-4">

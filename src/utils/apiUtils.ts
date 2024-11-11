@@ -635,7 +635,7 @@ export const verifyOtpIsCorrect = async (
 
 export const updateAuction = async (
   id: number,
-  auction: AuctionModel,
+  auction: AddNewAuctionDTO,
 ): Promise<void> => {
   try {
     const response = await axios.put(`${API_URL}/auctions/${id}`, auction, {
@@ -648,9 +648,9 @@ export const updateAuction = async (
     }
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error("Error deleting auction:", error.response?.data);
+      console.error("Error update auction:", error.response?.data);
       throw new Error(
-        error.response?.data?.reason || "An error occurred during deletion",
+        error.response?.data?.reason || "An error occurred during update",
       );
     } else {
       throw new Error("An unexpected error occurred");

@@ -23,8 +23,13 @@ import {
   endAuctionEmergency,
   fetchAuctionKoi,
   fetchAuctions,
+  updateAuction,
 } from "~/utils/apiUtils";
-import { extractErrorMessage, prepareAuctionData } from "~/utils/dataConverter";
+import {
+  extractErrorMessage,
+  prepareAuctionData,
+  prepareUpdateAuctionData,
+} from "~/utils/dataConverter";
 import AddAuctionDialog from "./AddAuctionDialog";
 import EditAuctionDialog from "./EditAuctionDialog";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
@@ -32,6 +37,7 @@ import { getCookie } from "~/utils/cookieUtils";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import AuctionSearchComponent from "~/components/search/AuctionSearchComponent";
 import axios from "axios";
+import { formatDateTimeString } from "~/utils/dateTimeUtils";
 
 export const AuctionsManagement: React.FC = () => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);
@@ -56,11 +62,16 @@ export const AuctionsManagement: React.FC = () => {
     setIsSearchActive(isActive);
   };
 
-  const formatDateForInput = (date: Date): string => {
-    if (!date) return "";
-    const d = new Date(date);
-    if (isNaN(d.getTime())) return "";
-    return d.toISOString().slice(0, 16);
+  const formatDateForInput = (dateString: string): string => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "";
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
   const token = getCookie("access_token");
@@ -151,11 +162,31 @@ export const AuctionsManagement: React.FC = () => {
     setEditingAuction((prev) => (prev ? { ...prev, [name]: value } : null));
   };
 
-  const handleSubmitEditAuction = () => {
+  const handleSubmitEditAuction = async () => {
     if (editingAuction) {
       console.log("Submitting edited auction:", editingAuction);
       // Implement the actual update logic here
+
+      const data = {
+        ...editingAuction,
+        start_time: formatDateTimeString(editingAuction.start_time as string),
+        end_time: formatDateTimeString(editingAuction.end_time as string),
+      };
+
+      console.log("Data to be submitted:", data);
       handleCloseEditDialog();
+
+      try {
+        await updateAuction(editingAuction.id!, data);
+        toast.success("Auction updated successfully");
+      } catch (error) {
+        const errorMessage = extractErrorMessage(
+          error,
+          "Failed to update auction",
+        );
+        console.error(errorMessage);
+        toast.error(errorMessage);
+      }
     }
   };
 

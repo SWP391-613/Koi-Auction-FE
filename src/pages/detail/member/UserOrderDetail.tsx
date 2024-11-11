@@ -523,7 +523,7 @@ const UserOrderDetail: React.FC = () => {
                       order.status === OrderStatus.PROCESSING) && (
                       <Button
                         variant="contained"
-                        color="secondary"
+                        color="warning"
                         onClick={() =>
                           handleOpenDialog(
                             "cancel",

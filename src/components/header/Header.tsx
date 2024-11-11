@@ -61,7 +61,7 @@ const Header = () => {
         duration-300
       `}
     >
-      <div className="flex items-center justify-between h-full px-6">
+      <div className="flex items-center justify-around h-full px-6">
         <div className="mr-4">
           <Clock />
         </div>

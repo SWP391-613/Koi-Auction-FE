@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchBidHistory } from "~/utils/apiUtils";
+import { formatCurrency } from "~/utils/currencyUtils";
 
 // Define the interface for checking AuctionKoi is On-going
 interface BiddingHistoryProps {
@@ -74,7 +75,7 @@ const BiddingHistory: React.FC<BiddingHistoryProps> = ({
                 <span
                   className={`text-2xl font-bold ${index === 0 ? "text-white" : "text-gray-800"}`}
                 >
-                  ${bid.bid_amount.toLocaleString()}
+                  {formatCurrency(bid.bid_amount)}
                 </span>
                 <span className="text-gray-600">{bid.bidder_name}</span>
               </div>

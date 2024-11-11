@@ -45,7 +45,7 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
 
   useEffect(() => {
     if (bidStep < MIN_BID_STEP) {
-      setErrorMessage(`Bid step must be at least $${MIN_BID_STEP}.`);
+      setErrorMessage(`Bid step must be at least ${MIN_BID_STEP} vnđ.`);
     } else {
       setErrorMessage("");
     }
@@ -55,7 +55,7 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
     // Check if the new base price is less than the original base price
     if (basePrice < originalBasePrice) {
       setBasePriceError(
-        `Price must be greater than or equal to the original price of $${originalBasePrice}.`,
+        `Price must be greater than or equal to the original price of ${originalBasePrice} vnđ.`,
       );
     } else {
       setBasePriceError("");
@@ -66,7 +66,7 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
     // Check if the ceiling price is less than the current base price
     if (ceilPrice > 0 && ceilPrice <= basePrice) {
       setCeilPriceError(
-        `Ceiling price must be greater than the current base price of $${basePrice}.`,
+        `Ceiling price must be greater than the current base price of ${basePrice} vnđ.`,
       );
     } else if (
       (bidMethod === "ASCENDING_BID" || bidMethod === "DESCENDING_BID") &&
@@ -125,14 +125,14 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
         </TextField>
 
         <TextField
-          label="Base Price ($)"
+          label="Base Price (vnđ)"
           type="number"
           variant="outlined"
           fullWidth
           margin="normal"
           value={basePrice}
           onChange={(e) => setBasePrice(Number(e.target.value))}
-          placeholder="Enter base price ($)"
+          placeholder="Enter base price (vnđ)"
           error={!!basePriceError} // Show error if base price error exists
         />
         {basePriceError && (
@@ -140,27 +140,27 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
         )}
 
         <TextField
-          label="Bid Step ($)"
+          label="Bid Step (vnđ)"
           type="number"
           variant="outlined"
           fullWidth
           margin="normal"
           value={bidStep}
           onChange={(e) => setBidStep(Number(e.target.value))}
-          placeholder="Enter bid step  ($)"
+          placeholder="Enter bid step (vnđ)"
           error={!!errorMessage} // Show error if exists
         />
         {errorMessage && <FormHelperText error>{errorMessage}</FormHelperText>}
 
         <TextField
-          label="Ceiling Price ($)"
+          label="Ceiling Price (vnđ)"
           type="number"
           variant="outlined"
           fullWidth
           margin="normal"
           value={ceilPrice}
           onChange={(e) => setCeilPrice(Number(e.target.value))}
-          placeholder="Enter ceiling price ($)"
+          placeholder="Enter ceiling price (vnđ)"
           InputProps={{
             readOnly: !auctionNeedCeilingPrice.includes(bidMethod),
           }}

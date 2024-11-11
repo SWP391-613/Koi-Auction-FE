@@ -177,7 +177,7 @@ const KoiBidding: React.FC = () => {
         <NavigateButton
           to={`/auctions/${auctionId}`}
           icon={<FontAwesomeIcon icon={faArrowLeft} />}
-          text="Back to Auction"
+          text="Auction"
           className="rounded bg-gray-200 px-5 py-3 text-lg text-black transition hover:bg-gray-200"
         />
       </div>
@@ -353,10 +353,10 @@ const KoiBidding: React.FC = () => {
                           onChange={() => setViewMode("list")}
                         />
                         <div
-                          className="w-6 h-6 bg-transparent border-2 border-blue-500 rounded-full 
-                          peer-checked:bg-blue-500 peer-checked:border-blue-500 
-                          peer-hover:shadow-lg peer-hover:shadow-blue-500/50 
-                          peer-checked:shadow-lg peer-checked:shadow-blue-500/50 
+                          className="w-6 h-6 bg-transparent border-2 border-blue-500 rounded-full
+                          peer-checked:bg-blue-500 peer-checked:border-blue-500
+                          peer-hover:shadow-lg peer-hover:shadow-blue-500/50
+                          peer-checked:shadow-lg peer-checked:shadow-blue-500/50
                           transition duration-300 ease-in-out"
                         ></div>
                         <span className="ml-2 text-gray-700">List View</span>
@@ -371,10 +371,10 @@ const KoiBidding: React.FC = () => {
                           onChange={() => setViewMode("chart")}
                         />
                         <div
-                          className="w-6 h-6 bg-transparent border-2 border-green-500 rounded-full 
-                          peer-checked:bg-green-500 peer-checked:border-green-500 
-                          peer-hover:shadow-lg peer-hover:shadow-green-500/50 
-                          peer-checked:shadow-lg peer-checked:shadow-green-500/50 
+                          className="w-6 h-6 bg-transparent border-2 border-green-500 rounded-full
+                          peer-checked:bg-green-500 peer-checked:border-green-500
+                          peer-hover:shadow-lg peer-hover:shadow-green-500/50
+                          peer-checked:shadow-lg peer-checked:shadow-green-500/50
                           transition duration-300 ease-in-out"
                         ></div>
                         <span className="ml-2 text-gray-700">Chart View</span>

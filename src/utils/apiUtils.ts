@@ -806,12 +806,14 @@ export const getKoiInAuctionData = async (
     `${API_URL}/auctionkois/get-kois-by-keyword`,
     {
       params: {
-        keyword,
+        keyword: "",
         page: page - 1, // Assuming the API is zero-based
         limit,
       },
     },
   );
+
+  console.log("Data ne: " + JSON.stringify(response.data));
 
   if (response.status !== 200) {
     throw new Error("Failed to fetch kois");

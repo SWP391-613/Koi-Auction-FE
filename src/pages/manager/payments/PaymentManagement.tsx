@@ -17,7 +17,6 @@ import SearchBar from "~/components/shared/SearchBar";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import PaymentSearchGrid from "~/components/shared/PaymentSearchGrid";
 import { PaymentStatus } from "~/types/payments.type";
-// import { updatePaymentStatus } from "~/utils/apiUtils"; // You'll need to create this function
 import { getPaymentStatusColor } from "~/utils/colorUtils";
 import { toast, ToastContainer } from "react-toastify";
 import { getUserCookieToken } from "~/utils/auth.utils";

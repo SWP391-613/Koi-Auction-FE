@@ -29,7 +29,7 @@ const Header = () => {
           navigate("/breeders");
           break;
         case "member":
-          navigate("/orders");
+          navigate("/users/orders");
           break;
       }
     } else {

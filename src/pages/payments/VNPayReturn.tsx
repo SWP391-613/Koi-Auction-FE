@@ -62,7 +62,7 @@ const VNPayReturn: React.FC = () => {
             navigate("/");
           }
         } else if (paymentResult.paymentType === "order") {
-          navigate("/orders");
+          navigate("/users/orders");
         } else {
           navigate("/");
         }

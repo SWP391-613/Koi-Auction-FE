@@ -1,4 +1,8 @@
 /* src/components/Auth/styles.module.css */
+.full{
+  transform: translateY(20px);
+}
+
 .wrapper {
   min-height: 70vh;
   width: 100%;

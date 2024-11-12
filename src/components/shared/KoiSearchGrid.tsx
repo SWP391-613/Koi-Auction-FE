@@ -18,11 +18,12 @@ type BaseKoiProps<T> = {
   handleDelete?: (id: number) => void;
 };
 
-interface KoiSearchGridProps<T extends KoiDetailModel> extends BaseKoiProps<T> {
+interface KoiSearchGridProps<T extends KoiInAuctionDetailModel>
+  extends BaseKoiProps<T> {
   getLinkUrl?: (koi: T) => string; // Made optional
 }
 
-const KoiSearchGrid = <T extends KoiDetailModel>({
+const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
   kois,
   renderActions,
   getLinkUrl,
@@ -107,6 +108,15 @@ const KoiSearchGrid = <T extends KoiDetailModel>({
                     className="w-[25%]"
                   />
                 )}
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="absolute top-3 right-2 bg-opacity-50 text-white rounded-full p-3 text-sm flex items-center"
+              >
+                {koi.bid_method}
               </motion.div>
 
               <motion.div

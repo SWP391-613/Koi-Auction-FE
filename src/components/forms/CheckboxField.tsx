@@ -16,6 +16,9 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
   errors,
 }) => (
   <div className="flex items-center">
+    <label htmlFor={name} className="ml-6 block text-sm text-gray-900">
+      {label}
+    </label>
     <Controller
       name={name}
       control={control}
@@ -28,9 +31,7 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
         />
       )}
     />
-    <label htmlFor={name} className="ml-2 block text-sm text-gray-900">
-      {label}
-    </label>
+
     {errors && errors[name] && (
       <p className="mt-1 text-xs text-red-500">
         {errors[name]?.message as string}

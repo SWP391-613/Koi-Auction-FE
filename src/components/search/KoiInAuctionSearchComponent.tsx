@@ -44,7 +44,7 @@ const KoiInAuctionSearchComponent: React.FC<
           sx={{ textAlign: "left", marginTop: "1rem" }}
           color="error"
         >
-          *Note: Search on name, sex, length, age, price,....
+          *Note: Search on name, sex, length, age, price, decription,....
         </Typography>
       </div>
       {loading && (

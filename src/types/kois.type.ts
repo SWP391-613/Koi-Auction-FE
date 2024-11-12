@@ -35,7 +35,10 @@ export type KoiGender = "Male" | "Female" | "Unknown";
 
 export type KoiInAuctionDetailModel = KoiDetailModel & {
   auction_id: number;
+  bid_method: BidMethod;
 };
+
+type BidMethod = "ASCENDING" | "DESCENDING" | "FIXED" | "SEALED";
 
 export type KoiSearchResult = {
   total_page: number;

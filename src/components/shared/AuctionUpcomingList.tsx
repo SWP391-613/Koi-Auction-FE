@@ -18,7 +18,7 @@ const AuctionUpcomingList: React.FC<AuctionUpcomingListProps> = ({
   fetchAuctionsData,
   cartComponent: CartComponent,
   emptyMessage,
-  itemsPerPage = 18,
+  itemsPerPage = 100,
 }) => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);
   const [currentPage, setCurrentPage] = useState(1);

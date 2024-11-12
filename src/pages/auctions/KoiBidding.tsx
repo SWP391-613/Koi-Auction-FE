@@ -149,7 +149,7 @@ const KoiBidding: React.FC = () => {
           "Congratulations! You've won the auction. Redirecting to order page...",
           {
             onClose: () => {
-              navigate(`/orders`); // or navigate to a specific order if you have an order ID
+              navigate(`/users/orders`); // or navigate to a specific order if you have an order ID
             },
             autoClose: 3000, // Adjust this value to control how long the toast is displayed before redirecting
           },
@@ -405,9 +405,9 @@ const KoiBidding: React.FC = () => {
         <Typography
           className={`text-lg ${isConnected ? "text-green-500" : "text-red-500"}`}
         >
-          {isConnected
+          {/* {isConnected
             ? WEB_SOCKET_MESSAGE.CONNECTED
-            : WEB_SOCKET_MESSAGE.DISCONNECTED}
+            : WEB_SOCKET_MESSAGE.DISCONNECTED} */}
         </Typography>
       )}
       <ToastContainer />

@@ -266,7 +266,7 @@ const UserOrderDetail: React.FC = () => {
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => navigate("/orders")}
+            onClick={() => navigate("/users/orders")}
           >
             Back to Orders
           </Button>
@@ -523,7 +523,7 @@ const UserOrderDetail: React.FC = () => {
                       order.status === OrderStatus.PROCESSING) && (
                       <Button
                         variant="contained"
-                        color="secondary"
+                        color="warning"
                         onClick={() =>
                           handleOpenDialog(
                             "cancel",

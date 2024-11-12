@@ -303,7 +303,7 @@ function AppContent() {
                           element={<SendNotifications />}
                         />
                       </Route>
-                      <Route path="/orders/*">
+                      <Route path="users/orders/*">
                         <Route path="" element={<UserOrder />} />
                         <Route
                           path="order-detail/:orderId"

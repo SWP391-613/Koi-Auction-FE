@@ -13,9 +13,9 @@ const DetailNavbar = () => {
     const basePath = `/${user.role_name}s`;
     const links = {
       member: [
-        { label: "Profile", path: `${basePath}/${user.id}` },
-        { label: "Orders", path: `${basePath}/orders` },
-        { label: "Payments", path: `${basePath}/payments` },
+        { label: "Profile", path: `users/${user.id}` },
+        { label: "Orders", path: "users/orders" },
+        { label: "Payments", path: "users/payments" },
       ],
       breeder: [
         { label: "Your Koi", path: basePath },

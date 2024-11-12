@@ -21,7 +21,7 @@ const NavigateButton: React.FC<NavigateButtonProps> = ({
       className={`border-b-2 border-gray-300 bg-white text-center w-48 rounded-2xl h-14 relative text-black text-xl font-semibold group ${className}`}
       type="button"
     >
-      <div className="bg-sky-600 rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-1 group-hover:w-[184px] z-10 duration-500">
+      <div className="bg-blue-950 rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-1 group-hover:w-[184px] z-10 duration-500">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1024 1024"
@@ -38,7 +38,7 @@ const NavigateButton: React.FC<NavigateButtonProps> = ({
           />
         </svg>
       </div>
-      <p className="translate pl-8">{text}</p>
+      <p className="translate pl-8 text-base">{text}</p>
     </button>
   );
 };

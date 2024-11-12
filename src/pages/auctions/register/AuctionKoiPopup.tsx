@@ -24,7 +24,7 @@ interface AuctionKoiPopupProps {
   ) => void;
 }
 
-const MIN_BID_STEP = 5;
+const MIN_BID_STEP = 50000;
 const auctionNeedCeilingPrice: string[] = ["DESCENDING_BID", "ASCENDING_BID"];
 
 const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
@@ -42,6 +42,7 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [basePriceError, setBasePriceError] = useState<string>("");
   const [ceilPriceError, setCeilPriceError] = useState<string>("");
+  const [feePriceMessage, setFeePriceMessage] = useState<string>("");
 
   useEffect(() => {
     if (bidStep < MIN_BID_STEP) {
@@ -66,7 +67,7 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
     // Check if the ceiling price is less than the current base price
     if (ceilPrice > 0 && ceilPrice <= basePrice) {
       setCeilPriceError(
-        `Ceiling price must be greater than the current base price of ${basePrice} vnđ.`,
+        `Ceiling price must be greater than the current base price of ${basePrice} vnd.`,
       );
     } else if (
       (bidMethod === "ASCENDING_BID" || bidMethod === "DESCENDING_BID") &&
@@ -77,8 +78,18 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
       );
     } else {
       setCeilPriceError("");
+      // Only set fee message if base price is valid
+      if (!basePriceError) {
+        setFeePriceMessage(
+          `*We will charge 10% of the base price (${Math.floor(
+            basePrice * 0.1,
+          )} vnd) as registration fee.*`,
+        );
+      } else {
+        setFeePriceMessage("");
+      }
     }
-  }, [ceilPrice, basePrice]);
+  }, [ceilPrice, basePrice, basePriceError]); // Add basePriceError to dependencies
 
   const handleSubmit = () => {
     if (!errorMessage) {
@@ -137,6 +148,11 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
         />
         {basePriceError && (
           <FormHelperText error>{basePriceError}</FormHelperText>
+        )}
+        {feePriceMessage && (
+          <FormHelperText sx={{ color: "green" }}>
+            {feePriceMessage}
+          </FormHelperText>
         )}
 
         <TextField

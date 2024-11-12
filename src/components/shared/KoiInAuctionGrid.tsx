@@ -77,6 +77,9 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
                   />
                 )}
               </div>
+              <div className="absolute top-3 right-2 bg-opacity-50 text-white rounded-full p-3 text-sm flex items-center">
+                {koi.auctionKoiData.bid_method}
+              </div>
               <div className="absolute bottom-9 left-2 md:bottom-2 md:left-3 text-white rounded-full p-1 text-md font-bold">
                 <FontAwesomeIcon icon={faTag} className="mr-1" />
                 {koi.id}

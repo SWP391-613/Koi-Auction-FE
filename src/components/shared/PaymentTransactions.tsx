@@ -132,13 +132,13 @@ const PaymentTransactions: React.FC = () => {
               <Box
                 sx={{
                   p: 2,
-                  display: "flex",
+                  display: "grid",
+                  gridTemplateColumns: "400px 200px 200px 200px auto",
                   alignItems: "center",
-                  flexWrap: "wrap",
                   gap: 2,
                 }}
               >
-                <Box sx={{ flexGrow: 1, minWidth: "200px" }}>
+                <Box>
                   <Typography variant="subtitle1">
                     Payment #{payment.id}
                   </Typography>
@@ -146,14 +146,7 @@ const PaymentTransactions: React.FC = () => {
                     {formatPaymentDate(payment.payment_date)}
                   </Typography>
                 </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    minWidth: "150px",
-                  }}
-                >
+                <Box>
                   <Typography variant="body2">
                     <strong>Method:</strong> {payment.payment_method}
                   </Typography>
@@ -162,14 +155,7 @@ const PaymentTransactions: React.FC = () => {
                     {PaymentTypeView(payment.payment_type)}
                   </Typography>
                 </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    minWidth: "150px",
-                  }}
-                >
+                <Box>
                   <Typography variant="body2">
                     <strong>Amount:</strong>{" "}
                     {formatCurrency(payment.payment_amount)}
@@ -179,12 +165,19 @@ const PaymentTransactions: React.FC = () => {
                       <strong>Order ID:</strong> {payment.order_id}
                     </Typography>
                   )}
+                  {payment.bank_name && (
+                    <Typography variant="body2">
+                      <strong>Bank Name:</strong> {payment.bank_name}
+                    </Typography>
+                  )}
                 </Box>
-                <Chip
-                  label={payment.payment_status}
-                  color={getPaymentStatusColor(payment.payment_status)}
-                  size="small"
-                />
+                <Box sx={{ justifySelf: "flex-end" }}>
+                  <Chip
+                    label={payment.payment_status}
+                    color={getPaymentStatusColor(payment.payment_status)}
+                    size="small"
+                  />
+                </Box>
               </Box>
             </React.Fragment>
           ))}

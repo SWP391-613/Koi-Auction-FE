@@ -234,18 +234,6 @@ const UserOrder = () => {
                       </Typography>
                     </Box>
 
-                    {/* <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                      <Typography variant="body2">
-                        Shipping Method: {order.shipping_method}
-                      </Typography>
-                    </Box>
-
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                      <Typography variant="body2">
-                        Payment Method: {order.payment_method}
-                      </Typography>
-                    </Box> */}
-
                     <Box
                       sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}
                     >

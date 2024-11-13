@@ -49,6 +49,9 @@ import { getUserCookieToken } from "~/utils/auth.utils";
 import { koiBreeders } from "~/utils/data/koibreeders";
 import { styled } from "@mui/material/styles";
 import { formatCurrency } from "~/utils/currencyUtils";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import StorefrontIcon from "@mui/icons-material/Storefront";
 
 // Create a styled Button component
 const GrayButton = styled(Button)(({ theme }) => ({
@@ -56,6 +59,36 @@ const GrayButton = styled(Button)(({ theme }) => ({
   borderColor: theme.palette.grey[300],
   "&:hover": {
     borderColor: theme.palette.grey[500],
+  },
+}));
+
+// Add these new styled components at the top after imports
+const OrderStatusBar = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  color: "white",
+  padding: theme.spacing(2),
+  borderRadius: theme.shape.borderRadius,
+  marginBottom: theme.spacing(3),
+}));
+
+const OrderSection = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(3),
+  marginBottom: theme.spacing(3),
+  borderRadius: theme.shape.borderRadius,
+}));
+
+const OrderHeader = styled(Box)(({ theme }) => ({
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  paddingBottom: theme.spacing(2),
+  marginBottom: theme.spacing(2),
+}));
+
+const ProductCard = styled(Box)(({ theme }) => ({
+  display: "flex",
+  padding: theme.spacing(2),
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  "&:last-child": {
+    borderBottom: "none",
   },
 }));
 
@@ -254,312 +287,260 @@ const UserOrderDetail: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="lg">
-      <Paper elevation={3} sx={{ p: 4, my: 4 }}>
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={4}
-        >
-          <Typography variant="h4">Order Details</Typography>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => navigate("/users/orders")}
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      {/* Order Status Bar */}
+      {order && (
+        <OrderStatusBar>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            Back to Orders
-          </Button>
-        </Box>
+            <Typography variant="h6">Order #{orderId}</Typography>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Typography>Status:</Typography>
+              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                {order.status}
+              </Typography>
+            </Box>
+          </Box>
+        </OrderStatusBar>
+      )}
 
-        {loading && <LoadingComponent />}
+      {loading && <LoadingComponent />}
+      {error && <Typography color="error">{error}</Typography>}
 
-        {error && (
-          <Typography color="error" mb={4}>
-            {error}
-          </Typography>
-        )}
-
-        {order && orderDetails.length > 0 && (
-          <>
-            <Typography variant="h5" gutterBottom>
-              Order #{orderId}
-            </Typography>
-
-            <Grid container spacing={4}>
-              {/* Koi Image and Details */}
-              <Grid item xs={12} md={4}>
-                <Card elevation={3}>
-                  <CardContent>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        mb: 2,
-                      }}
-                    >
-                      <Typography variant="h6" component="div">
-                        {orderDetails[0].product_id.name}
-                      </Typography>
-                      {koiBreeders.find(
-                        (breeder) =>
-                          breeder.id === orderDetails[0].product_id.owner_id,
-                      ) && (
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <Link
-                            to={`/breeder/${orderDetails[0].product_id.owner_id}/info`}
-                            onClick={(event) => event.stopPropagation()}
-                            style={{
-                              textDecoration: "none",
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <img
-                              src={
-                                koiBreeders.find(
-                                  (breeder) =>
-                                    breeder.id ===
-                                    orderDetails[0].product_id.owner_id,
-                                )?.avatar_url
-                              }
-                              alt="Breeder Avatar"
-                              style={{
-                                width: "60px",
-                                height: "60px",
-                                marginRight: "10px",
-                              }}
-                            />
-                            <GrayButton variant="outlined" size="small">
-                              View Shop
-                            </GrayButton>
-                          </Link>
-                        </Box>
-                      )}
-                    </Box>
-                    <Box
-                      sx={{
-                        backgroundColor: "rgb(79 146 209)",
-                        p: 1,
-                        borderRadius: 1,
-                        mb: 2,
-                      }}
-                    >
-                      <CardMedia
-                        component="img"
-                        height="200"
-                        image={orderDetails[0].product_id.thumbnail}
-                        alt={orderDetails[0].product_id.name}
-                        sx={{ objectFit: "contain", borderRadius: 1 }}
-                      />
-                    </Box>
-                    <Typography variant="body1" gutterBottom>
-                      <strong>Order Date:</strong>{" "}
-                      {formatDate(order.order_date)}
-                    </Typography>
-                    <Typography variant="body1" gutterBottom>
-                      <strong>Total Amount:</strong>{" "}
-                      {formatCurrency(totalOrderAmount)}
-                    </Typography>
-                    <Typography variant="body1">
-                      <strong>Est. Ship Date:</strong>{" "}
-                      {formatDate(order.shipping_date)}
-                    </Typography>
-                  </CardContent>
-                </Card>
+      {order && orderDetails.length > 0 && (
+        <>
+          {/* Shipping Information Section */}
+          <OrderSection>
+            <OrderHeader>
+              <Typography variant="h6" sx={{ color: "primary.main" }}>
+                <LocationOnIcon sx={{ verticalAlign: "middle", mr: 1 }} />
+                Shipping Information
+              </Typography>
+            </OrderHeader>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <Typography>
+                  <strong>Name:</strong> {order.first_name} {order.last_name}
+                </Typography>
+                <Typography>
+                  <strong>Phone:</strong> {order.phone_number}
+                </Typography>
+                <Typography>
+                  <strong>Address:</strong> {order.shipping_address}
+                </Typography>
               </Grid>
-
-              {/* Order Details */}
-              <Grid item xs={12} md={8}>
-                <Card elevation={3}>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      Order Information
-                    </Typography>
-                    <Grid container spacing={3}>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          fullWidth
-                          margin="normal"
-                          name="first_name"
-                          label="First Name"
-                          value={editedOrder?.first_name || order.first_name}
-                          onChange={handleInputChange}
-                          disabled={!isEditing}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          fullWidth
-                          margin="normal"
-                          name="last_name"
-                          label="Last Name"
-                          value={editedOrder?.last_name || order.last_name}
-                          onChange={handleInputChange}
-                          disabled={!isEditing}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <FormControl fullWidth margin="normal">
-                          <InputLabel id="payment-method-label">
-                            Payment Method
-                          </InputLabel>
-                          <Select
-                            labelId="payment-method-label"
-                            id="payment-method"
-                            name="payment_method"
-                            value={
-                              editedOrder?.payment_method ||
-                              order.payment_method
-                            }
-                            label="Payment Method"
-                            onChange={(e) =>
-                              handleInputChange(
-                                e as React.ChangeEvent<HTMLInputElement>,
-                              )
-                            }
-                            disabled={!isEditing}
-                          >
-                            <MenuItem value="Cash">Cash</MenuItem>
-                            <MenuItem value="Payment">Payment</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          fullWidth
-                          margin="normal"
-                          name="phone_number"
-                          label="Phone Number"
-                          value={
-                            editedOrder?.phone_number || order.phone_number
-                          }
-                          onChange={handleInputChange}
-                          disabled={!isEditing}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          margin="normal"
-                          name="shipping_address"
-                          label="Shipping Address"
-                          value={
-                            editedOrder?.shipping_address ||
-                            order.shipping_address
-                          }
-                          onChange={handleInputChange}
-                          disabled={!isEditing}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          margin="normal"
-                          name="note"
-                          label="Note"
-                          multiline
-                          rows={3}
-                          value={editedOrder?.note || order.note}
-                          onChange={handleInputChange}
-                          disabled={!isEditing}
-                        />
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-
-                {/* Action Buttons */}
-                <Box mt={4} display="flex" justifyContent="space-between">
-                  {isEditing ? (
-                    <>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<SaveIcon />}
-                        onClick={handleSaveEditedOrder}
-                      >
-                        Save Changes
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        color="secondary"
-                        startIcon={<CancelIcon />}
-                        onClick={handleCancelEdit}
-                      >
-                        Cancel
-                      </Button>
-                    </>
-                  ) : (
-                    order.status === OrderStatus.PENDING && (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<EditIcon />}
-                        onClick={handleEditOrder}
-                      >
-                        Edit Order
-                      </Button>
-                    )
-                  )}
-                  {order.status === OrderStatus.PENDING && (
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      startIcon={<PaymentIcon />}
-                      onClick={() =>
-                        handleOpenDialog(
-                          "payment",
-                          "Are you sure you want to process the payment for this order?",
-                        )
-                      }
-                    >
-                      Process Payment
-                    </Button>
-                  )}
-                  {order &&
-                    (order.status === OrderStatus.PENDING ||
-                      order.status === OrderStatus.PROCESSING) && (
-                      <Button
-                        variant="contained"
-                        color="warning"
-                        onClick={() =>
-                          handleOpenDialog(
-                            "cancel",
-                            "Are you sure you want to cancel this order?",
-                          )
-                        }
-                      >
-                        Cancel Order
-                      </Button>
-                    )}
-                  {order && order.status === OrderStatus.SHIPPING && (
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() =>
-                        handleOpenDialog(
-                          "delivery",
-                          "Are you sure you want to mark this order as shipped?",
-                        )
-                      }
-                    >
-                      Order Shipped
-                    </Button>
-                  )}
-                </Box>
-                {/* Feedback Section */}
-                {order && order.status !== "PENDING" && (
-                  <Paper elevation={3} sx={{ p: 3, mt: 4 }}>
-                    <Feedback orderId={orderId || ""} />
-                  </Paper>
+              <Grid item xs={12} md={6}>
+                <Typography>
+                  <strong>Order Date:</strong> {formatDate(order.order_date)}
+                </Typography>
+                <Typography>
+                  <strong>Est. Delivery:</strong>{" "}
+                  {formatDate(order.shipping_date)}
+                </Typography>
+                {order.note && (
+                  <Typography>
+                    <strong>Note:</strong> {order.note}
+                  </Typography>
                 )}
               </Grid>
             </Grid>
-          </>
-        )}
-      </Paper>
+          </OrderSection>
+
+          {/* Products Section */}
+          <OrderSection>
+            <OrderHeader>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography variant="h6" sx={{ color: "primary.main" }}>
+                  <ShoppingBagIcon sx={{ verticalAlign: "middle", mr: 1 }} />
+                  Products
+                </Typography>
+                {koiBreeders.find(
+                  (breeder) =>
+                    breeder.id === orderDetails[0].product_id.owner_id,
+                ) && (
+                  <Link
+                    to={`/breeder/${orderDetails[0].product_id.owner_id}/info`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Button
+                      variant="outlined"
+                      startIcon={<StorefrontIcon />}
+                      size="small"
+                    >
+                      Visit Store
+                    </Button>
+                  </Link>
+                )}
+              </Box>
+            </OrderHeader>
+
+            {orderDetails.map((detail) => (
+              <ProductCard key={detail.id}>
+                <Box
+                  sx={{
+                    width: 100,
+                    height: 100,
+                    backgroundColor: "rgb(79 146 209)",
+                    borderRadius: 1,
+                    mr: 2,
+                    overflow: "hidden",
+                  }}
+                >
+                  <img
+                    src={detail.product_id.thumbnail}
+                    alt={detail.product_id.name}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                    }}
+                  />
+                </Box>
+                <Box flex={1}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {detail.product_id.name}
+                  </Typography>
+                  <Typography color="text.secondary" gutterBottom>
+                    Quantity: {orderDetails.length}
+                  </Typography>
+                  <Typography color="primary" fontWeight="bold">
+                    {formatCurrency(detail.total_money)}
+                  </Typography>
+                </Box>
+              </ProductCard>
+            ))}
+
+            <Box
+              sx={{ mt: 2, p: 2, backgroundColor: "#f5f5f5", borderRadius: 1 }}
+            >
+              <Box display="flex" justifyContent="space-between" mb={1}>
+                <Typography>Subtotal:</Typography>
+                <Typography>{formatCurrency(totalOrderAmount)}</Typography>
+              </Box>
+              <Box display="flex" justifyContent="space-between" mb={1}>
+                <Typography>Shipping Fee:</Typography>
+                <Typography>{formatCurrency(0)}</Typography>
+              </Box>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="h6">Total:</Typography>
+                <Typography variant="h6" color="primary.main">
+                  {formatCurrency(totalOrderAmount)}
+                </Typography>
+              </Box>
+            </Box>
+          </OrderSection>
+
+          {/* Payment Section */}
+          <OrderSection>
+            <OrderHeader>
+              <Typography variant="h6" sx={{ color: "primary.main" }}>
+                <PaymentIcon sx={{ verticalAlign: "middle", mr: 1 }} />
+                Payment Information
+              </Typography>
+            </OrderHeader>
+            <Typography>
+              <strong>Payment Method:</strong> {order.payment_method}
+            </Typography>
+            <Typography>
+              <strong>Payment Status:</strong> {order.payment_status}
+            </Typography>
+          </OrderSection>
+
+          {/* Action Buttons */}
+          <Box display="flex" gap={2} justifyContent="flex-end" mt={3}>
+            {isEditing ? (
+              <>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<SaveIcon />}
+                  onClick={handleSaveEditedOrder}
+                >
+                  Save Changes
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<CancelIcon />}
+                  onClick={handleCancelEdit}
+                >
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <>
+                {order.status === OrderStatus.PENDING && (
+                  <Button
+                    variant="outlined"
+                    startIcon={<EditIcon />}
+                    onClick={handleEditOrder}
+                  >
+                    Edit Order
+                  </Button>
+                )}
+                {order.status === OrderStatus.PENDING && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<PaymentIcon />}
+                    onClick={() =>
+                      handleOpenDialog(
+                        "payment",
+                        "Are you sure you want to process the payment for this order?",
+                      )
+                    }
+                  >
+                    Process Payment
+                  </Button>
+                )}
+                {order &&
+                  (order.status === OrderStatus.PENDING ||
+                    order.status === OrderStatus.PROCESSING) && (
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      onClick={() =>
+                        handleOpenDialog(
+                          "cancel",
+                          "Are you sure you want to cancel this order?",
+                        )
+                      }
+                    >
+                      Cancel Order
+                    </Button>
+                  )}
+                {order && order.status === OrderStatus.SHIPPING && (
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() =>
+                      handleOpenDialog(
+                        "delivery",
+                        "Are you sure you want to mark this order as shipped?",
+                      )
+                    }
+                  >
+                    Order Shipped
+                  </Button>
+                )}
+              </>
+            )}
+          </Box>
+
+          {/* Feedback Section */}
+          {order && order.status !== "PENDING" && (
+            <OrderSection sx={{ mt: 3 }}>
+              <Feedback orderId={orderId || ""} />
+            </OrderSection>
+          )}
+        </>
+      )}
 
       {/* Confirmation Dialog */}
       <Dialog

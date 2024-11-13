@@ -196,7 +196,7 @@ const VerifyKoiList: React.FC = () => {
               textAlign: "center",
             }}
           >
-            No Koi data available
+            Koi's Unverified Not Available
           </Typography>
         </div>
       )}

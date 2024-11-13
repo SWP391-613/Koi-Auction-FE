@@ -48,8 +48,8 @@ const AddKoiPreviewCart: React.FC<AddKoiPreviewCartProps> = ({ items }) => {
                   <span className="text-lg text-black">{koi.gender}</span>
                 </p>
                 <p className="flex items-center justify-between">
-                  <span>Age:</span>
-                  <span className="text-lg text-black">{koi.age} years</span>
+                  <span>Year born:</span>
+                  <span className="text-lg text-black">{koi.year_born}</span>
                 </p>
                 <p className="flex items-center justify-between">
                   <span>Category:</span>

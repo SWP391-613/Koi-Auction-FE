@@ -26,7 +26,7 @@ export const KoiCartComponenet: React.FC<KoiCartProps> = ({ items }) => {
               <div>
                 <h3 className="font-semibold">{koi.name}</h3>
                 <p className="text-sm text-gray-600">
-                  Sex: {koi.sex}, Age: {koi.age}, Length: {koi.length}cm
+                  Sex: {koi.sex}, Age: {koi.year_born}, Length: {koi.length}cm
                 </p>
               </div>
             </li>

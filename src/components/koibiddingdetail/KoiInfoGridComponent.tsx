@@ -52,8 +52,8 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
     },
     {
       icon: faCalendarDays,
-      label: "Age",
-      value: koi.age,
+      label: "Year Born",
+      value: koi.year_born,
       bgColor: "bg-gray-300",
     },
     {

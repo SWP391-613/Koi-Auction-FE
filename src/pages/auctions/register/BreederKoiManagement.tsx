@@ -207,7 +207,7 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
                     </td>
                     <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                       <p className="whitespace-no-wrap text-gray-900">
-                        {koi.age || "N/A"}
+                        {koi.year_born || "N/A"}
                       </p>
                     </td>
                     <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">

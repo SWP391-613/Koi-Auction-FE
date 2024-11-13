@@ -228,7 +228,7 @@ const UserDetail: React.FC = () => {
               <div className="mt-6 space-y-4">
                 <div className="flex gap-5 justify-between ">
                   <h2 className="text-lg font-bold">Date of Birth</h2>
-                  <p>{user.date_of_birth}</p>
+                  <p>{user.date_of_birth || "Not Provided"}</p>
                 </div>
                 <div className="flex gap-5 justify-between ">
                   <h2 className="text-lg font-bold">Created At</h2>

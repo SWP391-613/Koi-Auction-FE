@@ -38,10 +38,8 @@ const OtpVerification: React.FC = () => {
       state.email
     ) {
       setEmail(state.email);
-    } else {
-      navigate("/notfound", { replace: true });
     }
-  }, [location, navigate]);
+  }, [location]);
 
   const handleChange =
     (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,7 +102,7 @@ const OtpVerification: React.FC = () => {
           />
         ))}
       </div>
-      <span class="text-zinc-500 text-[12px] text-center">
+      <span className="text-zinc-500 text-[12px] text-center">
         Please enter the 6-digits one time password (OTP) that we sent to your
         registered email
       </span>

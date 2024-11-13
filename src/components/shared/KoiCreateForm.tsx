@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { AddNewKoiDTO } from "~/types/kois.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
-import { koiName } from "~/utils/data/fixedTitleName";
 import { categoryMap } from "~/utils/dataConverter";
 import AddKoiPreviewCart from "./AddKoiPreviewCart";
 
@@ -31,7 +30,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
   owner_id,
 }) => {
   const [formData, setFormData] = useState<AddNewKoiDTO>({
-    name: "Select a name",
+    name: "",
     base_price: 0,
     thumbnail: "",
     gender: "FEMALE",
@@ -154,39 +153,17 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
       <div className="flex">
         <div className="flex flex-col">
           <div>
-            {/* Dropdown for koi names */}
-            <div className="flex gap-5">
-              <FormControl fullWidth margin="normal" error={!!errors.name}>
-                <InputLabel>Name</InputLabel>
-                <Select
-                  name="name"
-                  value={formData.name}
-                  onChange={handleDropdownChange}
-                >
-                  {koiName.map((koiName, index) => (
-                    <MenuItem key={index} value={koiName}>
-                      {koiName}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
-              </FormControl>
-              <FormControl fullWidth margin="normal" error={!!errors.gender}>
-                <InputLabel>Gender</InputLabel>
-                <Select
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleInputChange}
-                >
-                  <MenuItem value="MALE">Male</MenuItem>
-                  <MenuItem value="FEMALE">Female</MenuItem>
-                  <MenuItem value="UNKNOWN">Unknown</MenuItem>
-                </Select>
-                {errors.gender && (
-                  <p style={{ color: "red" }}>{errors.gender}</p>
-                )}
-              </FormControl>
-            </div>
+            <TextField
+              fullWidth
+              margin="normal"
+              name="name"
+              label="Name"
+              value={formData.name}
+              sx={{ backgroundColor: "white" }}
+              onChange={handleInputChange}
+              error={!!errors.name}
+              helperText={errors.name}
+            />
             <FormControl fullWidth margin="normal" error={!!errors.category_id}>
               <InputLabel>Category</InputLabel>
               <Select

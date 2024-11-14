@@ -22,12 +22,9 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { toast } from "react-toastify";
+
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { useUserData } from "~/hooks/useUserData";
-import { updateOrder } from "~/utils/apiUtils";
-import { getCookie } from "~/utils/cookieUtils";
-import { Order } from "./UserOrder";
+import { Order } from "~/types/orders.type";
 
 interface EditOrderDialogProps {
   open: boolean;

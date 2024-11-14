@@ -84,3 +84,20 @@ export type OrderDetailWithKoi = OrderDetail & {
     owner_id: number;
   };
 };
+
+// Add helper types for the UI
+export interface AddressSelection {
+  province: string;
+  province_code: string;
+  district: string;
+  district_code: string;
+  ward: string;
+  ward_code: string;
+  street_address: string;
+}
+
+export interface ShippingMethodSelection {
+  type: "normal" | "express";
+  price: number;
+  estimated_days: number;
+}

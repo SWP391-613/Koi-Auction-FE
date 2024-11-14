@@ -109,7 +109,7 @@ export const useEntitySearch = <T, StatusType>({
 export const useOrderSearch = (debounceTime = 500) => {
   return useEntitySearch<OrderResponse, OrderStatus>({
     endpoint:
-      "http://localhost:4000/api/v1/orders/get-orders-by-keyword-and-status",
+      "https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/orders/get-orders-by-keyword-and-status",
     initialStatus: OrderStatus.ALL,
     debounceTime,
   });
@@ -118,7 +118,7 @@ export const useOrderSearch = (debounceTime = 500) => {
 export const usePaymentSearch = (debounceTime = 500) => {
   return useEntitySearch<PaymentResponse, PaymentStatus>({
     endpoint:
-      "http://localhost:4000/api/v1/payments/get-payments-by-keyword-and-status",
+      "https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/payments/get-payments-by-keyword-and-status",
     initialStatus: PaymentStatus.ALL,
     debounceTime,
   });

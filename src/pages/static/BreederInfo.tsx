@@ -22,7 +22,7 @@ const BreederInfo: React.FC = () => {
   const fetchBreederById = async (breederId: string) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/v1/breeders/${breederId}`,
+        `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/breeders/${breederId}`,
       );
 
       if (response.data) {

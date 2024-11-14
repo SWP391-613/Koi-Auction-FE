@@ -29,7 +29,9 @@ const UserDetailDialog: React.FC<{
     if (openModal) {
       const userId = getCookie("user_id");
       axios
-        .get(`http://localhost:4000/api/v1/users/${userId}`)
+        .get(
+          `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/users/${userId}`,
+        )
         .then((response) => {
           setFetchedUser(response.data);
           setUserFields({
@@ -62,7 +64,7 @@ const UserDetailDialog: React.FC<{
     const accessToken = getCookie("access_token");
     axios
       .put(
-        `http://localhost:4000/api/v1/users/${userId}`,
+        `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/users/${userId}`,
         { ...userFields },
         { headers: { Authorization: `Bearer ${accessToken}` } },
       )

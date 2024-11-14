@@ -40,7 +40,7 @@ const UserDetail: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/v1/users/${userId}`,
+        `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/users/${userId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         },
@@ -108,7 +108,7 @@ const UserDetail: React.FC = () => {
       }
 
       const response = await axios.get(
-        `http://localhost:4000/api/v1/users/${userId}`,
+        `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/users/${userId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         },

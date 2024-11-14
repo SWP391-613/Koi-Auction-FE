@@ -2,7 +2,7 @@ name: CD for Koi-Auction-FE
 
 on:
   push:
-    branches: ["main", "production", "develop"]
+    branches: ["main", "production", "develop", "deployment"]
   pull_request:
     branches: ["develop"]
 

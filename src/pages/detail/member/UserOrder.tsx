@@ -14,6 +14,10 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link, Link as RouterLink, useNavigate } from "react-router-dom";
@@ -36,6 +40,8 @@ import { getUserOrderByStatus } from "../../../utils/apiUtils";
 import { koiBreeders } from "~/utils/data/koibreeders";
 import OrderSearchComponent from "~/components/search/OrderSearchComponent";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { BreedersResponse } from "~/types/paginated.types";
+import axios from "axios";
 
 const UserOrder = () => {
   const theme = useTheme();
@@ -50,10 +56,11 @@ const UserOrder = () => {
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus>(
     OrderStatus.ALL,
   );
-  const [isSearchActive, setIsSearchActive] = useState(false);
-  const handleSearchStateChange = (isActive: boolean) => {
-    setIsSearchActive(isActive);
-  };
+  const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>({
+    total_page: 0,
+    total_item: 0,
+    item: [],
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -78,8 +85,26 @@ const UserOrder = () => {
       }
     };
 
+    const fetchAllBreeders = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/v1/breeders`,
+          {
+            params: {
+              page: 0,
+              limit: 20,
+            },
+          },
+        );
+        setKoiBreeders(response.data || []);
+      } catch (error) {
+        console.error("Error fetching breeders:", error);
+      }
+    };
+
     if (user) {
       fetchOrders();
+      fetchAllBreeders();
     }
   }, [user, page, selectedStatus]);
 
@@ -116,18 +141,29 @@ const UserOrder = () => {
   return (
     <div className="">
       <Box sx={{ my: 4 }}>
-        <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-          {Object.values(OrderStatus).map((status) => (
-            <Button
-              key={status}
-              variant={selectedStatus === status ? "contained" : "outlined"}
-              onClick={() => handleStatusChange(status)}
-              sx={{ mx: 1 }}
-              color={getOrderStatusColor(status)}
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2, mr: 3 }}>
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel>Order Status</InputLabel>
+            <Select
+              value={selectedStatus}
+              label="Order Status"
+              onChange={(e) =>
+                handleStatusChange(e.target.value as OrderStatus)
+              }
             >
-              {status}
-            </Button>
-          ))}
+              {Object.values(OrderStatus).map((status) => (
+                <MenuItem
+                  key={status}
+                  value={status}
+                  sx={{
+                    color: getOrderStatusColor(status),
+                  }}
+                >
+                  {status}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Box>
       </Box>
 
@@ -179,7 +215,7 @@ const UserOrder = () => {
                     mb: 2,
                   }}
                 >
-                  {koiBreeders.find(
+                  {koiBreeders.item.find(
                     (breeder) =>
                       breeder.id === order.order_details[0].koi.owner.id,
                   ) && (
@@ -187,29 +223,29 @@ const UserOrder = () => {
                       <Link
                         to={`/breeder/${order.order_details[0].koi.owner.id}/info`}
                         onClick={(event) => event.stopPropagation()}
-                        className="inline" // Make sure the link doesn't take full width
+                        className="inline"
                       >
                         <img
                           src={
-                            koiBreeders.find(
+                            koiBreeders.item.find(
                               (breeder) =>
                                 breeder.id ===
                                 order.order_details[0].koi.owner.id,
                             )?.avatar_url
                           }
                           alt="Breeder Avatar"
-                          className="w-[20%] m-0 p-0" // Ensure no extra margin or padding
+                          className="w-[40px] m-0 p-0"
                           onClick={(event) => event.stopPropagation()}
                         />
                       </Link>
                       <Link
-                        to={`/breeder/${order.order_details[0].koi.owner.id}/info`} // Same link for the button
+                        to={`/breeder/${order.order_details[0].koi.owner.id}/info`}
                         onClick={(event) => event.stopPropagation()}
                         className="inline-block"
                       >
                         <Button
                           variant="outlined"
-                          color="#808080"
+                          color="primary"
                           sx={{ mt: 1 }}
                         >
                           View Shop
@@ -264,7 +300,7 @@ const UserOrder = () => {
                 >
                   <Typography variant="body2">Quantity: x1</Typography>
                   <Chip
-                    label="Refund free in 15days"
+                    label="Already paid Koi price"
                     color="primary"
                     variant="outlined"
                   />

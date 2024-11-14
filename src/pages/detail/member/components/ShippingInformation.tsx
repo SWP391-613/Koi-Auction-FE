@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { Edit, LocationOn, LocalShipping } from "@mui/icons-material";
 import { format, addDays } from "date-fns";
-import { Order } from "~/types/orders.type";
+import { Order, OrderStatus } from "~/types/orders.type";
 import { formatCurrency } from "~/utils/currencyUtils";
 import {
   parseAddressString,
@@ -154,6 +154,8 @@ export const ShippingInformation: React.FC<ShippingInformationProps> = ({
   const handleShippingMethodChange = (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
+    if (order.status !== "Pending") return;
+
     const newMethod = e.target.value as "Standard" | "Express";
     setShippingMethod(newMethod);
 
@@ -168,9 +170,14 @@ export const ShippingInformation: React.FC<ShippingInformationProps> = ({
         <Typography variant="h6">
           <LocationOn /> Shipping Information
         </Typography>
-        <Button startIcon={<Edit />} onClick={() => setIsEditingAddress(true)}>
-          Edit
-        </Button>
+        {order.status === OrderStatus.PENDING && (
+          <Button
+            startIcon={<Edit />}
+            onClick={() => setIsEditingAddress(true)}
+          >
+            Edit
+          </Button>
+        )}
       </Box>
 
       {/* Current Address Display */}
@@ -184,7 +191,7 @@ export const ShippingInformation: React.FC<ShippingInformationProps> = ({
 
       <Divider sx={{ my: 2 }} />
 
-      {/* Updated Shipping Method Selection */}
+      {/* Updated Shipping Method Selection with disabled state */}
       <Box sx={{ mb: 3 }}>
         <Typography variant="subtitle1" sx={{ mb: 2 }}>
           <LocalShipping /> Shipping Method
@@ -208,6 +215,7 @@ export const ShippingInformation: React.FC<ShippingInformationProps> = ({
                   </Typography>
                 </Box>
               }
+              disabled={order.status !== OrderStatus.PENDING}
             />
           </Paper>
           <Paper variant="outlined" sx={{ p: 2 }}>
@@ -225,6 +233,7 @@ export const ShippingInformation: React.FC<ShippingInformationProps> = ({
                   </Typography>
                 </Box>
               }
+              disabled={order.status !== OrderStatus.PENDING}
             />
           </Paper>
         </RadioGroup>

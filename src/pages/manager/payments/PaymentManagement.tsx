@@ -11,6 +11,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { usePaymentSearch } from "~/hooks/useEntitySearch";
 import SearchBar from "~/components/shared/SearchBar";
@@ -80,18 +84,21 @@ const PaymentManagement: React.FC = () => {
         Payment Management
       </Typography>
 
-      <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-        {Object.values(PaymentStatus).map((paymentStatus) => (
-          <Button
-            key={paymentStatus}
-            variant={status === paymentStatus ? "contained" : "outlined"}
-            onClick={() => setStatus(paymentStatus)}
-            sx={{ mx: 1 }}
-            color={getPaymentStatusColor(paymentStatus)}
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <FormControl sx={{ minWidth: 200 }}>
+          <InputLabel>Payment Status</InputLabel>
+          <Select
+            value={status}
+            label="Payment Status"
+            onChange={(e) => setStatus(e.target.value as PaymentStatus)}
           >
-            {paymentStatus}
-          </Button>
-        ))}
+            {Object.values(PaymentStatus).map((status) => (
+              <MenuItem key={status} value={status}>
+                {status}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
 
       <Box className="bg-gray-200 p-4 rounded-xl mb-4">

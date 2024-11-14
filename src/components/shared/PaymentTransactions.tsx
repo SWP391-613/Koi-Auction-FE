@@ -9,6 +9,10 @@ import {
   Chip,
   Paper,
   Divider,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { useUserData } from "~/hooks/useUserData";
 import {
@@ -108,18 +112,23 @@ const PaymentTransactions: React.FC = () => {
         Payment Transactions
       </Typography>
 
-      <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-        {Object.values(PaymentStatus).map((status) => (
-          <Button
-            key={status}
-            variant={selectedStatus === status ? "contained" : "outlined"}
-            onClick={() => handleStatusChange(status)}
-            sx={{ mx: 1 }}
-            color={getPaymentStatusColor(status)}
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <FormControl sx={{ minWidth: 200 }}>
+          <InputLabel>Payment Status</InputLabel>
+          <Select
+            value={selectedStatus}
+            label="Payment Status"
+            onChange={(e) =>
+              handleStatusChange(e.target.value as PaymentStatus)
+            }
           >
-            {status}
-          </Button>
-        ))}
+            {Object.values(PaymentStatus).map((status) => (
+              <MenuItem key={status} value={status}>
+                {status}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
 
       {payments.length === 0 ? (

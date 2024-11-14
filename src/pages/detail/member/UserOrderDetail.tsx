@@ -490,6 +490,7 @@ const UserOrderDetail: React.FC = () => {
               onChange={(e) => handleTempOrderUpdate({ note: e.target.value })}
               placeholder="Add any special instructions or notes for your order here..."
               sx={{ mt: 2 }}
+              disabled={order.status !== OrderStatus.PENDING}
             />
           </OrderSection>
 
@@ -539,6 +540,7 @@ const UserOrderDetail: React.FC = () => {
                 onChange={(e) =>
                   handleTempOrderUpdate({ payment_method: e.target.value })
                 }
+                disabled={order.status !== OrderStatus.PENDING}
               >
                 <MenuItem value="Cash">Cash</MenuItem>
                 <MenuItem value="Payment">Online Payment</MenuItem>
@@ -561,7 +563,7 @@ const UserOrderDetail: React.FC = () => {
             {Object.keys(tempOrderUpdates).length > 0 && (
               <Button
                 variant="contained"
-                color="primary"
+                color="success"
                 startIcon={<SaveIcon />}
                 onClick={handleSaveOrder}
               >
@@ -619,7 +621,7 @@ const UserOrderDetail: React.FC = () => {
       )}
 
       {/* Feedback Section */}
-      {order && order.status !== "PENDING" && (
+      {order && order.status !== OrderStatus.PENDING && (
         <OrderSection sx={{ mt: 3 }}>
           <Feedback orderId={orderId || ""} />
         </OrderSection>

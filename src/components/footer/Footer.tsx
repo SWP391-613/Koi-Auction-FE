@@ -27,8 +27,7 @@ const Footer: React.FC = () => {
   ];
 
   const accountLinks: FooterLinkProps[] = [
-    { href: "/login", icon: <LoginIcon />, text: "Login" },
-    { href: "/register", icon: <PersonAddIcon />, text: "Register" },
+    { href: "/auth", icon: <LoginIcon />, text: "Login" },
   ];
 
   return (

@@ -41,7 +41,7 @@ const KoiManagement = () => {
     name: "",
     sex: "",
     length: 0,
-    age: 0,
+    year_born: 0,
   });
   const [koiImage, setKoiImage] = useState<File | null>(null);
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -350,7 +350,7 @@ const KoiManagement = () => {
             type="number"
             fullWidth
             variant="standard"
-            value={newkoi.year_born}
+            value={newKoi.year_born}
             onChange={handleInputChange}
           />
           <label

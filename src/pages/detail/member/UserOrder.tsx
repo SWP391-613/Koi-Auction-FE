@@ -184,19 +184,33 @@ const UserOrder = () => {
                 flexDirection: "row",
                 margin: 3,
                 overflow: "hidden",
+                position: "relative",
               }}
             >
               {order.order_details[0].koi.thumbnail && (
-                <CardMedia
-                  component="img"
+                <Box
                   sx={{
-                    height: "auto",
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
                     width: "20%",
-                    backgroundColor: "#1365b4",
+                    overflow: "hidden",
                   }}
-                  image={order.order_details[0].koi.thumbnail}
-                  alt="Koi"
-                />
+                >
+                  <CardMedia
+                    component="img"
+                    sx={{
+                      height: "100%",
+                      width: "100%",
+                      objectFit: "contain",
+                      objectPosition: "center",
+                      backgroundColor: "#1365b4",
+                    }}
+                    image={order.order_details[0].koi.thumbnail}
+                    alt="Koi"
+                  />
+                </Box>
               )}
               <CardContent
                 sx={{
@@ -204,6 +218,7 @@ const UserOrder = () => {
                   display: "flex",
                   flexDirection: "column",
                   p: 3,
+                  marginLeft: "20%",
                 }}
               >
                 <Box

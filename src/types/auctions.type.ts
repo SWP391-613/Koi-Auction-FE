@@ -20,3 +20,10 @@ export type AuctionModel = {
 export type AddNewAuctionDTO = Omit<AuctionModel, "id" | "end_time_countdown">;
 
 export type AUCTION_STATUS = "UPCOMING" | "ONGOING" | "ENDED";
+
+export const BID_METHOD = {
+  ASCENDING_BID: "ASCENDING_BID",
+  SEALED_BID: "SEALED_BID",
+  DESCENDING_BID: "DESCENDING_BID",
+  FIXED_PRICE: "FIXED_PRICE",
+} as const;

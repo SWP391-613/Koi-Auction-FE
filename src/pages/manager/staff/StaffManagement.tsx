@@ -1,29 +1,21 @@
 import AddIcon from "@mui/icons-material/Add";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-} from "@mui/material";
-import axios, { Axios } from "axios";
+import { Button } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
+import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
+import { API_URL_DEPLOYMENT } from "~/constants/endPoints";
+import { STAFF_MANAGEMENT_HEADER } from "~/constants/tableHeader";
+import usePagination from "~/hooks/usePagination";
 import { Staff, StaffRegisterDTO } from "~/types/users.type";
+import { createStaff, deleteStaff } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
+import { extractErrorMessage } from "~/utils/dataConverter";
 import CreateStaffDialog from "./CreateStaffDialog";
 import EditStaffDialog from "./EditStaffDialog";
-import "react-toastify/dist/ReactToastify.css";
-import { toast, ToastContainer } from "react-toastify";
-import usePagination from "~/hooks/usePagination";
-import { ENDPOINT_STAFFS } from "~/constants/endPoints";
-import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
-import { STAFF_MANAGEMENT_HEADER } from "~/constants/tableHeader";
-import { createStaff, deleteStaff } from "~/utils/apiUtils";
-import { extractErrorMessage } from "~/utils/dataConverter";
-import PaginationComponent from "~/components/common/PaginationComponent";
 
 const StaffManagement = () => {
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
@@ -61,7 +53,7 @@ const StaffManagement = () => {
     handlePageChange,
     refetch,
   } = usePagination<Staff>({
-    apiUrl: ENDPOINT_STAFFS.BASE,
+    apiUrl: `${API_URL_DEPLOYMENT}/staffs`,
     itemsPerPage: 8,
     accessToken,
   });

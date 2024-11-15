@@ -15,7 +15,7 @@ import UserDetailDialog from "./UserDetailDialog";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { toast, ToastContainer } from "react-toastify";
 import { UserResponse } from "~/types/users.type";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { API_URL_DEPLOYMENT } from "~/constants/endPoints";
 
 const UserDetail: React.FC = () => {
   const { user, loading, error, setUser } = useUserData();
@@ -42,7 +42,7 @@ const UserDetail: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `${API_URL_DEVELOPMENT}/users/${userId}`,
+        `${API_URL_DEPLOYMENT}/users/${userId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         },
@@ -110,7 +110,7 @@ const UserDetail: React.FC = () => {
       }
 
       const response = await axios.get(
-        `${API_URL_DEVELOPMENT}/users/${userId}`,
+        `${API_URL_DEPLOYMENT}/users/${userId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         },

@@ -85,7 +85,7 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
     setLoading(true);
     try {
       const response = await axios.get<StaffApiResponse>(
-        "${API_URL_DEVELOPMENT}/staffs",
+        "${API_URL_DEPLOYMENT}/staffs",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

@@ -5,8 +5,8 @@ import { AuctionsManagement } from "~/pages/manager/auctions/AuctionsManagement"
 import SendNotifications from "~/components/shared/SendNotifications";
 import StaffDetail from "~/pages/detail/staff/StaffDetail";
 import DashboardLayout from "~/components/shared/DashboardLayout";
-import OrderManagement from "~/pages/manager/orders/OrderManagement";
-import PaymentManagement from "~/pages/manager/payments/PaymentManagement";
+import OrderManagement from "~/pages/managements/OrderManagement";
+import PaymentManagement from "~/pages/managements/PaymentManagement";
 
 const StaffLayout: React.FC = () => {
   const navLinks = [

@@ -16,15 +16,14 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { NavbarProvider, useNavbar } from "./contexts/NavbarContext";
 
 // Components
+import Footer from "./components/common/Footer";
+import Header from "./components/common/Header";
+import NavBar from "./components/common/NavBar";
 import ProtectedRoute from "./components/common/ProtectedRoute";
-import Footer from "./components/footer/Footer";
-import Header from "./components/header/Header";
-import NavBar from "./components/navbar/NavBar";
 
 // Pages
+import OtpVerification from "./components/common/OtpVeficitaion";
 import NotFound from "./components/error/NotFound";
-import OtpVerification from "./components/otp/OtpVeficitaion";
-import ManagerLayout from "./layouts/ManagerLayout";
 import AuctionDetail from "./pages/auctions/AuctionDetail";
 import KoiBidding from "./pages/auctions/KoiBidding";
 import Login from "./pages/auth/Login";
@@ -38,34 +37,33 @@ import Terms from "./pages/static/Terms";
 // Types
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import InternalServerError from "./components/error/InternalServerError";
+import DetailNavbar from "./components/shared/DetailNavbar";
 import PageTransition from "./components/shared/PageTransition";
+import PaymentTransactions from "./components/shared/PaymentTransactions";
+import SendNotifications from "./components/shared/SendNotifications";
 import PaymentLayout from "./layouts/PaymentLayout";
 import Auctions from "./pages/auctions/Auctions";
 import KoiRegisterAuctionDetail from "./pages/auctions/register/KoiRegisterAuctionDetail";
+import KoiRegisterAuctions from "./pages/auctions/register/KoiRegisterAuctions";
+import AuthContainer from "./pages/auth/AuthContainer";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import BlogList from "./pages/blog/BlogList";
 import BlogPost from "./pages/blog/BlogPost";
+import AddKoi from "./pages/detail/breeder/AddKoi";
+import BreederDetail from "./pages/detail/breeder/BreederDetail";
+import ManagerDetail from "./pages/detail/manager/ManagerDetail";
 import Feedback from "./pages/detail/member/Feedback";
+import UserDetail from "./pages/detail/member/UserDetail";
+import UserOrder from "./pages/detail/member/UserOrder";
 import UserOrderDetail from "./pages/detail/member/UserOrderDetail";
-import Kois from "./pages/kois/Kois";
+import StaffDetail from "./pages/detail/staff/StaffDetail";
+import KoiWishList from "./pages/kois/KoiWishList";
+import VerifyKoiList from "./pages/kois/VerifyKoiList";
+import { AuctionsManagement } from "./pages/managements/AuctionsManagement";
+import OrderManagement from "./pages/managements/OrderManagement";
+import PaymentManagement from "./pages/managements/PaymentManagement";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import BreederInfo from "./pages/static/BreederInfo";
-import KoiWishList from "./pages/kois/KoiWishList";
-import StaffDetail from "./pages/detail/staff/StaffDetail";
-import BreederDetail from "./pages/detail/breeder/BreederDetail";
-import UserDetail from "./pages/detail/member/UserDetail";
-import ManagerDetail from "./pages/detail/manager/ManagerDetail";
-import UserOrder from "./pages/detail/member/UserOrder";
-import PaymentTransactions from "./components/shared/PaymentTransactions";
-import VerifyKoiList from "./pages/kois/VerifyKoiList";
-import OrderManagement from "./pages/manager/orders/OrderManagement";
-import PaymentManagement from "./pages/manager/payments/PaymentManagement";
-import SendNotifications from "./components/shared/SendNotifications";
-import AddKoi from "./pages/detail/breeder/AddKoi";
-import KoiRegisterAuctions from "./pages/auctions/register/KoiRegisterAuctions";
-import { AuctionsManagement } from "./pages/manager/auctions/AuctionsManagement";
-import DetailNavbar from "./components/shared/DetailNavbar";
-import AuthContainer from "./pages/auth/AuthContainer";
 
 const TITLE = "Koi Auction";
 

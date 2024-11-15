@@ -18,7 +18,7 @@ import { getStatusColor } from "~/utils/colorUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { getCategoryName } from "~/utils/dataConverter";
 import { useAuth } from "../../contexts/AuthContext";
-import BreederEditKoiDialog from "../manager/koi/BreederEditKoiDialog";
+import BreederEditKoiDialog from "./BreederEditKoiDialog";
 import { getUserCookieToken, isTokenValid } from "~/utils/auth.utils";
 
 interface KoiDetailItemProps {

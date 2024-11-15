@@ -15,7 +15,7 @@ export const canAcceptShip = (order: Order | OrderResponse) => {
   const daysSinceProcessing = Math.floor(
     (currentDate.getTime() - processingDate.getTime()) / (1000 * 3600 * 24),
   );
-  return order.status === OrderStatus.SHIPPED && daysSinceProcessing <= 7;
+  return order.status === OrderStatus.DELIVERED && daysSinceProcessing <= 7;
 };
 
 export const canConfirmOrder = (order: Order | OrderResponse) => {

@@ -7,7 +7,6 @@ import LoadingComponent from "~/components/shared/LoadingComponent";
 import { environment } from "~/environments/environment";
 import { useUserData } from "~/hooks/useUserData";
 import VerifyKoiList from "~/pages/kois/VerifyKoiList";
-import { AuctionsManagement } from "~/pages/manager/auctions/AuctionsManagement";
 import { sendOtp } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import "./StaffDetail.scss";
@@ -16,6 +15,7 @@ import { UserResponse } from "~/types/users.type";
 import UserDetailDialog from "../member/UserDetailDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { AuctionsManagement } from "~/pages/managements/AuctionsManagement";
 
 const StaffDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();

@@ -41,7 +41,7 @@ const VerifyKoiList: React.FC = () => {
     setLoading(true);
     try {
       await axios.put(
-        `http://localhost:4000/api/v1/kois/status/${id}`,
+        `${API_URL_DEVELOPMENT}/kois/status/${id}`,
         {
           tracking_status: "VERIFIED",
         },
@@ -69,7 +69,7 @@ const VerifyKoiList: React.FC = () => {
 
     try {
       await axios.put(
-        `http://localhost:4000/api/v1/kois/status/${id}`,
+        `${API_URL_DEVELOPMENT}/kois/status/${id}`,
         {
           tracking_status: "REJECTED",
         },
@@ -98,18 +98,21 @@ const VerifyKoiList: React.FC = () => {
 
     try {
       setLoading(true);
-      const API_URL =
+      const API_URL_DEVELOPMENT =
         import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
-      const response = await axios.get<KoisResponse>(`${API_URL}/kois/status`, {
-        params: {
-          status: "UNVERIFIED",
-          page: currentPage - 1,
-          limit: itemsPerPage,
+      const response = await axios.get<KoisResponse>(
+        `${API_URL_DEVELOPMENT}/kois/status`,
+        {
+          params: {
+            status: "UNVERIFIED",
+            page: currentPage - 1,
+            limit: itemsPerPage,
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      );
 
       const data = response.data; // Access the data property of the response
 
@@ -196,7 +199,7 @@ const VerifyKoiList: React.FC = () => {
               textAlign: "center",
             }}
           >
-            No Koi data available
+            Koi's Unverified Not Available
           </Typography>
         </div>
       )}

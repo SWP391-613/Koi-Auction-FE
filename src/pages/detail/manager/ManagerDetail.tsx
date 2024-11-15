@@ -1,23 +1,23 @@
+import { faEdit, faUserCheck } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Divider, Rating, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import LoadingComponent from "~/components/shared/LoadingComponent";
+import { toast } from "react-toastify";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import { useUserData } from "~/hooks/useUserData";
-import { environment } from "~/environments/environment";
-import { getCookie } from "~/utils/cookieUtils";
-import "./ManagerDetail.scss";
-import { formatDate, sendOtp } from "~/utils/apiUtils";
-import UserDetailDialog from "../member/UserDetailDialog";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { formatCurrency } from "~/utils/currencyUtils";
-import { faEdit, faUserCheck } from "@fortawesome/free-solid-svg-icons";
-import { AuctionsManagement } from "~/pages/manager/auctions/AuctionsManagement";
-import MemberManagement from "~/pages/manager/member/MemberManagement";
-import BreederManagement from "~/pages/manager/breeder/BreederManagement";
+import { AuctionsManagement } from "~/pages/managements/AuctionsManagement";
+import BreederManagement from "~/pages/managements/BreederManagement";
+import KoiManagement from "~/pages/managements/KoiManagement";
+import MemberManagement from "~/pages/managements/MemberManagement";
 import StaffManagement from "~/pages/manager/staff/StaffManagement";
-import KoiManagement from "~/pages/manager/koi/KoiManagement";
+import { formatDate, sendOtp } from "~/utils/apiUtils";
+import { getCookie } from "~/utils/cookieUtils";
+import { formatCurrency } from "~/utils/currencyUtils";
+import UserDetailDialog from "../member/UserDetailDialog";
+import "./ManagerDetail.scss";
 
 const ManagerDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,36 +31,26 @@ const ManagerDetail: React.FC = () => {
   const toggleAbout = () => setShowAbout(!showAbout);
 
   const handleUpdate = async () => {
-    if (!user || !updateField || !updateValue) return;
     const userId = getCookie("user_id"); // Retrieve user id from cookie
     const accessToken = getCookie("access_token");
-    if (!accessToken) {
+
+    if (!userId || !accessToken) {
       navigate("/notfound");
       return;
     }
 
     try {
-      const API_URL =
-        import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
-      const response = await axios.put(
-        `${API_URL}/users/${user.id}`,
-        { [updateField]: updateValue },
+      const response = await axios.get(
+        `http://localhost:4000/api/v1/users/${userId}`,
         {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+          headers: { Authorization: `Bearer ${accessToken}` },
         },
       );
-
-      if (response.status === 200) {
-        setUser({ ...user, [updateField]: updateValue });
-        setUpdateField("");
-        setUpdateValue("");
-        alert("User information updated successfully!");
-      }
+      setFetchedUser(response.data); // Save fetched data to state
+      setOpenModal(true); // Open the modal to display the data
     } catch (error) {
-      console.error("Failed to update user data:", error);
-      alert("Failed to update user information. Please try again.");
+      console.error("Failed to fetch user data", error);
+      toast.error("Failed to fetch user data");
     }
   };
 
@@ -182,7 +172,7 @@ const ManagerDetail: React.FC = () => {
             <div className="mt-6 space-y-4">
               <div className="flex gap-5 justify-between ">
                 <h2 className="text-lg font-bold">Date of Birth</h2>
-                <p>{user.date_of_birth}</p>
+                <p>{user.date_of_birth || "Not Provided"}</p>
               </div>
               <div className="flex gap-5 justify-between ">
                 <h2 className="text-lg font-bold">Created At</h2>

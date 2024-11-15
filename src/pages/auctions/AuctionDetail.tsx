@@ -1,4 +1,4 @@
-import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faClock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Typography } from "@mui/material";
 import { isPast, parse } from "date-fns"; // Make sure to install date-fns if you haven't already
@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import KoiInAuctionGrid from "~/components/shared/KoiInAuctionGrid";
 import LoadingComponent from "~/components/shared/LoadingComponent";
+import NavigateButton from "~/components/shared/NavigateButton";
 import { useAuth } from "~/contexts/AuthContext";
 import { KoiWithAuctionKoiData } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
@@ -90,7 +91,13 @@ const AuctionDetail: React.FC = () => {
   return (
     <>
       <div className="flex flex-col p-5">
-        <div className="mb-5 flex flex-col pt-3 pl-6 justify-between">
+        <div className="ml-10 mt-6 mb-5 flex flex-col pt-3 pl-6 justify-between">
+          <NavigateButton
+            to={`/auctions`}
+            icon={<FontAwesomeIcon icon={faArrowLeft} />}
+            text="Auctions"
+            className="rounded bg-gray-200 px-5 py-3 text-lg text-black transition hover:bg-gray-200"
+          />
           <Typography variant="h6">
             Name: &nbsp;
             <span className="text-2xl font-semibold text-black">

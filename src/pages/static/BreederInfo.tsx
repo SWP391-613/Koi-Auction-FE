@@ -7,6 +7,7 @@ import { Box } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import KoiOwnerSearchNotAuthComponent from "~/components/search/KoiOwnerSearchComponentNotAuth";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 
 const BreederInfo: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Grab breeder ID from URL
@@ -22,7 +23,7 @@ const BreederInfo: React.FC = () => {
   const fetchBreederById = async (breederId: string) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/v1/breeders/${breederId}`,
+        `${API_URL_DEVELOPMENT}/breeders/${breederId}`,
       );
 
       if (response.data) {

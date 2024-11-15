@@ -49,11 +49,13 @@ const BiddingChart: React.FC<BiddingChartProps> = ({
     const loadBiddingHistory = async () => {
       try {
         const history = await fetchBidHistory(auctionKoiId);
-        const formattedData = history.map((bid: Bid) => ({
-          time: format(new Date(bid.bid_time), "HH:mm:ss"),
-          amount: bid.bid_amount,
-          bidder: bid.bidder_name,
-        }));
+        const formattedData = history
+          .map((bid: Bid) => ({
+            time: format(new Date(bid.bid_time), "HH:mm:ss"),
+            amount: bid.bid_amount,
+            bidder: bid.bidder_name,
+          }))
+          .reverse();
         setChartData(formattedData);
       } catch (error) {
         console.error("Error loading bidding history:", error);
@@ -77,9 +79,8 @@ const BiddingChart: React.FC<BiddingChartProps> = ({
           data={chartData}
           margin={{
             top: 20,
-            right: 30,
-            left: 20,
-            bottom: 60,
+            right: 20,
+            left: 30,
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
@@ -92,6 +93,8 @@ const BiddingChart: React.FC<BiddingChartProps> = ({
             fontSize={12}
           />
           <YAxis
+            orientation="right"
+            yAxisId="right"
             domain={[0, yAxisMax]}
             tickFormatter={(value) => formatCurrency(value)}
             fontSize={12}
@@ -104,6 +107,7 @@ const BiddingChart: React.FC<BiddingChartProps> = ({
           <Line
             type="monotone"
             dataKey="amount"
+            yAxisId="right"
             stroke="#8884d8"
             strokeWidth={2}
             dot={{ r: 4 }}

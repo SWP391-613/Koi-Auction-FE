@@ -1,4 +1,6 @@
-export const API_URL = "http://localhost:4000/api/v1";
+export const API_URL =
+  "https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1";
+export const API_URL_DEVELOPMENT = "http://localhost:4000/api/v1";
 
 export const ROUTING_PATH = {
   MANAGERS_HOME: "/managers",
@@ -11,5 +13,9 @@ export const ROUTING_PATH = {
 } as const;
 
 export const ENDPOINT_STAFFS = {
+  BASE: "https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/staffs",
+} as const;
+
+export const ENDPOINT_STAFFS_DEVELOPMENT = {
   BASE: "http://localhost:4000/api/v1/staffs",
 } as const;

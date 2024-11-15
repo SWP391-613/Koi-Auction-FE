@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { AddNewKoiDTO } from "~/types/kois.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
-import { koiName } from "~/utils/data/fixedTitleName";
 import { categoryMap } from "~/utils/dataConverter";
 import AddKoiPreviewCart from "./AddKoiPreviewCart";
 
@@ -31,15 +30,15 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
   owner_id,
 }) => {
   const [formData, setFormData] = useState<AddNewKoiDTO>({
-    name: "Select a name",
-    base_price: 0,
+    name: "",
+    base_price: "" as unknown as number, // This will show empty field instead of 0
     thumbnail: "",
     gender: "FEMALE",
-    length: 0,
-    age: 0,
+    length: "" as unknown as number, // This will show empty field instead of 0
+    year_born: "" as unknown as number, // This will show empty field instead of 0
     description: "Enter description here...",
-    category_id: 0,
-    owner_id: 0,
+    category_id: "" as unknown as number, // This will show empty field instead of 0
+    owner_id: owner_id, // Keep this as it's passed as prop
     status_name: "UNVERIFIED",
     is_display: 1,
   });
@@ -66,6 +65,13 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
       | SelectChangeEvent<unknown>,
   ) => {
     const { name, value } = e.target;
+
+    // For number fields, ensure value is not negative
+    if (["length", "age", "base_price", "category_id"].includes(name)) {
+      const numValue = Number(value);
+      if (numValue < 0) return; // Prevent negative values
+    }
+
     setFormData((prevData) => ({
       ...prevData,
       [name]:
@@ -73,7 +79,9 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
         name === "age" ||
         name === "length" ||
         name === "base_price"
-          ? Number(value)
+          ? value === ""
+            ? (value as unknown as number)
+            : Number(value)
           : value,
     }));
   };
@@ -83,7 +91,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
 
     // Validate name
     if (!formData.name) {
-      newErrors.name = "Name is required";
+      newErrors.name = "Koi name is required";
     }
 
     // Validate base price
@@ -102,7 +110,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
     }
 
     // Validate age
-    if (formData.age < 0) {
+    if (formData.year_born < 0) {
       newErrors.age = "Age cannot be negative";
     }
 
@@ -151,42 +159,20 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
 
   return (
     <>
-      <div className="flex">
-        <div className="flex flex-col">
+      <div className="flex justify-center">
+        <div className="flex flex-col ">
           <div>
-            {/* Dropdown for koi names */}
-            <div className="flex gap-5">
-              <FormControl fullWidth margin="normal" error={!!errors.name}>
-                <InputLabel>Name</InputLabel>
-                <Select
-                  name="name"
-                  value={formData.name}
-                  onChange={handleDropdownChange}
-                >
-                  {koiName.map((koiName, index) => (
-                    <MenuItem key={index} value={koiName}>
-                      {koiName}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
-              </FormControl>
-              <FormControl fullWidth margin="normal" error={!!errors.gender}>
-                <InputLabel>Gender</InputLabel>
-                <Select
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleInputChange}
-                >
-                  <MenuItem value="MALE">Male</MenuItem>
-                  <MenuItem value="FEMALE">Female</MenuItem>
-                  <MenuItem value="UNKNOWN">Unknown</MenuItem>
-                </Select>
-                {errors.gender && (
-                  <p style={{ color: "red" }}>{errors.gender}</p>
-                )}
-              </FormControl>
-            </div>
+            <TextField
+              fullWidth
+              margin="normal"
+              name="name"
+              label="Name"
+              value={formData.name}
+              sx={{ backgroundColor: "white" }}
+              onChange={handleInputChange}
+              error={!!errors.name}
+              helperText={errors.name}
+            />
             <FormControl fullWidth margin="normal" error={!!errors.category_id}>
               <InputLabel>Category</InputLabel>
               <Select
@@ -212,7 +198,8 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
                 name="length"
                 label="Length"
                 type="number"
-                value={formData.length}
+                value={formData.length || ""}
+                inputProps={{ min: 0 }}
                 onChange={handleInputChange}
                 error={!!errors.length}
                 helperText={errors.length}
@@ -221,13 +208,17 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
                 fullWidth
                 sx={{ backgroundColor: "white" }}
                 margin="normal"
-                name="age"
-                label="Age"
+                name="year_born"
+                label="Year Born"
                 type="number"
-                value={formData.age}
+                value={formData.year_born || ""}
+                inputProps={{
+                  min: 0, // Set the minimum year (e.g., 1900)
+                  max: new Date().getFullYear(), // Set the maximum year to the current year
+                }}
                 onChange={handleInputChange}
-                error={!!errors.age}
-                helperText={errors.age}
+                error={!!errors.year_born}
+                helperText={errors.year_born}
               />
             </div>
             <TextField
@@ -248,7 +239,8 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
               name="base_price"
               label="Base Price (VND)"
               type="number"
-              value={formData.base_price}
+              value={formData.base_price || ""}
+              inputProps={{ min: 0 }}
               onChange={handleInputChange}
               error={!!errors.base_price}
               helperText={errors.base_price}

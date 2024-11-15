@@ -1,18 +1,19 @@
 import { AdvancedVideo } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
+import axios from "axios";
 import { format } from "date-fns";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { default as React, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import KoiSearchGrid from "~/components/shared/KoiSearchGrid";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { useAuth } from "~/contexts/AuthContext";
 import { KoiInAuctionDetailModel } from "~/types/kois.type";
+import { BreedersResponse } from "~/types/paginated.types";
 import { getKoiInAuctionData } from "~/utils/apiUtils";
 import { generateBlogPostsPreview } from "~/utils/data/blog.data";
 import FancyButton from "../../components/shared/FancyButton";
-import { koiBreeders } from "../../utils/data/koibreeders";
-import { BreedersResponse } from "~/types/paginated.types";
-import axios from "axios";
+import Kois from "../kois/Kois";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -59,15 +60,12 @@ const Home = () => {
 
     const fetchAllBreeders = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:4000/api/v1/breeders`,
-          {
-            params: {
-              page: 0,
-              limit: 20,
-            },
+        const response = await axios.get(`${API_URL_DEVELOPMENT}/breeders`, {
+          params: {
+            page: 0,
+            limit: 20,
           },
-        );
+        });
         setKoiBreeders(response.data || []);
       } catch (error) {
         console.error("Error fetching breeders:", error);
@@ -255,28 +253,10 @@ const Home = () => {
           y: isFeaturedInView ? 0 : 50,
         }}
         transition={{ duration: 0.6 }}
-        className="py-16 px-4 bg-white"
+        className="bg-white"
       >
         <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="flex items-center justify-center gap-3 text-3xl font-bold text-gray-900">
-              <span className="text-red-600">→</span>
-              Featured Kois
-              <span className="text-red-600">←</span>
-            </h2>
-          </div>
-
-          {isLoading ? (
-            <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
-            </div>
-          ) : randomKois && randomKois.length > 0 ? (
-            <FeaturedKoiCard kois={randomKois} />
-          ) : (
-            <div className="text-center text-gray-500">
-              No kois available at the moment
-            </div>
-          )}
+          <Kois />
         </div>
       </motion.div>
 

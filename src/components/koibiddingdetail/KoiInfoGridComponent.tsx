@@ -1,28 +1,24 @@
-import React from "react";
-import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import {
-  faVenusMars,
-  faRuler,
+  faArrowUp,
   faCalendarDays,
-  faFish,
   faDollarSign,
+  faFish,
   faGavel,
   faHandHoldingHeart,
+  faRuler,
+  faVenusMars,
   faWallet,
-  faStar,
-  faArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
-import { KoiDetailItem } from "./KoiBiddingDetailComponent";
-import { UserDetailsResponse } from "~/types/users.type";
-import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter";
-import { KoiDetailModel } from "~/types/kois.type";
+import React from "react";
 import { AuctionKoi } from "~/types/auctionkois.type";
-import { formatCurrency } from "~/utils/currencyUtils";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import LoginOrRegister from "../auth/LoginOrRegister";
-import { getCookie } from "~/utils/cookieUtils";
+import { KoiDetailModel } from "~/types/kois.type";
+import { UserDetailsResponse } from "~/types/users.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { formatCurrency } from "~/utils/currencyUtils";
+import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter";
 import CountdownClock from "../auctions/CountdownClock";
+import LoginOrRegister from "../auth/LoginOrRegister";
+import { KoiDetailItem } from "./KoiBiddingDetailComponent";
 
 interface KoiInfoGridProps {
   koi: KoiDetailModel;
@@ -52,8 +48,8 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
     },
     {
       icon: faCalendarDays,
-      label: "Age",
-      value: koi.age,
+      label: "Year Born",
+      value: koi.year_born,
       bgColor: "bg-gray-300",
     },
     {

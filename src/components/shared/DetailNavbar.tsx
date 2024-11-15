@@ -8,7 +8,7 @@ const DetailNavbar = () => {
   const { user } = useUserData();
 
   const getNavLinks = () => {
-    if (!user) return [];
+    if (!user || user.status_name !== "VERIFIED") return [];
 
     const basePath = `/${user.role_name}s`;
     const links = {

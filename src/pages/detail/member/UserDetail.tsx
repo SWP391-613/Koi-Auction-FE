@@ -14,12 +14,14 @@ import { formatCurrency } from "~/utils/currencyUtils";
 import UserDetailDialog from "./UserDetailDialog";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { toast, ToastContainer } from "react-toastify";
+import { UserResponse } from "~/types/users.type";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 
 const UserDetail: React.FC = () => {
   const { user, loading, error, setUser } = useUserData();
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState(false); // Modal state for showing user details
-  const [fetchedUser, setFetchedUser] = useState<any>(null);
+  const [fetchedUser, setFetchedUser] = useState<UserResponse>();
   const navigate = useNavigate();
   const [showAbout, setShowAbout] = useState(false);
 
@@ -40,7 +42,7 @@ const UserDetail: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/v1/users/${userId}`,
+        `${API_URL_DEVELOPMENT}/users/${userId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         },
@@ -49,7 +51,7 @@ const UserDetail: React.FC = () => {
       setOpenModal(true); // Open the modal to display the data
     } catch (error) {
       console.error("Failed to fetch user data", error);
-      alert("Failed to fetch user data");
+      toast.error("Failed to fetch user data");
     }
   };
 
@@ -108,7 +110,7 @@ const UserDetail: React.FC = () => {
       }
 
       const response = await axios.get(
-        `http://localhost:4000/api/v1/users/${userId}`,
+        `${API_URL_DEVELOPMENT}/users/${userId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         },
@@ -228,7 +230,7 @@ const UserDetail: React.FC = () => {
               <div className="mt-6 space-y-4">
                 <div className="flex gap-5 justify-between ">
                   <h2 className="text-lg font-bold">Date of Birth</h2>
-                  <p>{user.date_of_birth}</p>
+                  <p>{user.date_of_birth || "Not Provided"}</p>
                 </div>
                 <div className="flex gap-5 justify-between ">
                   <h2 className="text-lg font-bold">Created At</h2>

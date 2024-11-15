@@ -8,7 +8,7 @@ interface NavbarContextType {
 const NavbarContext = createContext<NavbarContextType | undefined>(undefined);
 
 export function NavbarProvider({ children }: { children: React.ReactNode }) {
-  const [isNavCollapsed, setIsNavCollapsed] = useState(false);
+  const [isNavCollapsed, setIsNavCollapsed] = useState(true);
 
   const toggleNavCollapse = () => {
     setIsNavCollapsed((prev) => !prev);

@@ -1,4 +1,3 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
 export const forgotPasswordValidationSchema = Yup.object().shape({

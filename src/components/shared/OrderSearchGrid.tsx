@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Button,
@@ -7,15 +6,17 @@ import {
   CardMedia,
   Chip,
   Divider,
-  Typography,
   Grid,
   Paper,
+  Typography,
 } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { OrderResponse, OrderStatus } from "~/types/orders.type";
+import { BreedersResponse } from "~/types/paginated.types";
 import { getOrderStatusColor } from "~/utils/colorUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
-import { koiBreeders } from "~/utils/data/koibreeders";
 
 interface OrderSearchGridProps {
   orders: OrderResponse[];
@@ -26,6 +27,33 @@ const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({
   orders,
   onStatusUpdate,
 }) => {
+  const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>({
+    total_page: 0,
+    total_item: 0,
+    item: [],
+  });
+
+  useEffect(() => {
+    const fetchAllBreeders = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/v1/breeders`,
+          {
+            params: {
+              page: 0,
+              limit: 20,
+            },
+          },
+        );
+        setKoiBreeders(response.data || []);
+      } catch (error) {
+        console.error("Error fetching breeders:", error);
+      }
+    };
+
+    fetchAllBreeders();
+  }, []);
+
   const LabeledInfo = ({
     label,
     value,
@@ -54,9 +82,12 @@ const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({
             <CardMedia
               component="img"
               sx={{
-                height: "auto",
+                height: "500px",
                 width: "20%",
                 backgroundColor: "#1365b4",
+                objectFit: "contain",
+                objectPosition: "center",
+                padding: "8px",
               }}
               image={order.order_details[0].koi.thumbnail}
               alt="Koi"
@@ -88,20 +119,20 @@ const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({
                   color={getOrderStatusColor(order.status)}
                 />
               </Box>
-              {koiBreeders.find(
-                (breeder) => breeder.id === order.order_details[0].koi.owner.id,
+              {koiBreeders.item.find(
+                (breeder) => breeder.id === order.order_details[0].koi.owner_id,
               ) && (
                 <div className="">
                   <Link
-                    to={`/breeder/${order.order_details[0].koi.owner.id}/info`}
+                    to={`/breeder/${order.order_details[0].koi.owner_id}/info`}
                     onClick={(event) => event.stopPropagation()}
                     className="inline"
                   >
                     <img
                       src={
-                        koiBreeders.find(
+                        koiBreeders.item.find(
                           (breeder) =>
-                            breeder.id === order.order_details[0].koi.owner.id,
+                            breeder.id === order.order_details[0].koi.owner_id,
                         )?.avatar_url
                       }
                       alt="Breeder Avatar"
@@ -110,7 +141,7 @@ const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({
                     />
                   </Link>
                   <Link
-                    to={`/breeder/${order.order_details[0].koi.owner.id}/info`}
+                    to={`/breeder/${order.order_details[0].koi.owner_id}/info`}
                     onClick={(event) => event.stopPropagation()}
                     className="inline-block"
                   >

@@ -18,7 +18,7 @@ import { getStatusColor } from "~/utils/colorUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { getCategoryName } from "~/utils/dataConverter";
 import { useAuth } from "../../contexts/AuthContext";
-import BreederEditKoiDialog from "../manager/koi/BreederEditKoiDialog";
+import BreederEditKoiDialog from "./BreederEditKoiDialog";
 import { getUserCookieToken, isTokenValid } from "~/utils/auth.utils";
 
 interface KoiDetailItemProps {
@@ -127,8 +127,8 @@ const KoiDetail: React.FC = () => {
               />
               <KoiDetailItem
                 icon={faCalendarDays}
-                label="Age"
-                value={koi.age}
+                label="Year Born"
+                value={koi.year_born}
                 bgColor="bg-gray-300"
               />
               <KoiDetailItem

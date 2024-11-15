@@ -3,11 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  CardMedia,
   Container,
-  Grid,
   Paper,
   Typography,
   useTheme,
@@ -16,6 +12,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import PaymentIcon from "@mui/icons-material/Payment";
@@ -27,28 +27,24 @@ import {
   getOrderById,
   confirmOrder,
 } from "~/utils/apiUtils";
-import {
-  Order,
-  OrderDetail,
-  OrderStatus,
-  PaymentDTO,
-} from "~/types/orders.type";
+import { Order, OrderDetail, OrderStatus } from "~/types/orders.type";
+import { PaymentDTO } from "~/types/payments.type";
 import { toast, ToastContainer } from "react-toastify";
 import { getCookie } from "~/utils/cookieUtils";
 import TextField from "@mui/material/TextField";
 import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Cancel";
 import { useUserData } from "~/hooks/useUserData";
 import { useMediaQuery } from "@mui/material";
 import Feedback from "./Feedback";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
+
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { koiBreeders } from "~/utils/data/koibreeders";
 import { styled } from "@mui/material/styles";
 import { formatCurrency } from "~/utils/currencyUtils";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import { ShippingInformation } from "./components/ShippingInformation";
+import { SHIPPING_PRICES } from "~/types/shipping.types";
 
 // Create a styled Button component
 const GrayButton = styled(Button)(({ theme }) => ({
@@ -58,6 +54,38 @@ const GrayButton = styled(Button)(({ theme }) => ({
     borderColor: theme.palette.grey[500],
   },
 }));
+
+// Add these new styled components at the top after imports
+const OrderStatusBar = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  color: "white",
+  padding: theme.spacing(2),
+  borderRadius: theme.shape.borderRadius,
+  marginBottom: theme.spacing(3),
+}));
+
+const OrderSection = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(3),
+  marginBottom: theme.spacing(3),
+  borderRadius: theme.shape.borderRadius,
+}));
+
+const OrderHeader = styled(Box)(({ theme }) => ({
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  paddingBottom: theme.spacing(2),
+  marginBottom: theme.spacing(2),
+}));
+
+const ProductCard = styled(Box)(({ theme }) => ({
+  display: "flex",
+  padding: theme.spacing(2),
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  "&:last-child": {
+    borderBottom: "none",
+  },
+}));
+
+// Add these interfaces after your existing imports
 
 const UserOrderDetail: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
@@ -75,7 +103,10 @@ const UserOrderDetail: React.FC = () => {
   const [dialogAction, setDialogAction] = useState<string>("");
   const [dialogMessage, setDialogMessage] = useState<string>("");
 
-  const token = getUserCookieToken();
+  const token = getUserCookieToken() || "";
+
+  // Add new state for temporary order changes
+  const [tempOrderUpdates, setTempOrderUpdates] = useState<Partial<Order>>({});
 
   useEffect(() => {
     if (!token) {
@@ -84,79 +115,35 @@ const UserOrderDetail: React.FC = () => {
 
     if (orderId) {
       setLoading(true);
+      setError(null);
 
-      getOrderById(parseInt(orderId))
-        .then((order) => {
-          setOrder(order);
-        })
-        .catch((err) => {
-          console.error("Error fetching order:", err);
-          setError("Failed to fetch order");
-        });
+      Promise.all([
+        getOrderById(parseInt(orderId)),
+        fetchOrderDetails(parseInt(orderId)),
+      ])
+        .then(([orderData, details]) => {
+          if (orderData) {
+            setOrder(orderData);
+          } else {
+            throw new Error("Failed to fetch order");
+          }
 
-      fetchOrderDetails(parseInt(orderId))
-        .then((details) => {
           if (Array.isArray(details)) {
             setOrderDetails(details);
           } else {
-            console.error("Received non-array orderDetails:", details);
-            setError("Invalid order details format");
+            throw new Error("Invalid order details format");
           }
         })
         .catch((err) => {
-          console.error("Error fetching order details:", err);
-          setError("Failed to fetch order details");
+          console.error("Error fetching order data:", err);
+          setError(err.message || "Failed to fetch order data");
+          toast.error("Failed to load order information");
         })
-        .finally(() => setLoading(false));
+        .finally(() => {
+          setLoading(false);
+        });
     }
-  }, [orderId]);
-
-  const totalOrderAmount = orderDetails.reduce(
-    (sum, detail) => sum + detail.total_money,
-    0,
-  );
-
-  const handleEditOrder = () => {
-    setIsEditing(true);
-    setEditedOrder(order);
-  };
-
-  const handleCancelEdit = () => {
-    setIsEditing(false);
-    setEditedOrder(null);
-  };
-
-  const handleSaveEditedOrder = async () => {
-    if (!token) {
-      return;
-    }
-
-    if (editedOrder) {
-      try {
-        const updatedOrder = await updateOrder(
-          editedOrder,
-          getCookie("access_token") || "",
-        );
-
-        if (updatedOrder && updatedOrder.id) {
-          setOrder(updatedOrder);
-
-          const refreshedDetails = await fetchOrderDetails(updatedOrder.id);
-          setOrderDetails(refreshedDetails);
-        }
-        toast.success("Order updated successfully");
-        setIsEditing(false);
-      } catch (error) {
-        console.error("Error updating order:", error);
-        toast.error("Failed to update order. Please try again.");
-      }
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setEditedOrder((prev) => (prev ? { ...prev, [name]: value } : null));
-  };
+  }, [orderId, token, navigate]);
 
   const handlePayment = async () => {
     if (order) {
@@ -168,6 +155,7 @@ const UserOrderDetail: React.FC = () => {
           order_id: order.id,
           user_id: user?.id || 0,
           bank_number: null,
+          bank_name: null,
         };
 
         const paymentResponse = await createOrderPayment(
@@ -199,18 +187,6 @@ const UserOrderDetail: React.FC = () => {
     }
   };
 
-  // Add this function to format the date
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) {
-      return "N/A";
-    }
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   const handleUpdateOrderStatus = async (newStatus: OrderStatus) => {
     if (order && order.id) {
       try {
@@ -240,6 +216,7 @@ const UserOrderDetail: React.FC = () => {
 
   const handleConfirmAction = async () => {
     setOpenDialog(false);
+
     switch (dialogAction) {
       case "payment":
         await handlePayment();
@@ -250,316 +227,405 @@ const UserOrderDetail: React.FC = () => {
       case "cancel":
         await handleUpdateOrderStatus(OrderStatus.CANCELLED);
         break;
+      case "save":
+        try {
+          const orderToUpdate = {
+            ...order,
+            ...tempOrderUpdates,
+            total_money: calculateTotal(order as Order, tempOrderUpdates),
+          };
+
+          setLoading(true);
+          const updated = await updateOrder(orderToUpdate as Order, token);
+
+          if (updated) {
+            setOrder(updated);
+            setTempOrderUpdates({});
+
+            toast.success("Order saved successfully");
+
+            try {
+              const refreshedDetails = await fetchOrderDetails(updated.id);
+              if (Array.isArray(refreshedDetails)) {
+                setOrderDetails(refreshedDetails);
+              }
+            } catch (refreshError) {
+              console.error("Error refreshing details:", refreshError);
+            }
+          } else {
+            throw new Error("Failed to update order");
+          }
+        } catch (error) {
+          console.error("Error saving order:", error);
+          toast.error("Failed to save order changes");
+        } finally {
+          setLoading(false);
+        }
+        break;
     }
   };
 
+  const handleUpdateShipping = (updatedOrder: Order) => {
+    setTempOrderUpdates((prev) => ({
+      ...prev,
+      ...updatedOrder,
+    }));
+  };
+
+  // Add new function to handle saving all changes to the server
+  const handleSaveOrder = async () => {
+    if (!token || !order) return;
+
+    try {
+      // Calculate the shipping fee based on the current or updated shipping method
+      const shippingFee = calculateTotal(order, tempOrderUpdates);
+
+      // Create the final order update object with the correct total_money
+      const updatedTempOrder = {
+        ...order, // Start with the base order
+        ...tempOrderUpdates, // Apply all temporary updates
+        total_money: shippingFee, // Set the correct total_money
+      };
+
+      setTempOrderUpdates(updatedTempOrder);
+
+      handleOpenDialog(
+        "save",
+        "Are you sure you want to save all changes to this order?",
+      );
+    } catch (error) {
+      console.error("Error saving order:", error);
+      toast.error("Failed to save order changes");
+    }
+  };
+
+  // Handler for temporary updates
+  const handleTempOrderUpdate = (updates: Partial<Order>) => {
+    setTempOrderUpdates((prev) => {
+      const newUpdates = {
+        ...prev,
+        ...updates,
+      };
+
+      // If shipping method is being updated, update shipping fee only
+      if (updates.shipping_method) {
+        const shippingFee = calculateTotal(order as Order, newUpdates);
+        newUpdates.total_money = shippingFee; // Only save shipping fee
+      }
+
+      return newUpdates;
+    });
+  };
+
+  // Add a function to calculate the current total
+  const calculateTotal = (baseOrder: Order, tempUpdates: Partial<Order>) => {
+    const currentShippingMethod =
+      tempUpdates.shipping_method || baseOrder.shipping_method;
+    const shippingFee =
+      currentShippingMethod === "Express"
+        ? SHIPPING_PRICES.express
+        : SHIPPING_PRICES.standard;
+
+    // Return only the shipping fee
+    return shippingFee;
+  };
+
   return (
-    <Container maxWidth="lg">
-      <Paper elevation={3} sx={{ p: 4, my: 4 }}>
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={4}
-        >
-          <Typography variant="h4">Order Details</Typography>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => navigate("/users/orders")}
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      {/* Order Status Bar */}
+      {order && (
+        <OrderStatusBar>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            Back to Orders
-          </Button>
-        </Box>
+            <Typography variant="h6">Order #{orderId}</Typography>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Typography>Status:</Typography>
+              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                {order.status}
+              </Typography>
+            </Box>
+          </Box>
+        </OrderStatusBar>
+      )}
 
-        {loading && <LoadingComponent />}
+      {loading && <LoadingComponent />}
+      {error && <Typography color="error">{error}</Typography>}
 
-        {error && (
-          <Typography color="error" mb={4}>
-            {error}
-          </Typography>
-        )}
-
-        {order && orderDetails.length > 0 && (
-          <>
-            <Typography variant="h5" gutterBottom>
-              Order #{orderId}
-            </Typography>
-
-            <Grid container spacing={4}>
-              {/* Koi Image and Details */}
-              <Grid item xs={12} md={4}>
-                <Card elevation={3}>
-                  <CardContent>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        mb: 2,
-                      }}
-                    >
-                      <Typography variant="h6" component="div">
-                        {orderDetails[0].product_id.name}
-                      </Typography>
-                      {koiBreeders.find(
-                        (breeder) =>
-                          breeder.id === orderDetails[0].product_id.owner_id,
-                      ) && (
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          <Link
-                            to={`/breeder/${orderDetails[0].product_id.owner_id}/info`}
-                            onClick={(event) => event.stopPropagation()}
-                            style={{
-                              textDecoration: "none",
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <img
-                              src={
-                                koiBreeders.find(
-                                  (breeder) =>
-                                    breeder.id ===
-                                    orderDetails[0].product_id.owner_id,
-                                )?.avatar_url
-                              }
-                              alt="Breeder Avatar"
-                              style={{
-                                width: "60px",
-                                height: "60px",
-                                marginRight: "10px",
-                              }}
-                            />
-                            <GrayButton variant="outlined" size="small">
-                              View Shop
-                            </GrayButton>
-                          </Link>
-                        </Box>
-                      )}
-                    </Box>
-                    <Box
-                      sx={{
-                        backgroundColor: "rgb(79 146 209)",
-                        p: 1,
-                        borderRadius: 1,
-                        mb: 2,
-                      }}
-                    >
-                      <CardMedia
-                        component="img"
-                        height="200"
-                        image={orderDetails[0].product_id.thumbnail}
-                        alt={orderDetails[0].product_id.name}
-                        sx={{ objectFit: "contain", borderRadius: 1 }}
-                      />
-                    </Box>
-                    <Typography variant="body1" gutterBottom>
-                      <strong>Order Date:</strong>{" "}
-                      {formatDate(order.order_date)}
-                    </Typography>
-                    <Typography variant="body1" gutterBottom>
-                      <strong>Total Amount:</strong>{" "}
-                      {formatCurrency(totalOrderAmount)}
-                    </Typography>
-                    <Typography variant="body1">
-                      <strong>Est. Ship Date:</strong>{" "}
-                      {formatDate(order.shipping_date)}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-
-              {/* Order Details */}
-              <Grid item xs={12} md={8}>
-                <Card elevation={3}>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      Order Information
-                    </Typography>
-                    <Grid container spacing={3}>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          fullWidth
-                          margin="normal"
-                          name="first_name"
-                          label="First Name"
-                          value={editedOrder?.first_name || order.first_name}
-                          onChange={handleInputChange}
-                          disabled={!isEditing}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          fullWidth
-                          margin="normal"
-                          name="last_name"
-                          label="Last Name"
-                          value={editedOrder?.last_name || order.last_name}
-                          onChange={handleInputChange}
-                          disabled={!isEditing}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <FormControl fullWidth margin="normal">
-                          <InputLabel id="payment-method-label">
-                            Payment Method
-                          </InputLabel>
-                          <Select
-                            labelId="payment-method-label"
-                            id="payment-method"
-                            name="payment_method"
-                            value={
-                              editedOrder?.payment_method ||
-                              order.payment_method
-                            }
-                            label="Payment Method"
-                            onChange={(e) =>
-                              handleInputChange(
-                                e as React.ChangeEvent<HTMLInputElement>,
-                              )
-                            }
-                            disabled={!isEditing}
-                          >
-                            <MenuItem value="Cash">Cash</MenuItem>
-                            <MenuItem value="Payment">Payment</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          fullWidth
-                          margin="normal"
-                          name="phone_number"
-                          label="Phone Number"
-                          value={
-                            editedOrder?.phone_number || order.phone_number
-                          }
-                          onChange={handleInputChange}
-                          disabled={!isEditing}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          margin="normal"
-                          name="shipping_address"
-                          label="Shipping Address"
-                          value={
-                            editedOrder?.shipping_address ||
-                            order.shipping_address
-                          }
-                          onChange={handleInputChange}
-                          disabled={!isEditing}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          fullWidth
-                          margin="normal"
-                          name="note"
-                          label="Note"
-                          multiline
-                          rows={3}
-                          value={editedOrder?.note || order.note}
-                          onChange={handleInputChange}
-                          disabled={!isEditing}
-                        />
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-
-                {/* Action Buttons */}
-                <Box mt={4} display="flex" justifyContent="space-between">
-                  {isEditing ? (
-                    <>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<SaveIcon />}
-                        onClick={handleSaveEditedOrder}
-                      >
-                        Save Changes
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        color="secondary"
-                        startIcon={<CancelIcon />}
-                        onClick={handleCancelEdit}
-                      >
-                        Cancel
-                      </Button>
-                    </>
-                  ) : (
-                    order.status === OrderStatus.PENDING && (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<EditIcon />}
-                        onClick={handleEditOrder}
-                      >
-                        Edit Order
-                      </Button>
-                    )
-                  )}
-                  {order.status === OrderStatus.PENDING && (
+      {order && orderDetails.length > 0 && (
+        <>
+          {/* Products Section */}
+          <OrderSection>
+            <OrderHeader>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Typography variant="h6" sx={{ color: "primary.main" }}>
+                  <ShoppingBagIcon sx={{ verticalAlign: "middle", mr: 1 }} />
+                  Products
+                </Typography>
+                {koiBreeders.find(
+                  (breeder) =>
+                    breeder.id === orderDetails[0].product_id.owner_id,
+                ) && (
+                  <Link
+                    to={`/breeder/${orderDetails[0].product_id.owner_id}/info`}
+                    style={{ textDecoration: "none" }}
+                  >
                     <Button
-                      variant="contained"
-                      color="secondary"
-                      startIcon={<PaymentIcon />}
-                      onClick={() =>
-                        handleOpenDialog(
-                          "payment",
-                          "Are you sure you want to process the payment for this order?",
-                        )
-                      }
+                      variant="outlined"
+                      startIcon={<StorefrontIcon />}
+                      size="small"
                     >
-                      Process Payment
+                      Visit Store
                     </Button>
-                  )}
-                  {order &&
-                    (order.status === OrderStatus.PENDING ||
-                      order.status === OrderStatus.PROCESSING) && (
-                      <Button
-                        variant="contained"
-                        color="warning"
-                        onClick={() =>
-                          handleOpenDialog(
-                            "cancel",
-                            "Are you sure you want to cancel this order?",
-                          )
-                        }
-                      >
-                        Cancel Order
-                      </Button>
-                    )}
-                  {order && order.status === OrderStatus.SHIPPING && (
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() =>
-                        handleOpenDialog(
-                          "delivery",
-                          "Are you sure you want to mark this order as shipped?",
-                        )
-                      }
-                    >
-                      Order Shipped
-                    </Button>
-                  )}
-                </Box>
-                {/* Feedback Section */}
-                {order && order.status !== "PENDING" && (
-                  <Paper elevation={3} sx={{ p: 3, mt: 4 }}>
-                    <Feedback orderId={orderId || ""} />
-                  </Paper>
+                  </Link>
                 )}
-              </Grid>
-            </Grid>
-          </>
-        )}
-      </Paper>
+              </Box>
+            </OrderHeader>
+
+            {orderDetails.map((detail) => (
+              <ProductCard key={detail.id}>
+                <Box
+                  sx={{
+                    width: 100,
+                    height: 100,
+                    backgroundColor: "rgb(79 146 209)",
+                    borderRadius: 1,
+                    mr: 2,
+                    overflow: "hidden",
+                  }}
+                >
+                  <img
+                    src={detail.product_id.thumbnail}
+                    alt={detail.product_id.name}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                    }}
+                  />
+                </Box>
+                <Box flex={1}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {detail.product_id.name}
+                  </Typography>
+                  <Typography color="text.secondary" gutterBottom>
+                    Quantity: {orderDetails.length}
+                  </Typography>
+                  <Typography color="primary" fontWeight="bold">
+                    {formatCurrency(detail.total_money)}
+                  </Typography>
+                </Box>
+              </ProductCard>
+            ))}
+
+            <Box
+              sx={{ mt: 2, p: 2, backgroundColor: "#f5f5f5", borderRadius: 1 }}
+            >
+              <Box display="flex" justifyContent="space-between" mb={1}>
+                <Typography color="text.secondary">
+                  Subtotal (Already Paid):
+                </Typography>
+                <Typography
+                  color="text.secondary"
+                  sx={{ textDecoration: "line-through", opacity: 0.7 }}
+                >
+                  {formatCurrency(
+                    orderDetails.reduce(
+                      (sum, detail) => sum + detail.total_money,
+                      0,
+                    ),
+                  )}
+                </Typography>
+              </Box>
+              <Box display="flex" justifyContent="space-between" mb={1}>
+                <Typography>Shipping Fee:</Typography>
+                <Typography>
+                  {formatCurrency(calculateTotal(order, tempOrderUpdates))}
+                </Typography>
+              </Box>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="h6">Total to Pay:</Typography>
+                <Typography variant="h6" color="primary.main">
+                  {formatCurrency(calculateTotal(order, tempOrderUpdates))}
+                </Typography>
+              </Box>
+            </Box>
+          </OrderSection>
+
+          {/* Shipping Information Section */}
+          <OrderSection>
+            {order && (
+              <ShippingInformation
+                order={{
+                  ...order,
+                  ...tempOrderUpdates, // Merge temp updates with current order
+                }}
+                onTempUpdate={handleTempOrderUpdate}
+                onSave={handleUpdateShipping}
+              />
+            )}
+          </OrderSection>
+
+          {/* Add Note Section before the Action Buttons */}
+          <OrderSection>
+            <OrderHeader>
+              <Typography variant="h6" sx={{ color: "primary.main" }}>
+                <EditIcon sx={{ verticalAlign: "middle", mr: 1 }} />
+                Order Notes
+              </Typography>
+            </OrderHeader>
+
+            <TextField
+              fullWidth
+              multiline
+              rows={4}
+              label="Notes for your order"
+              value={tempOrderUpdates.note || order.note || ""}
+              onChange={(e) => handleTempOrderUpdate({ note: e.target.value })}
+              placeholder="Add any special instructions or notes for your order here..."
+              sx={{ mt: 2 }}
+              disabled={order.status !== OrderStatus.PENDING}
+            />
+          </OrderSection>
+
+          {/* Update the temporary changes summary to include notes */}
+          {Object.keys(tempOrderUpdates).length > 0 && (
+            <OrderSection>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Pending Changes
+              </Typography>
+              {tempOrderUpdates.shipping_method && (
+                <Typography>
+                  Shipping Method:{" "}
+                  {tempOrderUpdates.shipping_method === "Standard"
+                    ? "Standard"
+                    : "Express"}{" "}
+                  Delivery
+                </Typography>
+              )}
+              {tempOrderUpdates.phone_number && (
+                <Typography>
+                  Phone Number: {tempOrderUpdates.phone_number}
+                </Typography>
+              )}
+              {tempOrderUpdates.note && (
+                <Typography>Note: {tempOrderUpdates.note}</Typography>
+              )}
+              {/* Add other temporary changes here */}
+            </OrderSection>
+          )}
+
+          {/* Payment Section */}
+          <OrderSection>
+            <OrderHeader>
+              <Typography variant="h6" sx={{ color: "primary.main" }}>
+                <PaymentIcon sx={{ verticalAlign: "middle", mr: 1 }} />
+                Payment Information
+              </Typography>
+            </OrderHeader>
+
+            <FormControl fullWidth sx={{ mt: 2 }}>
+              <InputLabel id="payment-method-label">Payment Method</InputLabel>
+              <Select
+                labelId="payment-method-label"
+                id="payment-method"
+                value={tempOrderUpdates.payment_method || order.payment_method}
+                label="Payment Method"
+                onChange={(e) =>
+                  handleTempOrderUpdate({ payment_method: e.target.value })
+                }
+                disabled={order.status !== OrderStatus.PENDING}
+              >
+                <MenuItem value="Cash">Cash</MenuItem>
+                <MenuItem value="Payment">Online Payment</MenuItem>
+              </Select>
+            </FormControl>
+
+            <Typography
+              sx={{ mt: 2, color: "text.secondary", fontSize: "0.875rem" }}
+            >
+              {tempOrderUpdates.payment_method === "Payment" ||
+              (order.payment_method === "Payment" &&
+                !tempOrderUpdates.payment_method)
+                ? "You will be redirected to payment gateway after confirming"
+                : "You will pay in cash upon delivery"}
+            </Typography>
+          </OrderSection>
+
+          {/* Action Buttons */}
+          <Box display="flex" gap={2} justifyContent="flex-end" mt={3}>
+            {Object.keys(tempOrderUpdates).length > 0 && (
+              <Button
+                variant="contained"
+                color="success"
+                startIcon={<SaveIcon />}
+                onClick={handleSaveOrder}
+              >
+                Save Order
+              </Button>
+            )}
+
+            {order.status === OrderStatus.PENDING && (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<PaymentIcon />}
+                onClick={() =>
+                  handleOpenDialog(
+                    "payment",
+                    "Are you sure you want to process the payment for this order?",
+                  )
+                }
+              >
+                Process Payment
+              </Button>
+            )}
+            {order &&
+              (order.status === OrderStatus.PENDING ||
+                order.status === OrderStatus.PROCESSING) && (
+                <Button
+                  variant="contained"
+                  color="warning"
+                  onClick={() =>
+                    handleOpenDialog(
+                      "cancel",
+                      "Are you sure you want to cancel this order?",
+                    )
+                  }
+                >
+                  Cancel Order
+                </Button>
+              )}
+            {order && order.status === OrderStatus.SHIPPING && (
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() =>
+                  handleOpenDialog(
+                    "delivery",
+                    "Are you sure you want to mark this order as shipped?",
+                  )
+                }
+              >
+                Order Shipped
+              </Button>
+            )}
+          </Box>
+        </>
+      )}
+
+      {/* Feedback Section */}
+      {order && order.status !== OrderStatus.PENDING && (
+        <OrderSection sx={{ mt: 3 }}>
+          <Feedback orderId={orderId || ""} />
+        </OrderSection>
+      )}
 
       {/* Confirmation Dialog */}
       <Dialog
@@ -581,6 +647,27 @@ const UserOrderDetail: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Add a draft changes indicator */}
+      {Object.keys(tempOrderUpdates).length > 0 && (
+        <Paper
+          sx={{
+            position: "fixed",
+            bottom: 16,
+            right: 16,
+            p: 2,
+            backgroundColor: theme.palette.grey[200],
+            zIndex: 1000,
+            border: "1px solid",
+            borderColor: theme.palette.grey[300],
+            borderRadius: theme.shape.borderRadius,
+          }}
+        >
+          <Typography variant="body2" color="black">
+            You have unsaved changes
+          </Typography>
+        </Paper>
+      )}
 
       <ToastContainer />
     </Container>

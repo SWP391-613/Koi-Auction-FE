@@ -23,7 +23,6 @@ import { AddNewAuctionDTO, AuctionModel } from "~/types/auctions.type";
 import { Staff } from "~/types/users.type";
 import { createNewAuction } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
-import { auctionName } from "~/utils/data/fixedTitleName";
 import { extractErrorMessage, prepareAuctionData } from "~/utils/dataConverter";
 
 interface StaffApiResponse {
@@ -86,7 +85,7 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
     setLoading(true);
     try {
       const response = await axios.get<StaffApiResponse>(
-        "http://localhost:4000/api/v1/staffs",
+        "${API_URL_DEVELOPMENT}/staffs",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -185,22 +184,17 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
       >
         <DialogTitle>Add New Auction</DialogTitle>
         <DialogContent>
-          <FormControl fullWidth margin="normal" error={!!errors.title}>
-            <InputLabel>Name</InputLabel>
-            <Select
-              name="title"
-              value={formData.title}
-              onChange={handleDropdownChange}
-            >
-              {auctionName.map((ac, index) => (
-                <MenuItem key={index} value={ac}>
-                  {ac}
-                </MenuItem>
-              ))}
-            </Select>
-            {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
-          </FormControl>
-
+          <TextField
+            autoFocus
+            margin="dense"
+            name="title"
+            label="Auction Title"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={formData.title || ""}
+            onChange={handleTextFieldChange}
+          />
           <div className="flex gap-10">
             <TextField
               margin="dense"
@@ -265,7 +259,7 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
               onChange={handleDropdownChange}
               label="Auctioneer"
             >
-              {staffList.map((staff, index) => (
+              {staffList?.map((staff, index) => (
                 <MenuItem key={index} value={staff.id}>
                   {`${staff.first_name} ${staff.last_name}`}
                 </MenuItem>

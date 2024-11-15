@@ -10,7 +10,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { AuctionModel } from "~/types/auctions.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
-import AuctionKoiView from "~/pages/manager/auctions/AuctionKoiView";
+import AuctionKoiView from "~/pages/auctions/AuctionKoiView";
 
 interface EditAuctionDialogProps {
   open: boolean;

@@ -48,10 +48,10 @@ const KoiWishList: React.FC = () => {
 
     try {
       setIsLoading(true);
-      const API_URL =
+      const API_URL_DEVELOPMENT =
         import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
       const response = await axios.get<KoisResponse>(
-        `${API_URL}/breeders/kois/status`,
+        `${API_URL_DEVELOPMENT}/breeders/kois/status`,
         {
           params: {
             breeder_id: userId,
@@ -87,7 +87,11 @@ const KoiWishList: React.FC = () => {
   }, [isLoggedIn, userId, accessToken, fetchKoiData]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingComponent />
+      </div>
+    );
   }
 
   if (error) {
@@ -112,13 +116,19 @@ const KoiWishList: React.FC = () => {
           <KoiBreederViewGrid kois={kois} handleView={handleView} />
         </>
       ) : (
-        <div>No Koi data available</div>
+        <div className="flex flex-col justify-center items-center h-[30rem]">
+          <Typography
+            variant="h3"
+            sx={{
+              color: "error.main",
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            Koi's Unverified Not Available
+          </Typography>
+        </div>
       )}
-      <PaginationComponent
-        totalPages={hasMorePages ? currentPage + 1 : currentPage} // Handle pagination with dynamic totalPages
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
     </div>
   );
 };

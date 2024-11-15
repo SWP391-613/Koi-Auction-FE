@@ -41,14 +41,14 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
             : "hover:bg-red-100"
         }`}
       >
-        <div className="flex justify-around items-center">
-          <div className="flex items-center">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center flex-1 min-w-0">
             <FontAwesomeIcon
               icon={faCircleArrowRight}
-              className="text-black text-3xl mr-5 hidden sm:block"
+              className="text-black text-3xl mr-5 hidden sm:block flex-shrink-0"
             />
-            <div className="flex flex-col items-start justify-start">
-              <h2 className="text-black text-2xl font-semibold mt-3">
+            <div className="flex flex-col flex-1 min-w-0">
+              <h2 className="text-black text-2xl font-semibold mt-3 truncate">
                 {auction.title}
               </h2>
               <div className="details text-sm text-gray-600">
@@ -72,7 +72,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
               </div>
             </div>
           </div>
-          <div>{renderCrudButtons()}</div>
+          <div className="flex-shrink-0">{renderCrudButtons()}</div>
         </div>
       </div>
     </Link>

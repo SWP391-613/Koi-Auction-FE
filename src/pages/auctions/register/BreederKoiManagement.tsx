@@ -8,18 +8,17 @@ import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "~/constants/message";
 import { BREEDER_KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { BidMethod } from "~/types/auctionkois.type";
-import { AuctionModel } from "~/types/auctions.type";
 import { KoiDetailModel } from "~/types/kois.type";
 import {
   deleteKoiById,
   fetchKoisOfBreederWithStatus,
   postAuctionKoi,
 } from "~/utils/apiUtils";
+import { getUserCookieToken } from "~/utils/auth.utils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage, getCategoryName } from "~/utils/dataConverter";
 import PaginationComponent from "../../../components/common/PaginationComponent";
 import AuctionKoiPopup from "./AuctionKoiPopup";
-import { getUserCookieToken } from "~/utils/auth.utils";
 
 interface BreederKoiManagementProps {
   auction_id: number;
@@ -30,23 +29,14 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
 }) => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [auction, setAuction] = useState<AuctionModel | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
   const navigate = useNavigate();
-  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [totalPages, setTotalPages] = useState<number>(0);
   const itemsPerPage = 8; // Adjusted to match the API limit parameter
   const [selectedKoiId, setSelectedKoiId] = useState<number | null>(null);
   const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false);
   const [openPopup, setOpenPopup] = useState<boolean>(false);
-  const [newKoi, setNewKoi] = useState<Partial<KoiDetailModel>>({
-    name: "",
-    sex: "",
-    length: 0,
-    age: 0,
-  });
-  const [koiImage, setKoiImage] = useState<File | null>(null);
 
   const accessToken = getUserCookieToken();
   const userId = getCookie("user_id");
@@ -65,10 +55,8 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
       try {
         const koiData = await fetchKoisOfBreederWithStatus(
           parseInt(userId),
-          "VERIFIED",
           page - 1,
           itemsPerPage,
-          accessToken,
         ); // Use the utility function
         const data = koiData;
 
@@ -128,6 +116,9 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
         bidMethod,
         ceilPrice,
         accessToken,
+      );
+      console.log(
+        `Data: ${selectedKoiId}, ${auction_id}, ${basePrice}, ${bidStep}, ${bidMethod}, ${ceilPrice}, ${accessToken}`,
       );
       toast.success(SUCCESS_MESSAGE.REGISTER_KOI_SUCCESS);
       setOpenPopup(false); // Close the popup
@@ -207,7 +198,7 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
                     </td>
                     <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                       <p className="whitespace-no-wrap text-gray-900">
-                        {koi.age || "N/A"}
+                        {koi.year_born || "N/A"}
                       </p>
                     </td>
                     <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
@@ -262,9 +253,9 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
                 <tr>
                   <td
                     colSpan={5}
-                    className="border-b border-gray-200 bg-white px-5 py-5 text-sm text-center text-gray-900"
+                    className="border-b border-gray-200 bg-white px-5 py-5 text-lg text-center text-red-500"
                   >
-                    No kois found.
+                    No verified kois found.
                   </td>
                 </tr>
               )}

@@ -7,7 +7,7 @@ import {
   parseRoles,
 } from "~/utils/cookieUtils";
 import { doLogout } from "~/utils/apiUtils";
-import { UserLoginResponse } from "~/types/users.type";
+import { UserLoginResponse, UserStatus } from "~/types/users.type";
 import { AuthLoginData } from "~/types/auth.types";
 
 interface AuthContextType {
@@ -32,14 +32,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const roles = parseRoles(getCookie("user_roles"));
     const id = getCookie("user_id");
     const username = getCookie("username");
+    const status = getCookie("status");
 
-    if (token && roles.length > 0 && id && username) {
+    if (token && roles.length > 0 && id && username && status) {
       setIsLoggedIn(true);
       setUser({
         token,
         roles,
         id: parseInt(id, 10),
         username,
+        status: status as UserStatus,
       });
     }
   }, []);
@@ -56,6 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       roles: userData.roles,
       id: userData.id || 0,
       username: userData.username || "",
+      status: userData.status || "UNVERIFIED",
     };
     setUser(authData);
     setCookie("access_token", userData.token, 1); // Set to expire in 1 day
@@ -64,6 +67,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (userData.username) setCookie("username", userData.username, 1);
     if (userData.refresh_token)
       setCookie("refresh_token", userData.refresh_token, 7); // Set refresh token to expire in 7 days
+    if (userData.status) setCookie("status", userData.status, 1);
   };
 
   const authLogout = async () => {
@@ -78,6 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     eraseCookie("user_id");
     eraseCookie("username");
     eraseCookie("refresh_token");
+    eraseCookie("status");
     navigate("/");
   };
 

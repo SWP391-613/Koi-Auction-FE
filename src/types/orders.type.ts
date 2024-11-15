@@ -38,15 +38,6 @@ export enum OrderStatus {
   COMPLETED = "COMPLETED",
 }
 
-export type PaymentDTO = {
-  payment_amount: number;
-  payment_method: string;
-  payment_type: string;
-  order_id: number | null;
-  user_id: number;
-  bank_number: string | null;
-};
-
 export type OrderPaginationResponse = {
   item: OrderResponse[]; //OrderResponse
   total_page: number;
@@ -93,3 +84,20 @@ export type OrderDetailWithKoi = OrderDetail & {
     owner_id: number;
   };
 };
+
+// Add helper types for the UI
+export interface AddressSelection {
+  province: string;
+  province_code: string;
+  district: string;
+  district_code: string;
+  ward: string;
+  ward_code: string;
+  street_address: string;
+}
+
+export interface ShippingMethodSelection {
+  type: "normal" | "express";
+  price: number;
+  estimated_days: number;
+}

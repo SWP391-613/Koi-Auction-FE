@@ -6,16 +6,23 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createDepositPayment, createDrawOutRequest } from "~/utils/apiUtils";
-import { PaymentDTO } from "~/types/orders.type";
+import { PaymentDTO } from "~/types/payments.type";
+import { Autocomplete } from "@mui/material";
 
 interface AccountTransactionComponentProps {
   userId: number;
   token: string;
   onTransactionSuccess: () => void;
+}
+
+interface BankOption {
+  name: string;
+  shortName: string;
+  code: string;
 }
 
 const AccountTransactionComponent: React.FC<
@@ -26,6 +33,9 @@ const AccountTransactionComponent: React.FC<
     "deposit",
   );
   const [bankNumber, setBankNumber] = useState<string>("");
+  const [bankName, setBankName] = useState<string>("");
+  const [banks, setBanks] = useState<BankOption[]>([]);
+  const [selectedBank, setSelectedBank] = useState<BankOption | null>(null);
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(Number(e.target.value));
   };
@@ -39,11 +49,36 @@ const AccountTransactionComponent: React.FC<
     }
   };
 
+  // Add this useEffect to fetch banks when component mounts
+  useEffect(() => {
+    const fetchBanks = async () => {
+      try {
+        const response = await axios.get("https://api.vietqr.io/v2/banks");
+        const banksList = response.data.data.map((bank: any) => ({
+          name: bank.name,
+          shortName: bank.shortName,
+          code: bank.code,
+        }));
+        setBanks(banksList);
+      } catch (error) {
+        console.error("Failed to fetch banks:", error);
+        toast.error("Failed to load banks list");
+      }
+    };
+
+    fetchBanks();
+  }, []);
+
   const handleTransaction = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (amount <= 0) {
       toast.error("Amount must be greater than 0.");
+      return;
+    }
+
+    if (transactionType === "drawout" && !selectedBank) {
+      toast.error("Please select a bank.");
       return;
     }
 
@@ -56,6 +91,10 @@ const AccountTransactionComponent: React.FC<
         user_id: userId,
         order_id: null,
         bank_number: transactionType === "drawout" ? bankNumber : null,
+        bank_name:
+          transactionType === "drawout"
+            ? selectedBank && selectedBank?.shortName
+            : null,
       };
       if (transactionType === "deposit") {
         const response = await createDepositPayment(paymentDTO, token);
@@ -119,12 +158,33 @@ const AccountTransactionComponent: React.FC<
             InputProps={{ inputProps: { min: 1 } }}
           />
           {transactionType === "drawout" && (
-            <TextField
-              fullWidth
-              label="Bank Number"
-              value={bankNumber}
-              onChange={(e) => setBankNumber(e.target.value)}
-            />
+            <>
+              <TextField
+                fullWidth
+                label="Bank Number"
+                value={bankNumber}
+                onChange={(e) => setBankNumber(e.target.value)}
+                required
+                sx={{ mb: 2 }}
+              />
+              <Autocomplete
+                options={banks}
+                getOptionLabel={(option) =>
+                  `${option.shortName} - ${option.name}`
+                }
+                value={selectedBank}
+                onChange={(event, newValue) => setSelectedBank(newValue)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    label="Select Bank"
+                    required
+                    sx={{ mb: 2 }}
+                  />
+                )}
+              />
+            </>
           )}
         </Box>
         <Box sx={{ textAlign: "center" }}>

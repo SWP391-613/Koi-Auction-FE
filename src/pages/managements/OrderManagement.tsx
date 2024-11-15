@@ -11,6 +11,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { useOrderSearch } from "~/hooks/useEntitySearch";
 import SearchBar from "~/components/shared/SearchBar";
@@ -96,18 +100,29 @@ const OrderManagement: React.FC = () => {
         Order Management
       </Typography>
 
-      <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-        {Object.values(OrderStatus).map((orderStatus) => (
-          <Button
-            key={orderStatus}
-            variant={status === orderStatus ? "contained" : "outlined"}
-            onClick={() => setStatus(orderStatus)}
-            sx={{ mx: 1 }}
-            color={getOrderStatusColor(orderStatus)}
-          >
-            {orderStatus}
-          </Button>
-        ))}
+      <Box sx={{ my: 4 }}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel>Order Status</InputLabel>
+            <Select
+              value={status}
+              label="Order Status"
+              onChange={(e) => setStatus(e.target.value as OrderStatus)}
+            >
+              {Object.values(OrderStatus).map((status) => (
+                <MenuItem
+                  key={status}
+                  value={status}
+                  sx={{
+                    color: getOrderStatusColor(status),
+                  }}
+                >
+                  {status}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
 
       <Box className="bg-gray-200 p-4 rounded-xl mb-4">

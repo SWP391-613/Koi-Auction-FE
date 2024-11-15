@@ -22,8 +22,8 @@ import { KoiDetailModel } from "~/types/kois.type";
 import { createKoi, deleteKoiById, getKoiData } from "~/utils/apiUtils";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { createFormData, extractErrorMessage } from "~/utils/dataConverter";
-import PaginationComponent from "../../../components/common/PaginationComponent";
-import BreederEditKoiDialog from "./BreederEditKoiDialog";
+import PaginationComponent from "../../components/common/PaginationComponent";
+import BreederEditKoiDialog from "../kois/BreederEditKoiDialog";
 import { formatCurrency } from "~/utils/currencyUtils";
 
 const KoiManagement = () => {
@@ -41,7 +41,7 @@ const KoiManagement = () => {
     name: "",
     sex: "",
     length: 0,
-    age: 0,
+    year_born: 0,
   });
   const [koiImage, setKoiImage] = useState<File | null>(null);
   const [isSearchActive, setIsSearchActive] = useState(false);
@@ -217,7 +217,7 @@ const KoiManagement = () => {
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.age || "N/A"}
+                          {koi.year_born || "N/A"}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
@@ -346,11 +346,11 @@ const KoiManagement = () => {
           <TextField
             margin="dense"
             name="age"
-            label="Age"
+            label="Year Born"
             type="number"
             fullWidth
             variant="standard"
-            value={newKoi.age}
+            value={newKoi.year_born}
             onChange={handleInputChange}
           />
           <label

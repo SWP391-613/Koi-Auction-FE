@@ -3466,7 +3466,7 @@ keyv@^4.5.3:
     dotenv "^16.4.5"
     framer-motion "^11.11.11"
     husky "^9.1.5"
-    koiproject "file:C:/Users/Work/AppData/Local/Yarn/Cache/v6/npm-koiproject-0.0.0-81e41805-fb87-40f3-9afc-d93bb097d216-1731659675445/node_modules/koiproject"
+    koiproject "file:../../.cache/yarn/v6/npm-koiproject-0.0.0-552bd127-eb47-4349-8963-1ea211b8c5ad-1731662467491/node_modules/koiproject"
     prop-types "^15.8.1"
     react "^18.3.1"
     react-dom "^18.3.1"

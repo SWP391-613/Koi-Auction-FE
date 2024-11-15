@@ -31,6 +31,7 @@ export type UserLoginResponse = {
   roles: Role[];
   message: string;
   token: string;
+  status: UserStatus;
   refresh_token: string;
 };
 

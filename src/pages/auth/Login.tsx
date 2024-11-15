@@ -76,6 +76,7 @@ const Login: React.FC = () => {
         id: response.id,
         username: response.username,
         refresh_token: response.refresh_token,
+        status: response.status,
       });
 
       toast.success("Login successfully!");

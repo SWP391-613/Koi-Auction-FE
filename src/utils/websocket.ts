@@ -2,13 +2,14 @@ import { Client } from "@stomp/stompjs";
 import { environment } from "~/environments/environment";
 import SockJS from "sockjs-client";
 import { BidRequest } from "~/pages/auctions/KoiBidding";
+import { API_URL, API_URL_DEVELOPMENT } from "~/constants/endPoints";
 
 let stompClient: Client | null = null;
 let subscriptions: { [key: string]: any } = {};
 
 export const connectWebSocket = (onConnect: () => void) => {
   const socket = new SockJS(
-    `${environment.be.baseUrl}${environment.be.apiPrefix}${environment.be.endPoint.socket}`,
+    `${API_URL_DEVELOPMENT}${environment.be.endPoint.socket}`,
     undefined,
     { withCredentials: true },
   );

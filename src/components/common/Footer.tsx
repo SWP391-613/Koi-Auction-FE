@@ -1,16 +1,59 @@
-// Footer.tsx
-import React from "react";
-import SecurityIcon from "@mui/icons-material/Security";
 import DescriptionIcon from "@mui/icons-material/Description";
-import HomeIcon from "@mui/icons-material/Home";
 import AuctionIcon from "@mui/icons-material/Gavel";
+import HomeIcon from "@mui/icons-material/Home";
 import InfoIcon from "@mui/icons-material/Info";
 import LoginIcon from "@mui/icons-material/Login";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import { Link } from "react-router-dom";
-import FooterSection from "./FooterSection";
-import { FooterLinkProps } from "./FooterTypes";
+import SecurityIcon from "@mui/icons-material/Security";
+import classNames from "classnames";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useNavbar } from "../../contexts/NavbarContext";
+interface FooterLinkProps {
+  href: string;
+  icon: JSX.Element;
+  text: string;
+}
+
+interface FooterSectionProps {
+  title: string;
+  links: FooterLinkProps[];
+}
+
+const FooterSection: React.FC<FooterSectionProps> = ({ title, links }) => {
+  return (
+    <div className="flex flex-col w-full md:w-1/6">
+      <h3 className="mb-3 pl-8 p-2 rounded-3xl bg-gray-400 text-md font-bold text-[#121212]">
+        {title}
+      </h3>
+      {links.map((link, index) => (
+        <FooterButton key={index} {...link} />
+      ))}
+    </div>
+  );
+};
+
+const FooterButton: React.FC<FooterLinkProps> = ({ href, icon, text }) => {
+  const location = useLocation();
+  const isActive = location.pathname === href;
+
+  return (
+    <Link
+      to={href}
+      className={classNames(
+        "group mb-2 flex items-center font-bold justify-between rounded-full px-4 py-2 transition duration-300 ease-in-out",
+        {
+          "text-white font-bold bg-[#11468F]": isActive,
+          "hover:bg-[#1967d3] hover:text-[#2A5069] text-[#2A5069]": !isActive,
+        },
+      )}
+    >
+      <div>{icon}</div>
+      <span className="ml-2 transition-all duration-300 ease-in-out">
+        {text}
+      </span>
+    </Link>
+  );
+};
 
 const Footer: React.FC = () => {
   const { isNavCollapsed } = useNavbar();

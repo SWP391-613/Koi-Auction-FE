@@ -1,32 +1,24 @@
-import React, { useState, useMemo } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import Avatar from "@mui/material/Avatar";
-import { useAuth } from "../../contexts/AuthContext";
-import { useUserData } from "../../hooks/useUserData";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SecurityIcon from "@mui/icons-material/Security";
-import DescriptionIcon from "@mui/icons-material/Description";
 import {
-  faBars,
-  faTimes,
-  faFire,
-  faHouse,
-  faQuestion,
-  faUser,
-  faSignOutAlt,
-  faFish,
-  faScrewdriver,
-  faLock,
-  faCartShopping,
   faBook,
   faChevronLeft,
   faChevronRight,
-  faRightToBracket,
+  faFire,
+  faHouse,
+  faQuestion,
+  faTimes,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import classNames from "classnames"; // Install this package for easier class management
-import { motion, AnimatePresence } from "framer-motion";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import DescriptionIcon from "@mui/icons-material/Description";
+import SecurityIcon from "@mui/icons-material/Security";
 import Tooltip from "@mui/material/Tooltip";
+import classNames from "classnames"; // Install this package for easier class management
+import { AnimatePresence, motion } from "framer-motion";
+import React, { useMemo, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 import { useNavbar } from "../../contexts/NavbarContext";
+import { useUserData } from "../../hooks/useUserData";
 
 // Define interfaces for navigation and account buttons
 interface NavButton {
@@ -197,11 +189,11 @@ const Header = () => {
         to: "/auctions",
         icon: <FontAwesomeIcon icon={faFire} />,
       },
-      {
-        text: "Kois",
-        to: "/kois",
-        icon: <FontAwesomeIcon icon={faFish} />,
-      },
+      // {
+      //   text: "Kois",
+      //   to: "/kois",
+      //   icon: <FontAwesomeIcon icon={faFish} />,
+      // },
       {
         text: "Blogs",
         to: "/blog",

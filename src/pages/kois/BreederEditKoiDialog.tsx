@@ -5,6 +5,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -69,7 +74,11 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
     }
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    event:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | SelectChangeEvent<unknown>,
+  ) => {
     const { name, value } = event.target;
     setKoi((prev) => (prev ? { ...prev, [name]: value } : null));
   };
@@ -141,15 +150,20 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
                 value={koi?.name ?? ""}
                 onChange={handleInputChange}
               />
-              <TextField
-                name="gender"
-                label="Gender"
-                type="text"
-                fullWidth
-                variant="outlined"
-                value={koi?.sex ?? ""}
-                onChange={handleInputChange}
-              />
+              <FormControl fullWidth variant="outlined">
+                <InputLabel id="gender-label">Gender</InputLabel>
+                <Select
+                  labelId="gender-label"
+                  name="gender"
+                  label="Gender"
+                  value={koi?.sex ?? ""}
+                  onChange={handleInputChange}
+                >
+                  <MenuItem value="MALE">Male</MenuItem>
+                  <MenuItem value="FEMALE">Female</MenuItem>
+                  <MenuItem value="UNKNOWN">Unknown</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
             <Box sx={{ display: "flex", gap: 2 }}>
               <TextField
@@ -163,11 +177,11 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
               />
               <TextField
                 name="age"
-                label="Age (years)"
+                label="Year born"
                 type="text"
                 fullWidth
                 variant="outlined"
-                value={koi?.age ?? ""}
+                value={koi?.year_born ?? ""}
                 onChange={handleInputChange}
               />
             </Box>
@@ -198,7 +212,6 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
                 fullWidth
                 variant="outlined"
                 value={koi?.description ?? ""}
-                inputProps={inputProps}
               />
             </Box>
             <TextField

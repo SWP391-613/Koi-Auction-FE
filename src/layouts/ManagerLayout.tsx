@@ -3,12 +3,11 @@ import { Route, Routes } from "react-router-dom";
 import DashboardLayout from "~/components/shared/DashboardLayout";
 import ManagerDetail from "../pages/detail/manager/ManagerDetail";
 import KoiDetail from "../pages/kois/KoiDetail";
-import { AuctionsManagement } from "../pages/manager/auctions/AuctionsManagement";
-import BreederManagement from "../pages/manager/breeder/BreederManagement";
-import KoiManagement from "../pages/manager/koi/KoiManagement";
-import MemberManagement from "../pages/manager/member/MemberManagement";
-import Settings from "../pages/manager/settings/Settings";
+import BreederManagement from "../pages/managements/BreederManagement";
+import KoiManagement from "../pages/managements/KoiManagement";
+import MemberManagement from "../pages/managements/MemberManagement";
 import StaffManagement from "../pages/manager/staff/StaffManagement";
+import { AuctionsManagement } from "~/pages/managements/AuctionsManagement";
 
 const ManagerLayout: React.FC = () => {
   const navLinks = [
@@ -18,7 +17,6 @@ const ManagerLayout: React.FC = () => {
     { to: "breeder", label: "Breeders Management" },
     { to: "staff", label: "Staffs Management" },
     { to: "koi", label: "Kois Management" },
-    { to: "setting", label: "Settings" },
   ];
 
   return (
@@ -31,7 +29,6 @@ const ManagerLayout: React.FC = () => {
         <Route path="staff" element={<StaffManagement />} />
         <Route path="koi" element={<KoiManagement />} />
         <Route path="koi-detail" element={<KoiDetail />} />
-        <Route path="setting" element={<Settings />} />
       </Routes>
     </DashboardLayout>
   );

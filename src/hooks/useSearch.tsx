@@ -1,7 +1,7 @@
 import { debounce } from "@mui/material";
 import axios from "axios";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { API_URL } from "~/constants/endPoints";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { AuctionModel } from "~/types/auctions.type";
 import { KoiDetailModel, KoiInAuctionDetailModel } from "~/types/kois.type";
 import { OrderResponse } from "~/types/orders.type";
@@ -146,7 +146,7 @@ export function useSearch<T>({
 //in page breeder detail call this hook, to their get koi by keyword
 export const useKoiOwnerSearch = (debounceTime = 500) => {
   return useSearch<KoiDetailModel>({
-    apiUrl: `${API_URL}/kois/get-kois-owner-by-keyword`,
+    apiUrl: `${API_URL_DEVELOPMENT}/kois/get-kois-owner-by-keyword`,
     requiresAuth: true,
     preload: true,
     defaultQuery: "",
@@ -159,7 +159,7 @@ export const useKoiOwnerSearchNotAuth = (
   debounceTime = 500,
 ) => {
   return useSearch<KoiDetailModel>({
-    apiUrl: `${API_URL}/kois/get-kois-owner-by-keyword-not-auth`,
+    apiUrl: `${API_URL_DEVELOPMENT}/kois/get-kois-owner-by-keyword-not-auth`,
     requiresAuth: false,
     preload: true,
     defaultQuery: "",
@@ -170,7 +170,7 @@ export const useKoiOwnerSearchNotAuth = (
 
 export const useAllKoiSearch = (debounceTime = 500) => {
   return useSearch<KoiDetailModel>({
-    apiUrl: `${API_URL}/kois/get-all-kois-by-keyword`,
+    apiUrl: `${API_URL_DEVELOPMENT}/kois/get-all-kois-by-keyword`,
     requiresAuth: true,
     preload: false,
     debounceTime,
@@ -180,7 +180,7 @@ export const useAllKoiSearch = (debounceTime = 500) => {
 //in page breeder detail call this hook, to their get koi by keyword
 export const useKoiUnverifiedSearch = (debounceTime = 500) => {
   return useSearch<KoiDetailModel>({
-    apiUrl: `${API_URL}/kois/get-unverified-kois-by-keyword`,
+    apiUrl: `${API_URL_DEVELOPMENT}/kois/get-unverified-kois-by-keyword`,
     requiresAuth: true,
     preload: true,
     defaultQuery: "",
@@ -190,8 +190,8 @@ export const useKoiUnverifiedSearch = (debounceTime = 500) => {
 
 export const useKoiInAuctionSearch = (debounceTime = 500) => {
   return useSearch<KoiInAuctionDetailModel>({
-    apiUrl: `${API_URL}/auctionkois/get-kois-by-keyword`,
-    limit: 30,
+    apiUrl: `${API_URL_DEVELOPMENT}/auctionkois/get-kois-by-keyword`,
+    limit: 12,
     requiresAuth: false,
     preload: true,
     defaultQuery: "",
@@ -201,7 +201,7 @@ export const useKoiInAuctionSearch = (debounceTime = 500) => {
 
 export const useAuctionSearch = (debounceTime = 500) => {
   return useSearch<AuctionModel>({
-    apiUrl: `${API_URL}/auctions/get-auctions-by-keyword`,
+    apiUrl: `${API_URL_DEVELOPMENT}/auctions/get-auctions-by-keyword`,
     limit: 30,
     requiresAuth: false,
     preload: true,
@@ -212,7 +212,7 @@ export const useAuctionSearch = (debounceTime = 500) => {
 
 export const useAuctionUpComingSearch = (debounceTime = 500) => {
   return useSearch<AuctionModel>({
-    apiUrl: `${API_URL}/auctions/get-auctions-by-keyword`,
+    apiUrl: `${API_URL_DEVELOPMENT}/auctions/get-auctions-by-keyword`,
     requiresAuth: true,
     preload: true,
     defaultQuery: "upcoming",
@@ -222,7 +222,7 @@ export const useAuctionUpComingSearch = (debounceTime = 500) => {
 
 export const useUserOrderSearch = (debounceTime = 500) => {
   return useSearch<OrderResponse>({
-    apiUrl: `${API_URL}/orders/search-user-orders-by-keyword`,
+    apiUrl: `${API_URL_DEVELOPMENT}/orders/search-user-orders-by-keyword`,
     requiresAuth: true,
     preload: false,
     debounceTime,

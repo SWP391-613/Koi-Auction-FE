@@ -22,8 +22,8 @@ import { KoiDetailModel } from "~/types/kois.type";
 import { createKoi, deleteKoiById, getKoiData } from "~/utils/apiUtils";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { createFormData, extractErrorMessage } from "~/utils/dataConverter";
-import PaginationComponent from "../../../components/common/PaginationComponent";
-import BreederEditKoiDialog from "./BreederEditKoiDialog";
+import PaginationComponent from "../../components/common/PaginationComponent";
+import BreederEditKoiDialog from "../kois/BreederEditKoiDialog";
 import { formatCurrency } from "~/utils/currencyUtils";
 
 const KoiManagement = () => {

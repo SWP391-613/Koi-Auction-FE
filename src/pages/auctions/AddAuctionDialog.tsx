@@ -85,7 +85,7 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
     setLoading(true);
     try {
       const response = await axios.get<StaffApiResponse>(
-        "https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/staffs",
+        "${API_URL_DEVELOPMENT}/staffs",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -192,7 +192,7 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
             type="text"
             fullWidth
             variant="standard"
-            value={newAuction.title || ""}
+            value={formData.title || ""}
             onChange={handleTextFieldChange}
           />
           <div className="flex gap-10">
@@ -259,7 +259,7 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
               onChange={handleDropdownChange}
               label="Auctioneer"
             >
-              {staffList.map((staff, index) => (
+              {staffList?.map((staff, index) => (
                 <MenuItem key={index} value={staff.id}>
                   {`${staff.first_name} ${staff.last_name}`}
                 </MenuItem>

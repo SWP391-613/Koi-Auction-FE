@@ -1,17 +1,13 @@
 import axios, { AxiosError } from "axios";
 import { format, isToday, isTomorrow, isYesterday } from "date-fns";
 import { Bid } from "~/components/koibiddingdetail/BiddingHistory";
-import { API_URL } from "~/constants/endPoints";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { BidRequest } from "~/pages/auctions/KoiBidding";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/detail/breeder/BreederDetail";
 import { FeedbackRequest } from "~/pages/detail/member/Feedback";
 import { AuctionKoi, BidMethod } from "~/types/auctionkois.type";
 import { AddNewAuctionDTO, AuctionModel } from "~/types/auctions.type";
-import {
-  KoiDetailModel,
-  KoiTrackingStatus,
-  UpdateKoiDTO,
-} from "~/types/kois.type";
+import { KoiDetailModel, UpdateKoiDTO } from "~/types/kois.type";
 import {
   Order,
   OrderDetail,
@@ -25,6 +21,7 @@ import {
   MembersResponse,
 } from "~/types/paginated.types";
 import {
+  PaymentDTO,
   PaymentPaginationResponse,
   PaymentStatus,
 } from "~/types/payments.type";
@@ -36,13 +33,15 @@ import {
   UserLoginResponse,
   UserRegisterDTO,
 } from "~/types/users.type";
-import { PaymentDTO } from "~/types/payments.type";
 import { environment } from "../environments/environment";
 import { getUserCookieToken } from "./auth.utils";
 
 export const login = async (payload: LoginDTO): Promise<UserLoginResponse> => {
   try {
-    const response = await axios.post(`${API_URL}/users/login`, payload);
+    const response = await axios.post(
+      `${API_URL_DEVELOPMENT}/users/login`,
+      payload,
+    );
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -71,7 +70,10 @@ export const register = async (payload: UserRegisterDTO) => {
     role_id: payload.role_id || 1, // Default value for role_id
   };
   try {
-    const response = await axios.post(`${API_URL}/users/register`, fullData);
+    const response = await axios.post(
+      `${API_URL_DEVELOPMENT}/users/register`,
+      fullData,
+    );
     console.log("Data ne: " + JSON.stringify(response));
 
     return response.data;
@@ -119,11 +121,15 @@ export const createNewAuction = async (
   newAuction: AddNewAuctionDTO,
 ): Promise<AddNewAuctionDTO> => {
   try {
-    const response = await axios.post(`${API_URL}/auctions`, newAuction, {
-      headers: {
-        Authorization: `Bearer ${getUserCookieToken()}`,
+    const response = await axios.post(
+      `${API_URL_DEVELOPMENT}/auctions`,
+      newAuction,
+      {
+        headers: {
+          Authorization: `Bearer ${getUserCookieToken()}`,
+        },
       },
-    });
+    );
 
     if (response.status !== 201) {
       throw new Error("Failed to create new auction");
@@ -152,7 +158,7 @@ export const fetchAuctions = async (
     //   throw new Error("You are not logged in");
     // }
 
-    const response = await axios.get(`${API_URL}/auctions`, {
+    const response = await axios.get(`${API_URL_DEVELOPMENT}/auctions`, {
       params: { page, limit },
     });
 
@@ -189,12 +195,15 @@ export const fetchAuctionsByStatus = async (
     //   throw new Error("You are not logged in");
     // }
 
-    const response = await axios.get(`${API_URL}/auctions/koi_register`, {
-      params: { page, limit, status },
-      headers: {
-        Authorization: `Bearer ${getUserCookieToken()}`,
+    const response = await axios.get(
+      `${API_URL_DEVELOPMENT}/auctions/koi_register`,
+      {
+        params: { page, limit, status },
+        headers: {
+          Authorization: `Bearer ${getUserCookieToken()}`,
+        },
       },
-    });
+    );
 
     // Map the response data to Auction model
     const auctions: AuctionModel[] = response.data; //need raw data to calculate the time range of the auction
@@ -223,7 +232,7 @@ export const fetchAuctionById = async (
   id: number,
 ): Promise<AuctionModel | null> => {
   try {
-    const response = await axios.get(`${API_URL}/auctions/${id}`);
+    const response = await axios.get(`${API_URL_DEVELOPMENT}/auctions/${id}`);
     return createAuctionFromApi(response.data);
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -243,7 +252,7 @@ export const fetchAuctionKoi = async (
 ): Promise<AuctionKoi[]> => {
   try {
     const response = await axios.get<AuctionKoi[]>(
-      `${API_URL}/auctionkois/auction/${auctionId}`,
+      `${API_URL_DEVELOPMENT}/auctionkois/auction/${auctionId}`,
     );
     return response.data;
   } catch (error) {
@@ -267,7 +276,7 @@ export const fetchKoisOfBreeder = async (
 ): Promise<KoisOfBreeder | null> => {
   try {
     const response = await axios.get<KoisOfBreeder>(
-      `${API_URL}/breeders/kois`,
+      `${API_URL_DEVELOPMENT}/breeders/kois`,
       {
         params: { breeder_id, page, limit },
         headers: {
@@ -289,18 +298,16 @@ export const fetchKoisOfBreeder = async (
 
 export const fetchKoisOfBreederWithStatus = async (
   breeder_id: number,
-  status: KoiTrackingStatus,
   page: number,
   limit: number,
-  access_token: string,
 ): Promise<KoisOfBreeder | null> => {
   try {
     const response = await axios.get<KoisOfBreeder>(
-      `${API_URL}/breeders/kois/status`,
+      `${API_URL_DEVELOPMENT}/breeders/kois/not-in-auction`,
       {
-        params: { breeder_id, status, page, limit },
+        params: { breeder_id, page, limit },
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${getUserCookieToken()}`,
         },
       },
     );
@@ -322,7 +329,7 @@ export async function getKois(
 ): Promise<KoisResponse> {
   try {
     const response = await axios.get<KoisResponse>(
-      `${API_URL}/kois?page=${page}&limit=${limit}`,
+      `${API_URL_DEVELOPMENT}/kois?page=${page}&limit=${limit}`,
     );
     return response.data;
   } catch (error) {
@@ -336,7 +343,9 @@ export async function getKoiById(
   token?: string,
 ): Promise<KoiDetailModel> {
   try {
-    const response = await axios.get<KoiDetailModel>(`${API_URL}/kois/${id}`);
+    const response = await axios.get<KoiDetailModel>(
+      `${API_URL_DEVELOPMENT}/kois/${id}`,
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching koi data:", error);
@@ -350,7 +359,7 @@ export const fetchAuctionKoiDetails = async (
 ): Promise<AuctionKoi> => {
   try {
     const response = await axios.get(
-      `${API_URL}/auctionkois/${auctionId}/${auctionKoiId}`,
+      `${API_URL_DEVELOPMENT}/auctionkois/${auctionId}/${auctionKoiId}`,
     );
     return response.data;
   } catch (error) {
@@ -367,7 +376,9 @@ export const fetchAuctionKoiDetails = async (
 };
 
 export const fetchBidHistory = async (auctionKoiId: number): Promise<Bid[]> => {
-  const response = await fetch(`${API_URL}/bidding/${auctionKoiId}`);
+  const response = await fetch(
+    `${API_URL_DEVELOPMENT}/bidding/${auctionKoiId}`,
+  );
   if (!response.ok) {
     throw new Error("Failed to fetch bid history");
   }
@@ -377,7 +388,7 @@ export const fetchBidHistory = async (auctionKoiId: number): Promise<Bid[]> => {
 export const doLogout = async (token: string) => {
   try {
     const response = await axios.post(
-      `${API_URL}/users/logout`,
+      `${API_URL_DEVELOPMENT}/users/logout`,
       {},
       {
         headers: {
@@ -401,7 +412,7 @@ export const updateAccountBalance = async (
 ) => {
   try {
     const response = await axios.put(
-      `${API_URL}/users/${userId}/deposit/${payment}`,
+      `${API_URL_DEVELOPMENT}/users/${userId}/deposit/${payment}`,
       {}, // If your API expects a body, add it here
       {
         headers: {
@@ -427,7 +438,7 @@ export const placeBid = async (
 ): Promise<{ isSold: boolean }> => {
   try {
     const response = await axios.post(
-      `${API_URL}/bidding/bid/${bid.auction_koi_id}`,
+      `${API_URL_DEVELOPMENT}/bidding/bid/${bid.auction_koi_id}`,
       bid,
       {
         headers: {
@@ -460,7 +471,7 @@ export const fetchUserOrders = async (
 ): Promise<Order[]> => {
   try {
     const response = await axios.get(
-      `${API_URL}${environment.be.endPoint.orders}/user/${userId}`,
+      `${API_URL_DEVELOPMENT}${environment.be.endPoint.orders}/user/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -479,7 +490,7 @@ export const fetchOrderDetails = async (
 ): Promise<OrderDetail[]> => {
   try {
     const response = await axios.get(
-      `${API_URL}/orders_details/order/${orderId}`,
+      `${API_URL_DEVELOPMENT}/orders_details/order/${orderId}`,
       {
         headers: {
           Authorization: `Bearer ${getUserCookieToken()}`,
@@ -502,7 +513,7 @@ export const fetchOrderById = async (
   orderId: number,
   token: string,
 ): Promise<Order> => {
-  const response = await axios.get(`${API_URL}/orders/${orderId}`, {
+  const response = await axios.get(`${API_URL_DEVELOPMENT}/orders/${orderId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -516,7 +527,7 @@ export const createDepositPayment = async (
 ) => {
   try {
     const response = await axios.post(
-      `${API_URL}/payments/create_deposit_payment`,
+      `${API_URL_DEVELOPMENT}/payments/create_deposit_payment`,
       paymentRequest,
       {
         headers: {
@@ -538,7 +549,7 @@ export const createDepositPayment = async (
 export const sendOtp = async (email: string): Promise<any> => {
   try {
     const response = await axios.get(
-      `${API_URL}/otp/send?type=mail&recipient=${email}`,
+      `${API_URL_DEVELOPMENT}/otp/send?type=mail&recipient=${email}`,
     );
     if (response.status === 200) {
       console.log("OTP sent successfully");
@@ -559,7 +570,7 @@ export const sendOtp = async (email: string): Promise<any> => {
 export const sendOtpForgotPassword = async (email: string): Promise<any> => {
   try {
     const response = await axios.get(
-      `${API_URL}/forgot-password?toEmail=${email}`,
+      `${API_URL_DEVELOPMENT}/forgot-password?toEmail=${email}`,
     );
     if (response.status === 200) {
       console.log("OTP sent successfully");
@@ -582,7 +593,7 @@ export const verifyOtpToVerifyUser = async (
   otp: string,
 ): Promise<any> => {
   try {
-    const response = await axios.post(`${API_URL}/users/verify`, {
+    const response = await axios.post(`${API_URL_DEVELOPMENT}/users/verify`, {
       email,
       otp,
     });
@@ -610,7 +621,7 @@ export const verifyOtpIsCorrect = async (
   otp: string,
 ): Promise<any> => {
   try {
-    const response = await axios.post(`${API_URL}/otp/verify`, {
+    const response = await axios.post(`${API_URL_DEVELOPMENT}/otp/verify`, {
       email,
       otp,
     });
@@ -638,11 +649,15 @@ export const updateAuction = async (
   auction: AddNewAuctionDTO,
 ): Promise<void> => {
   try {
-    const response = await axios.put(`${API_URL}/auctions/${id}`, auction, {
-      headers: {
-        Authorization: `Bearer ${getUserCookieToken()}`,
+    const response = await axios.put(
+      `${API_URL_DEVELOPMENT}/auctions/${id}`,
+      auction,
+      {
+        headers: {
+          Authorization: `Bearer ${getUserCookieToken()}`,
+        },
       },
-    });
+    );
     if (response.status === 200) {
       console.log("Auction update successfully");
     }
@@ -663,11 +678,14 @@ export const deleteAuction = async (
   accessToken: string,
 ): Promise<void> => {
   try {
-    const response = await axios.delete(`${API_URL}/auctions/${id}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
+    const response = await axios.delete(
+      `${API_URL_DEVELOPMENT}/auctions/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       },
-    });
+    );
     if (response.status === 204) {
       console.log("Auction deleted successfully");
     }
@@ -690,7 +708,7 @@ export const updateUserField = async (
   token: string,
 ): Promise<void> => {
   const response = await axios.put(
-    `${API_URL}/users/${userId}`,
+    `${API_URL_DEVELOPMENT}/users/${userId}`,
     { [field]: value },
     {
       headers: {
@@ -708,11 +726,15 @@ export const createStaff = async (
   staffData: StaffRegisterDTO,
   token: string,
 ): Promise<void> => {
-  const response = await axios.post(`${API_URL}/staffs`, staffData, {
-    headers: {
-      Authorization: `Bearer ${token}`,
+  const response = await axios.post(
+    `${API_URL_DEVELOPMENT}/staffs`,
+    staffData,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-  });
+  );
 
   if (response.status !== 201) {
     throw new Error(response.data?.reason || "Failed to create staff.");
@@ -720,7 +742,7 @@ export const createStaff = async (
 };
 
 export const deleteStaff = async (id: number, token: string): Promise<void> => {
-  const response = await axios.delete(`${API_URL}/staffs/${id}`, {
+  const response = await axios.delete(`${API_URL_DEVELOPMENT}/staffs/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -734,9 +756,13 @@ export const updateStaff = async (
   staffData: Staff,
   token: string,
 ): Promise<void> => {
-  const response = await axios.put(`${API_URL}/staffs/${staffId}`, staffData, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const response = await axios.put(
+    `${API_URL_DEVELOPMENT}/staffs/${staffId}`,
+    staffData,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
 
   if (response.status !== 200) {
     throw new Error("Failed to update staff");
@@ -747,7 +773,7 @@ export const getStaffData = async (
   staffId: number,
   token: string,
 ): Promise<any> => {
-  const response = await axios.get(`${API_URL}/staffs/${staffId}`, {
+  const response = await axios.get(`${API_URL_DEVELOPMENT}/staffs/${staffId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -762,15 +788,18 @@ export const getMembersData = async (
   page: number,
   limit: number,
 ): Promise<MembersResponse> => {
-  const response = await axios.get<MembersResponse>(`${API_URL}/members`, {
-    params: {
-      page: page - 1,
-      limit: limit,
+  const response = await axios.get<MembersResponse>(
+    `${API_URL_DEVELOPMENT}/members`,
+    {
+      params: {
+        page: page - 1,
+        limit: limit,
+      },
+      headers: {
+        Authorization: `Bearer ${getUserCookieToken()}`,
+      },
     },
-    headers: {
-      Authorization: `Bearer ${getUserCookieToken()}`,
-    },
-  });
+  );
 
   if (response.status !== 200) {
     throw new Error("Failed to fetch members");
@@ -783,12 +812,15 @@ export const getKoiData = async (
   page: number,
   limit: number,
 ): Promise<KoisResponse> => {
-  const response = await axios.get<KoisResponse>(`${API_URL}/kois`, {
-    params: {
-      page: page - 1, // Assuming the API is zero-based
-      limit: limit,
+  const response = await axios.get<KoisResponse>(
+    `${API_URL_DEVELOPMENT}/kois`,
+    {
+      params: {
+        page: page - 1, // Assuming the API is zero-based
+        limit: limit,
+      },
     },
-  });
+  );
 
   if (response.status !== 200) {
     throw new Error("Failed to fetch kois");
@@ -803,7 +835,7 @@ export const getKoiInAuctionData = async (
   limit: number,
 ): Promise<KoiInAuctionResponse> => {
   const response = await axios.get<KoiInAuctionResponse>(
-    `${API_URL}/auctionkois/get-kois-by-keyword`,
+    `${API_URL_DEVELOPMENT}/auctionkois/get-kois-by-keyword`,
     {
       params: {
         keyword: "",
@@ -826,7 +858,7 @@ export const deleteKoiById = async (
   id: number,
   accessToken: string,
 ): Promise<void> => {
-  const response = await axios.delete(`${API_URL}/kois/${id}`, {
+  const response = await axios.delete(`${API_URL_DEVELOPMENT}/kois/${id}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -841,7 +873,7 @@ export const createKoi = async (
   formData: FormData,
 ): Promise<KoiDetailModel> => {
   const response = await axios.post<KoiDetailModel>(
-    `${API_URL}/kois`,
+    `${API_URL_DEVELOPMENT}/kois`,
     formData,
     {
       headers: {
@@ -859,11 +891,15 @@ export const createKoi = async (
 
 export const updateKoi = async (koiId: number, koi: UpdateKoiDTO) => {
   try {
-    const response = await axios.put(`${API_URL}/kois/${koiId}`, koi, {
-      headers: {
-        Authorization: `Bearer ${getUserCookieToken()}`,
+    const response = await axios.put(
+      `${API_URL_DEVELOPMENT}/kois/${koiId}`,
+      koi,
+      {
+        headers: {
+          Authorization: `Bearer ${getUserCookieToken()}`,
+        },
       },
-    });
+    );
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -877,7 +913,7 @@ export const updateKoi = async (koiId: number, koi: UpdateKoiDTO) => {
 };
 
 export const fetchKoi = async (koiId: number) => {
-  const response = await axios.get(`${API_URL}/kois/${koiId}`, {
+  const response = await axios.get(`${API_URL_DEVELOPMENT}/kois/${koiId}`, {
     headers: {
       Authorization: `Bearer ${getUserCookieToken()}`,
     },
@@ -891,15 +927,18 @@ export const fetchKoi = async (koiId: number) => {
 };
 
 export const fetchBreedersData = async (page: number, itemsPerPage: number) => {
-  const response = await axios.get<BreedersResponse>(`${API_URL}/breeders`, {
-    params: {
-      page: page - 1, // Adjusting for zero-based indexing
-      limit: itemsPerPage,
+  const response = await axios.get<BreedersResponse>(
+    `${API_URL_DEVELOPMENT}/breeders`,
+    {
+      params: {
+        page: page - 1, // Adjusting for zero-based indexing
+        limit: itemsPerPage,
+      },
+      headers: {
+        Authorization: `Bearer ${getUserCookieToken()}`,
+      },
     },
-    headers: {
-      Authorization: `Bearer ${getUserCookieToken()}`,
-    },
-  });
+  );
 
   if (response.status !== 200) {
     throw new Error("Failed to fetch breeders");
@@ -914,7 +953,7 @@ export const updateOrder = async (
 ): Promise<Order> => {
   try {
     const response = await axios.put(
-      `${API_URL}${environment.be.endPoint.orders}/${order.id}`,
+      `${API_URL_DEVELOPMENT}${environment.be.endPoint.orders}/${order.id}`,
       order,
       {
         headers: {
@@ -941,7 +980,7 @@ export const createCashOrderPayment = async (
 ): Promise<any> => {
   try {
     const response = await axios.post(
-      `${API_URL}/payments/cash/create_order_payment`,
+      `${API_URL_DEVELOPMENT}/payments/cash/create_order_payment`,
       paymentRequest,
       {
         headers: {
@@ -962,7 +1001,7 @@ export const createOnlineOrderPayment = async (
 ): Promise<any> => {
   try {
     const response = await axios.post(
-      `${API_URL}/payments/vnpay/create_order_payment`,
+      `${API_URL_DEVELOPMENT}/payments/vnpay/create_order_payment`,
       paymentRequest,
       {
         headers: {
@@ -983,7 +1022,7 @@ export const createOrderPayment = async (
 ): Promise<any> => {
   try {
     const response = await axios.post(
-      `${API_URL}/payments/create_order_payment`,
+      `${API_URL_DEVELOPMENT}/payments/create_order_payment`,
       paymentDTO,
       {
         headers: {
@@ -1026,7 +1065,7 @@ export const postAuctionKoi = async (
 
   try {
     const response = await axios.post(
-      `${API_URL}/auctionkois`,
+      `${API_URL_DEVELOPMENT}/auctionkois`,
       auctionKoiPayload,
       {
         headers: {
@@ -1053,7 +1092,10 @@ export const updateUserPassword = async (
   newPassword: UpdatePasswordDTO,
 ): Promise<void> => {
   try {
-    const response = await axios.put(`${API_URL}/forgot-password`, newPassword);
+    const response = await axios.put(
+      `${API_URL_DEVELOPMENT}/forgot-password`,
+      newPassword,
+    );
     if (response.status === 200) {
       console.log("Password updated successfully");
     }
@@ -1068,12 +1110,16 @@ export const submitFeedback = async (
   token: string,
 ): Promise<void> => {
   try {
-    const response = await axios.post(`${API_URL}/feedbacks`, feedbackData, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+    const response = await axios.post(
+      `${API_URL_DEVELOPMENT}/feedbacks`,
+      feedbackData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -1093,7 +1139,7 @@ export const getUserOrderByStatus = async (
   token?: string,
 ): Promise<OrderPaginationResponse> => {
   const response = await axios.get(
-    `${API_URL}/orders/user/${userId}/get-active-sorted-orders`,
+    `${API_URL_DEVELOPMENT}/orders/user/${userId}/get-active-sorted-orders`,
     {
       params: { keyword: status, page, limit },
       headers: { Authorization: `Bearer ${getUserCookieToken() || token}` },
@@ -1103,7 +1149,7 @@ export const getUserOrderByStatus = async (
 };
 
 export const getOrderById = async (orderId: number): Promise<Order> => {
-  const response = await axios.get(`${API_URL}/orders/${orderId}`, {
+  const response = await axios.get(`${API_URL_DEVELOPMENT}/orders/${orderId}`, {
     headers: { Authorization: `Bearer ${getUserCookieToken()}` },
   });
   return response.data;
@@ -1116,7 +1162,7 @@ export const updateOrderStatus = async (
 ) => {
   try {
     const response = await axios.put(
-      `${API_URL}/orders/${orderId}/update-order-status`,
+      `${API_URL_DEVELOPMENT}/orders/${orderId}/update-order-status`,
       { status: newStatus },
       {
         headers: {
@@ -1136,11 +1182,14 @@ export const updateOrderStatus = async (
 
 export const getFeedbackByOrderId = async (orderId: number, token: string) => {
   try {
-    const response = await axios.get(`${API_URL}/feedbacks/order/${orderId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await axios.get(
+      `${API_URL_DEVELOPMENT}/feedbacks/order/${orderId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
     return response.data;
   } catch (error) {}
 };
@@ -1152,7 +1201,7 @@ export const confirmOrder = async (
 ): Promise<Order> => {
   try {
     const response = await axios.put(
-      `${API_URL}/orders/${orderId}/confirm-delivery`,
+      `${API_URL_DEVELOPMENT}/orders/${orderId}/confirm-delivery`,
       { status: newStatus },
       {
         headers: {
@@ -1177,7 +1226,7 @@ export const createDrawOutRequest = async (
   token: string,
 ) => {
   const response = await axios.post(
-    `${API_URL}/payments/create_drawout_request`,
+    `${API_URL_DEVELOPMENT}/payments/create_drawout_request`,
     paymentDTO,
     {
       headers: {
@@ -1196,7 +1245,7 @@ export const getUserPaymentHistoryByStatus = async (
   token?: string,
 ): Promise<PaymentPaginationResponse> => {
   const response = await axios.get(
-    `${API_URL}/payments/user/${user_id}/get-sorted-payments`,
+    `${API_URL_DEVELOPMENT}/payments/user/${user_id}/get-sorted-payments`,
     {
       params: { status: status, page, limit },
       headers: { Authorization: `Bearer ${getUserCookieToken() || token}` },
@@ -1212,7 +1261,7 @@ export const updatePaymentStatus = async (
 ) => {
   try {
     const response = await axios.put(
-      `${API_URL}/payments/${paymentId}/update-payment-status`,
+      `${API_URL_DEVELOPMENT}/payments/${paymentId}/update-payment-status`,
       { status: paymentStatus },
       {
         headers: {
@@ -1235,7 +1284,7 @@ export const getUserHighestBidInAuctionKoi = async (
   userId: number,
 ): Promise<Bid> => {
   const response = await axios.get(
-    `${API_URL}/bidding/${auctionKoiId}/${userId}`,
+    `${API_URL_DEVELOPMENT}/bidding/${auctionKoiId}/${userId}`,
     {
       headers: {
         Authorization: `Bearer ${getUserCookieToken()}`,
@@ -1248,7 +1297,7 @@ export const getUserHighestBidInAuctionKoi = async (
 export const sendRequestUpdateRole = async (role: string) => {
   try {
     const response = await axios.get(
-      `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/mail/update-role?updateRole=${role}`,
+      `${API_URL_DEVELOPMENT}/mail/update-role?updateRole=${role}`,
       {
         headers: {
           Authorization: `Bearer ${getUserCookieToken()}`,
@@ -1272,7 +1321,7 @@ export const sendRequestUpdateRole = async (role: string) => {
 export const endAuctionEmergency = async (auctionId: number) => {
   try {
     const response = await axios.put(
-      `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/auctions/end/${auctionId}`,
+      `${API_URL_DEVELOPMENT}/auctions/end/${auctionId}`,
       {},
       {
         headers: {

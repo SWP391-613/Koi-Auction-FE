@@ -14,12 +14,14 @@ import { formatCurrency } from "~/utils/currencyUtils";
 import UserDetailDialog from "./UserDetailDialog";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { toast, ToastContainer } from "react-toastify";
+import { UserResponse } from "~/types/users.type";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 
 const UserDetail: React.FC = () => {
   const { user, loading, error, setUser } = useUserData();
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState(false); // Modal state for showing user details
-  const [fetchedUser, setFetchedUser] = useState<any>(null);
+  const [fetchedUser, setFetchedUser] = useState<UserResponse>();
   const navigate = useNavigate();
   const [showAbout, setShowAbout] = useState(false);
 
@@ -40,7 +42,7 @@ const UserDetail: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/users/${userId}`,
+        `${API_URL_DEVELOPMENT}/users/${userId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         },
@@ -49,7 +51,7 @@ const UserDetail: React.FC = () => {
       setOpenModal(true); // Open the modal to display the data
     } catch (error) {
       console.error("Failed to fetch user data", error);
-      alert("Failed to fetch user data");
+      toast.error("Failed to fetch user data");
     }
   };
 
@@ -108,7 +110,7 @@ const UserDetail: React.FC = () => {
       }
 
       const response = await axios.get(
-        `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/users/${userId}`,
+        `${API_URL_DEVELOPMENT}/users/${userId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         },

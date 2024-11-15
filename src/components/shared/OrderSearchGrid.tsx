@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -7,16 +6,17 @@ import {
   CardMedia,
   Chip,
   Divider,
-  Typography,
   Grid,
   Paper,
+  Typography,
 } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { OrderResponse, OrderStatus } from "~/types/orders.type";
+import { BreedersResponse } from "~/types/paginated.types";
 import { getOrderStatusColor } from "~/utils/colorUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
-import { BreedersResponse } from "~/types/paginated.types";
-import axios from "axios";
 
 interface OrderSearchGridProps {
   orders: OrderResponse[];
@@ -120,11 +120,11 @@ const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({
                 />
               </Box>
               {koiBreeders.item.find(
-                (breeder) => breeder.id === order.order_details[0].koi.owner.id,
+                (breeder) => breeder.id === order.order_details[0].koi.owner_id,
               ) && (
                 <div className="">
                   <Link
-                    to={`/breeder/${order.order_details[0].koi.owner.id}/info`}
+                    to={`/breeder/${order.order_details[0].koi.owner_id}/info`}
                     onClick={(event) => event.stopPropagation()}
                     className="inline"
                   >
@@ -132,7 +132,7 @@ const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({
                       src={
                         koiBreeders.item.find(
                           (breeder) =>
-                            breeder.id === order.order_details[0].koi.owner.id,
+                            breeder.id === order.order_details[0].koi.owner_id,
                         )?.avatar_url
                       }
                       alt="Breeder Avatar"
@@ -141,7 +141,7 @@ const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({
                     />
                   </Link>
                   <Link
-                    to={`/breeder/${order.order_details[0].koi.owner.id}/info`}
+                    to={`/breeder/${order.order_details[0].koi.owner_id}/info`}
                     onClick={(event) => event.stopPropagation()}
                     className="inline-block"
                   >

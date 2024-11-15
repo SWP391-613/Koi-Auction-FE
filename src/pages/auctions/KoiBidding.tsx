@@ -11,7 +11,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { Bid } from "~/components/koibiddingdetail/BiddingHistory";
 import { KoiInfoGridComponent } from "~/components/koibiddingdetail/KoiInfoGridComponent";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
-import { WEB_SOCKET_MESSAGE } from "~/constants/webSocketMessages";
 import { useUserData } from "~/hooks/useUserData";
 import {
   fetchAuctionById,
@@ -25,7 +24,6 @@ import {
   disconnectWebSocket,
   subscribeToAuctionUpdates,
 } from "~/utils/websocket";
-import Sold from "../../assets/Sold.png";
 import BiddingHistory from "~/components/koibiddingdetail/BiddingHistory";
 import NavigateButton from "../../components/shared/NavigateButton";
 import { KoiDetailModel } from "~/types/kois.type";
@@ -34,9 +32,9 @@ import { AuctionKoi } from "~/types/auctionkois.type";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "~/constants/message";
-import CountdownClock from "~/components/auctions/CountdownClock";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import BiddingChart from "~/components/biddingChart/BiddingChart";
+import { BID_METHOD } from "~/types/auctions.type";
 
 // Define the BidRequest interface
 export type BidRequest = {
@@ -56,7 +54,6 @@ const KoiBidding: React.FC = () => {
   const [auctionKoi, setAuctionKoi] = useState<AuctionKoi | null>(null);
   const [auction, setAuction] = useState<AuctionModel | null>(null);
   const [latestBid, setLatestBid] = useState<Bid | null>(null);
-  const [selectedMedia, setSelectedMedia] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [userHighestBid, setUserHighestBid] = useState<number | null>(null);
   const navigate = useNavigate();
@@ -81,15 +78,29 @@ const KoiBidding: React.FC = () => {
         ]);
         setAuctionKoi(auctionKoiDetails);
         setAuction(auctionDetails);
-        setBidAmount(
-          auctionKoi?.bid_method === "SEALED_BID"
-            ? 0
-            : auctionKoiDetails.current_bid +
-                auctionKoiDetails.bid_step +
-                (auctionKoiDetails.current_bid === 0
-                  ? auctionKoiDetails.base_price
-                  : 0),
-        );
+        // calculate bid amount based on bid method
+        let bidAmount = 0;
+        switch (auctionKoi?.bid_method) {
+          case BID_METHOD.SEALED_BID:
+            bidAmount = 0;
+            break;
+          case BID_METHOD.ASCENDING_BID:
+            //check if current bid is 0, if yes, set bid amount to base price plus bid step
+            bidAmount =
+              auctionKoiDetails.current_bid +
+              auctionKoiDetails.bid_step +
+              (auctionKoiDetails.current_bid === 0
+                ? auctionKoiDetails.base_price
+                : 0);
+            break;
+          case BID_METHOD.FIXED_PRICE:
+            bidAmount = auctionKoiDetails.base_price;
+            break;
+          default:
+            bidAmount = auctionKoiDetails.current_bid;
+            break;
+        }
+        setBidAmount(bidAmount);
         setKoi(await getKoiById(auctionKoiDetails.koi_id));
         await getUserHighestBidInAuctionKoi(
           Number(auctionKoiId),
@@ -102,8 +113,16 @@ const KoiBidding: React.FC = () => {
         toast.error("Failed to load auction details. Please try again.");
       }
     };
+
+    // Initial load
     loadData();
-  }, [auctionId, auctionKoiId, latestBid, userHighestBid]);
+
+    // Set up auto-refresh interval
+    const refreshInterval = setInterval(loadData, 30000); // 30 seconds
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(refreshInterval);
+  }, [auctionId, auctionKoiId, user?.id, latestBid, userHighestBid]);
 
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
@@ -188,75 +207,14 @@ const KoiBidding: React.FC = () => {
             className="relative justify-center h-[25rem] w-full md:h-[30rem] lg:h-[40rem] lg:w-[90%] rounded-xl
           bg-gradient-to-r from-[#1365b4] to-[#1584cb] duration-300 ease-in-out"
           >
-            {selectedMedia ? (
-              selectedMedia.includes("youtube") ? (
-                <iframe
-                  className="absolute inset-0 h-full w-full rounded-xl"
-                  src={selectedMedia}
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              ) : (
-                <img
-                  className="absolute inset-0 h-full w-full rounded-xl object-contain
+            <img
+              className="absolute inset-0 h-full w-full rounded-xl object-contain
                           drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.2)]
                         duration-500
                         hover:drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.35)] opacity-100"
-                  src={selectedMedia}
-                  alt={koi.name}
-                />
-              )
-            ) : (
-              <img
-                className="absolute inset-0 h-full w-full rounded-xl object-contain
-                          drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.2)]
-                        duration-500
-                        hover:drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.35)] opacity-100"
-                src={koi.thumbnail}
-                alt={koi.name}
-              />
-            )}
-            {auctionKoi.is_sold && selectedMedia === koi.thumbnail && (
-              <div className="absolute -left-4 -top-4 z-10">
-                <img
-                  src={Sold}
-                  alt="Sold"
-                  className="h-[10rem] w-[10rem] transform rotate-[-20deg]"
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Media Gallery */}
-          <div className="mt-4 h-30 flex space-x-2 overflow-x-auto">
-            <img
               src={koi.thumbnail}
-              alt="Main"
-              className="w-20 cursor-pointer rounded-md object-cover bg-gradient-to-r from-[#1365b4] to-[#1584cb]"
-              onClick={() => setSelectedMedia(koi.thumbnail)}
+              alt={koi.name}
             />
-            <img
-              src={koi.thumbnail}
-              alt="Main"
-              className="w-20 cursor-pointer rounded-md object-cover bg-gradient-to-r from-[#1365b4] to-[#1584cb]"
-              onClick={() => setSelectedMedia(koi.thumbnail)}
-            />
-            {/* {koi.additional_images?.map((img, index) => (
-              <img
-                key={index}
-                src={img}
-                alt={`Additional ${index + 1}`}
-                className="h-20 w-20 cursor-pointer rounded-md object-cover"
-                onClick={() => setSelectedMedia(img)}
-              />
-            ))} */}
-            <div
-              className="flex w-20 cursor-pointer items-center justify-center rounded-md bg-gray-200"
-              onClick={() =>
-                setSelectedMedia("https://www.youtube.com/embed/your-video-id")
-              }
-            ></div>
           </div>
         </div>
 
@@ -276,32 +234,56 @@ const KoiBidding: React.FC = () => {
                 <h3 className="mb-2 text-xl font-semibold text-center">
                   Place Your Bid
                 </h3>
-                <TextField
-                  type="number"
-                  value={bidAmount}
-                  onChange={(e) => setBidAmount(Number(e.target.value))}
-                  variant="outlined" // You can change to "filled" or "standard" for different styles
-                  placeholder="Enter bid amount"
-                  fullWidth // Makes the input take the full width of its container
-                  inputProps={{
-                    style: { textAlign: "right" }, // Aligns text to the right
-                  }}
-                  sx={{
-                    // Custom styles
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: "10px", // Rounded corners
-                      "& fieldset": {
-                        borderColor: "gray", // Border color
+                <div className="flex gap-2">
+                  <TextField
+                    type="number"
+                    value={bidAmount}
+                    onChange={(e) => setBidAmount(Number(e.target.value))}
+                    variant="outlined"
+                    placeholder="Enter bid amount"
+                    fullWidth
+                    inputProps={{
+                      style: { textAlign: "right" },
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: "10px",
+                        "& fieldset": {
+                          borderColor: "gray",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "green",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "green",
+                        },
                       },
-                      "&:hover fieldset": {
-                        borderColor: "green", // Border color on hover
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "green", // Border color when focused
-                      },
-                    },
-                  }}
-                />
+                    }}
+                  />
+                  {auctionKoi.bid_method === BID_METHOD.ASCENDING_BID && (
+                    <select
+                      className="w-1/3 rounded-lg border border-gray-500 bg-gray-100 px-4 py-2 text-gray-700 focus:border-green-500 focus:outline-none"
+                      onChange={(e) => setBidAmount(Number(e.target.value))}
+                      aria-label="Bid step selection"
+                      value={bidAmount}
+                    >
+                      {[...Array(5)].map((_, index) => {
+                        const stepValue =
+                          auctionKoi.current_bid +
+                          auctionKoi.bid_step * (index + 1) +
+                          (auctionKoi.current_bid === 0
+                            ? auctionKoi.base_price
+                            : 0);
+                        return (
+                          <option key={index} value={stepValue}>
+                            +{index + 1} Step{index > 0 ? "s" : ""} (
+                            {stepValue.toLocaleString()})
+                          </option>
+                        );
+                      })}
+                    </select>
+                  )}
+                </div>
                 <button
                   onClick={handlePlaceBid}
                   className="mt-2 w-full rounded-2xl bg-green-500 px-4 py-2 text-white hover:bg-green-600"
@@ -401,15 +383,6 @@ const KoiBidding: React.FC = () => {
           </div>
         </div>
       </div>
-      {!isAuctionEnded() && (
-        <Typography
-          className={`text-lg ${isConnected ? "text-green-500" : "text-red-500"}`}
-        >
-          {/* {isConnected
-            ? WEB_SOCKET_MESSAGE.CONNECTED
-            : WEB_SOCKET_MESSAGE.DISCONNECTED} */}
-        </Typography>
-      )}
       <ToastContainer />
     </div>
   );

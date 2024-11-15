@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import { useNavbar } from "../../contexts/NavbarContext";
-import { useAuth } from "../../contexts/AuthContext";
-import { useUserData } from "~/hooks/useUserData";
+import { motion } from "framer-motion";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { useUserData } from "~/hooks/useUserData";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavbar } from "../../contexts/NavbarContext";
 import { Clock } from "../clock/Clock";
-import { SearchBar } from "../search/SearchBar";
-import { RoleIcon } from "../roleIcon/RoleIcon";
+import { RoleIcon } from "../icons/RoleIcon";
 import { UserProfile } from "../userProfile/UserProfile";
 
 const Header = () => {

@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { faStar, faTag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faTag, faStar } from "@fortawesome/free-solid-svg-icons";
-import { getCategoryName } from "~/utils/dataConverter"; // Adjust the import path as needed
-import KoiDetails from "../auctiondetail/KoiDetails";
-import { KoiInAuctionDetailModel } from "~/types/kois.type";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { KoiWithAuctionKoiData } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
-import axios from "axios";
 import { BreedersResponse } from "~/types/paginated.types";
+import { getCategoryName } from "~/utils/dataConverter"; // Adjust the import path as needed
+import KoiDetails from "../auctiondetail/KoiDetails";
 
 interface KoiInAuctionGridProps {
   kois: KoiWithAuctionKoiData[];
@@ -25,24 +25,24 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
     item: [],
   });
 
-  const fetchAllBreeders = async () => {
-    try {
-      const response = await axios.get(
-        `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/breeders`,
-        {
+  useEffect(() => {
+    const fetchAllBreeders = async () => {
+      try {
+        const response = await axios.get(`${API_URL_DEVELOPMENT}/breeders`, {
           params: {
             page: 0,
             limit: 20,
           },
-        },
-      );
-      setKoiBreeders(response.data || []);
-    } catch (error) {
-      console.error("Error fetching breeders:", error);
-    }
-  };
+        });
+        setKoiBreeders(response.data || []);
+      } catch (error) {
+        console.error("Error fetching breeders:", error);
+      }
+    };
 
-  fetchAllBreeders();
+    fetchAllBreeders();
+  }, []);
+
   return (
     <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {kois.map((koi: KoiWithAuctionKoiData) => (

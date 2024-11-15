@@ -1,19 +1,18 @@
 import { AdvancedVideo } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
+import axios from "axios";
 import { format } from "date-fns";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { default as React, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import KoiSearchGrid from "~/components/shared/KoiSearchGrid";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { useAuth } from "~/contexts/AuthContext";
 import { KoiInAuctionDetailModel } from "~/types/kois.type";
+import { BreedersResponse } from "~/types/paginated.types";
 import { getKoiInAuctionData } from "~/utils/apiUtils";
 import { generateBlogPostsPreview } from "~/utils/data/blog.data";
 import FancyButton from "../../components/shared/FancyButton";
-import { koiBreeders } from "../../utils/data/koibreeders";
-import { BreedersResponse } from "~/types/paginated.types";
-import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import Kois from "../kois/Kois";
 
 const Home = () => {
@@ -254,17 +253,9 @@ const Home = () => {
           y: isFeaturedInView ? 0 : 50,
         }}
         transition={{ duration: 0.6 }}
-        className="py-16 px-4 bg-white"
+        className="bg-white"
       >
         <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="flex items-center justify-center gap-3 text-3xl font-bold text-gray-900">
-              <span className="text-red-600">→</span>
-              Kois
-              <span className="text-red-600">←</span>
-            </h2>
-          </div>
-
           <Kois />
         </div>
       </motion.div>

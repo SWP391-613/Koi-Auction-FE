@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { getCookie } from "~/utils/cookieUtils";
-import { UserResponse, UpdateUserDTO, UserStatus } from "~/types/users.type";
 import {
+  Button,
   Dialog,
   DialogContent,
-  TextField,
   DialogTitle,
-  Button,
   InputLabel,
+  TextField,
 } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { UpdateUserDTO, UserResponse, UserStatus } from "~/types/users.type";
+import { getCookie } from "~/utils/cookieUtils";
 
 interface UserDetailDialogProps {
   openModal: boolean;
@@ -86,9 +86,13 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
       const userId = getCookie("user_id");
       const accessToken = getCookie("access_token");
 
-      await axios.put(`${API_URL_DEVELOPMENT}/users/${userId}`, userFields, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      await axios.put(
+        `${API_URL_DEVELOPMENT}/users/details/${userId}`,
+        userFields,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        },
+      );
 
       toast.success("User details updated successfully");
       handleClose();

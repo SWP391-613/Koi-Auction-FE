@@ -8,18 +8,17 @@ import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "~/constants/message";
 import { BREEDER_KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { BidMethod } from "~/types/auctionkois.type";
-import { AuctionModel } from "~/types/auctions.type";
 import { KoiDetailModel } from "~/types/kois.type";
 import {
   deleteKoiById,
   fetchKoisOfBreederWithStatus,
   postAuctionKoi,
 } from "~/utils/apiUtils";
+import { getUserCookieToken } from "~/utils/auth.utils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage, getCategoryName } from "~/utils/dataConverter";
 import PaginationComponent from "../../../components/common/PaginationComponent";
 import AuctionKoiPopup from "./AuctionKoiPopup";
-import { getUserCookieToken } from "~/utils/auth.utils";
 
 interface BreederKoiManagementProps {
   auction_id: number;
@@ -56,10 +55,8 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
       try {
         const koiData = await fetchKoisOfBreederWithStatus(
           parseInt(userId),
-          "VERIFIED",
           page - 1,
           itemsPerPage,
-          accessToken,
         ); // Use the utility function
         const data = koiData;
 
@@ -119,6 +116,9 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
         bidMethod,
         ceilPrice,
         accessToken,
+      );
+      console.log(
+        `Data: ${selectedKoiId}, ${auction_id}, ${basePrice}, ${bidStep}, ${bidMethod}, ${ceilPrice}, ${accessToken}`,
       );
       toast.success(SUCCESS_MESSAGE.REGISTER_KOI_SUCCESS);
       setOpenPopup(false); // Close the popup
@@ -253,9 +253,9 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
                 <tr>
                   <td
                     colSpan={5}
-                    className="border-b border-gray-200 bg-white px-5 py-5 text-sm text-center text-gray-900"
+                    className="border-b border-gray-200 bg-white px-5 py-5 text-lg text-center text-red-500"
                   >
-                    No kois found.
+                    No verified kois found.
                   </td>
                 </tr>
               )}

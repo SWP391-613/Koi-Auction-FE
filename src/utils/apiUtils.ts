@@ -7,11 +7,7 @@ import { KoiOfBreeder as KoisOfBreeder } from "~/pages/detail/breeder/BreederDet
 import { FeedbackRequest } from "~/pages/detail/member/Feedback";
 import { AuctionKoi, BidMethod } from "~/types/auctionkois.type";
 import { AddNewAuctionDTO, AuctionModel } from "~/types/auctions.type";
-import {
-  KoiDetailModel,
-  KoiTrackingStatus,
-  UpdateKoiDTO,
-} from "~/types/kois.type";
+import { KoiDetailModel, UpdateKoiDTO } from "~/types/kois.type";
 import {
   Order,
   OrderDetail,
@@ -25,6 +21,7 @@ import {
   MembersResponse,
 } from "~/types/paginated.types";
 import {
+  PaymentDTO,
   PaymentPaginationResponse,
   PaymentStatus,
 } from "~/types/payments.type";
@@ -36,7 +33,6 @@ import {
   UserLoginResponse,
   UserRegisterDTO,
 } from "~/types/users.type";
-import { PaymentDTO } from "~/types/payments.type";
 import { environment } from "../environments/environment";
 import { getUserCookieToken } from "./auth.utils";
 
@@ -302,18 +298,16 @@ export const fetchKoisOfBreeder = async (
 
 export const fetchKoisOfBreederWithStatus = async (
   breeder_id: number,
-  status: KoiTrackingStatus,
   page: number,
   limit: number,
-  access_token: string,
 ): Promise<KoisOfBreeder | null> => {
   try {
     const response = await axios.get<KoisOfBreeder>(
-      `${API_URL_DEVELOPMENT}/breeders/kois/status`,
+      `${API_URL_DEVELOPMENT}/breeders/kois/not-in-auction`,
       {
-        params: { breeder_id, status, page, limit },
+        params: { breeder_id, page, limit },
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${getUserCookieToken()}`,
         },
       },
     );

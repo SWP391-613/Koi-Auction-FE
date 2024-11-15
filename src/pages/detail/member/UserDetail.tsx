@@ -49,7 +49,7 @@ const UserDetail: React.FC = () => {
       setOpenModal(true); // Open the modal to display the data
     } catch (error) {
       console.error("Failed to fetch user data", error);
-      alert("Failed to fetch user data");
+      toast.error("Failed to fetch user data");
     }
   };
 

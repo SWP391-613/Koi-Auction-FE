@@ -10,6 +10,7 @@ import {
   Button,
   InputLabel,
 } from "@mui/material";
+import { toast } from "react-toastify";
 
 interface UserDetailDialogProps {
   openModal: boolean;
@@ -28,7 +29,7 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
     email: "",
     phone_number: "",
     address: "",
-    status: "ACTIVE" as UserStatus,
+    status: "" as UserStatus,
     date_of_birth: "",
     avatar_url: "",
     google_account_id: 0,
@@ -92,11 +93,12 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
         },
       );
 
-      alert("User updated successfully");
+      toast.success("User details updated successfully");
       handleClose();
     } catch (error) {
-      console.error("Error updating user:", error);
-      alert("Failed to update user.");
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.reason || "An error occurred");
+      }
     }
   };
 

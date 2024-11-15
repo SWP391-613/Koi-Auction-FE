@@ -30,23 +30,14 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
 }) => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [auction, setAuction] = useState<AuctionModel | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
   const navigate = useNavigate();
-  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [totalPages, setTotalPages] = useState<number>(0);
   const itemsPerPage = 8; // Adjusted to match the API limit parameter
   const [selectedKoiId, setSelectedKoiId] = useState<number | null>(null);
   const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false);
   const [openPopup, setOpenPopup] = useState<boolean>(false);
-  const [newKoi, setNewKoi] = useState<Partial<KoiDetailModel>>({
-    name: "",
-    sex: "",
-    length: 0,
-    age: 0,
-  });
-  const [koiImage, setKoiImage] = useState<File | null>(null);
 
   const accessToken = getUserCookieToken();
   const userId = getCookie("user_id");

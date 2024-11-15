@@ -24,6 +24,7 @@ import UserDetailDialog from "../member/UserDetailDialog";
 import { formatCurrency } from "~/utils/currencyUtils";
 import AccountTransactionComponent from "~/components/shared/AccountTransactionComponent";
 import { UserResponse } from "~/types/users.type";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -69,7 +70,7 @@ const BreederDetail: React.FC = () => {
     if (!userId || !accessToken) return;
 
     try {
-      const API_URL =
+      const API_URL_DEVELOPMENT =
         import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
       const response = await fetchKoisOfBreeder(
         parseInt(userId),
@@ -178,14 +179,11 @@ const BreederDetail: React.FC = () => {
     if (!confirmDelete) return;
 
     try {
-      const response = await axios.delete(
-        `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/kois/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+      const response = await axios.delete(`${API_URL_DEVELOPMENT}/kois/${id}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
         },
-      );
+      });
 
       if (response.status === 200) {
         toast.success("Your Koi deleted successfully");

@@ -15,6 +15,7 @@ import {
 import axios, { AxiosError } from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 
 // Types
 type RecipientType = "all" | "premium" | "free";
@@ -111,15 +112,11 @@ const SendNotifications: React.FC = () => {
 
     setIsLoading((prev) => ({ ...prev, form: true }));
     try {
-      await axios.post(
-        "https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/notifications",
-        notification,
-        {
-          headers: {
-            Authorization: `Bearer ${getUserCookieToken()}`,
-          },
+      await axios.post(`${API_URL_DEVELOPMENT}/notifications`, notification, {
+        headers: {
+          Authorization: `Bearer ${getUserCookieToken()}`,
         },
-      );
+      });
       toast.success("Notification sent successfully");
       setNotification(initialFormState);
     } catch (error) {
@@ -140,14 +137,11 @@ const SendNotifications: React.FC = () => {
 
     setIsLoading((prev) => ({ ...prev, upcomingNotification: true }));
     try {
-      await axios.get(
-        "https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/auctions/notify/upcoming",
-        {
-          headers: {
-            Authorization: `Bearer ${getUserCookieToken()}`,
-          },
+      await axios.get(`${API_URL_DEVELOPMENT}/auctions/notify/upcoming`, {
+        headers: {
+          Authorization: `Bearer ${getUserCookieToken()}`,
         },
-      );
+      });
       toast.success("Upcoming auction notifications sent successfully");
       setCooldown(COOLDOWN_DURATION); // Start cooldown
     } catch (error) {

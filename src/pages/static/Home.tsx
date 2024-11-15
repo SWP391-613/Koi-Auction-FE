@@ -13,6 +13,7 @@ import FancyButton from "../../components/shared/FancyButton";
 import { koiBreeders } from "../../utils/data/koibreeders";
 import { BreedersResponse } from "~/types/paginated.types";
 import axios from "axios";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -59,15 +60,12 @@ const Home = () => {
 
     const fetchAllBreeders = async () => {
       try {
-        const response = await axios.get(
-          `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/breeders`,
-          {
-            params: {
-              page: 0,
-              limit: 20,
-            },
+        const response = await axios.get(`${API_URL_DEVELOPMENT}/breeders`, {
+          params: {
+            page: 0,
+            limit: 20,
           },
-        );
+        });
         setKoiBreeders(response.data || []);
       } catch (error) {
         console.error("Error fetching breeders:", error);

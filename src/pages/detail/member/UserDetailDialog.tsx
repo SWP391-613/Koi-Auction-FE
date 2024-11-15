@@ -11,6 +11,7 @@ import {
   InputLabel,
 } from "@mui/material";
 import { toast } from "react-toastify";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 
 interface UserDetailDialogProps {
   openModal: boolean;
@@ -42,7 +43,7 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
       const fetchUser = async () => {
         try {
           const response = await axios.get<UserResponse>(
-            `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/users/${userId}`,
+            `${API_URL_DEVELOPMENT}/users/${userId}`,
           );
           setFetchedUser(response.data);
 
@@ -85,13 +86,9 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
       const userId = getCookie("user_id");
       const accessToken = getCookie("access_token");
 
-      await axios.put(
-        `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/users/${userId}`,
-        userFields,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        },
-      );
+      await axios.put(`${API_URL_DEVELOPMENT}/users/${userId}`, userFields, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
 
       toast.success("User details updated successfully");
       handleClose();

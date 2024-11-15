@@ -213,7 +213,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
                 type="number"
                 value={formData.year_born || ""}
                 inputProps={{
-                  min: 2022, // Set the minimum year (e.g., 1900)
+                  min: 0, // Set the minimum year (e.g., 1900)
                   max: new Date().getFullYear(), // Set the maximum year to the current year
                 }}
                 onChange={handleInputChange}

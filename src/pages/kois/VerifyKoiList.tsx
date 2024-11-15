@@ -41,7 +41,7 @@ const VerifyKoiList: React.FC = () => {
     setLoading(true);
     try {
       await axios.put(
-        `http://localhost:4000/api/v1/kois/status/${id}`,
+        `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/kois/status/${id}`,
         {
           tracking_status: "VERIFIED",
         },
@@ -69,7 +69,7 @@ const VerifyKoiList: React.FC = () => {
 
     try {
       await axios.put(
-        `http://localhost:4000/api/v1/kois/status/${id}`,
+        `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/kois/status/${id}`,
         {
           tracking_status: "REJECTED",
         },

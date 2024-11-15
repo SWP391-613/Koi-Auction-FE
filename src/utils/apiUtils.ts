@@ -1248,7 +1248,7 @@ export const getUserHighestBidInAuctionKoi = async (
 export const sendRequestUpdateRole = async (role: string) => {
   try {
     const response = await axios.get(
-      `http://localhost:4000/api/v1/mail/update-role?updateRole=${role}`,
+      `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/mail/update-role?updateRole=${role}`,
       {
         headers: {
           Authorization: `Bearer ${getUserCookieToken()}`,
@@ -1272,7 +1272,7 @@ export const sendRequestUpdateRole = async (role: string) => {
 export const endAuctionEmergency = async (auctionId: number) => {
   try {
     const response = await axios.put(
-      `http://localhost:4000/api/v1/auctions/end/${auctionId}`,
+      `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/auctions/end/${auctionId}`,
       {},
       {
         headers: {

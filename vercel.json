@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "outputDirectory": "dist",
+  "rewrites": [{ "source": "/(.*)", "destination": "/dist/$1" }],
+  "alias": ["fkoi88.me", "koiauction88.me"]
+}

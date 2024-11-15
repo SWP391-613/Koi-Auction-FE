@@ -112,7 +112,7 @@ const SendNotifications: React.FC = () => {
     setIsLoading((prev) => ({ ...prev, form: true }));
     try {
       await axios.post(
-        "http://localhost:4000/api/v1/notifications",
+        "https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/notifications",
         notification,
         {
           headers: {
@@ -140,11 +140,14 @@ const SendNotifications: React.FC = () => {
 
     setIsLoading((prev) => ({ ...prev, upcomingNotification: true }));
     try {
-      await axios.get("http://localhost:4000/api/v1/auctions/notify/upcoming", {
-        headers: {
-          Authorization: `Bearer ${getUserCookieToken()}`,
+      await axios.get(
+        "https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/auctions/notify/upcoming",
+        {
+          headers: {
+            Authorization: `Bearer ${getUserCookieToken()}`,
+          },
         },
-      });
+      );
       toast.success("Upcoming auction notifications sent successfully");
       setCooldown(COOLDOWN_DURATION); // Start cooldown
     } catch (error) {

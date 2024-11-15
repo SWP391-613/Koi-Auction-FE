@@ -42,7 +42,7 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
       const fetchUser = async () => {
         try {
           const response = await axios.get<UserResponse>(
-            `http://localhost:4000/api/v1/users/${userId}`,
+            `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/users/${userId}`,
           );
           setFetchedUser(response.data);
 
@@ -86,7 +86,7 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
       const accessToken = getCookie("access_token");
 
       await axios.put(
-        `http://localhost:4000/api/v1/users/details/${userId}`,
+        `https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1/users/${userId}`,
         userFields,
         {
           headers: { Authorization: `Bearer ${accessToken}` },

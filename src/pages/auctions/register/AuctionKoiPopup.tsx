@@ -92,8 +92,15 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
   }, [ceilPrice, basePrice, basePriceError]); // Add basePriceError to dependencies
 
   const handleSubmit = () => {
-    if (!errorMessage) {
-      onSubmit(basePrice, bidStep, bidMethod, ceilPrice);
+    // Only check bidStep and ceilPrice errors for non-FIXED_PRICE methods
+    if (bidMethod === "FIXED_PRICE") {
+      if (!basePriceError) {
+        onSubmit(basePrice, 0, bidMethod, 0);
+      }
+    } else {
+      if (!errorMessage && !basePriceError && !ceilPriceError) {
+        onSubmit(basePrice, bidStep, bidMethod, ceilPrice);
+      }
     }
   };
 
@@ -196,7 +203,11 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
             color="success"
             sx={{ ":hover": { backgroundColor: "#4caf50" } }}
             onClick={handleSubmit}
-            disabled={!!errorMessage || !!basePriceError} // Disable submit if there's an error
+            disabled={
+              bidMethod === "FIXED_PRICE"
+                ? !!basePriceError
+                : !!errorMessage || !!basePriceError || !!ceilPriceError
+            }
           >
             Submit
           </Button>

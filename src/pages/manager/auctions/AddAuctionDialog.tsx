@@ -259,7 +259,7 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
               onChange={handleDropdownChange}
               label="Auctioneer"
             >
-              {staffList.map((staff, index) => (
+              {staffList?.map((staff, index) => (
                 <MenuItem key={index} value={staff.id}>
                   {`${staff.first_name} ${staff.last_name}`}
                 </MenuItem>

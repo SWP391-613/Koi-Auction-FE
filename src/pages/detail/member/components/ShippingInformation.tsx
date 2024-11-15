@@ -154,7 +154,7 @@ export const ShippingInformation: React.FC<ShippingInformationProps> = ({
   const handleShippingMethodChange = (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    if (order.status !== "Pending") return;
+    if (order.status !== OrderStatus.PENDING) return;
 
     const newMethod = e.target.value as "Standard" | "Express";
     setShippingMethod(newMethod);
@@ -167,7 +167,7 @@ export const ShippingInformation: React.FC<ShippingInformationProps> = ({
   return (
     <Paper sx={{ p: 3, mb: 2 }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-        <Typography variant="h6">
+        <Typography variant="h6" sx={{ color: "primary.main" }}>
           <LocationOn /> Shipping Information
         </Typography>
         {order.status === OrderStatus.PENDING && (

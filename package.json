@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:prod": "VITE_API_BASE_URL=https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1 vite",
+    "dev:prod": "cross-env VITE_API_BASE_URL=https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1 vite",
     "build": "vite build",
-    "build:dev": "NODE_ENV=development vite build",
-    "build:prod": "NODE_ENV=production vite build",
+    "build:dev": "cross-env NODE_ENV=development vite build",
+    "build:prod": "cross-env NODE_ENV=production vite build",
     "preview": "vite preview",
     "prepare": "husky",
     "lint": "npm run prettier:fix && npm run eslint:check && npm run check-types",
@@ -103,6 +103,7 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.0",
-    "vite": "^5.4.10"
+    "vite": "^5.4.10",
+    "cross-env": "^7.0.3"
   }
 }

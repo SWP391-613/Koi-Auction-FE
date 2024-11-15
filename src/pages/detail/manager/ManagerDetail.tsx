@@ -18,6 +18,7 @@ import MemberManagement from "~/pages/manager/member/MemberManagement";
 import BreederManagement from "~/pages/manager/breeder/BreederManagement";
 import StaffManagement from "~/pages/manager/staff/StaffManagement";
 import KoiManagement from "~/pages/manager/koi/KoiManagement";
+import { toast } from "react-toastify";
 
 const ManagerDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,36 +32,26 @@ const ManagerDetail: React.FC = () => {
   const toggleAbout = () => setShowAbout(!showAbout);
 
   const handleUpdate = async () => {
-    if (!user || !updateField || !updateValue) return;
     const userId = getCookie("user_id"); // Retrieve user id from cookie
     const accessToken = getCookie("access_token");
-    if (!accessToken) {
+
+    if (!userId || !accessToken) {
       navigate("/notfound");
       return;
     }
 
     try {
-      const API_URL =
-        import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
-      const response = await axios.put(
-        `${API_URL}/users/${user.id}`,
-        { [updateField]: updateValue },
+      const response = await axios.get(
+        `http://localhost:4000/api/v1/users/${userId}`,
         {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+          headers: { Authorization: `Bearer ${accessToken}` },
         },
       );
-
-      if (response.status === 200) {
-        setUser({ ...user, [updateField]: updateValue });
-        setUpdateField("");
-        setUpdateValue("");
-        alert("User information updated successfully!");
-      }
+      setFetchedUser(response.data); // Save fetched data to state
+      setOpenModal(true); // Open the modal to display the data
     } catch (error) {
-      console.error("Failed to update user data:", error);
-      alert("Failed to update user information. Please try again.");
+      console.error("Failed to fetch user data", error);
+      toast.error("Failed to fetch user data");
     }
   };
 

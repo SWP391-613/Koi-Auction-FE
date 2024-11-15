@@ -23,6 +23,7 @@ import { faEdit, faUserCheck } from "@fortawesome/free-solid-svg-icons";
 import UserDetailDialog from "../member/UserDetailDialog";
 import { formatCurrency } from "~/utils/currencyUtils";
 import AccountTransactionComponent from "~/components/shared/AccountTransactionComponent";
+import { UserResponse } from "~/types/users.type";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -52,6 +53,7 @@ const BreederDetail: React.FC = () => {
   const accessToken = getCookie("access_token");
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [openModal, setOpenModal] = useState(false); // Modal state for showing user details
+  const [fetchedUser, setFetchedUser] = useState<UserResponse>();
   const [showAbout, setShowAbout] = useState(true);
   const handleSearchStateChange = (isActive: boolean) => {
     setIsSearchActive(isActive);
@@ -98,36 +100,26 @@ const BreederDetail: React.FC = () => {
   }, [currentPage, isLoggedIn, userId, accessToken]);
 
   const handleUpdate = async () => {
-    if (!user || !updateField || !updateValue) return;
-
+    const userId = getCookie("user_id"); // Retrieve user id from cookie
     const accessToken = getCookie("access_token");
-    if (!accessToken) {
+
+    if (!userId || !accessToken) {
       navigate("/notfound");
       return;
     }
 
     try {
-      const API_URL =
-        import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
-      const response = await axios.put(
-        `${API_URL}/users/${user.id}`,
-        { [updateField]: updateValue },
+      const response = await axios.get(
+        `http://localhost:4000/api/v1/users/${userId}`,
         {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+          headers: { Authorization: `Bearer ${accessToken}` },
         },
       );
-
-      if (response.status === 200) {
-        setUser({ ...user, [updateField]: updateValue });
-        setUpdateField("");
-        setUpdateValue("");
-        alert("User information updated successfully!");
-      }
+      setFetchedUser(response.data); // Save fetched data to state
+      setOpenModal(true); // Open the modal to display the data
     } catch (error) {
-      console.error("Failed to update user data:", error);
-      alert("Failed to update user information. Please try again.");
+      console.error("Failed to fetch user data", error);
+      toast.error("Failed to fetch user data");
     }
   };
 

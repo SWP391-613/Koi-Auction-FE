@@ -11,46 +11,47 @@ import { AuctionsManagement } from "~/pages/manager/auctions/AuctionsManagement"
 import { sendOtp } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import "./StaffDetail.scss";
+import { toast } from "react-toastify";
+import { UserResponse } from "~/types/users.type";
+import UserDetailDialog from "../member/UserDetailDialog";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 const StaffDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [updateField, setUpdateField] = useState("");
   const [updateValue, setUpdateValue] = useState("");
   const navigate = useNavigate();
+  const [openModal, setOpenModal] = useState(false);
+  const [fetchedUser, setFetchedUser] = useState<UserResponse>();
   const { user, loading, error, setUser } = useUserData();
 
   const handleUpdate = async () => {
-    if (!user || !updateField || !updateValue) return;
-
+    const userId = getCookie("user_id"); // Retrieve user id from cookie
     const accessToken = getCookie("access_token");
-    if (!accessToken) {
+
+    if (!userId || !accessToken) {
       navigate("/notfound");
       return;
     }
 
     try {
-      const API_URL =
-        import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
-      const response = await axios.put(
-        `${API_URL}/users/${user.id}`,
-        { [updateField]: updateValue },
+      const response = await axios.get(
+        `http://localhost:4000/api/v1/users/${userId}`,
         {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+          headers: { Authorization: `Bearer ${accessToken}` },
         },
       );
-
-      if (response.status === 200) {
-        setUser({ ...user, [updateField]: updateValue });
-        setUpdateField("");
-        setUpdateValue("");
-        alert("User information updated successfully!");
-      }
+      setFetchedUser(response.data); // Save fetched data to state
+      setOpenModal(true); // Open the modal to display the data
     } catch (error) {
-      console.error("Failed to update user data:", error);
-      alert("Failed to update user information. Please try again.");
+      console.error("Failed to fetch user data", error);
+      toast.error("Failed to fetch user data");
     }
+  };
+
+  const handleClose = () => {
+    setOpenModal(false);
   };
 
   const handleVerify = async () => {
@@ -85,6 +86,7 @@ const StaffDetail: React.FC = () => {
   return (
     <div className="flex flex-col justify-around m-10">
       <AccountVerificationAlert user={user} />
+      <UserDetailDialog openModal={openModal} handleClose={handleClose} />
       <div className="user-detail-content">
         <div className="user-sidebar">
           <img
@@ -104,6 +106,11 @@ const StaffDetail: React.FC = () => {
         </div>
         <div className="user-main">
           <div className="user-info-grid">
+            <FontAwesomeIcon
+              icon={faEdit}
+              onClick={handleUpdate}
+              className="text-2xl text-gray-400 hover:cursor-pointer"
+            />
             <div className="info-item">
               <p className="info-label">Email</p>
               <p className="info-value">{user.email}</p>

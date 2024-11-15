@@ -14,12 +14,13 @@ import { formatCurrency } from "~/utils/currencyUtils";
 import UserDetailDialog from "./UserDetailDialog";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { toast, ToastContainer } from "react-toastify";
+import { UserResponse } from "~/types/users.type";
 
 const UserDetail: React.FC = () => {
   const { user, loading, error, setUser } = useUserData();
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState(false); // Modal state for showing user details
-  const [fetchedUser, setFetchedUser] = useState<any>(null);
+  const [fetchedUser, setFetchedUser] = useState<UserResponse>();
   const navigate = useNavigate();
   const [showAbout, setShowAbout] = useState(false);
 

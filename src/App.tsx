@@ -225,14 +225,14 @@ function AppContent() {
                         </PageTransition>
                       }
                     />
-                    <Route
+                    {/* <Route
                       path="/kois"
                       element={
                         <PageTransition>
                           <Kois />
                         </PageTransition>
                       }
-                    />
+                    /> */}
 
                     {/* Protected routes for logged-in users */}
                     <Route element={<ProtectedRoute />}>

@@ -14,6 +14,7 @@ import { koiBreeders } from "../../utils/data/koibreeders";
 import { BreedersResponse } from "~/types/paginated.types";
 import axios from "axios";
 import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import Kois from "../kois/Kois";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -259,22 +260,12 @@ const Home = () => {
           <div className="text-center mb-12">
             <h2 className="flex items-center justify-center gap-3 text-3xl font-bold text-gray-900">
               <span className="text-red-600">→</span>
-              Featured Kois
+              Kois
               <span className="text-red-600">←</span>
             </h2>
           </div>
 
-          {isLoading ? (
-            <div className="flex justify-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
-            </div>
-          ) : randomKois && randomKois.length > 0 ? (
-            <FeaturedKoiCard kois={randomKois} />
-          ) : (
-            <div className="text-center text-gray-500">
-              No kois available at the moment
-            </div>
-          )}
+          <Kois />
         </div>
       </motion.div>
 

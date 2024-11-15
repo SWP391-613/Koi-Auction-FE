@@ -197,11 +197,11 @@ const Header = () => {
         to: "/auctions",
         icon: <FontAwesomeIcon icon={faFire} />,
       },
-      {
-        text: "Kois",
-        to: "/kois",
-        icon: <FontAwesomeIcon icon={faFish} />,
-      },
+      // {
+      //   text: "Kois",
+      //   to: "/kois",
+      //   icon: <FontAwesomeIcon icon={faFish} />,
+      // },
       {
         text: "Blogs",
         to: "/blog",

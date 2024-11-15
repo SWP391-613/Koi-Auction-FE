@@ -131,7 +131,6 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
         >
           <MenuItem value="ASCENDING_BID">Ascending Bid</MenuItem>
           <MenuItem value="DESCENDING_BID">Descending Bid</MenuItem>
-          <MenuItem value="SEALED_BID">Sealed Bid</MenuItem>
           <MenuItem value="FIXED_PRICE">Fixed Price</MenuItem>
         </TextField>
 
@@ -164,7 +163,8 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
           value={bidStep}
           onChange={(e) => setBidStep(Number(e.target.value))}
           placeholder="Enter bid step (vnđ)"
-          error={!!errorMessage} // Show error if exists
+          error={!!errorMessage}
+          disabled={bidMethod === "FIXED_PRICE"}
         />
         {errorMessage && <FormHelperText error>{errorMessage}</FormHelperText>}
 
@@ -177,9 +177,7 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
           value={ceilPrice}
           onChange={(e) => setCeilPrice(Number(e.target.value))}
           placeholder="Enter ceiling price (vnđ)"
-          InputProps={{
-            readOnly: !auctionNeedCeilingPrice.includes(bidMethod),
-          }}
+          disabled={bidMethod === "FIXED_PRICE"}
           error={!!ceilPriceError}
         />
         {ceilPriceError && (

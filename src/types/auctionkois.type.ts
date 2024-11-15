@@ -12,7 +12,7 @@ export type AuctionKoi = {
   bid_step: number;
 };
 
-export type BidMethod = "SEALED_BID" | "DESCENDING_BID" | "ASCENDING_BID" | "F";
+export type BidMethod = "FIXED_PRICE" | "DESCENDING_BID" | "ASCENDING_BID" | "F";
 
 export interface KoiWithAuctionKoiData extends KoiDetailModel {
   auctionKoiData: AuctionKoi;

@@ -75,3 +75,38 @@ export type UpdatePasswordDTO = {
   email: string;
   new_password: string;
 };
+
+export type UserResponse = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  email: string;
+  address: string;
+  password: string;
+  is_active: number;
+  is_subscription: number;
+  status_name: UserStatus;
+  date_of_birth: string;
+  avatar_url: string;
+  google_account_id: number;
+  role_name: string;
+  account_balance: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type UpdateUserDTO = {
+  first_name: string | "";
+  last_name: string;
+  email: string;
+  phone_number: string;
+  password?: string;
+  confirm_password?: string;
+  address: string;
+  status: UserStatus;
+  date_of_birth: string;
+  avatar_url: string;
+  google_account_id: number;
+  balance_account: number;
+};

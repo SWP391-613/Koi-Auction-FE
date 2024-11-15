@@ -192,7 +192,7 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
             type="text"
             fullWidth
             variant="standard"
-            value={newAuction.title || ""}
+            value={formData.title || ""}
             onChange={handleTextFieldChange}
           />
           <div className="flex gap-10">

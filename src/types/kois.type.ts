@@ -4,7 +4,7 @@ export type KoiDetailModel = {
   name: string;
   sex: KoiGender | "";
   length: number;
-  age: number;
+  year_born: number;
   base_price: number;
   status_name: KoiTrackingStatus | "UNVERIFIED"; //if not any of the status, then default is unverified
   is_display: number; //0, 1
@@ -48,7 +48,7 @@ export type KoiSearchResult = {
 
 export type UpdateKoiDTO = {
   id: number;
-  age: number;
+  year_born: number;
   base_price: number;
   category_id: number;
   description: string;

@@ -11,14 +11,14 @@ interface KoiDetailsProps {
   category: string;
   sex: string;
   length: number;
-  age: number;
+  year_born: number;
 }
 
 const KoiDetails: React.FC<KoiDetailsProps> = ({
   category,
   sex,
   length,
-  age,
+  year_born,
 }) => {
   return (
     <div className="mx-auto grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-2">
@@ -58,8 +58,8 @@ const KoiDetails: React.FC<KoiDetailsProps> = ({
           className="mr-2 text-[#4086c7]  sm:block"
         />
         <div className="w-full pl-2">
-          <label className="text-gray-500 text-sm">Age</label>
-          <p className="text-black font-semibold">{age}y</p>
+          <label className="text-gray-500 text-sm">Year Born</label>
+          <p className="text-black font-semibold">{year_born}</p>
         </div>
       </div>
     </div>

@@ -17,7 +17,6 @@ import {
   OrderDetail,
   OrderPaginationResponse,
   OrderStatus,
-  PaymentDTO,
 } from "~/types/orders.type";
 import {
   BreedersResponse,
@@ -37,6 +36,7 @@ import {
   UserLoginResponse,
   UserRegisterDTO,
 } from "~/types/users.type";
+import { PaymentDTO } from "~/types/payments.type";
 import { environment } from "../environments/environment";
 import { getUserCookieToken } from "./auth.utils";
 

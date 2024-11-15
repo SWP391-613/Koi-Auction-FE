@@ -62,7 +62,9 @@ const KoiCart: React.FC<KoiCartProps> = ({
                 </p>
                 <p className="flex items-center justify-between">
                   <span>Age:</span>
-                  <span className="text-lg text-black">{koi.age} years</span>
+                  <span className="text-lg text-black">
+                    {koi.year_born} years
+                  </span>
                 </p>
                 <p className="flex items-center justify-between">
                   <span>Category:</span>

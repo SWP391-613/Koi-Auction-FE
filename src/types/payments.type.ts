@@ -19,6 +19,16 @@ export enum PaymentMethod {
   VNPAY = "VNPAY",
 }
 
+export type PaymentDTO = {
+  payment_amount: number;
+  payment_method: string;
+  payment_type: string;
+  order_id: number | null;
+  user_id: number;
+  bank_number: string | null;
+  bank_name: string | null;
+};
+
 export type PaymentResponse = {
   id: number;
   payment_amount: number;
@@ -29,6 +39,7 @@ export type PaymentResponse = {
   user: UserDetailsResponse;
   payment_type: PaymentType;
   bank_number: string | null;
+  bank_name: string | null;
 };
 
 export type PaymentPaginationResponse = {

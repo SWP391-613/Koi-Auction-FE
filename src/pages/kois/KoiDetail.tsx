@@ -127,8 +127,8 @@ const KoiDetail: React.FC = () => {
               />
               <KoiDetailItem
                 icon={faCalendarDays}
-                label="Age"
-                value={koi.age}
+                label="Year Born"
+                value={koi.year_born}
                 bgColor="bg-gray-300"
               />
               <KoiDetailItem

@@ -23,7 +23,6 @@ import { AddNewAuctionDTO, AuctionModel } from "~/types/auctions.type";
 import { Staff } from "~/types/users.type";
 import { createNewAuction } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
-import { auctionName } from "~/utils/data/fixedTitleName";
 import { extractErrorMessage, prepareAuctionData } from "~/utils/dataConverter";
 
 interface StaffApiResponse {
@@ -185,22 +184,17 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
       >
         <DialogTitle>Add New Auction</DialogTitle>
         <DialogContent>
-          <FormControl fullWidth margin="normal" error={!!errors.title}>
-            <InputLabel>Name</InputLabel>
-            <Select
-              name="title"
-              value={formData.title}
-              onChange={handleDropdownChange}
-            >
-              {auctionName.map((ac, index) => (
-                <MenuItem key={index} value={ac}>
-                  {ac}
-                </MenuItem>
-              ))}
-            </Select>
-            {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
-          </FormControl>
-
+          <TextField
+            autoFocus
+            margin="dense"
+            name="title"
+            label="Auction Title"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={newAuction.title || ""}
+            onChange={handleTextFieldChange}
+          />
           <div className="flex gap-10">
             <TextField
               margin="dense"

@@ -191,6 +191,7 @@ export const useKoiUnverifiedSearch = (debounceTime = 500) => {
 export const useKoiInAuctionSearch = (debounceTime = 500) => {
   return useSearch<KoiInAuctionDetailModel>({
     apiUrl: `${API_URL}/auctionkois/get-kois-by-keyword`,
+    limit: 30,
     requiresAuth: false,
     preload: true,
     defaultQuery: "",
@@ -201,6 +202,7 @@ export const useKoiInAuctionSearch = (debounceTime = 500) => {
 export const useAuctionSearch = (debounceTime = 500) => {
   return useSearch<AuctionModel>({
     apiUrl: `${API_URL}/auctions/get-auctions-by-keyword`,
+    limit: 30,
     requiresAuth: false,
     preload: true,
     defaultQuery: "",

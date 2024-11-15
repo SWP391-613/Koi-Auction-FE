@@ -14,8 +14,8 @@ const FooterButton: React.FC<FooterLinkProps> = ({ href, icon, text }) => {
       className={classNames(
         "group mb-2 flex items-center font-bold justify-between rounded-full px-4 py-2 transition duration-300 ease-in-out",
         {
-          "text-white font-bold bg-[#4685AF]": isActive,
-          "hover:bg-[#5d9fcc] hover:text-[#2A5069] text-[#2A5069]": !isActive,
+          "text-white font-bold bg-[#11468F]": isActive,
+          "hover:bg-[#1967d3] hover:text-[#2A5069] text-[#2A5069]": !isActive,
         },
       )}
     >

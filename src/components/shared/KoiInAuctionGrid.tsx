@@ -89,7 +89,7 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
                   category={getCategoryName(koi.category_id)}
                   sex={koi.sex}
                   length={koi.length}
-                  age={koi.age}
+                  year_born={koi.year_born}
                 />
               </div>
               <div className="absolute bottom-2 left-2 sm:left-auto sm:right-2 text-white rounded-full p-1 text-md font-bold">
@@ -110,7 +110,7 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
                   category={koi.category_id.toString()}
                   sex={koi.sex}
                   length={koi.length}
-                  age={koi.age}
+                  year_born={koi.year_born}
                 />
               </div>
             </div>

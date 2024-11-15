@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import {
   loginValidationSchema,
   registerValidationSchema,
@@ -350,39 +350,42 @@ const AuthContainer = () => {
   const [isActive, setIsActive] = useState(false);
 
   return (
-    <div className={styles.full}>
-      <motion.div
-        className={styles.wrapper}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
+    <>
+      <div className={styles.full}>
         <motion.div
-          className={`${styles.container} ${isActive ? styles.active : ""}`}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          className={styles.wrapper}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
         >
           <motion.div
-            className={`${styles.formContainer} ${styles.signUp}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            className={`${styles.container} ${isActive ? styles.active : ""}`}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <RegisterForm />
+            <motion.div
+              className={`${styles.formContainer} ${styles.signUp}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <RegisterForm />
+            </motion.div>
+            <motion.div
+              className={`${styles.formContainer} ${styles.signIn}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <LoginForm />
+            </motion.div>
+            <Overlay isActive={isActive} onToggle={setIsActive} />
           </motion.div>
-          <motion.div
-            className={`${styles.formContainer} ${styles.signIn}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <LoginForm />
-          </motion.div>
-          <Overlay isActive={isActive} onToggle={setIsActive} />
         </motion.div>
-      </motion.div>
-    </div>
+      </div>
+      <ToastContainer />
+    </>
   );
 };
 

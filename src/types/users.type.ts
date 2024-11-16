@@ -61,7 +61,9 @@ export type StaffRegisterDTO = Omit<UserRegisterBase, "password"> & {
   avatar_url?: string;
 };
 
-export type Breeder = UserBase;
+export type Breeder = UserBase & {
+  koi_count: number;
+};
 export type Member = UserBase;
 export type Staff = UserBase;
 

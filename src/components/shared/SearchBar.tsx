@@ -13,7 +13,12 @@ import {
 } from "@mui/material";
 import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import { FilterValues, KoiFilterValues, AuctionFilterValues, BidMethod } from '~/types/search.types';
+import {
+  FilterValues,
+  KoiFilterValues,
+  AuctionFilterValues,
+  BidMethod,
+} from "~/types/search.types";
 
 interface SearchBarProps {
   values: FilterValues;
@@ -21,29 +26,34 @@ interface SearchBarProps {
   loading?: boolean;
   placeholder?: string;
   varieties?: string[];
-  type: 'koi' | 'auction';
+  type: "koi" | "auction";
 }
 
-const BID_METHODS: BidMethod[] = ["All", "Fixed Price", "Descending Bid", "Ascending Bid"];
+const BID_METHODS: BidMethod[] = [
+  "All",
+  "Fixed Price",
+  "Descending Bid",
+  "Ascending Bid",
+];
 
-const SearchBar: React.FC<SearchBarProps> = ({ 
+const SearchBar: React.FC<SearchBarProps> = ({
   values = {
-    type: 'koi',
-    search: '',
-    bidMethod: 'All',
-    category: 'All',
-    gender: 'All',
+    type: "koi",
+    search: "",
+    bidMethod: "All",
+    category: "All",
+    gender: "All",
     minSize: 0,
     maxSize: 100,
     minAge: 0,
     maxAge: 10,
-    priceRange: [0, 1000000]
-  } as KoiFilterValues, 
-  onChange, 
-  loading = false, 
+    priceRange: [0, 1000000],
+  } as KoiFilterValues,
+  onChange,
+  loading = false,
   placeholder = "Search...",
   varieties = [],
-  type = 'koi'
+  type = "koi",
 }) => {
   // Add safety check
   if (!values) {
@@ -51,29 +61,31 @@ const SearchBar: React.FC<SearchBarProps> = ({
   }
 
   const handleChange = (field: string, value: any) => {
-    if (type === 'koi') {
+    if (type === "koi") {
       onChange({
         ...values,
-        type: 'koi',
-        [field]: value
+        type: "koi",
+        [field]: value,
       } as KoiFilterValues);
     } else {
       onChange({
         ...values,
-        type: 'auction',
-        [field]: value
+        type: "auction",
+        [field]: value,
       } as AuctionFilterValues);
     }
   };
 
   // Type guard
   const isKoiFilter = (values: FilterValues): values is KoiFilterValues => {
-    return values.type === 'koi';
+    return values.type === "koi";
   };
 
   // Add type guard for AuctionFilterValues
-  const isAuctionFilter = (values: FilterValues): values is AuctionFilterValues => {
-    return values.type === 'auction';
+  const isAuctionFilter = (
+    values: FilterValues,
+  ): values is AuctionFilterValues => {
+    return values.type === "auction";
   };
 
   return (
@@ -97,7 +109,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             ),
           }}
         />
-        
+
         <FormControl sx={{ minWidth: 200 }}>
           <InputLabel>Bid Method</InputLabel>
           <Select
@@ -113,7 +125,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           </Select>
         </FormControl>
 
-        {type === 'koi' && isKoiFilter(values) && (
+        {type === "koi" && isKoiFilter(values) && (
           <>
             <FormControl sx={{ minWidth: 120 }}>
               <InputLabel>Category</InputLabel>
@@ -123,7 +135,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 label="Category"
               >
                 {varieties.map((category) => (
-                  <MenuItem key={category} value={category}>{category}</MenuItem>
+                  <MenuItem key={category} value={category}>
+                    {category}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -136,7 +150,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 label="Gender"
               >
                 {["All", "Male", "Female"].map((gender) => (
-                  <MenuItem key={gender} value={gender}>{gender}</MenuItem>
+                  <MenuItem key={gender} value={gender}>
+                    {gender}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -144,8 +160,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
         )}
       </Box>
 
-      {type === 'koi' && isKoiFilter(values) && (
-        <Box sx={{ display: 'flex', gap: 4 }}>
+      {type === "koi" && isKoiFilter(values) && (
+        <Box sx={{ display: "flex", gap: 4 }}>
           <Box sx={{ width: 300 }}>
             <Typography gutterBottom>Size (cm)</Typography>
             <Slider
@@ -187,7 +203,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         </Box>
       )}
 
-      {type === 'auction' && isAuctionFilter(values) && (
+      {type === "auction" && isAuctionFilter(values) && (
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel>Bid Method</InputLabel>
           <Select
@@ -196,7 +212,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
             label="Bid Method"
           >
             {BID_METHODS.map((method) => (
-              <MenuItem key={method} value={method}>{method}</MenuItem>
+              <MenuItem key={method} value={method}>
+                {method}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>

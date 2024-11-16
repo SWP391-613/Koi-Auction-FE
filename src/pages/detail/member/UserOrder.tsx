@@ -234,11 +234,11 @@ const UserOrder = () => {
                     (breeder) =>
                       breeder.id === order.order_details[0].koi.owner.id,
                   ) && (
-                    <div className="">
+                    <div className="flex">
                       <Link
                         to={`/breeder/${order.order_details[0].koi.owner.id}/info`}
                         onClick={(event) => event.stopPropagation()}
-                        className="inline"
+                        className="inline mt-3 mr-1"
                       >
                         <img
                           src={

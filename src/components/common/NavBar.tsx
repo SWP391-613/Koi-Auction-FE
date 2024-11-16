@@ -228,7 +228,7 @@ const Header = () => {
         {
           // do like switch case
           text: "Privacy Policy",
-          to: getMyAccountUrl(),
+          to: "/privacy",
           icon: <SecurityIcon />,
         },
         {

@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         roles: roles.length ? roles : [],
         id: id ? parseInt(id, 10) : 0,
         username: username || "",
-        status: status as UserStatus || "UNVERIFIED"
+        status: (status as UserStatus) || "UNVERIFIED",
       });
     }
   }, []);

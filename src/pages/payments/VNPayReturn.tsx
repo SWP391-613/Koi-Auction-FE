@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoadingComponent from "~/components/shared/LoadingComponent";
+import { useUserData } from "~/hooks/useUserData";
 
 const VNPayReturn: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -21,6 +22,7 @@ const VNPayReturn: React.FC = () => {
   } | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useUserData();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -55,22 +57,25 @@ const VNPayReturn: React.FC = () => {
   useEffect(() => {
     if (!loading && paymentResult) {
       const redirectTimer = setTimeout(() => {
-        if (paymentResult.paymentType === "deposit") {
-          if (paymentResult.userId) {
-            navigate(`/users/${paymentResult.userId}`);
-          } else {
-            navigate("/");
-          }
-        } else if (paymentResult.paymentType === "order") {
-          navigate("/users/orders");
-        } else {
-          navigate("/");
+        switch (paymentResult.paymentType) {
+          case "deposit":
+            if (paymentResult.userId) {
+              navigate(
+                user?.role_name === "breeder"
+                  ? "/breeders/"
+                  : `/users/${paymentResult.userId}`,
+              );
+            }
+            break;
+          case "order":
+            navigate("/users/orders");
+            break;
         }
-      }, 5000); // Redirect after 5 seconds
+      }, 5000);
 
       return () => clearTimeout(redirectTimer);
     }
-  }, [loading, paymentResult, navigate]);
+  }, [loading, paymentResult, navigate, user]);
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>

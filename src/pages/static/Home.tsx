@@ -6,7 +6,7 @@ import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { default as React, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import KoiSearchGrid from "~/components/shared/KoiSearchGrid";
-import { API_URL_DEPLOYMENT } from "~/constants/endPoints";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { useAuth } from "~/contexts/AuthContext";
 import { KoiInAuctionDetailModel } from "~/types/kois.type";
 import { BreedersResponse } from "~/types/paginated.types";
@@ -60,7 +60,7 @@ const Home = () => {
 
     const fetchAllBreeders = async () => {
       try {
-        const response = await axios.get(`${API_URL_DEPLOYMENT}/breeders`, {
+        const response = await axios.get(`${API_URL_DEVELOPMENT}/breeders`, {
           params: {
             page: 0,
             limit: 20,

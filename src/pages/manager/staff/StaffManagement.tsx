@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
-import { API_URL_DEPLOYMENT } from "~/constants/endPoints";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { STAFF_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import usePagination from "~/hooks/usePagination";
 import { Staff, StaffRegisterDTO } from "~/types/users.type";
@@ -53,7 +53,7 @@ const StaffManagement = () => {
     handlePageChange,
     refetch,
   } = usePagination<Staff>({
-    apiUrl: `${API_URL_DEPLOYMENT}/staffs`,
+    apiUrl: `${API_URL_DEVELOPMENT}/staffs`,
     itemsPerPage: 8,
     accessToken,
   });

@@ -9,7 +9,7 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { API_URL_DEPLOYMENT } from "~/constants/endPoints";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { UpdateUserDTO, UserResponse, UserStatus } from "~/types/users.type";
 import { getCookie } from "~/utils/cookieUtils";
 
@@ -54,11 +54,14 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
   };
 
   const validatePhoneNumber = (phone: string): string => {
-    // Validates phone numbers in format +84xxxxxxxxx or 0xxxxxxxxx
-    const phoneRegex = /(?:\+84|0084|0)[235789][0-9]{1,2}[0-9]{7}(?:[^\d]+|$)/g;
-    if (!phone) return "Phone number is required";
-    if (!phoneRegex.test(phone))
+    // If phone is empty or only whitespace, it's valid (optional field)
+    if (!phone || phone.trim() === "") return "";
+
+    // Only validate if there's actually a phone number entered
+    const phoneRegex = /^(?:\+84|0084|0)[235789][0-9]{1,2}[0-9]{7}$/;
+    if (!phoneRegex.test(phone.trim())) {
       return "Invalid phone number format (must be in Vietnamese format +84xxxxxxxxx or 0xxxxxxxxx)";
+    }
     return "";
   };
 
@@ -79,7 +82,7 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
       const fetchUser = async () => {
         try {
           const response = await axios.get<UserResponse>(
-            `${API_URL_DEPLOYMENT}/users/${userId}`,
+            `${API_URL_DEVELOPMENT}/users/${userId}`,
           );
           setFetchedUser(response.data);
 
@@ -157,9 +160,14 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
       const userId = getCookie("user_id");
       const accessToken = getCookie("access_token");
 
+      const updatedFields = {
+        ...userFields,
+        phone_number: userFields.phone_number.trim(),
+      };
+
       await axios.put(
-        `${API_URL_DEPLOYMENT}/users/details/${userId}`,
-        userFields,
+        `${API_URL_DEVELOPMENT}/users/details/${userId}`,
+        updatedFields,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         },
@@ -244,6 +252,7 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
                 error={!!getFieldError("phone_number")}
                 helperText={getFieldError("phone_number")}
                 className="col-span-5"
+                placeholder="Enter phone number (optional)"
               />
             </div>
 

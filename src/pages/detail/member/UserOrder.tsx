@@ -87,15 +87,12 @@ const UserOrder = () => {
 
     const fetchAllBreeders = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:4000/api/v1/breeders`,
-          {
-            params: {
-              page: 0,
-              limit: 20,
-            },
+        const response = await axios.get(`API_URL_DEVELOPMENT/breeders`, {
+          params: {
+            page: 0,
+            limit: 20,
           },
-        );
+        });
         setKoiBreeders(response.data || []);
       } catch (error) {
         console.error("Error fetching breeders:", error);

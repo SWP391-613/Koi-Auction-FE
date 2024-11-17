@@ -26,10 +26,6 @@ import { getCookie } from "~/utils/cookieUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import UserDetailDialog from "./UserDetailDialog";
-import { getUserCookieToken } from "~/utils/auth.utils";
-import { toast, ToastContainer } from "react-toastify";
-import { UserResponse } from "~/types/users.type";
-import { API_URL_DEPLOYMENT } from "~/constants/endPoints";
 
 const UserDetail: React.FC = () => {
   const { user, loading: userLoading, loading, error, setUser } = useUserData();
@@ -66,7 +62,7 @@ const UserDetail: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `${API_URL_DEPLOYMENT}/users/${userId}`,
+        `${API_URL_DEVELOPMENT}/users/${userId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         },
@@ -155,7 +151,7 @@ const UserDetail: React.FC = () => {
       }
 
       const response = await axios.get(
-        `${API_URL_DEPLOYMENT}/users/${userId}`,
+        `${API_URL_DEVELOPMENT}/users/${userId}`,
         {
           headers: { Authorization: `Bearer ${accessToken}` },
         },
@@ -248,11 +244,13 @@ const UserDetail: React.FC = () => {
               <Typography variant="h4">
                 {user.first_name} {user.last_name}
               </Typography>
-              <FontAwesomeIcon
-                icon={faEdit}
-                onClick={handleUpdate}
-                className="text-2xl text-gray-400 hover:cursor-pointer"
-              />
+              {user.status_name === "VERIFIED" && (
+                <FontAwesomeIcon
+                  icon={faEdit}
+                  onClick={handleUpdate}
+                  className="text-2xl text-gray-400 hover:cursor-pointer"
+                />
+              )}
             </div>
             <h2 className="text-2xl text-blue-500 mt-5 mb-6">
               {user.role_name.charAt(0).toUpperCase() + user.role_name.slice(1)}

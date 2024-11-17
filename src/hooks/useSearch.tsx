@@ -212,10 +212,10 @@ export const useAuctionSearch = (debounceTime = 500) => {
 
 export const useAuctionUpComingSearch = (debounceTime = 500) => {
   return useSearch<AuctionModel>({
-    apiUrl: `${API_URL_DEVELOPMENT}/auctions/get-auctions-by-keyword`,
+    apiUrl: `${API_URL_DEVELOPMENT}/auctions/get-auctions-upcoming`,
     requiresAuth: true,
     preload: true,
-    defaultQuery: "upcoming",
+    defaultQuery: "",
     debounceTime,
   });
 };

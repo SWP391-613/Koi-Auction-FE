@@ -18,10 +18,10 @@ const DetailNavbar = () => {
         { label: "Payments", path: "users/payments" },
       ],
       breeder: [
-        { label: "Your Koi", path: basePath },
+        { label: "My Profile", path: basePath },
         { label: "Add Koi", path: `${basePath}/add-koi` },
-        { label: "Register Auction", path: `${basePath}/auctions/register` },
-        { label: "Wishlist", path: `${basePath}/wishlist` },
+        { label: "Register to Auction", path: `${basePath}/auctions/register` },
+        { label: "Pending Koi", path: `${basePath}/wishlist` },
         { label: "Payments", path: `${basePath}/payments` },
       ],
       staff: [

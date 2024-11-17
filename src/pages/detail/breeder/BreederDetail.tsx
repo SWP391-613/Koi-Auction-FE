@@ -201,17 +201,14 @@ const BreederDetail: React.FC = () => {
   return (
     <div className="container mx-auto">
       <AccountVerificationAlert user={user} />
-      <div className="grid grid-cols-1 md:grid-cols-3 m-10 border-4 border-gray-500 rounded-xl transition-du bg-white hover:shadow-lg shadow-sm">
+      <div className="grid grid-cols-1 md:grid-cols-3 m-10 transition-du bg-white">
         <div className=" rounded-lg flex flex-col justify-around">
-          <div className="flex flex-col p-6 items-center border-r">
+          <div className="flex flex-col p-6 items-center">
             <img
               src={user.avatar_url}
               alt={`${user.first_name} ${user.last_name}`}
+              className="mb-4"
             />
-            <div className="flex items-center justify-center gap-5">
-              <p className="text-gray-600">{user.status_name} </p>
-              <CrudButton ariaLabel="Approve" svgPath="approve.svg" />
-            </div>
             {user.status_name !== "VERIFIED" && (
               <button
                 onClick={handleVerify}
@@ -223,7 +220,7 @@ const BreederDetail: React.FC = () => {
             )}
           </div>
 
-          <div className="pl-6 pb-6 space-y-4 border-2">
+          <div className="pl-6 pb-6 space-y-4">
             <div>
               <h2 className="text-lg font-bold">Email</h2>
               <p className="text-xl ">{user.email}</p>
@@ -240,41 +237,47 @@ const BreederDetail: React.FC = () => {
               <p className="text-lg font-bold ">Total Koi</p>
               <p className="text-xl ">{totalKoi}</p>{" "}
             </div>
+            <div>
+              <p className="text-lg font-bold">Status</p>
+              <p className="text-xl">{user.status_name} </p>
+            </div>
           </div>
         </div>
 
         {/* Display total number of koi */}
-        <div className=" md:col-span-2 rounded-lg">
-          <div className="flex justify-between items-center m-3">
+        <div className=" md:col-span-2 rounded-lg p-6">
+          <div className="flex justify-between items-center">
             <Typography variant="h3">
               {user.first_name} {user.last_name}
             </Typography>
-            <FontAwesomeIcon
-              icon={faEdit}
-              onClick={handleUpdate}
-              className="text-2xl text-gray-400 hover:cursor-pointer"
-            />
+            {user.status_name === "VERIFIED" && (
+              <FontAwesomeIcon
+                icon={faEdit}
+                onClick={handleUpdate}
+                className="text-2xl text-gray-400 hover:cursor-pointer"
+              />
+            )}
           </div>
-          <div className="flex justify-start items-center gap-3 m-3">
-            <Typography variant="h5">5/5</Typography>
-            <Rating name="read-only" value={5} readOnly />
-          </div>
-          <div className="flex flex-col items-center">
-            <div className="flex justify-center items-center gap-5">
-              <p className="text-xl font-bold">Account Balance:</p>
-              <p className="text-3xl text-green-600 font-bold">
-                {user.account_balance !== null
-                  ? formatCurrency(user.account_balance)
-                  : "No money"}
-              </p>
+          <h2 className="text-2xl text-blue-500 mt-5 mb-6">
+            {user.role_name.charAt(0).toUpperCase() + user.role_name.slice(1)}
+          </h2>
+          {user.status_name == "VERIFIED" && (
+            <div className="flex flex-col items-center">
+              <div className="flex justify-center items-center gap-5">
+                <p className="text-xl font-bold">Account Balance:</p>
+                <p className="text-3xl text-green-600 font-bold">
+                  {user.account_balance !== null
+                    ? formatCurrency(user.account_balance)
+                    : "No money"}
+                </p>
+              </div>
+              <AccountTransactionComponent
+                userId={user.id}
+                token={getCookie("access_token") || ""}
+                onTransactionSuccess={handleTransactionSuccess}
+              />
             </div>
-            <AccountTransactionComponent
-              userId={user.id}
-              token={getCookie("access_token") || ""}
-              onTransactionSuccess={handleTransactionSuccess}
-            />
-          </div>
-
+          )}
           {/* About Button */}
           <div className="text-left">
             <FontAwesomeIcon icon={faUserCheck} className="mr-2" />
@@ -302,17 +305,12 @@ const BreederDetail: React.FC = () => {
 
       {/* Modal for showing fetched user data */}
       <UserDetailDialog openModal={openModal} handleClose={handleClose} />
-      <div>
-        <Typography variant="h5" sx={{ marginTop: "2rem", marginLeft: "1rem" }}>
-          Search your koi here
-        </Typography>
-        <KoiOwnerSearchComponent
-          onSearchStateChange={handleSearchStateChange}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
-          renderActions={renderCrudButtons}
-        />
-      </div>
+      <KoiOwnerSearchComponent
+        onSearchStateChange={handleSearchStateChange}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+        renderActions={renderCrudButtons}
+      />
       <ScrollToTop smooth />
     </div>
   );

@@ -183,7 +183,7 @@ const KoiManagement = () => {
             onClick={handleOpenCreateDialog}
             startIcon={<AddIcon />}
           >
-            Create New Koi
+            Add New Koi
           </Button>
         </div>
         <div className="-mx-4 overflow-hidden px-4 py-4 sm:-mx-8 sm:px-8">
@@ -310,7 +310,7 @@ const KoiManagement = () => {
         </div>
       </div>
       <Dialog open={openCreateDialog} onClose={handleCloseCreateDialog}>
-        <DialogTitle>Create New Koi</DialogTitle>
+        <DialogTitle>Add New Koi</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus

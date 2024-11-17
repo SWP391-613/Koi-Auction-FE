@@ -108,13 +108,24 @@ const KoiWishList: React.FC = () => {
   return (
     <div>
       {kois.length > 0 && userId ? (
-        <>
-          <KoiUnverifiedSearchComponent
-            onSearchStateChange={handleSearchStateChange}
-          />
-          <Typography variant="h3">This Kois is waiting to Verified</Typography>
+        <div className="ml-16 mr-16 mb-16">
+          <Typography variant="h4" className="text-center">
+            Your Kois is waiting to Verified
+          </Typography>
+          <Typography
+            variant="body1"
+            className="text-center text-gray-500"
+            sx={{ marginTop: "15px" }}
+          >
+            *Note: Please wait until your koi is verified by our team. We will
+            send result email back, thanks for your patience. From Koi Auction
+            Team.
+          </Typography>
+          <Typography variant="body2" className="text-left">
+            Showing 1 - {kois.length} of {totalKoi} results.
+          </Typography>
           <KoiBreederViewGrid kois={kois} handleView={handleView} />
-        </>
+        </div>
       ) : (
         <div className="flex flex-col justify-center items-center h-[30rem]">
           <Typography

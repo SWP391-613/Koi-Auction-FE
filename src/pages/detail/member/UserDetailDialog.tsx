@@ -190,10 +190,10 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
 
   return (
     <Dialog open={openModal} onClose={handleClose}>
-      <DialogTitle>
+      <DialogTitle className="text-center">
         {loading
           ? "Loading..."
-          : `Update for member ${fetchedUser?.first_name} ${fetchedUser?.last_name}`}
+          : `Update for ${fetchedUser?.role_name} ${fetchedUser?.first_name} ${fetchedUser?.last_name}`}
       </DialogTitle>
       <DialogContent className="sm:max-w-[500px] lg:max-w-[600px]">
         {!loading && (

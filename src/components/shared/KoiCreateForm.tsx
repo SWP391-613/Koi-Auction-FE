@@ -33,7 +33,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
     name: "",
     base_price: "" as unknown as number, // This will show empty field instead of 0
     thumbnail: "",
-    gender: "FEMALE",
+    gender: "",
     length: "" as unknown as number, // This will show empty field instead of 0
     year_born: "" as unknown as number, // This will show empty field instead of 0
     description: "Enter description here...",
@@ -109,9 +109,17 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
       newErrors.length = "Length must be greater than 0 and less than 125";
     }
 
-    // Validate age
+    // Validate year born
+    if (!formData.year_born) {
+      newErrors.year_born = "Year born is required";
+    }
+
     if (formData.year_born < 0) {
-      newErrors.age = "Age cannot be negative";
+      newErrors.year_born = "Year born cannot be negative";
+    }
+
+    if (formData.year_born > new Date().getFullYear()) {
+      newErrors.year_born = "Year born cannot be in the future";
     }
 
     // Validate category
@@ -173,13 +181,32 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
               error={!!errors.name}
               helperText={errors.name}
             />
+            <FormControl fullWidth margin="normal" error={!!errors.gender}>
+              <Select
+                name="gender"
+                value={formData.gender}
+                onChange={handleInputChange}
+                displayEmpty
+              >
+                <MenuItem value="" disabled>
+                  Select Gender
+                </MenuItem>
+                <MenuItem value="MALE">Male</MenuItem>
+                <MenuItem value="FEMALE">Female</MenuItem>
+                <MenuItem value="UNKNOWN">Unknown</MenuItem>
+              </Select>
+              {errors.gender && <p style={{ color: "red" }}>{errors.gender}</p>}
+            </FormControl>
             <FormControl fullWidth margin="normal" error={!!errors.category_id}>
-              <InputLabel>Category</InputLabel>
               <Select
                 name="category_id"
                 value={formData.category_id}
                 onChange={handleInputChange}
+                displayEmpty
               >
+                <MenuItem value="" disabled>
+                  Select Category
+                </MenuItem>
                 {Object.entries(categoryMap).map(([id, name]) => (
                   <MenuItem key={id} value={Number(id)}>
                     {name}
@@ -257,25 +284,20 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
               onChange={handleInputChange}
             />
           </div>
-          <div className="mt-5">
-            <Button
-              onClick={() => {
-                setTimeout(() => {
-                  navigate("/breeders");
-                }, 1000);
-              }}
-            >
-              Back
-            </Button>
-            <Button onClick={handleSubmit} variant="contained" color="primary">
-              Create
-            </Button>
-          </div>
         </div>
         <div className="ml-10">
-          <Typography variant="h4">Preview</Typography>
           <AddKoiPreviewCart items={[formData]} />
         </div>
+      </div>
+      <div className="mt-3 ga-5 mx-auto">
+        <Button
+          onClick={handleSubmit}
+          className="w-[10rem] h-[3rem]"
+          variant="contained"
+          color="primary"
+        >
+          Submit
+        </Button>
       </div>
 
       <Snackbar

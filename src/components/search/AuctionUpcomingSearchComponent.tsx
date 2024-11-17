@@ -32,7 +32,7 @@ const AuctionUpcomingSearchComponent: React.FC<
           variant="h5"
           sx={{ textAlign: "left", marginBottom: "1rem" }}
         >
-          Search All Our Auction
+          Search All Our Upcoming Auction
         </Typography>
         <SearchBar
           value={query}
@@ -45,7 +45,7 @@ const AuctionUpcomingSearchComponent: React.FC<
           sx={{ textAlign: "left", marginTop: "1rem" }}
           color="error"
         >
-          *Note: Search on name, status, start date, end date,...
+          *Note: Search on name, start date, end date,...
         </Typography>
       </div>
       {loading && <p className="mt-2">Searching...</p>}

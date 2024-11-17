@@ -18,7 +18,7 @@ import { toast, ToastContainer } from "react-toastify";
 import AccountTransactionComponent from "~/components/shared/AccountTransactionComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { API_URL_DEPLOYMENT } from "~/constants/endPoints";
 import { useUserData } from "~/hooks/useUserData";
 import { UserResponse } from "~/types/users.type";
 import { formatDate, sendOtp, sendRequestUpdateRole } from "~/utils/apiUtils";
@@ -26,10 +26,6 @@ import { getCookie } from "~/utils/cookieUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import UserDetailDialog from "./UserDetailDialog";
-import { getUserCookieToken } from "~/utils/auth.utils";
-import { toast, ToastContainer } from "react-toastify";
-import { UserResponse } from "~/types/users.type";
-import { API_URL_DEPLOYMENT } from "~/constants/endPoints";
 
 const UserDetail: React.FC = () => {
   const { user, loading: userLoading, loading, error, setUser } = useUserData();

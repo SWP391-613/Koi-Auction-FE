@@ -36,7 +36,7 @@ const StaffDetail: React.FC = () => {
     }
 
     try {
-      const response = await axios.get(`API_URL_DEVELOPMENT/users/${userId}`, {
+      const response = await axios.get(`API_URL_DEPLOYMENT/users/${userId}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setFetchedUser(response.data); // Save fetched data to state

@@ -36,7 +36,7 @@ const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({
   useEffect(() => {
     const fetchAllBreeders = async () => {
       try {
-        const response = await axios.get(`API_URL_DEVELOPMENT/breeders`, {
+        const response = await axios.get(`API_URL_DEPLOYMENT/breeders`, {
           params: {
             page: 0,
             limit: 20,

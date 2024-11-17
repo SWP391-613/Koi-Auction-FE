@@ -96,15 +96,6 @@ const OrderManagement: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Typography
-        variant="h4"
-        component="h1"
-        gutterBottom
-        className="text-center"
-      >
-        Order Management
-      </Typography>
-
       <Box sx={{ my: 4 }}>
         <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
           <FormControl sx={{ minWidth: 200 }}>

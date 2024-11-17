@@ -1,5 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -19,7 +19,6 @@ import EditStaffDialog from "./EditStaffDialog";
 
 const StaffManagement = () => {
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
-
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [selectedStaffId, setSelectedStaffId] = useState<number | null>(null);
   const navigate = useNavigate();
@@ -50,11 +49,12 @@ const StaffManagement = () => {
     error,
     page,
     totalPages,
+    totalItems,
     handlePageChange,
     refetch,
   } = usePagination<Staff>({
     apiUrl: `${API_URL_DEVELOPMENT}/staffs`,
-    itemsPerPage: 8,
+    itemsPerPage: 20,
     accessToken,
   });
 
@@ -129,8 +129,10 @@ const StaffManagement = () => {
 
   return (
     <div className="m-5 overflow-x-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Staffs Management</h1>
+      <div className="mb-6 flex justify-between">
+        <div className="border-2 p-6 rounded-xl">
+          <Typography variant="h5">Total Staff: {totalItems}</Typography>
+        </div>
         <Button
           variant="contained"
           color="primary"
@@ -180,6 +182,9 @@ const StaffManagement = () => {
               <td className="px-4 py-3 text-sm">{staff.is_subscription}</td>
               <td className="px-4 py-3 text-sm">{staff.date_of_birth}</td>
               <td className="px-4 py-3 text-sm">{staff.account_balance}</td>
+              <td className="px-4 py-3 text-sm">{staff.auction_count}</td>
+              <td className="px-4 py-3 text-sm">{staff.created_at}</td>
+              <td className="px-4 py-3 text-sm">{staff.updated_at}</td>
               <td className="px-4 py-3 text-sm">
                 <div className="flex items-center space-x-4 text-sm">
                   <CrudButton

@@ -9,6 +9,7 @@ interface UsePaginationProps<T> {
 
 interface PaginatedResponse<T> {
   item: T[];
+  total_item: number;
   total_page: number;
 }
 
@@ -21,6 +22,7 @@ function usePagination<T>({
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
 
   // Create a function to fetch the paginated data
@@ -44,6 +46,7 @@ function usePagination<T>({
 
       if (data && Array.isArray(data.item)) {
         setItems(data.item);
+        setTotalItems(data.total_item);
         setTotalPages(data.total_page);
         setError(null); // Reset error state on successful fetch
       } else {
@@ -74,6 +77,7 @@ function usePagination<T>({
     loading,
     error,
     page,
+    totalItems,
     totalPages,
     handlePageChange,
     refetch: fetchItems,

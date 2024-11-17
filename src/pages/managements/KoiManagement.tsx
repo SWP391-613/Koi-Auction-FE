@@ -18,13 +18,15 @@ import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
-import { KoiDetailModel } from "~/types/kois.type";
+import { KoiDetailModel, QuantityKoiByGenderResponse } from "~/types/kois.type";
 import { createKoi, deleteKoiById, getKoiData } from "~/utils/apiUtils";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { createFormData, extractErrorMessage } from "~/utils/dataConverter";
 import PaginationComponent from "../../components/common/PaginationComponent";
 import BreederEditKoiDialog from "../kois/BreederEditKoiDialog";
 import { formatCurrency } from "~/utils/currencyUtils";
+import axios from "axios";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 
 const KoiManagement = () => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
@@ -34,7 +36,7 @@ const KoiManagement = () => {
   const navigate = useNavigate();
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const itemsPerPage = 8; // Adjusted to match the API limit parameter
+  const itemsPerPage = 20; // Adjusted to match the API limit parameter
   const [selectedKoiId, setSelectedKoiId] = useState<number | null>(null);
   const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false);
   const [newKoi, setNewKoi] = useState<Partial<KoiDetailModel>>({
@@ -44,6 +46,8 @@ const KoiManagement = () => {
     year_born: 0,
   });
   const [koiImage, setKoiImage] = useState<File | null>(null);
+  const [koiCountGender, setKoiCountGender] =
+    useState<QuantityKoiByGenderResponse | null>(null);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const handleSearchStateChange = (isActive: boolean) => {
     setIsSearchActive(isActive);
@@ -80,7 +84,25 @@ const KoiManagement = () => {
         setLoading(false); // Reset loading state
       }
     };
+
+    const fetchKoiGenderCount = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get<QuantityKoiByGenderResponse>(
+          `${API_URL_DEVELOPMENT}/kois/count-by-gender`,
+        );
+        setKoiCountGender(response.data);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchKois();
+    fetchKoiGenderCount();
   }, [page, itemsPerPage]);
 
   const handlePageChange = (
@@ -173,10 +195,25 @@ const KoiManagement = () => {
 
   return (
     <div className="m-5 overflow-x-auto">
-      <AllKoiSearchComponent onSearchStateChange={handleSearchStateChange} />
       <div className="">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Koi Management</h1>
+        <div className="mb-6 flex justify-between">
+          <div className="border-2 p-6 rounded-xl">
+            <Typography variant="h5">
+              Total: {koiCountGender?.total} koi
+            </Typography>
+            <Typography variant="body1">
+              {" "}
+              Male: {koiCountGender?.male}
+            </Typography>
+            <Typography variant="body1">
+              {" "}
+              Female: {koiCountGender?.female}
+            </Typography>
+            <Typography variant="body1">
+              {" "}
+              Unknown: {koiCountGender?.unknown}
+            </Typography>
+          </div>
           <Button
             variant="contained"
             color="primary"
@@ -186,7 +223,7 @@ const KoiManagement = () => {
             Add New Koi
           </Button>
         </div>
-        <div className="-mx-4 overflow-hidden px-4 py-4 sm:-mx-8 sm:px-8">
+        <div className="px-4 py-4 sm:-mx-8 sm:px-8">
           <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
             <table className="min-w-full leading-normal">
               <TableHeaderComponent headers={KOI_MANAGEMENT_HEADER} />

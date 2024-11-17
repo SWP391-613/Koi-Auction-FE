@@ -31,14 +31,14 @@ interface StaffApiResponse {
   item: Staff[];
 }
 
-interface AddAuctionDialogProps {
+interface AddBreederDialogProps {
   open: boolean;
   onClose: () => void;
   newAuction: Partial<AuctionModel>;
   onInputChange: (name: string, value: unknown) => void;
 }
 
-const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
+const AddBreederDialog: React.FC<AddBreederDialogProps> = ({
   open,
   onClose,
   newAuction,
@@ -290,4 +290,4 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
   );
 };
 
-export default AddAuctionDialog;
+export default AddBreederDialog;

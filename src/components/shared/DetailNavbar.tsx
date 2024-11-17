@@ -35,6 +35,10 @@ const DetailNavbar = () => {
       manager: [
         { label: "My Profile", path: basePath },
         { label: "Auction Management", path: `${basePath}/auctions` },
+        { label: "Koi Management", path: `${basePath}/kois` },
+        { label: "Breeder Management", path: `${basePath}/breeders` },
+        { label: "Staff Management", path: `${basePath}/staffs` },
+        { label: "Member Management", path: `${basePath}/members` },
         { label: "Order Management", path: `${basePath}/orders` },
         { label: "Payment Management", path: `${basePath}/payments` },
       ],

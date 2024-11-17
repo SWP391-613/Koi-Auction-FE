@@ -61,7 +61,7 @@ const EditStaffDialog: React.FC<EditStaffDialogProps> = ({
     if (!accessToken) return;
 
     try {
-      const staffData = await getStaffData(staffId, accessToken); // Use the utility function
+      const staffData = await getStaffData(staffId); // Use the utility function
       setStaff(staffData);
     } catch (error) {
       const errorMessage = extractErrorMessage(

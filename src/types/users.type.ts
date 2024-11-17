@@ -16,6 +16,8 @@ export type UserBase = {
   google_account_id: number;
   role_name: string;
   account_balance: number;
+  created_at: string;
+  updated_at: string;
 };
 
 export type LoginDTO = {
@@ -64,8 +66,12 @@ export type StaffRegisterDTO = Omit<UserRegisterBase, "password"> & {
 export type Breeder = UserBase & {
   koi_count: number;
 };
-export type Member = UserBase;
-export type Staff = UserBase;
+export type Member = UserBase & {
+  order_count: number;
+};
+export type Staff = UserBase & {
+  auction_count: number;
+};
 
 export type UserDetailsResponse = UserBase & {
   created_at: string | null;

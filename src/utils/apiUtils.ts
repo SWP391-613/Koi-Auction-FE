@@ -6,7 +6,12 @@ import { BidRequest } from "~/pages/auctions/KoiBidding";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/detail/breeder/BreederDetail";
 import { FeedbackRequest } from "~/pages/detail/member/Feedback";
 import { AuctionKoi, BidMethod } from "~/types/auctionkois.type";
-import { AddNewAuctionDTO, AuctionModel } from "~/types/auctions.type";
+import {
+  AddNewAuctionDTO,
+  AuctionModel,
+  AuctionStatusCount,
+  QuantityKoiInAuctionByBidMethod,
+} from "~/types/auctions.type";
 import { KoiDetailModel, UpdateKoiDTO } from "~/types/kois.type";
 import {
   Order,
@@ -769,12 +774,9 @@ export const updateStaff = async (
   }
 };
 
-export const getStaffData = async (
-  staffId: number,
-  token: string,
-): Promise<any> => {
+export const getStaffData = async (staffId: number): Promise<any> => {
   const response = await axios.get(`${API_URL_DEVELOPMENT}/staffs/${staffId}`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${getUserCookieToken()}` },
   });
 
   if (response.status !== 200) {
@@ -1296,7 +1298,7 @@ export const getUserHighestBidInAuctionKoi = async (
 
 export const sendRequestUpdateRole = async (role: string, purpose: string) => {
   try {
-    const response = await axios.get(
+    const response = await axios.post(
       `${API_URL_DEVELOPMENT}/mail/update-role?updateRole=${role}`,
       { purpose },
       {
@@ -1338,6 +1340,43 @@ export const endAuctionEmergency = async (auctionId: number) => {
       );
     } else {
       throw new Error("An unexpected error occurred");
+    }
+  }
+};
+
+export const fetchQuantityKoiInAuctionByBidMethod = async () => {
+  try {
+    const response = await axios.get<QuantityKoiInAuctionByBidMethod>(
+      `${API_URL_DEVELOPMENT}/auctionkois/count-by-bid-method`,
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Error fetch quantity koi in auction by bid method",
+        error.response?.data,
+      );
+      throw new Error(
+        error.response?.data?.message ||
+          "An error occurred during fetch quantity koi in auction by bid method",
+      );
+    }
+  }
+};
+
+export const fetchAuctionStatusCount = async () => {
+  try {
+    const response = await axios.get<AuctionStatusCount>(
+      `${API_URL_DEVELOPMENT}/auctions/count-by-auction-status`,
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetch auction status count", error.response?.data);
+      throw new Error(
+        error.response?.data?.message ||
+          "An error occurred during fetch auction status count",
+      );
     }
   }
 };

@@ -1,5 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Alert, Button, Container } from "@mui/material";
+import { Alert, Button, Container, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import PaginationComponent from "~/components/common/PaginationComponent";
@@ -17,8 +17,9 @@ const MemberManagement = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const itemsPerPage = 8; // A
+  const itemsPerPage = 20;
 
   useEffect(() => {
     const fetchMembers = async () => {
@@ -29,6 +30,7 @@ const MemberManagement = () => {
 
         if (data && Array.isArray(data.item)) {
           setMembers(data.item);
+          setTotalItems(data.total_item);
           setTotalPages(data.total_page);
         } else {
           throw new Error("Unexpected data structure");
@@ -100,9 +102,11 @@ const MemberManagement = () => {
   }
 
   return (
-    <div className="w-full overflow-x-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Member Management</h1>
+    <div className="m-5 overflow-x-auto">
+      <div className="mb-6 flex justify-between">
+        <div className="border-2 p-6 rounded-xl">
+          <Typography variant="h5">Total Member: {totalItems}</Typography>
+        </div>
         <Button
           variant="contained"
           color="primary"
@@ -161,6 +165,9 @@ const MemberManagement = () => {
               <td className="px-4 py-3 text-sm">
                 {formatCurrency(member.account_balance)}
               </td>
+              <td className="px-4 py-3 text-sm">{member.order_count}</td>
+              <td className="px-4 py-3 text-sm">{member.created_at}</td>
+              <td className="px-4 py-3 text-sm">{member.updated_at}</td>
               <td className="px-4 py-3 text-sm">
                 <div className="flex items-center space-x-4 text-sm">
                   <CrudButton

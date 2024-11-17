@@ -3,6 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   Button,
+  Container,
   Paper,
   Table,
   TableBody,
@@ -10,20 +11,27 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PaginationComponent from "~/components/common/PaginationComponent";
-import AuctionSearchComponent from "~/components/search/AuctionSearchComponent";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
 import { AuctionKoi } from "~/types/auctionkois.type";
-import { AuctionModel } from "~/types/auctions.type";
+import {
+  AuctionModel,
+  AuctionStatusCount,
+  QuantityKoiInAuctionByBidMethod,
+} from "~/types/auctions.type";
 import {
   deleteAuction,
   endAuctionEmergency,
   fetchAuctionKoi,
   fetchAuctions,
+  fetchAuctionStatusCount,
+  fetchQuantityKoiInAuctionByBidMethod,
   updateAuction,
 } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
@@ -36,7 +44,7 @@ export const AuctionsManagement: React.FC = () => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true);
-  const itemsPerPage = 9;
+  const itemsPerPage = 20;
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [newAuction, setNewAuction] = useState({
@@ -50,10 +58,11 @@ export const AuctionsManagement: React.FC = () => {
     null,
   );
   const [auctionKois, setAuctionKois] = useState<AuctionKoi[]>([]);
-  const [isSearchActive, setIsSearchActive] = useState(false);
-  const handleSearchStateChange = (isActive: boolean) => {
-    setIsSearchActive(isActive);
-  };
+  const [loading, setLoading] = useState<boolean>(true);
+  const [koiInAuctionByBidMethod, setKoiInAuctionByBidMethod] =
+    useState<QuantityKoiInAuctionByBidMethod | null>(null);
+  const [auctionStatusCount, setAuctionStatusCount] =
+    useState<AuctionStatusCount | null>(null);
 
   const formatDateForInput = (dateString: string): string => {
     if (!dateString) return "";
@@ -75,6 +84,7 @@ export const AuctionsManagement: React.FC = () => {
     }
 
     const loadAuctions = async () => {
+      setLoading(true);
       try {
         const fetchedAuctions = await fetchAuctions(
           currentPage - 1,
@@ -87,10 +97,52 @@ export const AuctionsManagement: React.FC = () => {
       } catch (error) {
         console.error("Error fetching auctions:", error);
         setAuctions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const loadQuantityKoiInAuctionByBidMethod = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchQuantityKoiInAuctionByBidMethod();
+
+        if (data) {
+          setKoiInAuctionByBidMethod(data);
+        } else {
+          setKoiInAuctionByBidMethod(null);
+        }
+      } catch (error) {
+        console.error(
+          "Error fetching quantity koi in auction by bid method:",
+          error,
+        );
+        setKoiInAuctionByBidMethod(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const loadAuctionStatusCount = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchAuctionStatusCount();
+        if (data) {
+          setAuctionStatusCount(data);
+        } else {
+          setAuctionStatusCount(null);
+        }
+      } catch (error) {
+        console.error("Error fetching auction status count:", error);
+        setAuctionStatusCount(null);
+      } finally {
+        setLoading(false);
       }
     };
 
     loadAuctions();
+    loadQuantityKoiInAuctionByBidMethod();
+    loadAuctionStatusCount();
   }, [currentPage, token]);
 
   const handlePageChange = (
@@ -99,6 +151,14 @@ export const AuctionsManagement: React.FC = () => {
   ) => {
     setCurrentPage(page);
   };
+
+  if (loading) {
+    return (
+      <Container className="flex justify-center items-center h-screen">
+        <LoadingComponent />
+      </Container>
+    );
+  }
 
   const handleAddAuction = () => {
     setOpenAddDialog(true);
@@ -222,97 +282,125 @@ export const AuctionsManagement: React.FC = () => {
   };
 
   return (
-    <div className="m-5">
-      <AuctionSearchComponent onSearchStateChange={handleSearchStateChange} />
-      <div className="mt-3">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Auctions Management</h1>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            onClick={handleAddAuction}
-          >
-            Add New Auction
-          </Button>
+    <div className="m-5 overflow-x-auto">
+      <div className="mb-6 flex justify-between">
+        <div className="flex flex-col gap-5 border-2 p-6 rounded-xl">
+          <div>
+            <Typography variant="h5">
+              Total Auctions: {auctionStatusCount?.total}
+            </Typography>
+            <Typography variant="body1">
+              Upcoming Auctions: {auctionStatusCount?.upcoming}
+            </Typography>
+            <Typography variant="body1">
+              Ongoing Auctions: {auctionStatusCount?.ongoing}
+            </Typography>
+            <Typography variant="body1">
+              Ended Auctions: {auctionStatusCount?.ended}
+            </Typography>
+          </div>
+          <div>
+            <Typography variant="h5">
+              Total Koi In Auction: {koiInAuctionByBidMethod?.total}
+            </Typography>
+            <Typography variant="body1">
+              Total Koi In Ascending Bid:{" "}
+              {koiInAuctionByBidMethod?.ascending_bid}
+            </Typography>
+            <Typography variant="body1">
+              Total Koi In Descending Bid:{" "}
+              {koiInAuctionByBidMethod?.descending_bid}
+            </Typography>
+            <Typography variant="body1">
+              Total Koi In Fixed Price: {koiInAuctionByBidMethod?.fixed_price}
+            </Typography>
+          </div>
         </div>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={handleAddAuction}
+        >
+          Add New Auction
+        </Button>
+      </div>
 
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell>Auctioneer ID</TableCell>
-                <TableCell>Start Time</TableCell>
-                <TableCell>End Time</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Actions</TableCell>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell>Auctioneer ID</TableCell>
+              <TableCell>Start Time</TableCell>
+              <TableCell>End Time</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {auctions.map((auction) => (
+              <TableRow key={auction.id}>
+                <TableCell>{auction.id}</TableCell>
+                <TableCell>{auction.title}</TableCell>
+                <TableCell>{auction.auctioneer_id}</TableCell>
+                <TableCell>
+                  {new Date(auction.start_time).toLocaleString()}
+                </TableCell>
+                <TableCell>
+                  {new Date(auction.end_time).toLocaleString()}
+                </TableCell>
+                <TableCell>{auction.status}</TableCell>
+                <TableCell>
+                  <Button
+                    startIcon={<EditIcon />}
+                    onClick={() => handleEditAuction(auction)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    startIcon={<DeleteIcon />}
+                    color="error"
+                    onClick={() => handleDeleteAuction(auction.id!)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {auctions.map((auction) => (
-                <TableRow key={auction.id}>
-                  <TableCell>{auction.id}</TableCell>
-                  <TableCell>{auction.title}</TableCell>
-                  <TableCell>{auction.auctioneer_id}</TableCell>
-                  <TableCell>
-                    {new Date(auction.start_time).toLocaleString()}
-                  </TableCell>
-                  <TableCell>
-                    {new Date(auction.end_time).toLocaleString()}
-                  </TableCell>
-                  <TableCell>{auction.status}</TableCell>
-                  <TableCell>
-                    <Button
-                      startIcon={<EditIcon />}
-                      onClick={() => handleEditAuction(auction)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      startIcon={<DeleteIcon />}
-                      color="error"
-                      onClick={() => handleDeleteAuction(auction.id!)}
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-        <div className="mt-4">
-          <PaginationComponent
-            totalPages={hasMorePages ? currentPage + 1 : currentPage}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
-        </div>
-
-        {/* Add Auction Dialog */}
-        <AddAuctionDialog
-          open={openAddDialog}
-          onClose={handleCloseAddDialog}
-          newAuction={newAuction}
-          onInputChange={handleInputChange}
-        />
-
-        <EditAuctionDialog
-          open={openEditDialog}
-          onClose={handleCloseEditDialog}
-          editingAuction={editingAuction}
-          handleEndAuction={handleEndAuction}
-          auctionKois={auctionKois}
-          onInputChange={handleEditInputChange}
-          onSubmit={handleSubmitEditAuction}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          formatDateForInput={formatDateForInput}
+      <div className="mt-4">
+        <PaginationComponent
+          totalPages={hasMorePages ? currentPage + 1 : currentPage}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
         />
       </div>
+
+      {/* Add Auction Dialog */}
+      <AddAuctionDialog
+        open={openAddDialog}
+        onClose={handleCloseAddDialog}
+        newAuction={newAuction}
+        onInputChange={handleInputChange}
+      />
+
+      <EditAuctionDialog
+        open={openEditDialog}
+        onClose={handleCloseEditDialog}
+        editingAuction={editingAuction}
+        handleEndAuction={handleEndAuction}
+        auctionKois={auctionKois}
+        onInputChange={handleEditInputChange}
+        onSubmit={handleSubmitEditAuction}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        formatDateForInput={formatDateForInput}
+      />
       <ToastContainer />
     </div>
   );

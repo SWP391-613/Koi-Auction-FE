@@ -1,23 +1,27 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Alert, Button, Container } from "@mui/material";
+import { Alert, Button, Container, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import LoadingComponent from "~/components/shared/LoadingComponent";
+import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { BREEDER_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { Breeder } from "~/types/users.type";
 import { fetchBreedersData } from "~/utils/apiUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
-import PaginationComponent from "~/components/common/PaginationComponent";
+import AddBreederDialog from "../detail/breeder/AddBreederDialog";
+import EditBreederDialog from "../detail/breeder/EditBreederDialog";
 
 const BreederManagement = () => {
   const [breeders, setBreeders] = useState<Breeder[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const itemsPerPage = 8; // Adjusted to match the API limit parameter
+  const [openAddDialog, setOpenAddDialog] = useState(false);
+  const itemsPerPage = 20;
 
   useEffect(() => {
     const fetchBreeders = async () => {
@@ -28,6 +32,7 @@ const BreederManagement = () => {
 
         if (data && Array.isArray(data.item)) {
           setBreeders(data.item);
+          setTotalItems(data.total_item);
           setTotalPages(data.total_page);
         } else {
           setError("Unexpected data structure from API");
@@ -54,8 +59,8 @@ const BreederManagement = () => {
     setPage(value);
   };
 
-  const handleCreate = (breeder: Breeder) => {
-    alert("Create new breeder");
+  const handleCreate = () => {
+    setOpenAddDialog(true);
   };
 
   const handleView = (id: number) => {
@@ -88,8 +93,10 @@ const BreederManagement = () => {
 
   return (
     <div className="m-5 overflow-x-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Breeder Management</h1>
+      <div className="mb-6 flex justify-between">
+        <div className="border-2 p-6 rounded-xl">
+          <Typography variant="h5">Total Breeders: {totalItems}</Typography>
+        </div>
         <Button
           variant="contained"
           color="primary"
@@ -145,6 +152,9 @@ const BreederManagement = () => {
               </td>
               <td className="px-4 py-3 text-sm">{breeder.is_subscription}</td>
               <td className="px-4 py-3 text-sm">{breeder.account_balance}</td>
+              <td className="px-4 py-3 text-sm">{breeder.koi_count}</td>
+              <td className="px-4 py-3 text-sm">{breeder.created_at}</td>
+              <td className="px-4 py-3 text-sm">{breeder.updated_at}</td>
               <td className="px-4 py-3 text-sm">
                 <div className="flex items-center space-x-4 text-sm">
                   <CrudButton
@@ -177,6 +187,26 @@ const BreederManagement = () => {
           onPageChange={handlePageChange}
         />
       </div>
+
+      {/* <AddBreederDialog
+          open={openAddDialog}
+          onClose={handleCloseAddDialog}
+          newAuction={newAuction}
+          onInputChange={handleInputChange}
+        />
+
+        <EditBreederDialog
+          open={openEditDialog}
+          onClose={handleCloseEditDialog}
+          editingAuction={editingAuction}
+          handleEndAuction={handleEndAuction}
+          auctionKois={auctionKois}
+          onInputChange={handleEditInputChange}
+          onSubmit={handleSubmitEditAuction}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          formatDateForInput={formatDateForInput}
+        /> */}
     </div>
   );
 };

@@ -10,7 +10,7 @@ import VerifyKoiList from "~/pages/kois/VerifyKoiList";
 import { sendOtp } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import "./StaffDetail.scss";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { UserResponse } from "~/types/users.type";
 import UserDetailDialog from "../member/UserDetailDialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -83,7 +83,6 @@ const StaffDetail: React.FC = () => {
   return (
     <div className="flex flex-col justify-around m-10">
       <AccountVerificationAlert user={user} />
-      <UserDetailDialog openModal={openModal} handleClose={handleClose} />
       <div className="user-detail-content">
         <div className="user-sidebar">
           <img
@@ -126,12 +125,14 @@ const StaffDetail: React.FC = () => {
             </div>
           </div>
         </div>
+        <UserDetailDialog openModal={openModal} handleClose={handleClose} />
         {user.status_name === "VERIFIED" && (
           <div>
             <VerifyKoiList />
             <AuctionsManagement />
           </div>
         )}
+        <ToastContainer />
       </div>
     </div>
   );

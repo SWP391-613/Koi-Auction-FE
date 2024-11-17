@@ -34,3 +34,10 @@ export type QuantityKoiInAuctionByBidMethod = {
   descending_bid: number;
   fixed_price: number;
 };
+
+export type AuctionStatusCount = {
+  total: number;
+  upcoming: number;
+  ongoing: number;
+  ended: number;
+};

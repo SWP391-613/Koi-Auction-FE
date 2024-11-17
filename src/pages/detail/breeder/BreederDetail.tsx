@@ -2,7 +2,7 @@ import { Button, Divider, Rating, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import KoiBreederViewGrid from "~/components/search/KoiBreederViewGrid";
 import KoiOwnerSearchComponent from "~/components/search/KoiOwnerSearchComponent";
@@ -312,6 +312,7 @@ const BreederDetail: React.FC = () => {
         renderActions={renderCrudButtons}
       />
       <ScrollToTop smooth />
+      <ToastContainer />
     </div>
   );
 };

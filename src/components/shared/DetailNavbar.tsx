@@ -25,20 +25,18 @@ const DetailNavbar = () => {
         { label: "Payments", path: `${basePath}/payments` },
       ],
       staff: [
-        { label: "Dashboard", path: basePath },
-        { label: "Auctions", path: `${basePath}/auctions` },
+        { label: "My Profile", path: basePath },
+        { label: "Auction Management", path: `${basePath}/auctions` },
         { label: "Verify Kois", path: `${basePath}/verify/kois` },
-        { label: "Orders", path: `${basePath}/orders` },
-        { label: "Payments", path: `${basePath}/payments` },
+        { label: "Order Management", path: `${basePath}/orders` },
+        { label: "Payment Management", path: `${basePath}/payments` },
         { label: "Notifications", path: `${basePath}/send-notifications` },
       ],
       manager: [
-        { label: "Dashboard", path: basePath },
-        { label: "Auctions", path: `${basePath}/auctions` },
-        { label: "Verify Kois", path: `${basePath}/verify/kois` },
-        { label: "Orders", path: `${basePath}/orders` },
-        { label: "Payments", path: `${basePath}/payments` },
-        { label: "Notifications", path: `${basePath}/send-notifications` },
+        { label: "My Profile", path: basePath },
+        { label: "Auction Management", path: `${basePath}/auctions` },
+        { label: "Order Management", path: `${basePath}/orders` },
+        { label: "Payment Management", path: `${basePath}/payments` },
       ],
     };
 

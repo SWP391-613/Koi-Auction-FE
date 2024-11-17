@@ -103,11 +103,13 @@ const StaffDetail: React.FC = () => {
         </div>
         <div className="user-main">
           <div className="user-info-grid">
-            <FontAwesomeIcon
-              icon={faEdit}
-              onClick={handleUpdate}
-              className="text-2xl text-gray-400 hover:cursor-pointer"
-            />
+            {user.status_name === "VERIFIED" && (
+              <FontAwesomeIcon
+                icon={faEdit}
+                onClick={handleUpdate}
+                className="text-2xl text-gray-400 hover:cursor-pointer"
+              />
+            )}
             <div className="info-item">
               <p className="info-label">Email</p>
               <p className="info-value">{user.email}</p>
@@ -122,30 +124,6 @@ const StaffDetail: React.FC = () => {
               <p className="info-label">Address</p>
               <p className="info-value">{user.address || "Not provided"}</p>
             </div>
-          </div>
-          <div className="update-field">
-            <select
-              value={updateField}
-              onChange={(e) => setUpdateField(e.target.value)}
-              className="update-select"
-            >
-              <option value="">Select field to update</option>
-              <option value="first_name">First Name</option>
-              <option value="last_name">Last Name</option>
-              <option value="email">Email</option>
-              <option value="phone_number">Phone</option>
-              <option value="address">Address</option>
-            </select>
-            <input
-              type="text"
-              value={updateValue}
-              onChange={(e) => setUpdateValue(e.target.value)}
-              placeholder="Enter new value"
-              className="update-input"
-            />
-            <Button onClick={handleUpdate} variant="contained" color="primary">
-              Update
-            </Button>
           </div>
         </div>
         {user.status_name === "VERIFIED" && (

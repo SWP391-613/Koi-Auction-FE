@@ -151,7 +151,7 @@ const LoginForm = () => {
         navigate(routeUserToEachPage(response.roles[0]));
       }, 2000);
     } catch (error) {
-      toast.error("Login failed");
+      toast.error("Wrong email or password");
     }
   };
 

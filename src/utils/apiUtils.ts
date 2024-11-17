@@ -1294,10 +1294,11 @@ export const getUserHighestBidInAuctionKoi = async (
   return response.data;
 };
 
-export const sendRequestUpdateRole = async (role: string) => {
+export const sendRequestUpdateRole = async (role: string, purpose: string) => {
   try {
-    const response = await axios.get(
+    const response = await axios.post(
       `${API_URL_DEVELOPMENT}/mail/update-role?updateRole=${role}`,
+      { purpose },
       {
         headers: {
           Authorization: `Bearer ${getUserCookieToken()}`,
@@ -1307,11 +1308,10 @@ export const sendRequestUpdateRole = async (role: string) => {
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error("Error send update role email", error.response?.data);
-      throw new Error(
-        error.response?.data?.message ||
-          "An error occurred during send update role email",
-      );
+      const errorMessage =
+        error.response?.data?.reason ||
+        "An error occurred during send email update role";
+      throw new Error(errorMessage);
     } else {
       throw new Error("An unexpected error occurred");
     }

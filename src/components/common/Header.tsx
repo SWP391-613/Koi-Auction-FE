@@ -82,9 +82,9 @@ const Header = () => {
           </div>
         </div>
       </motion.header>
-      
+
       {user && (
-        <VerifyPopup 
+        <VerifyPopup
           open={isVerifyPopupOpen}
           onClose={() => setIsVerifyPopupOpen(false)}
           userId={user.id}

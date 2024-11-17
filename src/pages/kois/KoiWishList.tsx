@@ -48,10 +48,10 @@ const KoiWishList: React.FC = () => {
 
     try {
       setIsLoading(true);
-      const API_URL_DEPLOYMENT =
+      const API_URL_DEVELOPMENT =
         import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
       const response = await axios.get<KoisResponse>(
-        `${API_URL_DEPLOYMENT}/breeders/kois/status`,
+        `${API_URL_DEVELOPMENT}/breeders/kois/status`,
         {
           params: {
             breeder_id: userId,

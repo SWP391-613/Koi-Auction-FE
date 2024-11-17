@@ -36,12 +36,9 @@ const StaffDetail: React.FC = () => {
     }
 
     try {
-      const response = await axios.get(
-        `http://localhost:4000/api/v1/users/${userId}`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        },
-      );
+      const response = await axios.get(`API_URL_DEVELOPMENT/users/${userId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
       setFetchedUser(response.data); // Save fetched data to state
       setOpenModal(true); // Open the modal to display the data
     } catch (error) {

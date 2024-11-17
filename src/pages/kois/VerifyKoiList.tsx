@@ -41,7 +41,7 @@ const VerifyKoiList: React.FC = () => {
     setLoading(true);
     try {
       await axios.put(
-        `${API_URL_DEPLOYMENT}/kois/status/${id}`,
+        `${API_URL_DEVELOPMENT}/kois/status/${id}`,
         {
           tracking_status: "VERIFIED",
         },
@@ -69,7 +69,7 @@ const VerifyKoiList: React.FC = () => {
 
     try {
       await axios.put(
-        `${API_URL_DEPLOYMENT}/kois/status/${id}`,
+        `${API_URL_DEVELOPMENT}/kois/status/${id}`,
         {
           tracking_status: "REJECTED",
         },
@@ -98,10 +98,10 @@ const VerifyKoiList: React.FC = () => {
 
     try {
       setLoading(true);
-      const API_URL_DEPLOYMENT =
+      const API_URL_DEVELOPMENT =
         import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
       const response = await axios.get<KoisResponse>(
-        `${API_URL_DEPLOYMENT}/kois/status`,
+        `${API_URL_DEVELOPMENT}/kois/status`,
         {
           params: {
             status: "UNVERIFIED",

@@ -62,13 +62,13 @@ const Header = () => {
           h-16
           bg-gray-300
           shadow-sm
-          z-10
+          z-50
           transition-all
           duration-300
         `}
       >
         <div className="flex items-center justify-around h-full px-6">
-          <div className="mr-4">
+          <div className="mr-4 hidden md:block">
             <Clock />
           </div>
           <div className="flex items-center space-x-6 ">

@@ -17,7 +17,7 @@
   letter-spacing: -1px;
   border: 0;
   position: relative;
-  width: 220px;
+  width: 250px;
   height: 80px;
   /* Xóa transform để nút nằm thẳng */
   /* transform: rotate(353deg) skewX(4deg); */
@@ -127,6 +127,7 @@
 }
 
 .char {
+  font-size: large;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;

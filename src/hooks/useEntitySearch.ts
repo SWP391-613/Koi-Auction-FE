@@ -3,7 +3,7 @@ import axios from "axios";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { OrderResponse, OrderStatus } from "~/types/orders.type";
 import { PaymentResponse, PaymentStatus } from "~/types/payments.type";
-import { API_URL_DEPLOYMENT } from "~/constants/endPoints";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 
 interface SearchResult<T> {
   item: T[];
@@ -109,7 +109,7 @@ export const useEntitySearch = <T, StatusType>({
 
 export const useOrderSearch = (debounceTime = 500) => {
   return useEntitySearch<OrderResponse, OrderStatus>({
-    endpoint: `${API_URL_DEPLOYMENT}/orders/get-orders-by-keyword-and-status`,
+    endpoint: `${API_URL_DEVELOPMENT}/orders/get-orders-by-keyword-and-status`,
     initialStatus: OrderStatus.ALL,
     debounceTime,
   });
@@ -117,7 +117,7 @@ export const useOrderSearch = (debounceTime = 500) => {
 
 export const usePaymentSearch = (debounceTime = 500) => {
   return useEntitySearch<PaymentResponse, PaymentStatus>({
-    endpoint: `${API_URL_DEPLOYMENT}/payments/get-payments-by-keyword-and-status`,
+    endpoint: `${API_URL_DEVELOPMENT}/payments/get-payments-by-keyword-and-status`,
     initialStatus: PaymentStatus.ALL,
     debounceTime,
   });

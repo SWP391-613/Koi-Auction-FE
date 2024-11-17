@@ -4,7 +4,6 @@ import PaginationComponent from "../common/PaginationComponent";
 import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
 import { useAllKoiSearch } from "~/hooks/useSearch";
-import SearchKoiBar from "./SearchKoiBar";
 
 interface AllKoiOwnerhComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
@@ -32,7 +31,7 @@ const AllKoiSearchComponent: React.FC<AllKoiOwnerhComponentProps> = () => {
         >
           Search All Koi
         </Typography>
-        <SearchKoiBar
+        <SearchBar
           value={query}
           onChange={setQuery}
           loading={loading}

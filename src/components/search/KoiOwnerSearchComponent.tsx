@@ -5,7 +5,6 @@ import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
 import { useKoiOwnerSearch } from "~/hooks/useSearch";
 import { KoiDetailModel } from "~/types/kois.type";
-import SearchKoiBar from "./SearchKoiBar";
 
 interface KoiOwnerSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
@@ -45,7 +44,7 @@ const KoiOwnerSearchComponent: React.FC<KoiOwnerSearchComponentProps> = ({
         >
           Search Koi
         </Typography>
-        <SearchKoiBar
+        <SearchBar
           value={query}
           onChange={setQuery}
           loading={loading}

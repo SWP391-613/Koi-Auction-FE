@@ -4,7 +4,6 @@ import PaginationComponent from "../common/PaginationComponent";
 import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
 import { useKoiOwnerSearchNotAuth } from "~/hooks/useSearch";
-import SearchKoiBar from "./SearchKoiBar";
 
 interface KoiOwnerSearchNotAuthComponentProps {
   owner_id: number;
@@ -39,7 +38,7 @@ const KoiOwnerSearchNotAuthComponent: React.FC<
         >
           Search Breeder's Koi
         </Typography>
-        <SearchKoiBar
+        <SearchBar
           value={query}
           onChange={setQuery}
           loading={loading}

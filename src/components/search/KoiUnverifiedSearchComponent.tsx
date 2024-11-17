@@ -5,7 +5,6 @@ import { KoiDetailModel } from "~/types/kois.type";
 import PaginationComponent from "../common/PaginationComponent";
 import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
-import SearchKoiBar from "./SearchKoiBar";
 
 interface KoiUnverifiedSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
@@ -38,7 +37,7 @@ const KoiUnverifiedSearchComponent: React.FC<
         >
           Search Unverified Koi
         </Typography>
-        <SearchKoiBar
+        <SearchBar
           value={query}
           onChange={setQuery}
           loading={loading}

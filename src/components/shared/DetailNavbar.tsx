@@ -13,7 +13,7 @@ const DetailNavbar = () => {
     const basePath = `/${user.role_name}s`;
     const links = {
       member: [
-        { label: "Profile", path: `users/${user.id}` },
+        { label: "My Profile", path: `users/${user.id}` },
         { label: "Orders", path: "users/orders" },
         { label: "Payments", path: "users/payments" },
       ],

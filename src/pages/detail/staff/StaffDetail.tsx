@@ -151,10 +151,12 @@ const StaffDetail: React.FC = () => {
             </Button>
           </div>
         </div>
-      </div>
-      <div>
-        <VerifyKoiList />
-        <AuctionsManagement />
+        {user.status_name === "VERIFIED" && (
+          <div>
+            <VerifyKoiList />
+            <AuctionsManagement />
+          </div>
+        )}
       </div>
     </div>
   );

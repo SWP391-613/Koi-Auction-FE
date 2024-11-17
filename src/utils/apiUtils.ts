@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { format, isToday, isTomorrow, isYesterday } from "date-fns";
 import { Bid } from "~/components/koibiddingdetail/BiddingHistory";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { API_URL_DEPLOYMENT } from "~/constants/endPoints";
 import { BidRequest } from "~/pages/auctions/KoiBidding";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/detail/breeder/BreederDetail";
 import { FeedbackRequest } from "~/pages/detail/member/Feedback";
@@ -39,7 +39,7 @@ import { getUserCookieToken } from "./auth.utils";
 export const login = async (payload: LoginDTO): Promise<UserLoginResponse> => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/users/login`,
+      `${API_URL_DEPLOYMENT}/users/login`,
       payload,
     );
     return response.data;
@@ -71,7 +71,7 @@ export const register = async (payload: UserRegisterDTO) => {
   };
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/users/register`,
+      `${API_URL_DEPLOYMENT}/users/register`,
       fullData,
     );
     console.log("Data ne: " + JSON.stringify(response));
@@ -122,7 +122,7 @@ export const createNewAuction = async (
 ): Promise<AddNewAuctionDTO> => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/auctions`,
+      `${API_URL_DEPLOYMENT}/auctions`,
       newAuction,
       {
         headers: {
@@ -158,7 +158,7 @@ export const fetchAuctions = async (
     //   throw new Error("You are not logged in");
     // }
 
-    const response = await axios.get(`${API_URL_DEVELOPMENT}/auctions`, {
+    const response = await axios.get(`${API_URL_DEPLOYMENT}/auctions`, {
       params: { page, limit },
     });
 
@@ -196,7 +196,7 @@ export const fetchAuctionsByStatus = async (
     // }
 
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}/auctions/koi_register`,
+      `${API_URL_DEPLOYMENT}/auctions/koi_register`,
       {
         params: { page, limit, status },
         headers: {
@@ -232,7 +232,7 @@ export const fetchAuctionById = async (
   id: number,
 ): Promise<AuctionModel | null> => {
   try {
-    const response = await axios.get(`${API_URL_DEVELOPMENT}/auctions/${id}`);
+    const response = await axios.get(`${API_URL_DEPLOYMENT}/auctions/${id}`);
     return createAuctionFromApi(response.data);
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -252,7 +252,7 @@ export const fetchAuctionKoi = async (
 ): Promise<AuctionKoi[]> => {
   try {
     const response = await axios.get<AuctionKoi[]>(
-      `${API_URL_DEVELOPMENT}/auctionkois/auction/${auctionId}`,
+      `${API_URL_DEPLOYMENT}/auctionkois/auction/${auctionId}`,
     );
     return response.data;
   } catch (error) {
@@ -276,7 +276,7 @@ export const fetchKoisOfBreeder = async (
 ): Promise<KoisOfBreeder | null> => {
   try {
     const response = await axios.get<KoisOfBreeder>(
-      `${API_URL_DEVELOPMENT}/breeders/kois`,
+      `${API_URL_DEPLOYMENT}/breeders/kois`,
       {
         params: { breeder_id, page, limit },
         headers: {
@@ -303,7 +303,7 @@ export const fetchKoisOfBreederWithStatus = async (
 ): Promise<KoisOfBreeder | null> => {
   try {
     const response = await axios.get<KoisOfBreeder>(
-      `${API_URL_DEVELOPMENT}/breeders/kois/not-in-auction`,
+      `${API_URL_DEPLOYMENT}/breeders/kois/not-in-auction`,
       {
         params: { breeder_id, page, limit },
         headers: {
@@ -329,7 +329,7 @@ export async function getKois(
 ): Promise<KoisResponse> {
   try {
     const response = await axios.get<KoisResponse>(
-      `${API_URL_DEVELOPMENT}/kois?page=${page}&limit=${limit}`,
+      `${API_URL_DEPLOYMENT}/kois?page=${page}&limit=${limit}`,
     );
     return response.data;
   } catch (error) {
@@ -344,7 +344,7 @@ export async function getKoiById(
 ): Promise<KoiDetailModel> {
   try {
     const response = await axios.get<KoiDetailModel>(
-      `${API_URL_DEVELOPMENT}/kois/${id}`,
+      `${API_URL_DEPLOYMENT}/kois/${id}`,
     );
     return response.data;
   } catch (error) {
@@ -359,7 +359,7 @@ export const fetchAuctionKoiDetails = async (
 ): Promise<AuctionKoi> => {
   try {
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}/auctionkois/${auctionId}/${auctionKoiId}`,
+      `${API_URL_DEPLOYMENT}/auctionkois/${auctionId}/${auctionKoiId}`,
     );
     return response.data;
   } catch (error) {
@@ -376,9 +376,7 @@ export const fetchAuctionKoiDetails = async (
 };
 
 export const fetchBidHistory = async (auctionKoiId: number): Promise<Bid[]> => {
-  const response = await fetch(
-    `${API_URL_DEVELOPMENT}/bidding/${auctionKoiId}`,
-  );
+  const response = await fetch(`${API_URL_DEPLOYMENT}/bidding/${auctionKoiId}`);
   if (!response.ok) {
     throw new Error("Failed to fetch bid history");
   }
@@ -388,7 +386,7 @@ export const fetchBidHistory = async (auctionKoiId: number): Promise<Bid[]> => {
 export const doLogout = async (token: string) => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/users/logout`,
+      `${API_URL_DEPLOYMENT}/users/logout`,
       {},
       {
         headers: {
@@ -412,7 +410,7 @@ export const updateAccountBalance = async (
 ) => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/users/${userId}/deposit/${payment}`,
+      `${API_URL_DEPLOYMENT}/users/${userId}/deposit/${payment}`,
       {}, // If your API expects a body, add it here
       {
         headers: {
@@ -438,7 +436,7 @@ export const placeBid = async (
 ): Promise<{ isSold: boolean }> => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/bidding/bid/${bid.auction_koi_id}`,
+      `${API_URL_DEPLOYMENT}/bidding/bid/${bid.auction_koi_id}`,
       bid,
       {
         headers: {
@@ -471,7 +469,7 @@ export const fetchUserOrders = async (
 ): Promise<Order[]> => {
   try {
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}${environment.be.endPoint.orders}/user/${userId}`,
+      `${API_URL_DEPLOYMENT}${environment.be.endPoint.orders}/user/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -490,7 +488,7 @@ export const fetchOrderDetails = async (
 ): Promise<OrderDetail[]> => {
   try {
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}/orders_details/order/${orderId}`,
+      `${API_URL_DEPLOYMENT}/orders_details/order/${orderId}`,
       {
         headers: {
           Authorization: `Bearer ${getUserCookieToken()}`,
@@ -513,7 +511,7 @@ export const fetchOrderById = async (
   orderId: number,
   token: string,
 ): Promise<Order> => {
-  const response = await axios.get(`${API_URL_DEVELOPMENT}/orders/${orderId}`, {
+  const response = await axios.get(`${API_URL_DEPLOYMENT}/orders/${orderId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -527,7 +525,7 @@ export const createDepositPayment = async (
 ) => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/payments/create_deposit_payment`,
+      `${API_URL_DEPLOYMENT}/payments/create_deposit_payment`,
       paymentRequest,
       {
         headers: {
@@ -549,7 +547,7 @@ export const createDepositPayment = async (
 export const sendOtp = async (email: string): Promise<any> => {
   try {
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}/otp/send?type=mail&recipient=${email}`,
+      `${API_URL_DEPLOYMENT}/otp/send?type=mail&recipient=${email}`,
     );
     if (response.status === 200) {
       console.log("OTP sent successfully");
@@ -570,7 +568,7 @@ export const sendOtp = async (email: string): Promise<any> => {
 export const sendOtpForgotPassword = async (email: string): Promise<any> => {
   try {
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}/forgot-password?toEmail=${email}`,
+      `${API_URL_DEPLOYMENT}/forgot-password?toEmail=${email}`,
     );
     if (response.status === 200) {
       console.log("OTP sent successfully");
@@ -593,7 +591,7 @@ export const verifyOtpToVerifyUser = async (
   otp: string,
 ): Promise<any> => {
   try {
-    const response = await axios.post(`${API_URL_DEVELOPMENT}/users/verify`, {
+    const response = await axios.post(`${API_URL_DEPLOYMENT}/users/verify`, {
       email,
       otp,
     });
@@ -621,7 +619,7 @@ export const verifyOtpIsCorrect = async (
   otp: string,
 ): Promise<any> => {
   try {
-    const response = await axios.post(`${API_URL_DEVELOPMENT}/otp/verify`, {
+    const response = await axios.post(`${API_URL_DEPLOYMENT}/otp/verify`, {
       email,
       otp,
     });
@@ -650,7 +648,7 @@ export const updateAuction = async (
 ): Promise<void> => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/auctions/${id}`,
+      `${API_URL_DEPLOYMENT}/auctions/${id}`,
       auction,
       {
         headers: {
@@ -679,7 +677,7 @@ export const deleteAuction = async (
 ): Promise<void> => {
   try {
     const response = await axios.delete(
-      `${API_URL_DEVELOPMENT}/auctions/${id}`,
+      `${API_URL_DEPLOYMENT}/auctions/${id}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -708,7 +706,7 @@ export const updateUserField = async (
   token: string,
 ): Promise<void> => {
   const response = await axios.put(
-    `${API_URL_DEVELOPMENT}/users/${userId}`,
+    `${API_URL_DEPLOYMENT}/users/${userId}`,
     { [field]: value },
     {
       headers: {
@@ -726,15 +724,11 @@ export const createStaff = async (
   staffData: StaffRegisterDTO,
   token: string,
 ): Promise<void> => {
-  const response = await axios.post(
-    `${API_URL_DEVELOPMENT}/staffs`,
-    staffData,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  const response = await axios.post(`${API_URL_DEPLOYMENT}/staffs`, staffData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
-  );
+  });
 
   if (response.status !== 201) {
     throw new Error(response.data?.reason || "Failed to create staff.");
@@ -742,7 +736,7 @@ export const createStaff = async (
 };
 
 export const deleteStaff = async (id: number, token: string): Promise<void> => {
-  const response = await axios.delete(`${API_URL_DEVELOPMENT}/staffs/${id}`, {
+  const response = await axios.delete(`${API_URL_DEPLOYMENT}/staffs/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -757,7 +751,7 @@ export const updateStaff = async (
   token: string,
 ): Promise<void> => {
   const response = await axios.put(
-    `${API_URL_DEVELOPMENT}/staffs/${staffId}`,
+    `${API_URL_DEPLOYMENT}/staffs/${staffId}`,
     staffData,
     {
       headers: { Authorization: `Bearer ${token}` },
@@ -773,7 +767,7 @@ export const getStaffData = async (
   staffId: number,
   token: string,
 ): Promise<any> => {
-  const response = await axios.get(`${API_URL_DEVELOPMENT}/staffs/${staffId}`, {
+  const response = await axios.get(`${API_URL_DEPLOYMENT}/staffs/${staffId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -789,7 +783,7 @@ export const getMembersData = async (
   limit: number,
 ): Promise<MembersResponse> => {
   const response = await axios.get<MembersResponse>(
-    `${API_URL_DEVELOPMENT}/members`,
+    `${API_URL_DEPLOYMENT}/members`,
     {
       params: {
         page: page - 1,
@@ -812,15 +806,12 @@ export const getKoiData = async (
   page: number,
   limit: number,
 ): Promise<KoisResponse> => {
-  const response = await axios.get<KoisResponse>(
-    `${API_URL_DEVELOPMENT}/kois`,
-    {
-      params: {
-        page: page - 1, // Assuming the API is zero-based
-        limit: limit,
-      },
+  const response = await axios.get<KoisResponse>(`${API_URL_DEPLOYMENT}/kois`, {
+    params: {
+      page: page - 1, // Assuming the API is zero-based
+      limit: limit,
     },
-  );
+  });
 
   if (response.status !== 200) {
     throw new Error("Failed to fetch kois");
@@ -835,7 +826,7 @@ export const getKoiInAuctionData = async (
   limit: number,
 ): Promise<KoiInAuctionResponse> => {
   const response = await axios.get<KoiInAuctionResponse>(
-    `${API_URL_DEVELOPMENT}/auctionkois/get-kois-by-keyword`,
+    `${API_URL_DEPLOYMENT}/auctionkois/get-kois-by-keyword`,
     {
       params: {
         keyword: "",
@@ -858,7 +849,7 @@ export const deleteKoiById = async (
   id: number,
   accessToken: string,
 ): Promise<void> => {
-  const response = await axios.delete(`${API_URL_DEVELOPMENT}/kois/${id}`, {
+  const response = await axios.delete(`${API_URL_DEPLOYMENT}/kois/${id}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -873,7 +864,7 @@ export const createKoi = async (
   formData: FormData,
 ): Promise<KoiDetailModel> => {
   const response = await axios.post<KoiDetailModel>(
-    `${API_URL_DEVELOPMENT}/kois`,
+    `${API_URL_DEPLOYMENT}/kois`,
     formData,
     {
       headers: {
@@ -892,7 +883,7 @@ export const createKoi = async (
 export const updateKoi = async (koiId: number, koi: UpdateKoiDTO) => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/kois/${koiId}`,
+      `${API_URL_DEPLOYMENT}/kois/${koiId}`,
       koi,
       {
         headers: {
@@ -913,7 +904,7 @@ export const updateKoi = async (koiId: number, koi: UpdateKoiDTO) => {
 };
 
 export const fetchKoi = async (koiId: number) => {
-  const response = await axios.get(`${API_URL_DEVELOPMENT}/kois/${koiId}`, {
+  const response = await axios.get(`${API_URL_DEPLOYMENT}/kois/${koiId}`, {
     headers: {
       Authorization: `Bearer ${getUserCookieToken()}`,
     },
@@ -928,7 +919,7 @@ export const fetchKoi = async (koiId: number) => {
 
 export const fetchBreedersData = async (page: number, itemsPerPage: number) => {
   const response = await axios.get<BreedersResponse>(
-    `${API_URL_DEVELOPMENT}/breeders`,
+    `${API_URL_DEPLOYMENT}/breeders`,
     {
       params: {
         page: page - 1, // Adjusting for zero-based indexing
@@ -953,7 +944,7 @@ export const updateOrder = async (
 ): Promise<Order> => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}${environment.be.endPoint.orders}/${order.id}`,
+      `${API_URL_DEPLOYMENT}${environment.be.endPoint.orders}/${order.id}`,
       order,
       {
         headers: {
@@ -980,7 +971,7 @@ export const createCashOrderPayment = async (
 ): Promise<any> => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/payments/cash/create_order_payment`,
+      `${API_URL_DEPLOYMENT}/payments/cash/create_order_payment`,
       paymentRequest,
       {
         headers: {
@@ -1001,7 +992,7 @@ export const createOnlineOrderPayment = async (
 ): Promise<any> => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/payments/vnpay/create_order_payment`,
+      `${API_URL_DEPLOYMENT}/payments/vnpay/create_order_payment`,
       paymentRequest,
       {
         headers: {
@@ -1022,7 +1013,7 @@ export const createOrderPayment = async (
 ): Promise<any> => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/payments/create_order_payment`,
+      `${API_URL_DEPLOYMENT}/payments/create_order_payment`,
       paymentDTO,
       {
         headers: {
@@ -1065,7 +1056,7 @@ export const postAuctionKoi = async (
 
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/auctionkois`,
+      `${API_URL_DEPLOYMENT}/auctionkois`,
       auctionKoiPayload,
       {
         headers: {
@@ -1093,7 +1084,7 @@ export const updateUserPassword = async (
 ): Promise<void> => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/forgot-password`,
+      `${API_URL_DEPLOYMENT}/forgot-password`,
       newPassword,
     );
     if (response.status === 200) {
@@ -1111,7 +1102,7 @@ export const submitFeedback = async (
 ): Promise<void> => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/feedbacks`,
+      `${API_URL_DEPLOYMENT}/feedbacks`,
       feedbackData,
       {
         headers: {
@@ -1139,7 +1130,7 @@ export const getUserOrderByStatus = async (
   token?: string,
 ): Promise<OrderPaginationResponse> => {
   const response = await axios.get(
-    `${API_URL_DEVELOPMENT}/orders/user/${userId}/get-active-sorted-orders`,
+    `${API_URL_DEPLOYMENT}/orders/user/${userId}/get-active-sorted-orders`,
     {
       params: { keyword: status, page, limit },
       headers: { Authorization: `Bearer ${getUserCookieToken() || token}` },
@@ -1149,7 +1140,7 @@ export const getUserOrderByStatus = async (
 };
 
 export const getOrderById = async (orderId: number): Promise<Order> => {
-  const response = await axios.get(`${API_URL_DEVELOPMENT}/orders/${orderId}`, {
+  const response = await axios.get(`${API_URL_DEPLOYMENT}/orders/${orderId}`, {
     headers: { Authorization: `Bearer ${getUserCookieToken()}` },
   });
   return response.data;
@@ -1162,7 +1153,7 @@ export const updateOrderStatus = async (
 ) => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/orders/${orderId}/update-order-status`,
+      `${API_URL_DEPLOYMENT}/orders/${orderId}/update-order-status`,
       { status: newStatus },
       {
         headers: {
@@ -1183,7 +1174,7 @@ export const updateOrderStatus = async (
 export const getFeedbackByOrderId = async (orderId: number, token: string) => {
   try {
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}/feedbacks/order/${orderId}`,
+      `${API_URL_DEPLOYMENT}/feedbacks/order/${orderId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -1201,7 +1192,7 @@ export const confirmOrder = async (
 ): Promise<Order> => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/orders/${orderId}/confirm-delivery`,
+      `${API_URL_DEPLOYMENT}/orders/${orderId}/confirm-delivery`,
       { status: newStatus },
       {
         headers: {
@@ -1226,7 +1217,7 @@ export const createDrawOutRequest = async (
   token: string,
 ) => {
   const response = await axios.post(
-    `${API_URL_DEVELOPMENT}/payments/create_drawout_request`,
+    `${API_URL_DEPLOYMENT}/payments/create_drawout_request`,
     paymentDTO,
     {
       headers: {
@@ -1245,7 +1236,7 @@ export const getUserPaymentHistoryByStatus = async (
   token?: string,
 ): Promise<PaymentPaginationResponse> => {
   const response = await axios.get(
-    `${API_URL_DEVELOPMENT}/payments/user/${user_id}/get-sorted-payments`,
+    `${API_URL_DEPLOYMENT}/payments/user/${user_id}/get-sorted-payments`,
     {
       params: { status: status, page, limit },
       headers: { Authorization: `Bearer ${getUserCookieToken() || token}` },
@@ -1261,7 +1252,7 @@ export const updatePaymentStatus = async (
 ) => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/payments/${paymentId}/update-payment-status`,
+      `${API_URL_DEPLOYMENT}/payments/${paymentId}/update-payment-status`,
       { status: paymentStatus },
       {
         headers: {
@@ -1284,7 +1275,7 @@ export const getUserHighestBidInAuctionKoi = async (
   userId: number,
 ): Promise<Bid> => {
   const response = await axios.get(
-    `${API_URL_DEVELOPMENT}/bidding/${auctionKoiId}/${userId}`,
+    `${API_URL_DEPLOYMENT}/bidding/${auctionKoiId}/${userId}`,
     {
       headers: {
         Authorization: `Bearer ${getUserCookieToken()}`,
@@ -1296,8 +1287,8 @@ export const getUserHighestBidInAuctionKoi = async (
 
 export const sendRequestUpdateRole = async (role: string, purpose: string) => {
   try {
-    const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/mail/update-role?updateRole=${role}`,
+    const response = await axios.get(
+      `${API_URL_DEPLOYMENT}/mail/update-role?updateRole=${role}`,
       { purpose },
       {
         headers: {
@@ -1321,7 +1312,7 @@ export const sendRequestUpdateRole = async (role: string, purpose: string) => {
 export const endAuctionEmergency = async (auctionId: number) => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/auctions/end/${auctionId}`,
+      `${API_URL_DEPLOYMENT}/auctions/end/${auctionId}`,
       {},
       {
         headers: {

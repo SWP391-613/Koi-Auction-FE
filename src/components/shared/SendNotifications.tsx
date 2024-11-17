@@ -15,7 +15,7 @@ import {
 import axios, { AxiosError } from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { getUserCookieToken } from "~/utils/auth.utils";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { API_URL_DEPLOYMENT } from "~/constants/endPoints";
 
 // Types
 type RecipientType = "all" | "premium" | "free";
@@ -112,7 +112,7 @@ const SendNotifications: React.FC = () => {
 
     setIsLoading((prev) => ({ ...prev, form: true }));
     try {
-      await axios.post(`${API_URL_DEVELOPMENT}/notifications`, notification, {
+      await axios.post(`${API_URL_DEPLOYMENT}/notifications`, notification, {
         headers: {
           Authorization: `Bearer ${getUserCookieToken()}`,
         },
@@ -137,7 +137,7 @@ const SendNotifications: React.FC = () => {
 
     setIsLoading((prev) => ({ ...prev, upcomingNotification: true }));
     try {
-      await axios.get(`${API_URL_DEVELOPMENT}/auctions/notify/upcoming`, {
+      await axios.get(`${API_URL_DEPLOYMENT}/auctions/notify/upcoming`, {
         headers: {
           Authorization: `Bearer ${getUserCookieToken()}`,
         },

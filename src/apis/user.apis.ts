@@ -1,9 +1,8 @@
 import axios from "axios";
 import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
-import { Staff, StaffRegisterDTO } from "~/types/users.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
-import { handleAxiosError } from "~/utils/error.utils";
+import { handleAxiosError } from "~/utils/errors.utils";
 
 export const updateAccountBalance = async (
   userId: number,
@@ -74,5 +73,76 @@ export const updateUserField = async (
 
   if (response.status !== 200) {
     throw new Error("Failed to update user information.");
+  }
+};
+
+export const updateUserRole = async (
+  id: number,
+  roleId: number,
+): Promise<void> => {
+  try {
+    const response = await axios.put(
+      `${API_URL_DEVELOPMENT}/users/${id}/update-role/${roleId}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${getUserCookieToken()}`,
+        },
+      },
+    );
+    if (response.status !== 200) {
+      throw new Error("Failed to update user to breeder");
+    }
+  } catch (error) {
+    handleAxiosError(
+      error,
+      "Failed to update user to breeder",
+      true,
+      "Failed to update user to breeder",
+    );
+  }
+};
+
+export const softDeleteUser = async (id: number): Promise<void> => {
+  try {
+    const response = await axios.delete(`${API_URL_DEVELOPMENT}/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${getUserCookieToken()}`,
+      },
+    });
+    if (response.status !== 200) {
+      throw new Error("Failed to delete user");
+    }
+  } catch (error) {
+    handleAxiosError(
+      error,
+      "Failed to delete user",
+      true,
+      "Failed to delete user",
+    );
+  }
+};
+
+export const undoDeleteUser = async (id: number): Promise<void> => {
+  try {
+    const response = await axios.put(
+      `${API_URL_DEVELOPMENT}/users/${id}/restore`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${getUserCookieToken()}`,
+        },
+      },
+    );
+    if (response.status !== 200) {
+      throw new Error("Failed to restore user");
+    }
+  } catch (error) {
+    handleAxiosError(
+      error,
+      "Failed to restore user",
+      true,
+      "Failed to restore user",
+    );
   }
 };

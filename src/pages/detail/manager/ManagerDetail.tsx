@@ -24,7 +24,7 @@ const ManagerDetail: React.FC = () => {
   const [updateValue, setUpdateValue] = useState("");
   const navigate = useNavigate();
   const { user, loading, error, setUser } = useUserData();
-  const [showAbout, setShowAbout] = useState(false);
+  const [showAbout, setShowAbout] = useState(true);
   const toggleAbout = () => setShowAbout(!showAbout);
 
   const handleUpdate = async () => {

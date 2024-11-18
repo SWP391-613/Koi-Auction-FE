@@ -35,7 +35,7 @@ const UserDetail: React.FC = () => {
   const [openModal, setOpenModal] = useState(false); // Modal state for showing user details
   const [fetchedUser, setFetchedUser] = useState<UserResponse>();
   const navigate = useNavigate();
-  const [showAbout, setShowAbout] = useState(false);
+  const [showAbout, setShowAbout] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<{
     type: "verify" | "update" | null;

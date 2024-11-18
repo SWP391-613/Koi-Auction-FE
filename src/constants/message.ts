@@ -9,6 +9,18 @@ export const SUCCESS_MESSAGE = {
   //"Koi registered successfully!"
   REGISTER_KOI_SUCCESS: "Koi registered successfully!",
   DELETE_KOI_SUCCESS: "Koi deleted successfully!",
+  REDO_BREEDER_SUCCESS:
+    "Redo Breeder successfully, refresh the page to apply changes",
+  REDO_STAFF_SUCCESS:
+    "Redo Staff successfully, refresh the page to apply changes",
+  REDO_MEMBER_SUCCESS:
+    "Redo Member successfully, refresh the page to apply changes",
+  DELETE_STAFF_SUCCESS:
+    "Staff deleted successfully!, refresh the page to apply changes",
+  DELETE_BREEDER_SUCCESS:
+    "Breeder deleted successfully, , refresh the page to apply changes",
+  DELETE_MEMBER_SUCCESS:
+    "Member deleted successfully, , refresh the page to apply changes",
 } as const;
 
 export const ERROR_MESSAGE = {
@@ -16,11 +28,17 @@ export const ERROR_MESSAGE = {
   UNEXPECTED_ERROR_BID: "An unexpected error occurred while placing your bid.",
   OTP_VERIFICATION_ERROR: "An error occurred during OTP verification.",
   SELECT_KOI_AND_AUCTION: "Please select a koi and an auction to place a bid.",
+  REDO_BREEDER_FAILED: "Failed to redo breeder",
+  REDO_STAFF_FAILED: "Failed to redo staff",
+  REDO_MEMBER_FAILED: "Failed to redo member",
+  DELETE_MEMBER_FAILED: "Failed to delete breeder",
   REGISTER_KOI_FAILED: "Failed to register koi.",
   DELETE_KOI_FAILED: "Failed to delete koi.",
   FETCH_KOI_ERROR: "Error fetching kois",
+  DELETE_STAFF_FAILED: "Failed to delete staff",
   FAILED_TO_LOAD_AUCTION_DETAILS: "Failed to load auction details.",
   FAILED_TO_FETCH_BIDDING_HISTORY: "Failed to fetch bidding history.",
+  DELETE_BREEDER_FAILED: "Failed to delete breeder",
   FAILED_TO_FETCH_AUCTIONS: "Failed to fetch auctions.",
   FAILED_TO_LOAD_BANKS_LIST: "Failed to load banks list.",
   ERROR_CREATING_KOI: "Error creating koi.",
@@ -116,4 +134,23 @@ export const OTP_TOAST_MESSAGE = {
 export const LOGIN_FORM_TOAST_MESSAGE = {
   INVALID_EMAIL_FORGOT_PASSWORD_FORMAT:
     "Please enter a valid email address to reset your password.",
+} as const;
+
+export const CONFIRMATION_MESSAGE = {
+  ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_KOI:
+    "Are you sure you want to delete this koi?",
+  ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_AUCTION:
+    "Are you sure you want to delete this auction?",
+  ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_BREEDER:
+    "Are you sure you want to delete this breeder?",
+  ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_STAFF:
+    "Are you sure you want to delete this staff?",
+  ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_MEMBER:
+    "Are you sure you want to delete this member?",
+  ARE_YOU_SURE_YOU_WANT_TO_REDO_THIS_BREEDER:
+    "Are you sure you want to redo this breeder?",
+  ARE_YOU_SURE_YOU_WANT_TO_REDO_THIS_STAFF:
+    "Are you sure you want to redo this staff?",
+  ARE_YOU_SURE_YOU_WANT_TO_REDO_THIS_MEMBER:
+    "Are you sure you want to redo this member?",
 } as const;

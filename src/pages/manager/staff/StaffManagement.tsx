@@ -4,18 +4,24 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { undoDeleteUser } from "~/apis/user.apis";
+import { deleteStaff } from "~/apis/users/staff.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import {
+  CONFIRMATION_MESSAGE,
+  ERROR_MESSAGE,
+  SUCCESS_MESSAGE,
+} from "~/constants/message";
 import { STAFF_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import usePagination from "~/hooks/usePagination";
 import { Staff, StaffRegisterDTO } from "~/types/users.type";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
-import CreateStaffDialog from "./CreateStaffDialog";
+import AddStaffDialog from "./AddStaffDialog";
 import EditStaffDialog from "./EditStaffDialog";
-import { createStaff, deleteStaff } from "~/apis/users/staff.apis";
 
 const StaffManagement = () => {
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
@@ -63,24 +69,42 @@ const StaffManagement = () => {
   const handleDelete = useCallback(
     async (id: number) => {
       const confirmed = window.confirm(
-        `Are you sure you want to delete staff: ${id}?`,
+        `${CONFIRMATION_MESSAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_STAFF} ${id}?`,
       );
       if (!confirmed) return;
 
       try {
         await deleteStaff(id, accessToken); // Use the utility function for API call
-        toast.success("Staff deleted successfully!");
+        toast.success(SUCCESS_MESSAGE.DELETE_STAFF_SUCCESS);
         refetch(); // Refetch the data after successful deletion
       } catch (error) {
         const errorMessage = extractErrorMessage(
           error,
-          "Failed to delete staff. Please try again.",
+          ERROR_MESSAGE.DELETE_STAFF_FAILED,
         );
         toast.error(errorMessage);
       }
     },
     [accessToken, refetch],
   );
+
+  const handleUndoDelete = async (id: number) => {
+    const confirmReject = confirm(
+      `${CONFIRMATION_MESSAGE.ARE_YOU_SURE_YOU_WANT_TO_REDO_THIS_STAFF} ${id}`,
+    );
+    if (!confirmReject) return;
+
+    try {
+      await undoDeleteUser(id);
+      toast.success(SUCCESS_MESSAGE.REDO_STAFF_SUCCESS);
+    } catch (error) {
+      const errorMessage = extractErrorMessage(
+        error,
+        ERROR_MESSAGE.REDO_STAFF_FAILED,
+      );
+      toast.error(errorMessage);
+    }
+  };
 
   const handleEdit = useCallback((id: number) => {
     setSelectedStaffId(id);
@@ -101,31 +125,7 @@ const StaffManagement = () => {
     [],
   );
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setNewStaff((prevStaff) => ({
-        ...prevStaff,
-        [name]: value,
-      }));
-    },
-    [],
-  );
-
-  const handleCreateStaff = useCallback(async () => {
-    try {
-      await createStaff(newStaff, accessToken);
-      toast.success("Staff created successfully!");
-      handleCloseCreateDialog();
-      refetch(); // Refetch the data after successful creation
-    } catch (error) {
-      const errorMessage = extractErrorMessage(
-        error,
-        "An error occurred during staff creation",
-      );
-      toast.error(errorMessage);
-    }
-  }, [newStaff, accessToken, handleCloseCreateDialog, refetch]);
+  const handleInputChange = (name: string, value: unknown) => {};
 
   return (
     <div className="m-5 overflow-x-auto">
@@ -143,12 +143,10 @@ const StaffManagement = () => {
         </Button>
       </div>
 
-      <CreateStaffDialog
+      <AddStaffDialog
         open={openCreateDialog}
         onClose={handleCloseCreateDialog}
-        newStaff={newStaff}
         onInputChange={handleInputChange}
-        onCreateStaff={handleCreateStaff}
       />
 
       <table className="whitespace-no-wrap w-full">
@@ -196,6 +194,11 @@ const StaffManagement = () => {
                     onClick={() => handleDelete(staff.id)}
                     ariaLabel="Delete"
                     svgPath="delete.svg"
+                  />
+                  <CrudButton
+                    onClick={() => handleUndoDelete(staff.id)}
+                    ariaLabel="Redo breeder"
+                    svgPath="redo.svg"
                   />
                 </div>
               </td>

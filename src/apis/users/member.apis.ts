@@ -2,6 +2,7 @@ import axios from "axios";
 import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { MembersResponse } from "~/types/paginated.types";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { handleAxiosError } from "~/utils/errors.utils";
 
 export const getMembersData = async (
   page: number,

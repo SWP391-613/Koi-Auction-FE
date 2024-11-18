@@ -23,7 +23,7 @@ const StaffDetail: React.FC = () => {
   const [openModal, setOpenModal] = useState(false);
   const [fetchedUser, setFetchedUser] = useState<UserResponse>();
   const { user, loading, error, setUser } = useUserData();
-  const [showAbout, setShowAbout] = useState(false);
+  const [showAbout, setShowAbout] = useState(true);
   const toggleAbout = () => setShowAbout(!showAbout);
 
   const handleUpdate = async () => {

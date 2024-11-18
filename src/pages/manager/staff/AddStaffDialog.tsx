@@ -18,22 +18,22 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { updateUserRole } from "~/apis/user.apis";
 import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
-import { Member } from "~/types/users.type";
+import { Staff } from "~/types/users.type";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 
-interface AddBreederDialogProps {
+interface AddStaffProps {
   open: boolean;
   onClose: () => void;
   onInputChange: (name: string, value: unknown) => void;
 }
 
-const AddBreederDialog: React.FC<AddBreederDialogProps> = ({
+const AddStaffDialog: React.FC<AddStaffProps> = ({
   open,
   onClose,
   onInputChange,
 }) => {
-  const [memberList, setMemberList] = useState<Member[]>([]);
+  const [memberList, setMemberList] = useState<Staff[]>([]);
   const [selectedMember, setSelectedMember] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -77,14 +77,14 @@ const AddBreederDialog: React.FC<AddBreederDialogProps> = ({
     }
 
     try {
-      await updateUserRole(parseInt(selectedMember), 3);
-      setSnackbarMessage("Member updated to breeder successfully");
+      await updateUserRole(parseInt(selectedMember), 2);
+      setSnackbarMessage("Member updated to staff successfully");
       setSnackbarOpen(true);
       onClose();
     } catch (error) {
       const errorMessage = extractErrorMessage(
         error,
-        "Failed to update member to breeder",
+        "Failed to update member to staff",
       );
       console.error(errorMessage);
       toast.error(errorMessage);
@@ -110,7 +110,7 @@ const AddBreederDialog: React.FC<AddBreederDialogProps> = ({
         maxWidth="sm" // or "lg" for larger widths
         fullWidth
       >
-        <DialogTitle>Update Current User to Breeder</DialogTitle>
+        <DialogTitle>Update Current Member to Staff</DialogTitle>
         <DialogContent>
           <FormControl fullWidth variant="standard" margin="dense">
             <InputLabel id="auctioneer-select-label">Member</InputLabel>
@@ -153,4 +153,4 @@ const AddBreederDialog: React.FC<AddBreederDialogProps> = ({
   );
 };
 
-export default AddBreederDialog;
+export default AddStaffDialog;

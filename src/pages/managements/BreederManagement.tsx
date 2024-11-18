@@ -2,14 +2,21 @@ import AddIcon from "@mui/icons-material/Add";
 import { Alert, Button, Container, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { softDeleteUser, undoDeleteUser } from "~/apis/user.apis";
 import { fetchBreedersData } from "~/apis/users/breeder.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
+import {
+  CONFIRMATION_MESSAGE,
+  ERROR_MESSAGE,
+  SUCCESS_MESSAGE,
+} from "~/constants/message";
 import { BREEDER_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { Breeder } from "~/types/users.type";
 import { extractErrorMessage } from "~/utils/dataConverter";
+import AddBreederDialog from "../detail/breeder/AddBreederDialog";
 
 const BreederManagement = () => {
   const [breeders, setBreeders] = useState<Breeder[]>([]);
@@ -19,6 +26,7 @@ const BreederManagement = () => {
   const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const itemsPerPage = 20;
 
   useEffect(() => {
@@ -61,16 +69,60 @@ const BreederManagement = () => {
     setOpenAddDialog(true);
   };
 
-  const handleView = (id: number) => {
-    alert(`View breeder ${id}`);
-  };
-
   const handleEdit = (id: number) => {
     alert(`Edit breeder ${id}`);
   };
 
-  const handleDelete = (id: number) => {
-    alert(`Delete breeder ${id}`);
+  const handleDelete = async (id: number) => {
+    const confirmReject = confirm(
+      `${CONFIRMATION_MESSAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_BREEDER} ${id}`,
+    );
+    if (!confirmReject) return;
+
+    try {
+      await softDeleteUser(id);
+      toast.success(SUCCESS_MESSAGE.DELETE_BREEDER_SUCCESS);
+    } catch (error) {
+      const errorMessage = extractErrorMessage(
+        error,
+        ERROR_MESSAGE.DELETE_BREEDER_FAILED,
+      );
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleUndoDelete = async (id: number) => {
+    const confirmReject = confirm(
+      `${CONFIRMATION_MESSAGE.ARE_YOU_SURE_YOU_WANT_TO_REDO_THIS_BREEDER} ${id}`,
+    );
+    if (!confirmReject) return;
+
+    try {
+      await undoDeleteUser(id);
+      toast.success(SUCCESS_MESSAGE.REDO_BREEDER_SUCCESS);
+    } catch (error) {
+      const errorMessage = extractErrorMessage(
+        error,
+        ERROR_MESSAGE.REDO_BREEDER_FAILED,
+      );
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleCloseAddDialog = () => {
+    setOpenAddDialog(false);
+  };
+
+  const handleInputChange = (name: string, value: unknown) => {};
+
+  const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
+  };
+
+  const handleEditInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const { name, value } = event.target;
   };
 
   if (loading) {
@@ -156,12 +208,6 @@ const BreederManagement = () => {
               <td className="px-4 py-3 text-sm">
                 <div className="flex items-center space-x-4 text-sm">
                   <CrudButton
-                    onClick={() => handleView(breeder.id)}
-                    ariaLabel="View breeder"
-                    svgPath="view.svg"
-                  />
-
-                  <CrudButton
                     onClick={() => handleEdit(breeder.id)}
                     ariaLabel="Edit breeder"
                     svgPath="edit.svg"
@@ -171,6 +217,12 @@ const BreederManagement = () => {
                     onClick={() => handleDelete(breeder.id)}
                     ariaLabel="Delete breeder"
                     svgPath="delete.svg"
+                  />
+
+                  <CrudButton
+                    onClick={() => handleUndoDelete(breeder.id)}
+                    ariaLabel="Redo breeder"
+                    svgPath="redo.svg"
                   />
                 </div>
               </td>
@@ -186,24 +238,21 @@ const BreederManagement = () => {
         />
       </div>
 
-      {/* <AddBreederDialog
-          open={openAddDialog}
-          onClose={handleCloseAddDialog}
-          newAuction={newAuction}
-          onInputChange={handleInputChange}
-        />
+      <AddBreederDialog
+        open={openAddDialog}
+        onClose={handleCloseAddDialog}
+        onInputChange={handleInputChange}
+      />
 
-        <EditBreederDialog
+      {/* <EditBreederDialog
           open={openEditDialog}
           onClose={handleCloseEditDialog}
           editingAuction={editingAuction}
           handleEndAuction={handleEndAuction}
-          auctionKois={auctionKois}
           onInputChange={handleEditInputChange}
           onSubmit={handleSubmitEditAuction}
           onEdit={handleEdit}
           onDelete={handleDelete}
-          formatDateForInput={formatDateForInput}
         /> */}
     </div>
   );

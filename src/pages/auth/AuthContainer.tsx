@@ -19,6 +19,7 @@ import * as yup from "yup";
 import { sendOtpForgotPassword } from "~/utils/apiUtils";
 import { motion } from "framer-motion";
 import { GENERAL_TOAST_MESSAGE, OTP_TOAST_MESSAGE } from "~/constants/message";
+import FancyFormField from "~/components/shared/FancyFormField";
 
 const LoginForm = () => {
   const { authLogin } = useAuth();
@@ -85,14 +86,14 @@ const LoginForm = () => {
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <h1 className={styles.title}>Sign In</h1>
-      <FormField
+      <FancyFormField
         name="email"
         label="Email Address"
         type="email"
         control={control}
         errors={errors}
       />
-      <FormField
+      <FancyFormField
         name="password"
         label="Password"
         type="password"
@@ -168,7 +169,7 @@ const RegisterForm = () => {
 
       <div className={styles.nameFieldsContainer}>
         <div className={styles.inputGroup}>
-          <FormField
+          <FancyFormField
             name="first_name"
             label="First Name"
             control={control}
@@ -176,7 +177,7 @@ const RegisterForm = () => {
           />
         </div>
         <div className={styles.inputGroup}>
-          <FormField
+          <FancyFormField
             name="last_name"
             label="Last Name"
             control={control}
@@ -186,7 +187,7 @@ const RegisterForm = () => {
       </div>
 
       <div className={styles.inputGroup}>
-        <FormField
+        <FancyFormField
           name="email"
           label="Email Address"
           type="email"
@@ -196,7 +197,7 @@ const RegisterForm = () => {
       </div>
 
       <div className={styles.inputGroup}>
-        <FormField
+        <FancyFormField
           name="password"
           label="Password"
           type="password"
@@ -206,7 +207,7 @@ const RegisterForm = () => {
       </div>
 
       <div className={styles.inputGroup}>
-        <FormField
+        <FancyFormField
           name="confirm_password"
           label="Confirm Password"
           type="password"

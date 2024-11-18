@@ -97,7 +97,7 @@ export const deleteKoiById = async (id: number): Promise<void> => {
   }
 };
 
-export const updateKoi = async (koiId: number, koi: UpdateKoiDTO) => {
+export const updateKoi = async (koiId: number, koi: KoiDetailModel) => {
   try {
     const response = await axios.put(
       `${API_URL_DEVELOPMENT}/kois/${koiId}`,

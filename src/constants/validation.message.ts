@@ -31,7 +31,7 @@ export const FORGOT_PASSWORD_VALIDATION_MESSAGE = {
 export const KOI_CREATE_VALIDATION_MESSAGE = {
   KOI_NAME_IS_REQUIRED: "Koi name is required",
   KOI_NAME_MUST_FOLLOWING_FORMAT:
-    "Koi name must not contain any number, every first letter need capitalized",
+    "Koi name must not contain any number, every first letter need capitalized, not contain any punctuation",
   BASE_PRICE_IS_REQUIRED: "Base price is required",
   BASE_PRICE_GREATER_THAN_1_MILLION:
     "Base koi price must be equals or greater than 1.000.000 VND and equals or less than 50.000.000 VND",
@@ -44,6 +44,7 @@ export const KOI_CREATE_VALIDATION_MESSAGE = {
   YEAR_BORN_CANNOT_BE_IN_FUTURE: "Year born cannot be in the future",
   CATEGORY_IS_REQUIRED: "Category is required",
   THUMBNAIL_URL_IS_REQUIRED: "Thumbnail URL is required",
+  IS_DISPLAY_IS_REQUIRED: "Is display is required",
 } as const;
 
 export const SNACKBAR_VALIDATION_MESSAGE = {

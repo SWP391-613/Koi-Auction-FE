@@ -5,10 +5,14 @@ import {
   MenuItem,
   Modal,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material"; // Ensure you have Material-UI installed
 import React, { useEffect, useState } from "react";
 import { BidMethod } from "~/types/auctionkois.type";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline"; // Add this import
+import RulesPopup from "./RulePopup";
+import { formatCurrency } from "~/utils/currencyUtils";
 
 interface AuctionKoiPopupProps {
   open: boolean;
@@ -26,6 +30,7 @@ interface AuctionKoiPopupProps {
 
 const MIN_BID_STEP = 50000;
 const auctionNeedCeilingPrice: string[] = ["DESCENDING_BID", "ASCENDING_BID"];
+const MAX_BASE_PRICE = 50000000;
 
 const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
   open,
@@ -43,20 +48,28 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
   const [basePriceError, setBasePriceError] = useState<string>("");
   const [ceilPriceError, setCeilPriceError] = useState<string>("");
   const [feePriceMessage, setFeePriceMessage] = useState<string>("");
+  const [showRules, setShowRules] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (bidStep < MIN_BID_STEP) {
-      setErrorMessage(`Bid step must be at least ${MIN_BID_STEP} vnđ.`);
+    if (bidMethod !== "FIXED_PRICE" && bidStep < MIN_BID_STEP) {
+      setErrorMessage(
+        `Bid step must be at least ${formatCurrency(MIN_BID_STEP)}.`,
+      );
     } else {
       setErrorMessage("");
     }
-  }, [bidStep]);
+  }, [bidStep, bidMethod]); // Add bidMethod to dependencies
 
   useEffect(() => {
-    // Check if the new base price is less than the original base price
+    // Check if the base price is within valid range
     if (basePrice < originalBasePrice) {
       setBasePriceError(
-        `Price must be greater than or equal to the original price of ${originalBasePrice} vnđ.`,
+        `Price must be greater than or equal to the original price of ${formatCurrency(originalBasePrice)}.`,
+      );
+    } else if (basePrice > MAX_BASE_PRICE) {
+      setBasePriceError(
+        `Price cannot exceed ${formatCurrency(MAX_BASE_PRICE)}.`,
       );
     } else {
       setBasePriceError("");
@@ -64,10 +77,26 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
   }, [basePrice, originalBasePrice]);
 
   useEffect(() => {
-    // Check if the ceiling price is less than the current base price
-    if (ceilPrice > 0 && ceilPrice <= basePrice) {
+    if (!basePriceError && basePrice >= originalBasePrice) {
+      const fee = Math.floor(basePrice * 0.1);
+      setFeePriceMessage(
+        `*We will charge 10% of the base price (${formatCurrency(fee)}) as registration fee.*`,
+      );
+    } else {
+      setFeePriceMessage("");
+    }
+  }, [basePrice, basePriceError, originalBasePrice]);
+
+  useEffect(() => {
+    // Skip ceiling price validation for FIXED_PRICE
+    if (bidMethod === "FIXED_PRICE") {
+      setCeilPriceError("");
+      return;
+    }
+
+    if (ceilPrice > 0 && ceilPrice < basePrice + 10 * bidStep) {
       setCeilPriceError(
-        `Ceiling price must be greater than the current base price of ${basePrice} vnd.`,
+        `Ceiling price must be greater than ${formatCurrency(basePrice + 10 * bidStep)} (base price + 10 times of bid step).`,
       );
     } else if (
       (bidMethod === "ASCENDING_BID" || bidMethod === "DESCENDING_BID") &&
@@ -78,18 +107,8 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
       );
     } else {
       setCeilPriceError("");
-      // Only set fee message if base price is valid
-      if (!basePriceError) {
-        setFeePriceMessage(
-          `*We will charge 10% of the base price (${Math.floor(
-            basePrice * 0.1,
-          )} vnd) as registration fee.*`,
-        );
-      } else {
-        setFeePriceMessage("");
-      }
     }
-  }, [ceilPrice, basePrice, basePriceError]); // Add basePriceError to dependencies
+  }, [ceilPrice, basePrice, bidMethod, bidStep]);
 
   const handleSubmit = () => {
     // Only check bidStep and ceilPrice errors for non-FIXED_PRICE methods
@@ -104,6 +123,26 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
     }
   };
 
+  const handleHelpMouseEnter = (event: React.MouseEvent<HTMLDivElement>) => {
+    setAnchorEl(event.currentTarget);
+    setShowRules(true);
+  };
+
+  const handleHelpMouseLeave = () => {
+    setShowRules(false);
+    setAnchorEl(null);
+  };
+
+  const handleBidMethodChange = (newMethod: BidMethod) => {
+    setBidMethod(newMethod);
+
+    // Reset bid step and ceiling price if FIXED_PRICE is selected
+    if (newMethod === "FIXED_PRICE") {
+      setBidStep(0);
+      setCeilPrice(0);
+    }
+  };
+
   return (
     <Modal open={open} onClose={onClose}>
       <Box
@@ -115,8 +154,41 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
           margin: "auto",
           marginTop: "100px",
           boxShadow: 3,
+          position: "relative", // Add this
         }}
       >
+        {/* Add Help Icon */}
+        <div
+          onMouseEnter={handleHelpMouseEnter}
+          onMouseLeave={handleHelpMouseLeave}
+          style={{
+            position: "absolute",
+            right: "16px",
+            top: "16px",
+            cursor: "pointer",
+          }}
+        >
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            className="font-bold"
+          >
+            Rules of registration &nbsp;
+            <Tooltip title="Rules">
+              <HelpOutlineIcon color="primary" />
+            </Tooltip>
+          </Typography>
+        </div>
+
+        {/* Rules Popup */}
+        {showRules && anchorEl && (
+          <RulesPopup
+            open={showRules}
+            onClose={() => setShowRules(false)}
+            anchorEl={anchorEl}
+          />
+        )}
+
         <Typography variant="h6" component="h2" gutterBottom>
           Register Koi for Auction
         </Typography>
@@ -134,7 +206,7 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
           fullWidth
           margin="normal"
           value={bidMethod}
-          onChange={(e) => setBidMethod(e.target.value as BidMethod)}
+          onChange={(e) => handleBidMethodChange(e.target.value as BidMethod)}
         >
           <MenuItem value="ASCENDING_BID">Ascending Bid</MenuItem>
           <MenuItem value="DESCENDING_BID">Descending Bid</MenuItem>
@@ -142,48 +214,52 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
         </TextField>
 
         <TextField
-          label="Base Price (vnđ)"
+          label="Base Price (VND)"
           type="number"
           variant="outlined"
           fullWidth
           margin="normal"
           value={basePrice}
           onChange={(e) => setBasePrice(Number(e.target.value))}
-          placeholder="Enter base price (vnđ)"
-          error={!!basePriceError} // Show error if base price error exists
+          placeholder="Enter base price (VND)"
+          error={!!basePriceError}
+          inputProps={{
+            max: MAX_BASE_PRICE,
+            min: originalBasePrice,
+          }}
         />
         {basePriceError && (
           <FormHelperText error>{basePriceError}</FormHelperText>
         )}
-        {feePriceMessage && (
+        {feePriceMessage && basePrice >= originalBasePrice && (
           <FormHelperText sx={{ color: "green" }}>
             {feePriceMessage}
           </FormHelperText>
         )}
 
         <TextField
-          label="Bid Step (vnđ)"
+          label="Bid Step (VND)"
           type="number"
           variant="outlined"
           fullWidth
           margin="normal"
           value={bidStep}
           onChange={(e) => setBidStep(Number(e.target.value))}
-          placeholder="Enter bid step (vnđ)"
+          placeholder="Enter bid step (VND)"
           error={!!errorMessage}
           disabled={bidMethod === "FIXED_PRICE"}
         />
         {errorMessage && <FormHelperText error>{errorMessage}</FormHelperText>}
 
         <TextField
-          label="Ceiling Price (vnđ)"
+          label="Ceiling Price (VND)"
           type="number"
           variant="outlined"
           fullWidth
           margin="normal"
           value={ceilPrice}
           onChange={(e) => setCeilPrice(Number(e.target.value))}
-          placeholder="Enter ceiling price (vnđ)"
+          placeholder="Enter ceiling price (VND)"
           disabled={bidMethod === "FIXED_PRICE"}
           error={!!ceilPriceError}
         />

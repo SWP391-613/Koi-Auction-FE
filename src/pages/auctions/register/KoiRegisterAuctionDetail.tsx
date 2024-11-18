@@ -24,32 +24,30 @@ const KoiRegisterAuctionDetail: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const token = getCookie("access_token");
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     if (!token) return;
 
     const fetchAuction = async () => {
-      setLoading(true); // Set loading to true before starting the fetch
+      setLoading(true);
       try {
         const auctionData = await fetchAuctionById(Number(id));
         if (auctionData) {
           setAuction(auctionData);
+          const auctionKoiData = await fetchAuctionKoi(auctionData.id!);
+          if (auctionKoiData) {
+            const koiDetailsPromises = auctionKoiData.map(
+              (auctionKoi: AuctionKoi) => fetchKoiById(auctionKoi.koi_id),
+            );
+            const koiDetails = await Promise.all(koiDetailsPromises);
 
-          if (auctionData) {
-            const auctionKoiData = await fetchAuctionKoi(auctionData.id!);
-            if (auctionKoiData) {
-              const koiDetailsPromises = auctionKoiData.map(
-                (auctionKoi: AuctionKoi) => fetchKoiById(auctionKoi.koi_id),
-              );
-              const koiDetails = await Promise.all(koiDetailsPromises);
+            const combined = koiDetails.map((koiDetail, index) => ({
+              ...koiDetail,
+              auctionKoiData: auctionKoiData[index],
+            }));
 
-              const combined = koiDetails.map((koiDetail, index) => ({
-                ...koiDetail,
-                auctionKoiData: auctionKoiData[index],
-              }));
-
-              setKoiWithAuctionKoiData(combined);
-            }
+            setKoiWithAuctionKoiData(combined);
           }
         } else {
           setError("No Upcoming Auction Found.");
@@ -57,12 +55,12 @@ const KoiRegisterAuctionDetail: React.FC = () => {
       } catch (err) {
         setError("Error fetching auction data.");
       } finally {
-        setLoading(false); // Set loading to false once the fetch is done
+        setLoading(false);
       }
     };
 
     fetchAuction();
-  }, [id, token]);
+  }, [id, token, refreshTrigger]);
 
   if (loading) {
     return (
@@ -129,7 +127,10 @@ const KoiRegisterAuctionDetail: React.FC = () => {
           </div>
         </div>
         <KoiInAuctionGrid kois={koiWithAuctionKoiData} auction={auction} />
-        <BreederKoiManagement auction_id={auction.id} />
+        <BreederKoiManagement
+          auction_id={auction.id}
+          onKoiRegistered={() => setRefreshTrigger((prev) => prev + 1)}
+        />
       </div>
     </>
   );

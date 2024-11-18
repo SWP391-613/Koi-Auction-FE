@@ -107,7 +107,7 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
               </div>
               <div className="hidden sm:block">
                 <KoiDetails
-                  category={koi.category_id.toString()}
+                  category={getCategoryName(koi.category_id)}
                   sex={koi.sex}
                   length={koi.length}
                   year_born={koi.year_born}

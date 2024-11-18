@@ -76,14 +76,11 @@ export const getKoiInAuctionData = async (
   }
 };
 
-export const deleteKoiById = async (
-  id: number,
-  accessToken: string,
-): Promise<void> => {
+export const deleteKoiById = async (id: number): Promise<void> => {
   try {
     const response = await axios.delete(`${API_URL_DEVELOPMENT}/kois/${id}`, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${getUserCookieToken()}`,
       },
     });
 
@@ -94,7 +91,7 @@ export const deleteKoiById = async (
     handleAxiosError(
       error,
       ERROR_MESSAGE.UNEXPECTED_ERROR,
-      false,
+      true,
       ERROR_MESSAGE.FAILED_TO_DELETE_KOI,
     );
   }

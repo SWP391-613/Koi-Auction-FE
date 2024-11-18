@@ -30,6 +30,11 @@ import { createFormData, extractErrorMessage } from "~/utils/dataConverter";
 import PaginationComponent from "../../components/common/PaginationComponent";
 import BreederEditKoiDialog from "../kois/BreederEditKoiDialog";
 import { createKoi, deleteKoiById, getKoiData } from "~/apis/koi.apis";
+import {
+  CONFIRMATION_MESSAGE,
+  ERROR_MESSAGE,
+  SUCCESS_MESSAGE,
+} from "~/constants/message";
 
 const KoiManagement = () => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
@@ -140,18 +145,21 @@ const KoiManagement = () => {
 
   const handleDelete = async (id: number) => {
     const confirmed = window.confirm(
-      `Are you sure you want to delete koi: ${id}?`,
+      `${CONFIRMATION_MESSAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_KOI} ${id}?`,
     );
     if (!confirmed) return;
 
     try {
-      await deleteKoiById(id, accessToken); // Use the utility function
-      toast.success("Koi deleted successfully!");
+      await deleteKoiById(id); // Use the utility function
+      toast.success(SUCCESS_MESSAGE.DELETE_KOI_SUCCESS);
       setKois((prevKois) => prevKois.filter((koi) => koi.id !== id)); // Update state
-    } catch (err: any) {
-      const errorMessage = extractErrorMessage(err, "Error deleting koi");
-      toast.error(errorMessage); // Notify user of the error
-      setError(errorMessage); // Set error state
+    } catch (error: any) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unexpected error occurred";
+
+      console.log(errorMessage);
+
+      toast.error(errorMessage);
     }
   };
 
@@ -266,28 +274,28 @@ const KoiManagement = () => {
                     <tr key={koi.id}>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.id || "N/A"}
+                          {koi.id}
                         </p>
                       </td>
 
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.name || "N/A"}
+                          {koi.name}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.sex || "N/A"}
+                          {koi.sex}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.length || "N/A"}
+                          {koi.length}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.year_born || "N/A"}
+                          {koi.year_born}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
@@ -310,22 +318,22 @@ const KoiManagement = () => {
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.status_name || "N/A"}
+                          {koi.status_name}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.is_display || "N/A"}
+                          {koi.is_display}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.owner_id || "N/A"}
+                          {koi.owner_id}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.category_id || "N/A"}
+                          {koi.category_id}
                         </p>
                       </td>
 

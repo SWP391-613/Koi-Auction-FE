@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -103,15 +104,26 @@ const OtpVerification: React.FC = () => {
         ))}
       </div>
       <span className="text-zinc-500 text-[12px] text-center">
-        Please enter the 6-digits one time password (OTP) that we sent to your
+        * Please enter the 6-digits one time password (OTP) that we sent to your
         registered email
       </span>
-      <button
-        onClick={handleSubmit}
-        className="mt-4 bg-sky-500 text-white py-2 px-4 rounded-md hover:bg-sky-600/80 transition duration-300"
-      >
-        Verify OTP
-      </button>
+      <div className="flex gap-5">
+        <Button
+          onClick={() => {
+            navigate("/auth");
+          }}
+          sx={{ marginTop: "1rem" }}
+        >
+          Login now
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          variant="contained"
+          sx={{ marginTop: "1rem" }}
+        >
+          Verify OTP
+        </Button>
+      </div>
       <ToastContainer />
     </div>
   );

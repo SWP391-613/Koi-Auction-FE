@@ -10,6 +10,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { emailRegex } from "~/constants/regex";
 import { UpdateUserDTO, UserResponse, UserStatus } from "~/types/users.type";
 import { getCookie } from "~/utils/cookieUtils";
 
@@ -47,7 +48,6 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
 
   // Validation rules
   const validateEmail = (email: string): string => {
-    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
     if (!email) return "Email is required";
     if (!emailRegex.test(email)) return "Invalid email format";
     return "";

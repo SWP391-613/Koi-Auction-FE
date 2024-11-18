@@ -18,7 +18,6 @@ export const ERROR_MESSAGE = {
   SELECT_KOI_AND_AUCTION: "Please select a koi and an auction to place a bid.",
   REGISTER_KOI_FAILED: "Failed to register koi.",
   DELETE_KOI_FAILED: "Failed to delete koi.",
-  //"Error fetching kois"
   FETCH_KOI_ERROR: "Error fetching kois",
 } as const;
 

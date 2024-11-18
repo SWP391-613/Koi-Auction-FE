@@ -1,18 +1,17 @@
 // src/pages/Register.tsx
-import React from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Typography } from "@mui/material";
-import { Control, FieldErrors, useForm } from "react-hook-form";
+import React from "react";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import NavigateButton from "~/components/shared/NavigateButton";
+import AuthFormContainer from "~/components/forms/AuthFormContainer";
+import CheckboxField from "~/components/forms/CheckboxField";
+import FormField from "~/components/forms/FormField";
 import { UserRegisterDTO } from "~/types/users.type";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import { registerValidationSchema } from "~/utils/validation.utils";
 import { register as registerUser } from "../../utils/apiUtils";
-import FormField from "~/components/forms/FormField";
-import CheckboxField from "~/components/forms/CheckboxField";
-import AuthFormContainer from "~/components/forms/AuthFormContainer";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -39,13 +38,15 @@ const Register: React.FC = () => {
     try {
       const response = await registerUser(data);
       toast.success("Registered successfully");
-      navigate("/otp-verification", {
-        state: {
-          email: data.email,
-          from: "register",
-          statusCode: 200,
-        },
-      });
+      setTimeout(() => {
+        navigate("/otp-verification", {
+          state: {
+            email: data.email,
+            from: "register",
+            statusCode: 200,
+          },
+        });
+      }, 3000);
     } catch (error) {
       const errorMessage = extractErrorMessage(
         error,

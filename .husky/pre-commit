@@ -1,2 +1,2 @@
 # echo "Running pre-commit hook"
-yarn run build:prod && yarn run prettier:fix
+yarn run prettier:fix

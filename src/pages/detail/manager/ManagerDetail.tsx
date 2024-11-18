@@ -149,19 +149,6 @@ const ManagerDetail: React.FC = () => {
           <h2 className="text-2xl text-blue-500 mt-5 mb-6">
             {user.role_name.charAt(0).toUpperCase() + user.role_name.slice(1)}
           </h2>
-          {user.status_name == "VERIFIED" && (
-            <div className="mb-6 flex flex-col items-center">
-              <div className="flex justify-center items-center gap-5">
-                <p className="text-xl font-bold">Account Balance:</p>
-                <p className="text-3xl text-green-600 font-bold">
-                  {user.account_balance !== null
-                    ? formatCurrency(user.account_balance)
-                    : "No money"}
-                </p>
-              </div>
-            </div>
-          )}
-
           {/* About Button */}
           <div className="text-left">
             <FontAwesomeIcon icon={faUserCheck} className="mr-2" />

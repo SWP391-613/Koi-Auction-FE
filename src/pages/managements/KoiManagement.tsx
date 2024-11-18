@@ -255,14 +255,6 @@ const KoiManagement = () => {
               </Typography>
             </div>
           </div>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleOpenCreateDialog}
-            startIcon={<AddIcon />}
-          >
-            Add New Koi
-          </Button>
         </div>
         <div className="px-4 py-4 sm:-mx-8 sm:px-8">
           <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">

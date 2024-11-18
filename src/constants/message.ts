@@ -43,6 +43,17 @@ export const ERROR_MESSAGE = {
   FAILED_TO_LOAD_KOIS: "Failed to load kois.",
   FAILED_TO_DELETE_KOI: "Failed to delete koi.",
   FAILED_TO_LOAD_KOIS_IN_AUCTION: "Failed to load kois in auction.",
+  UPDATE_AUCTION_ERROR: "An error occurred during update auction",
+  DELETE_AUCTION_ERROR: "An error occurred during delete auction",
+  END_AUCTION_ERROR: "An error occurred during end auction",
+  FETCH_AUCTION_STATUS_COUNT_ERROR:
+    "An error occurred during fetch auction status count",
+  CREATE_AUCTION_KOI_ERROR: "An error occurred during create auction koi",
+  FETCH_QUANTITY_KOI_IN_AUCTION_BY_BID_METHOD_ERROR:
+    "An error occurred during fetch quantity koi in auction by bid method",
+
+  UPDATE_ACCOUNT_BALANCE_ERROR:
+    "An error occurred during update account balance",
 
   FETCH_BREEDERS_ERROR: "An error occurred during fetching breeders",
   FETCH_BREEDER_BY_ID_ERROR: "An error occurred during fetching breeder by ID",
@@ -67,6 +78,8 @@ export const ERROR_MESSAGE = {
   UPDATE_STAFF_ERROR: "An error occurred during updating staff",
   DELETE_STAFF_ERROR: "An error occurred during deleting staff",
   FETCH_STAFF_BY_ID_ERROR: "An error occurred during fetching staff by ID",
+
+  FETCH_ORDER_DETAILS_ERROR: "An error occurred during fetching order details",
 } as const;
 
 export const BIDDING_MESSAGE = {

@@ -42,6 +42,9 @@ export const getAuctionStatus = (
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
 
     if (diffDays < 1) {
+      if (isYesterday(end)) {
+        return "Ended yesterday";
+      }
       return "Ended today";
     } else if (diffDays < 30) {
       return `Ended ${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
@@ -85,6 +88,9 @@ export const getAuctionStatusV2 = (
     const diffDays = differenceInDays(now, end);
 
     if (diffDays < 1) {
+      if (isYesterday(end)) {
+        return "Ended yesterday";
+      }
       return "Ended today";
     } else if (diffDays < 30) {
       return `Ended ${diffDays} day${diffDays > 1 ? "s" : ""} ago`;

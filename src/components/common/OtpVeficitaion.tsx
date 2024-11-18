@@ -84,7 +84,7 @@ const OtpVerification: React.FC = () => {
           autoClose: 2000,
           onClose: () => {
             setTimeout(() => navigate("/"), 1000);
-          }
+          },
         });
       }
     } catch (error: Error | any) {

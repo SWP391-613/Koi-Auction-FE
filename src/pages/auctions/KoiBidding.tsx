@@ -39,6 +39,7 @@ import { fetchAuctionKoiDetails } from "~/apis/auctionkoi.apis";
 import { fetchAuctionById } from "~/apis/auction.apis";
 import { fetchKoiById } from "~/apis/koi.apis";
 import { getUserHighestBidInAuctionKoi } from "~/apis/bidding.apis";
+import { placeBid } from "~/apis/bidding.apis";
 
 // Define the BidRequest interface
 export type BidRequest = {

@@ -94,6 +94,7 @@ export const fetchAuctionById = async (id: number) => {
       false,
       ERROR_MESSAGE.FETCH_AUCTION_BY_ID_ERROR,
     );
+    return null;
   }
 };
 
@@ -111,18 +112,13 @@ export const updateAuction = async (
         },
       },
     );
-    if (response.status === 200) {
-      console.log("Auction update successfully");
-    }
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Error update auction:", error.response?.data);
-      throw new Error(
-        error.response?.data?.message || "An error occurred during update",
-      );
-    } else {
-      throw new Error(ERROR_MESSAGE.UNEXPECTED_ERROR);
-    }
+    handleAxiosError(
+      error,
+      ERROR_MESSAGE.UNEXPECTED_ERROR,
+      false,
+      ERROR_MESSAGE.UPDATE_AUCTION_ERROR,
+    );
   }
 };
 
@@ -143,14 +139,12 @@ export const deleteAuction = async (
       console.log("Auction deleted successfully");
     }
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Error deleting auction:", error.response?.data);
-      throw new Error(
-        error.response?.data?.reason || "An error occurred during deletion",
-      );
-    } else {
-      throw new Error(ERROR_MESSAGE.UNEXPECTED_ERROR);
-    }
+    handleAxiosError(
+      error,
+      ERROR_MESSAGE.UNEXPECTED_ERROR,
+      true,
+      ERROR_MESSAGE.DELETE_AUCTION_ERROR,
+    );
   }
 };
 
@@ -167,14 +161,12 @@ export const endAuctionEmergency = async (auctionId: number) => {
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Error end auction", error.response?.data);
-      throw new Error(
-        error.response?.data?.reason || "An error occurred during end auction",
-      );
-    } else {
-      throw new Error(ERROR_MESSAGE.UNEXPECTED_ERROR);
-    }
+    handleAxiosError(
+      error,
+      ERROR_MESSAGE.UNEXPECTED_ERROR,
+      true,
+      ERROR_MESSAGE.END_AUCTION_ERROR,
+    );
   }
 };
 
@@ -185,12 +177,11 @@ export const fetchAuctionStatusCount = async () => {
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Error fetch auction status count", error.response?.data);
-      throw new Error(
-        error.response?.data?.message ||
-          "An error occurred during fetch auction status count",
-      );
-    }
+    handleAxiosError(
+      error,
+      ERROR_MESSAGE.UNEXPECTED_ERROR,
+      false,
+      ERROR_MESSAGE.FETCH_AUCTION_STATUS_COUNT_ERROR,
+    );
   }
 };

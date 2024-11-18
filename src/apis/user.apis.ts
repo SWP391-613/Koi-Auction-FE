@@ -3,6 +3,7 @@ import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
 import { Staff, StaffRegisterDTO } from "~/types/users.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { handleAxiosError } from "~/utils/error.utils";
 
 export const updateAccountBalance = async (
   userId: number,
@@ -21,14 +22,12 @@ export const updateAccountBalance = async (
     );
     return response;
   } catch (err: any) {
-    //check the where error from and throw the error
-    if (axios.isAxiosError(err)) {
-      throw new Error(
-        err.response?.data?.message || "An error occurred during deposit",
-      );
-    } else {
-      throw new Error(ERROR_MESSAGE.UNEXPECTED_ERROR);
-    }
+    handleAxiosError(
+      err,
+      ERROR_MESSAGE.UNEXPECTED_ERROR,
+      false,
+      ERROR_MESSAGE.UPDATE_ACCOUNT_BALANCE_ERROR,
+    );
   }
 };
 
@@ -48,15 +47,12 @@ export const verifyOtpToVerifyUser = async (
       throw new Error("OTP verification failed");
     }
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Error verifying OTP:", error.response?.data);
-      throw new Error(
-        error.response?.data?.message ||
-          "An error occurred during verification",
-      );
-    } else {
-      throw new Error(ERROR_MESSAGE.UNEXPECTED_ERROR);
-    }
+    handleAxiosError(
+      error,
+      ERROR_MESSAGE.UNEXPECTED_ERROR,
+      false,
+      ERROR_MESSAGE.OTP_VERIFICATION_ERROR,
+    );
   }
 };
 

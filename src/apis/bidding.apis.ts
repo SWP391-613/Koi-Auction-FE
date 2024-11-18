@@ -42,7 +42,7 @@ export const placeBid = async (
     return { isSold: response.data.isSold };
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      if (error.response.status === 401) {
+      if (error.response.status === 401 || error.response.status === 403) {
         throw new Error("Unauthorized. Please log in again.");
       }
       if (error.response.data.reason === "BiddingRuleException") {

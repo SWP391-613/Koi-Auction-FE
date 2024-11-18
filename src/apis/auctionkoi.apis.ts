@@ -18,14 +18,13 @@ export const fetchAuctionKoi = async (auctionId: number) => {
       false,
       ERROR_MESSAGE.FETCH_AUCTION_KOI_ERROR,
     );
-    return null;
   }
 };
 
 export const fetchAuctionKoiDetails = async (
   auctionId: number,
   auctionKoiId: number,
-): Promise<AuctionKoi | void> => {
+): Promise<AuctionKoi | null> => {
   try {
     const response = await axios.get(
       `${API_URL_DEVELOPMENT}/auctionkois/${auctionId}/${auctionKoiId}`,
@@ -38,6 +37,7 @@ export const fetchAuctionKoiDetails = async (
       false,
       ERROR_MESSAGE.FAILED_TO_LOAD_AUCTION_KOI_DETAILS,
     );
+    return null;
   }
 };
 
@@ -73,14 +73,12 @@ export const postAuctionKoi = async (
     console.log("Auction Koi created successfully:", response.data);
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Axios error:", error.response?.data || error.message);
-      throw new Error(
-        error.response?.data?.reason || "Failed to create auction koi",
-      );
-    } else {
-      console.error("Unexpected error:", error);
-    }
+    handleAxiosError(
+      error,
+      ERROR_MESSAGE.UNEXPECTED_ERROR,
+      true,
+      ERROR_MESSAGE.CREATE_AUCTION_KOI_ERROR,
+    );
   }
 };
 
@@ -91,15 +89,11 @@ export const fetchQuantityKoiInAuctionByBidMethod = async () => {
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error(
-        "Error fetch quantity koi in auction by bid method",
-        error.response?.data,
-      );
-      throw new Error(
-        error.response?.data?.message ||
-          "An error occurred during fetch quantity koi in auction by bid method",
-      );
-    }
+    handleAxiosError(
+      error,
+      ERROR_MESSAGE.UNEXPECTED_ERROR,
+      false,
+      ERROR_MESSAGE.FETCH_QUANTITY_KOI_IN_AUCTION_BY_BID_METHOD_ERROR,
+    );
   }
 };

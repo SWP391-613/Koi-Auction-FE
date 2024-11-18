@@ -59,14 +59,16 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
       value: getCategoryName(koi.category_id),
       bgColor: "bg-gray-300",
     },
-    {
-      icon: faDollarSign,
-      label: KOI_INFO_LABEL.BASE_PRICE,
-      value: ["DESCENDING_BID", "SEALED_BID"].includes(auctionKoi.bid_method)
-        ? ""
-        : formatCurrency(auctionKoi.base_price),
-      bgColor: "bg-blue-200",
-    },
+    auctionKoi.bid_method !== "DESCENDING_BID" &&
+      auctionKoi.bid_method !== "SEALED_BID" && {
+        icon: faDollarSign,
+        label:
+          auctionKoi.bid_method === "FIXED_PRICE"
+            ? KOI_INFO_LABEL.SALES_PRICE
+            : KOI_INFO_LABEL.BASE_PRICE,
+        value: formatCurrency(auctionKoi.base_price),
+        bgColor: "bg-blue-200",
+      },
     {
       icon: faGavel,
       label:
@@ -95,7 +97,7 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
           },
         ]
       : []),
-  ];
+  ].filter(Boolean);
 
   const accessToken = getUserCookieToken();
 

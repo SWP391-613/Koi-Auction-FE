@@ -25,6 +25,7 @@ export const KOI_INFO_LABEL = {
   HIDDEN: "Hidden",
   BID_METHOD: "Bid Method",
   BID_STEP: "Bid Step",
+  SALES_PRICE: "Sales Price",
 } as const;
 
 export const SEARCH_LABEL = {

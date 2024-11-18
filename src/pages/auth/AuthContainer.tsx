@@ -1,25 +1,24 @@
 // src/components/Auth/index.tsx
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import * as yup from "yup";
+import { login, register } from "~/apis/auth.apis";
+import { sendOtpForgotPassword } from "~/apis/otp.apis";
+import { routeUserToEachPage } from "~/components/auth/RoleBasedRoute";
+import CheckboxField from "~/components/forms/CheckboxField";
+import FancyFormField from "~/components/shared/FancyFormField";
+import { GENERAL_TOAST_MESSAGE, OTP_TOAST_MESSAGE } from "~/constants/message";
+import { useAuth } from "~/contexts/AuthContext";
 import {
   loginValidationSchema,
   registerValidationSchema,
 } from "~/utils/validation.utils";
-import { login, register as registerUser } from "~/utils/apiUtils";
-import { useAuth } from "~/contexts/AuthContext";
-import { routeUserToEachPage } from "~/components/auth/RoleBasedRoute";
-import FormField from "~/components/forms/FormField";
-import CheckboxField from "~/components/forms/CheckboxField";
 import styles from "./styles.module.css";
-import { Typography } from "@mui/material";
-import * as yup from "yup";
-import { sendOtpForgotPassword } from "~/utils/apiUtils";
-import { motion } from "framer-motion";
-import { GENERAL_TOAST_MESSAGE, OTP_TOAST_MESSAGE } from "~/constants/message";
-import FancyFormField from "~/components/shared/FancyFormField";
+import { LoginDTO, UserRegisterDTO } from "~/types/users.type";
 
 const LoginForm = () => {
   const { authLogin } = useAuth();
@@ -64,20 +63,23 @@ const LoginForm = () => {
     }
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: LoginDTO) => {
     try {
       const response = await login(data);
-      authLogin({
-        token: response.token,
-        roles: response.roles,
-        id: response.id,
-        username: response.username,
-        refresh_token: response.refresh_token,
-      });
-      toast.success("Login successfully!");
-      setTimeout(() => {
-        navigate(routeUserToEachPage(response.roles[0]));
-      }, 2000);
+
+      if (response) {
+        authLogin({
+          token: response.token,
+          roles: response.roles,
+          id: response.id,
+          username: response.username,
+          refresh_token: response.refresh_token,
+        });
+        toast.success("Login successfully!");
+        setTimeout(() => {
+          navigate(routeUserToEachPage(response.roles[0]));
+        }, 2000);
+      }
     } catch (error) {
       toast.error("Wrong email or password");
     }
@@ -147,9 +149,9 @@ const RegisterForm = () => {
     },
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: UserRegisterDTO) => {
     try {
-      await registerUser(data);
+      await register(data);
       toast.success("Registered successfully");
       navigate("/otp-verification", {
         state: {
@@ -158,8 +160,10 @@ const RegisterForm = () => {
           statusCode: 200,
         },
       });
-    } catch (error) {
-      toast.error("Registration failed");
+    } catch (error: any) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unexpected error occurred";
+      toast.error(errorMessage);
     }
   };
 

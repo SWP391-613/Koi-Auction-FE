@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
 import { AddNewAuctionDTO, AuctionModel } from "~/types/auctions.type";
 import { Staff } from "~/types/users.type";
-import { createNewAuction } from "~/utils/apiUtils";
+import { createNewAuction } from "~/apis/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage, prepareAuctionData } from "~/utils/dataConverter";
 

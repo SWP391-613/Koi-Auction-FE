@@ -3,9 +3,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { updateUserPassword } from "~/utils/apiUtils";
 import { forgotPasswordValidationSchema } from "~/utils/validation.utils";
 import { useLocation, useNavigate } from "react-router-dom";
+import { updateUserPassword } from "~/apis/forgotpassword.apis";
 
 const ForgotPassword: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);

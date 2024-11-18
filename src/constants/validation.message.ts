@@ -49,6 +49,8 @@ export const KOI_CREATE_VALIDATION_MESSAGE = {
 export const SNACKBAR_VALIDATION_MESSAGE = {
   PLEASE_FIX_THE_ERRORS_IN_THE_FORM: "Please fix the errors in the form",
   KOI_CREATE_SUCCESS: "Koi created successfully!",
+  KOI_UPDATE_SUCCESS: "Koi updated successfully!",
+  KOI_DELETE_SUCCESS: "Koi deleted successfully!",
 } as const;
 
 export const GENERAL_VALIDATION_MESSAGE = {

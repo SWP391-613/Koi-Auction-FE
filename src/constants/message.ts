@@ -24,6 +24,49 @@ export const ERROR_MESSAGE = {
   FAILED_TO_FETCH_AUCTIONS: "Failed to fetch auctions.",
   FAILED_TO_LOAD_BANKS_LIST: "Failed to load banks list.",
   ERROR_CREATING_KOI: "Error creating koi.",
+  UNEXPECTED_ERROR: "An unexpected error occurred.",
+  LOGIN_ERROR: "An error occurred during login",
+  REGISTER_ERROR: "An error occurred during registration",
+  CREATE_AUCTION_ERROR: "An error occurred during auction creation",
+  FETCH_AUCTION_ERROR: "An error occurred during auction fetching",
+  FETCH_AUCTION_BY_STATUS_ERROR:
+    "An error occurred during fetching auction by status",
+  FETCH_AUCTION_BY_ID_ERROR: "An error occurred during fetching auction by ID",
+  FETCH_AUCTION_KOI_ERROR: "An error occurred during fetching auction koi",
+  FETCH_BREEDER_KOI_ERROR: "An error occurred during fetching breeder koi",
+  FETCH_BREEDER_KOI_WITH_STATUS_ERROR:
+    "An error occurred during fetching breeder koi with status",
+  FETCH_KOI_BY_ID_ERROR: "An error occurred during fetching koi by ID",
+  FAILED_TO_LOAD_AUCTION_KOI_DETAILS: "Failed to load auction koi details.",
+  FAILED_TO_UPDATE_KOI: "Failed to update koi.",
+  FAILED_TO_LOAD_KOI_DETAILS: "Failed to load koi details.",
+  FAILED_TO_LOAD_KOIS: "Failed to load kois.",
+  FAILED_TO_DELETE_KOI: "Failed to delete koi.",
+  FAILED_TO_LOAD_KOIS_IN_AUCTION: "Failed to load kois in auction.",
+
+  FETCH_BREEDERS_ERROR: "An error occurred during fetching breeders",
+  FETCH_BREEDER_BY_ID_ERROR: "An error occurred during fetching breeder by ID",
+  CREATE_BREEDER_ERROR: "An error occurred during creating breeder",
+  UPDATE_BREEDER_ERROR: "An error occurred during updating breeder",
+  DELETE_BREEDER_ERROR: "An error occurred during deleting breeder",
+
+  FETCH_MEMBERS_ERROR: "An error occurred during fetching members",
+  FETCH_MEMBER_BY_ID_ERROR: "An error occurred during fetching member by ID",
+  CREATE_MEMBER_ERROR: "An error occurred during creating member",
+  UPDATE_MEMBER_ERROR: "An error occurred during updating member",
+  DELETE_MEMBER_ERROR: "An error occurred during deleting member",
+
+  FETCH_MANAGER_ERROR: "An error occurred during fetching manager",
+  FETCH_MANAGER_BY_ID_ERROR: "An error occurred during fetching manager by ID",
+  CREATE_MANAGER_ERROR: "An error occurred during creating manager",
+  UPDATE_MANAGER_ERROR: "An error occurred during updating manager",
+  DELETE_MANAGER_ERROR: "An error occurred during deleting manager",
+
+  FETCH_STAFF_ERROR: "An error occurred during fetching staff",
+  CREATE_STAFF_ERROR: "An error occurred during creating staff",
+  UPDATE_STAFF_ERROR: "An error occurred during updating staff",
+  DELETE_STAFF_ERROR: "An error occurred during deleting staff",
+  FETCH_STAFF_BY_ID_ERROR: "An error occurred during fetching staff by ID",
 } as const;
 
 export const BIDDING_MESSAGE = {

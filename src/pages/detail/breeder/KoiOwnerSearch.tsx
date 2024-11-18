@@ -3,13 +3,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { fetchKoisOfBreeder } from "~/apis/users/breeder.apis";
 import KoiOwnerSearchComponent from "~/components/search/KoiOwnerSearchComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { useAuth } from "~/contexts/AuthContext";
 import { environment } from "~/environments/environment";
 import { KoiDetailModel } from "~/types/kois.type";
-import { fetchKoisOfBreeder } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 

@@ -49,7 +49,9 @@ const FancyFormField: React.FC<FancyFormFieldProps> = ({
               strokeWidth="2"
               fill="none"
               className={`transition-colors duration-200 ${
-                errors[name] ? 'stroke-red-500' : 'stroke-[--clr] peer-focus-visible:stroke-teal-600'
+                errors[name]
+                  ? "stroke-red-500"
+                  : "stroke-[--clr] peer-focus-visible:stroke-teal-600"
               }`}
             >
               <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>

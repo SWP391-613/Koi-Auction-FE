@@ -15,9 +15,9 @@ import { useNavigate } from "react-router-dom";
 import { Staff } from "~/types/users.type"; // Adjust the import path as needed
 import { getCookie } from "~/utils/cookieUtils"; // Adjust the import path as needed
 import { toast } from "react-toastify";
-import { getStaffData, updateStaff } from "~/utils/apiUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import LoadingComponent from "~/components/shared/LoadingComponent";
+import { getStaffData, updateStaff } from "~/apis/users/staff.apis";
 
 interface EditStaffDialogProps {
   open: boolean;

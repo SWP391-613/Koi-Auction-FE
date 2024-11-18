@@ -7,13 +7,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import LoadingComponent from "~/components/shared/LoadingComponent";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { useUserData } from "~/hooks/useUserData";
-import { formatDate, sendOtp } from "~/utils/apiUtils";
+
 import { getCookie } from "~/utils/cookieUtils";
-import { formatCurrency } from "~/utils/currencyUtils";
+import { formatDateV2 } from "~/utils/dateTimeUtils";
 import UserDetailDialog from "../member/UserDetailDialog";
 import "./ManagerDetail.scss";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { sendOtp } from "~/apis/otp.apis";
 
 const ManagerDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -167,7 +168,7 @@ const ManagerDetail: React.FC = () => {
               </div>
               <div className="flex gap-5 justify-between ">
                 <h2 className="text-lg font-bold">Created At</h2>
-                <p>{formatDate(user.created_at || "")}</p>
+                <p>{formatDateV2(user.created_at || "")}</p>
               </div>
             </div>
           )}

@@ -5,15 +5,14 @@ import { format } from "date-fns";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { default as React, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import KoiSearchGrid from "~/components/shared/KoiSearchGrid";
 import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { useAuth } from "~/contexts/AuthContext";
 import { KoiInAuctionDetailModel } from "~/types/kois.type";
 import { BreedersResponse } from "~/types/paginated.types";
-import { getKoiInAuctionData } from "~/utils/apiUtils";
 import { generateBlogPostsPreview } from "~/utils/data/blog.data";
 import FancyButton from "../../components/shared/FancyButton";
 import Kois from "../kois/Kois";
+import { getKoiInAuctionData } from "~/apis/koi.apis";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -49,8 +48,10 @@ const Home = () => {
       try {
         setIsLoading(true);
         const response = await getKoiInAuctionData("", 1, 12);
-        console.log("API Response:", response);
-        setRandomKois(response.item || []);
+        if (response) {
+          console.log("API Response:", response);
+          setRandomKois(response.item || []);
+        }
       } catch (error) {
         console.error("Error fetching kois:", error);
       } finally {

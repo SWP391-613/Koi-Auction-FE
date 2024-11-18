@@ -2,16 +2,14 @@ import AddIcon from "@mui/icons-material/Add";
 import { Alert, Button, Container, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { fetchBreedersData } from "~/apis/users/breeder.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { BREEDER_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { Breeder } from "~/types/users.type";
-import { fetchBreedersData } from "~/utils/apiUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
-import AddBreederDialog from "../detail/breeder/AddBreederDialog";
-import EditBreederDialog from "../detail/breeder/EditBreederDialog";
 
 const BreederManagement = () => {
   const [breeders, setBreeders] = useState<Breeder[]>([]);

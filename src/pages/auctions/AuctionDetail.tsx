@@ -4,17 +4,15 @@ import { Typography } from "@mui/material";
 import { isPast, parse } from "date-fns"; // Make sure to install date-fns if you haven't already
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { fetchAuctionById } from "~/apis/auction.apis";
+import { fetchAuctionKoi } from "~/apis/auctionkoi.apis";
+import { fetchKoiById } from "~/apis/koi.apis";
 import KoiInAuctionGrid from "~/components/shared/KoiInAuctionGrid";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import NavigateButton from "~/components/shared/NavigateButton";
 import { useAuth } from "~/contexts/AuthContext";
 import { KoiWithAuctionKoiData } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
-import {
-  fetchAuctionById,
-  fetchAuctionKoi,
-  getKoiById,
-} from "~/utils/apiUtils"; // Assume we have this API function
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { getAuctionStatusV2 } from "~/utils/dateTimeUtils";
 
@@ -34,21 +32,25 @@ const AuctionDetail: React.FC = () => {
       setError(null);
       try {
         const auctionData = await fetchAuctionById(Number(id));
-        setAuction(auctionData);
-
         if (auctionData) {
-          const auctionKoiData = await fetchAuctionKoi(auctionData.id!);
-          const koiDetailsPromises = auctionKoiData.map((auctionKoi) =>
-            getKoiById(auctionKoi.koi_id),
-          );
-          const koiDetails = await Promise.all(koiDetailsPromises);
+          setAuction(auctionData);
 
-          const combined = koiDetails.map((koiDetail, index) => ({
-            ...koiDetail,
-            auctionKoiData: auctionKoiData[index],
-          }));
+          if (auctionData) {
+            const auctionKoiData = await fetchAuctionKoi(auctionData.id!);
+            if (auctionKoiData) {
+              const koiDetailsPromises = auctionKoiData.map((auctionKoi) =>
+                fetchKoiById(auctionKoi.koi_id),
+              );
+              const koiDetails = await Promise.all(koiDetailsPromises);
 
-          setKoiWithAuctionKoiData(combined);
+              const combined = koiDetails.map((koiDetail, index) => ({
+                ...koiDetail,
+                auctionKoiData: auctionKoiData[index],
+              }));
+
+              setKoiWithAuctionKoiData(combined);
+            }
+          }
         } else {
           setError("Auction not found.");
         }

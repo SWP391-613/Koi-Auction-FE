@@ -21,10 +21,10 @@ import SearchBar from "~/components/shared/SearchBar";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import OrderSearchGrid from "~/components/shared/OrderSearchGrid";
 import { OrderStatus } from "~/types/orders.type";
-import { updateOrderStatus } from "~/utils/apiUtils"; // You'll need to create this function
 import { getOrderStatusColor } from "~/utils/colorUtils";
 import { toast } from "react-toastify";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { updateOrderStatus } from "~/apis/order.apis";
 
 const OrderManagement: React.FC = () => {
   const {

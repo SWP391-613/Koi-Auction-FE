@@ -16,7 +16,6 @@ import { LoginDTO } from "~/types/users.type";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import { loginValidationSchema } from "~/utils/validation.utils";
 import { useAuth } from "../../contexts/AuthContext";
-import { login, sendOtpForgotPassword } from "../../utils/apiUtils";
 import FormField from "~/components/forms/FormField";
 import CheckboxField from "~/components/forms/CheckboxField";
 import AuthFormContainer from "~/components/forms/AuthFormContainer";
@@ -27,6 +26,8 @@ import {
   LOGIN_FORM_TOAST_MESSAGE,
   OTP_TOAST_MESSAGE,
 } from "~/constants/message";
+import { sendOtpForgotPassword } from "~/apis/otp.apis";
+import { login } from "~/apis/auth.apis";
 
 const Login: React.FC = () => {
   const { authLogin } = useAuth();
@@ -82,19 +83,21 @@ const Login: React.FC = () => {
     try {
       const response = await login(data);
 
-      authLogin({
-        token: response.token,
-        roles: response.roles,
-        id: response.id,
-        username: response.username,
-        refresh_token: response.refresh_token,
-        status: response.status,
-      });
+      if (response) {
+        authLogin({
+          token: response.token,
+          roles: response.roles,
+          id: response.id,
+          username: response.username,
+          refresh_token: response.refresh_token,
+          status: response.status,
+        });
 
-      toast.success("Login successfully!");
-      setTimeout(() => {
-        navigate(routeUserToEachPage(response.roles[0]));
-      }, 2000);
+        toast.success("Login successfully!");
+        setTimeout(() => {
+          navigate(routeUserToEachPage(response.roles[0]));
+        }, 2000);
+      }
     } catch (error) {
       const errorMessage = extractErrorMessage(
         error,

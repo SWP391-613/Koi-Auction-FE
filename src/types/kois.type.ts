@@ -67,3 +67,11 @@ export type QuantityKoiByGenderResponse = {
   female: number;
   unknown: number;
 };
+
+export type QuantityKoiByStatusResponse = {
+  total: number;
+  unverified: number;
+  verified: number;
+  rejected: number;
+  sold: number;
+};

@@ -9,14 +9,12 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import { Order, OrderStatus } from "~/types/orders.type";
-import {
-  fetchOrderById,
-  submitFeedback,
-  getFeedbackByOrderId,
-} from "../../../utils/apiUtils";
+
 import { getCookie } from "../../../utils/cookieUtils";
 import { useAuth } from "~/contexts/AuthContext";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { fetchOrderById } from "~/apis/order.apis";
+import { getFeedbackByOrderId, submitFeedback } from "~/apis/feedback.apis";
 
 interface FeedbackProps {
   orderId: string;

@@ -21,11 +21,13 @@ import LoadingComponent from "~/components/shared/LoadingComponent";
 import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { useUserData } from "~/hooks/useUserData";
 import { UserResponse } from "~/types/users.type";
-import { formatDate, sendOtp, sendRequestUpdateRole } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import UserDetailDialog from "./UserDetailDialog";
+import { formatDateV2 } from "~/utils/dateTimeUtils";
+import { sendOtp } from "~/apis/otp.apis";
+import { sendRequestUpdateRole } from "~/apis/mail.apis";
 
 const UserDetail: React.FC = () => {
   const { user, loading: userLoading, loading, error, setUser } = useUserData();
@@ -290,7 +292,7 @@ const UserDetail: React.FC = () => {
               </div>
               <div className="flex gap-5 justify-between ">
                 <h2 className="text-lg font-bold">Created At</h2>
-                <p>{formatDate(user.created_at || "")}</p>
+                <p>{formatDateV2(user.created_at || "")}</p>
               </div>
               <div>
                 {user.status_name === "VERIFIED" &&

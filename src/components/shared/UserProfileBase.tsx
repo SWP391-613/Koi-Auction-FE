@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { sendOtp } from "~/utils/apiUtils";
+import { sendOtp } from "~/apis/apiUtils";
 import { useUserData } from "~/hooks/useUserData";
 import { UserBase } from "~/types/users.type";
 

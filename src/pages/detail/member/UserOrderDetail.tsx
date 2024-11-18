@@ -20,13 +20,6 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import PaymentIcon from "@mui/icons-material/Payment";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import {
-  fetchOrderDetails,
-  updateOrder,
-  createOrderPayment,
-  getOrderById,
-  confirmOrder,
-} from "~/utils/apiUtils";
 import { Order, OrderDetail, OrderStatus } from "~/types/orders.type";
 import { PaymentDTO } from "~/types/payments.type";
 import { toast, ToastContainer } from "react-toastify";
@@ -45,6 +38,13 @@ import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import { ShippingInformation } from "./components/ShippingInformation";
 import { SHIPPING_PRICES } from "~/types/shipping.types";
+import {
+  confirmOrder,
+  fetchOrderDetails,
+  getOrderById,
+  updateOrder,
+} from "~/apis/order.apis";
+import { createOrderPayment } from "~/apis/payment.apis";
 
 // Create a styled Button component
 const GrayButton = styled(Button)(({ theme }) => ({

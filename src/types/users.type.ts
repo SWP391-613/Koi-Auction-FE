@@ -37,6 +37,11 @@ export type UserLoginResponse = {
   refresh_token: string;
 };
 
+export type UserRegisterResponse = {
+  message: string;
+  single_data: Omit<UserBase, "password">;
+};
+
 export type UserRegisterBase = {
   first_name: string;
   last_name: string;

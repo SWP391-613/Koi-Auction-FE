@@ -5,13 +5,13 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { register } from "~/apis/auth.apis";
 import AuthFormContainer from "~/components/forms/AuthFormContainer";
 import CheckboxField from "~/components/forms/CheckboxField";
 import FormField from "~/components/forms/FormField";
 import { UserRegisterDTO } from "~/types/users.type";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import { registerValidationSchema } from "~/utils/validation.utils";
-import { register as registerUser } from "../../utils/apiUtils";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ const Register: React.FC = () => {
 
   const onSubmit = async (data: UserRegisterDTO) => {
     try {
-      const response = await registerUser(data);
+      const response = await register(data);
       toast.success("Registered successfully");
       setTimeout(() => {
         navigate("/otp-verification", {

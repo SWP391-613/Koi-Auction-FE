@@ -3,13 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { verifyOtpIsCorrect } from "~/apis/otp.apis";
+import { verifyOtpToVerifyUser } from "~/apis/user.apis";
 import { ROUTING_PATH } from "~/constants/endPoints";
 import {
   ERROR_MESSAGE,
   SUCCESS_MESSAGE,
   VALIDATION_MESSAGE,
 } from "~/constants/message";
-import { verifyOtpIsCorrect, verifyOtpToVerifyUser } from "~/utils/apiUtils";
 
 const validFromStates = [
   "login",
@@ -71,17 +72,21 @@ const OtpVerification: React.FC = () => {
     try {
       if (state.from === "login") {
         await verifyOtpIsCorrect(email, otpString);
-        // Redirect to /forgot-password if coming from login
+        toast.success(SUCCESS_MESSAGE.OTP_VERIFY_SUCCESS);
         setTimeout(
           () => navigate(ROUTING_PATH.FORGOT_PASSWORD, { state: { email } }),
           3000,
         );
       } else {
         await verifyOtpToVerifyUser(email, otpString);
-        // Redirect to home page or other pages as per requirement
-        setTimeout(() => navigate("/"), 3000);
+        toast.success(SUCCESS_MESSAGE.OTP_VERIFY_SUCCESS);
+        toast.info("Please login again to continue", {
+          autoClose: 2000,
+          onClose: () => {
+            setTimeout(() => navigate("/"), 1000);
+          },
+        });
       }
-      toast.success(SUCCESS_MESSAGE.OTP_VERIFY_SUCCESS);
     } catch (error: Error | any) {
       console.error(error);
       toast.error(error.message || ERROR_MESSAGE.OTP_VERIFICATION_ERROR);

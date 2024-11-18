@@ -8,17 +8,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
-import { Bid } from "~/components/koibiddingdetail/BiddingHistory";
 import { KoiInfoGridComponent } from "~/components/koibiddingdetail/KoiInfoGridComponent";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
 import { useUserData } from "~/hooks/useUserData";
-import {
-  fetchAuctionById,
-  fetchAuctionKoiDetails,
-  getKoiById,
-  getUserHighestBidInAuctionKoi,
-  placeBid,
-} from "~/utils/apiUtils";
+
 import {
   connectWebSocket,
   disconnectWebSocket,
@@ -41,6 +34,11 @@ import { getUserCookieToken } from "~/utils/auth.utils";
 import BiddingChart from "~/components/biddingChart/BiddingChart";
 import { BID_METHOD } from "~/types/auctions.type";
 import { ROUTING_PATH } from "~/constants/endPoints";
+import { Bid } from "~/types/bids.type";
+import { fetchAuctionKoiDetails } from "~/apis/auctionkoi.apis";
+import { fetchAuctionById } from "~/apis/auction.apis";
+import { fetchKoiById } from "~/apis/koi.apis";
+import { getUserHighestBidInAuctionKoi } from "~/apis/bidding.apis";
 
 // Define the BidRequest interface
 export type BidRequest = {
@@ -107,7 +105,7 @@ const KoiBidding: React.FC = () => {
             break;
         }
         setBidAmount(bidAmount);
-        setKoi(await getKoiById(auctionKoiDetails.koi_id));
+        setKoi(await fetchKoiById(auctionKoiDetails.koi_id));
         await getUserHighestBidInAuctionKoi(
           Number(auctionKoiId),
           user?.id || 0,

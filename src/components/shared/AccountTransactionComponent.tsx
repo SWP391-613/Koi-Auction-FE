@@ -9,10 +9,13 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { createDepositPayment, createDrawOutRequest } from "~/utils/apiUtils";
 import { PaymentDTO } from "~/types/payments.type";
 import { Autocomplete } from "@mui/material";
 import { ERROR_MESSAGE, GENERAL_TOAST_MESSAGE } from "~/constants/message";
+import {
+  createDepositPayment,
+  createDrawOutRequest,
+} from "~/apis/payment.apis";
 
 interface AccountTransactionComponentProps {
   userId: number;

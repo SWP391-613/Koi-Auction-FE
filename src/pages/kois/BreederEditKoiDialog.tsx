@@ -10,16 +10,22 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Snackbar,
   TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { fetchKoi, updateKoi } from "~/apis/koi.apis";
 import LoadingComponent from "~/components/shared/LoadingComponent";
+import { SNACKBAR_VALIDATION_MESSAGE } from "~/constants/validation.message";
 import { UpdateKoiDTO } from "~/types/kois.type"; // Adjust the import path as needed
-import { fetchKoi, updateKoi } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils"; // Adjust the import path as needed
-import { extractErrorMessage, getCategoryName } from "~/utils/dataConverter";
+import {
+  categoryMap,
+  extractErrorMessage,
+  getCategoryName,
+} from "~/utils/dataConverter";
 
 interface EditKoiDialogProps {
   open: boolean;
@@ -39,7 +45,8 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
   const [koi, setKoi] = useState<UpdateKoiDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [snackbar, setSnackbar] = useState({ open: false, message: "" });
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -91,11 +98,13 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
 
     try {
       await updateKoi(koiId, koi); // Use the utility function
-      setSnackbar({ open: true, message: "Koi updated successfully" });
+      setSnackbarMessage(SNACKBAR_VALIDATION_MESSAGE.KOI_UPDATE_SUCCESS);
+      setSnackbarOpen(true);
       onClose();
       fetchKoiData();
-    } catch (err) {
-      const errorMessage = extractErrorMessage(err, "Failed to update koi");
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unexpected error occurred";
       toast.error(errorMessage);
       setError(errorMessage);
     }
@@ -201,9 +210,8 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
                 type="number"
                 fullWidth
                 variant="outlined"
-                InputLabelProps={{ shrink: true }}
                 value={koi?.base_price ?? ""}
-                onChange={handleInputChange}
+                inputProps={inputProps}
               />
               <TextField
                 name="description"
@@ -212,6 +220,7 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
                 fullWidth
                 variant="outlined"
                 value={koi?.description ?? ""}
+                onChange={handleInputChange}
               />
             </Box>
             <TextField
@@ -223,28 +232,23 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
               value={koi?.is_display == 0 ? "No" : "Yes"}
               onChange={handleInputChange}
             />
-            <TextField
-              name="category_id"
-              label="Category Id"
-              type="text"
-              fullWidth
-              variant="outlined"
-              value={koi?.category_id ?? ""}
-              onChange={handleInputChange}
-            />
-            <TextField
-              name="category_name"
-              label="Category Name"
-              type="text"
-              fullWidth
-              variant="outlined"
-              value={
-                getCategoryName(koi?.category_id!)
-                  ? getCategoryName(koi?.category_id!)
-                  : "Not Set"
-              }
-              inputProps={inputProps}
-            />
+            <FormControl fullWidth margin="none">
+              <Select
+                name="category_id"
+                value={koi?.category_id ?? ""}
+                onChange={handleInputChange}
+                displayEmpty
+              >
+                <MenuItem value="" disabled>
+                  Select Category
+                </MenuItem>
+                {Object.entries(categoryMap).map(([id, name]) => (
+                  <MenuItem key={id} value={Number(id)}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
         </DialogContent>
         <DialogActions>
@@ -254,6 +258,12 @@ const BreederEditKoiDialog: React.FC<EditKoiDialogProps> = ({
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
       <ToastContainer />
     </>
   );

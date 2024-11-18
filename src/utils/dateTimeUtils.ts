@@ -1,8 +1,12 @@
 import {
   differenceInDays,
+  format,
   isAfter,
   isBefore,
+  isToday,
+  isTomorrow,
   isValid,
+  isYesterday,
   parse,
   parseISO,
 } from "date-fns";
@@ -132,4 +136,18 @@ export function formatDateTimeString(dateTime: string): string {
 
 export const formatDate = (dateString: string): string => {
   return new Date(dateString).toLocaleString();
+};
+
+export const formatDateV2 = (dateString: string): string => {
+  const date = new Date(dateString);
+
+  if (isToday(date)) {
+    return `${format(date, "MMM d, yyyy 'at' h:mm a")}`;
+  } else if (isYesterday(date)) {
+    return `${format(date, "MMM d, yyyy 'at' h:mm a")}`;
+  } else if (isTomorrow(date)) {
+    return `${format(date, "MMM d, yyyy 'at' h:mm a")}`;
+  } else {
+    return format(date, "MMM d, yyyy 'at' h:mm a");
+  }
 };

@@ -12,11 +12,12 @@ import LoadingComponent from "~/components/shared/LoadingComponent";
 import { useUserData } from "~/hooks/useUserData";
 import { KoiDetailModel } from "~/types/kois.type";
 import { UserResponse } from "~/types/users.type";
-import { formatDate, sendOtp } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import UserDetailDialog from "../member/UserDetailDialog";
 import "./BreederDetail.scss";
+import { formatDateV2 } from "~/utils/dateTimeUtils";
+import { sendOtp } from "~/apis/otp.apis";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -188,7 +189,7 @@ const BreederDetail: React.FC = () => {
               </div>
               <div className="flex gap-5 justify-between ">
                 <h2 className="text-lg font-bold">Created At</h2>
-                <p>{formatDate(user.created_at || "")}</p>
+                <p>{formatDateV2(user.created_at || "")}</p>
               </div>
             </div>
           )}

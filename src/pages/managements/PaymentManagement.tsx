@@ -24,7 +24,7 @@ import { PaymentStatus } from "~/types/payments.type";
 import { getPaymentStatusColor } from "~/utils/colorUtils";
 import { toast, ToastContainer } from "react-toastify";
 import { getUserCookieToken } from "~/utils/auth.utils";
-import { updatePaymentStatus } from "~/utils/apiUtils";
+import { updatePaymentStatus } from "~/apis/payment.apis";
 
 const PaymentManagement: React.FC = () => {
   const {

@@ -9,11 +9,11 @@ import AccountVerificationAlert from "~/components/shared/AccountVerificationAle
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { useUserData } from "~/hooks/useUserData";
 import { UserResponse } from "~/types/users.type";
-import { formatDate, sendOtp } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
-import { formatCurrency } from "~/utils/currencyUtils";
+import { formatDateV2 } from "~/utils/dateTimeUtils";
 import UserDetailDialog from "../member/UserDetailDialog";
 import "./StaffDetail.scss";
+import { sendOtp } from "~/apis/otp.apis";
 
 const StaffDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -163,7 +163,7 @@ const StaffDetail: React.FC = () => {
               </div>
               <div className="flex gap-5 justify-between ">
                 <h2 className="text-lg font-bold">Created At</h2>
-                <p>{formatDate(user.created_at || "")}</p>
+                <p>{formatDateV2(user.created_at || "")}</p>
               </div>
             </div>
           )}

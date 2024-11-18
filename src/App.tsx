@@ -347,7 +347,6 @@ function AppContent() {
               </div>
               <Footer />
             </div>
-            <ToastContainer />
           </div>
         </ThemeProvider>
         <Analytics />
@@ -361,6 +360,7 @@ function App() {
   return (
     <NavbarProvider>
       <AppContent />
+      <ToastContainer />
     </NavbarProvider>
   );
 }

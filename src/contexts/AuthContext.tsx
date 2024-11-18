@@ -6,9 +6,9 @@ import {
   eraseCookie,
   parseRoles,
 } from "~/utils/cookieUtils";
-import { doLogout } from "~/utils/apiUtils";
 import { UserLoginResponse, UserStatus } from "~/types/users.type";
 import { AuthLoginData } from "~/types/auth.types";
+import { doLogout } from "~/apis/auth.apis";
 
 interface AuthContextType {
   isLoggedIn: boolean;

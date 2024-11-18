@@ -20,12 +20,12 @@ import {
   PaymentStatus,
   PaymentType,
 } from "~/types/payments.type";
-import { getUserPaymentHistoryByStatus } from "~/utils/apiUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { getPaymentStatusColor } from "~/utils/colorUtils";
 import { ToastContainer } from "react-toastify";
 import PaginationComponent from "../common/PaginationComponent";
+import { getUserPaymentHistoryByStatus } from "~/apis/payment.apis";
 
 const formatPaymentDate = (dateArray: number[]): string => {
   const [year, month, day, hour, minute] = dateArray;

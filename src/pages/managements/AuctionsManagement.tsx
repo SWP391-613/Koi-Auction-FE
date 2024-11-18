@@ -16,29 +16,32 @@ import {
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  deleteAuction,
+  endAuctionEmergency,
+  fetchAuctions,
+  fetchAuctionStatusCount,
+  updateAuction,
+} from "~/apis/auction.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
+import { ERROR_MESSAGE } from "~/constants/message";
 import { AuctionKoi } from "~/types/auctionkois.type";
 import {
   AuctionModel,
   AuctionStatusCount,
   QuantityKoiInAuctionByBidMethod,
 } from "~/types/auctions.type";
-import {
-  deleteAuction,
-  endAuctionEmergency,
-  fetchAuctionKoi,
-  fetchAuctions,
-  fetchAuctionStatusCount,
-  fetchQuantityKoiInAuctionByBidMethod,
-  updateAuction,
-} from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import { formatDateTimeString } from "~/utils/dateTimeUtils";
 import AddAuctionDialog from "../auctions/AddAuctionDialog";
 import EditAuctionDialog from "../auctions/EditAuctionDialog";
+import {
+  fetchAuctionKoi,
+  fetchQuantityKoiInAuctionByBidMethod,
+} from "~/apis/auctionkoi.apis";
 
 export const AuctionsManagement: React.FC = () => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);
@@ -90,10 +93,12 @@ export const AuctionsManagement: React.FC = () => {
           currentPage - 1,
           itemsPerPage,
         );
-        if (fetchedAuctions.length < itemsPerPage) {
-          setHasMorePages(false);
+        if (fetchedAuctions) {
+          if (fetchedAuctions.length < itemsPerPage) {
+            setHasMorePages(false);
+          }
+          setAuctions(fetchedAuctions);
         }
-        setAuctions(fetchedAuctions);
       } catch (error) {
         console.error(ERROR_MESSAGE.FAILED_TO_FETCH_AUCTIONS, error);
         setAuctions([]);
@@ -188,13 +193,15 @@ export const AuctionsManagement: React.FC = () => {
       }
 
       const kois = await fetchAuctionKoi(auction.id);
-      setAuctionKois(
-        kois.map((auctionKoi) => ({
-          ...auctionKoi,
-          name: "", // Provide a default value or fetch from somewhere
-          thumbnail: "", // Provide a default value or fetch from somewhere
-        })),
-      );
+      if (kois) {
+        setAuctionKois(
+          kois.map((auctionKoi) => ({
+            ...auctionKoi,
+            name: "", // Provide a default value or fetch from somewhere
+            thumbnail: "", // Provide a default value or fetch from somewhere
+          })),
+        );
+      }
     } catch (error) {
       console.error("Error fetching auction kois:", error);
       setAuctionKois([]);

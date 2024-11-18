@@ -1,9 +1,9 @@
 import React from "react";
 import AuctionList from "~/components/shared/AuctionList";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
-import { fetchAuctionsByStatus } from "~/utils/apiUtils";
 import UpcomingAuctionCart from "./UpcomingAuctionCart";
 import AuctionUpcomingList from "~/components/shared/AuctionUpcomingList";
+import { fetchAuctionsByStatus } from "~/apis/auction.apis";
 
 const KoiRegisterAuctions: React.FC = () => {
   return (

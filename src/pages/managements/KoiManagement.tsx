@@ -10,23 +10,26 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import AllKoiSearchComponent from "~/components/search/AllKoiSearchComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
-import { KoiDetailModel, QuantityKoiByGenderResponse } from "~/types/kois.type";
-import { createKoi, deleteKoiById, getKoiData } from "~/utils/apiUtils";
+import {
+  KoiDetailModel,
+  QuantityKoiByGenderResponse,
+  QuantityKoiByStatusResponse,
+} from "~/types/kois.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { formatCurrency } from "~/utils/currencyUtils";
 import { createFormData, extractErrorMessage } from "~/utils/dataConverter";
 import PaginationComponent from "../../components/common/PaginationComponent";
 import BreederEditKoiDialog from "../kois/BreederEditKoiDialog";
-import { formatCurrency } from "~/utils/currencyUtils";
-import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { createKoi, deleteKoiById, getKoiData } from "~/apis/koi.apis";
 
 const KoiManagement = () => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
@@ -48,6 +51,8 @@ const KoiManagement = () => {
   const [koiImage, setKoiImage] = useState<File | null>(null);
   const [koiCountGender, setKoiCountGender] =
     useState<QuantityKoiByGenderResponse | null>(null);
+  const [koiCountStatus, setKoiCountStatus] =
+    useState<QuantityKoiByStatusResponse | null>(null);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const handleSearchStateChange = (isActive: boolean) => {
     setIsSearchActive(isActive);
@@ -101,8 +106,25 @@ const KoiManagement = () => {
       }
     };
 
+    //http://localhost:4000/api/v1/kois/count-by-status
+    const fetchKoiStatusCount = async () => {
+      try {
+        const response = await axios.get(
+          `${API_URL_DEVELOPMENT}/kois/count-by-status`,
+        );
+        setKoiCountStatus(response.data);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchKois();
     fetchKoiGenderCount();
+    fetchKoiStatusCount();
   }, [page, itemsPerPage]);
 
   const handlePageChange = (
@@ -197,22 +219,41 @@ const KoiManagement = () => {
     <div className="m-5 overflow-x-auto">
       <div className="">
         <div className="mb-6 flex justify-between">
-          <div className="border-2 p-6 rounded-xl">
-            <Typography variant="h5">
-              Total: {koiCountGender?.total} koi
-            </Typography>
-            <Typography variant="body1">
-              {" "}
-              Male: {koiCountGender?.male}
-            </Typography>
-            <Typography variant="body1">
-              {" "}
-              Female: {koiCountGender?.female}
-            </Typography>
-            <Typography variant="body1">
-              {" "}
-              Unknown: {koiCountGender?.unknown}
-            </Typography>
+          <div className="flex gap-5">
+            <div className="border-2 p-6 rounded-xl">
+              <Typography variant="h5">
+                Total: {koiCountGender?.total} koi
+              </Typography>
+              <Typography variant="body1">
+                {" "}
+                Male: {koiCountGender?.male}
+              </Typography>
+              <Typography variant="body1">
+                {" "}
+                Female: {koiCountGender?.female}
+              </Typography>
+              <Typography variant="body1">
+                {" "}
+                Unknown: {koiCountGender?.unknown}
+              </Typography>
+            </div>
+            <div className="border-2 p-6 rounded-xl">
+              <Typography variant="h5">
+                Total: {koiCountStatus?.total} koi
+              </Typography>
+              <Typography variant="body1">
+                Unverified: {koiCountStatus?.unverified}
+              </Typography>
+              <Typography variant="body1">
+                Verified: {koiCountStatus?.verified}
+              </Typography>
+              <Typography variant="body1">
+                Sold: {koiCountStatus?.sold}
+              </Typography>
+              <Typography variant="body1">
+                Rejected: {koiCountStatus?.rejected}
+              </Typography>
+            </div>
           </div>
           <Button
             variant="contained"

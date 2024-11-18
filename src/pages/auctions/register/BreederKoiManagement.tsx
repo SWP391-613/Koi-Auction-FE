@@ -9,16 +9,14 @@ import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "~/constants/message";
 import { BREEDER_KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { BidMethod } from "~/types/auctionkois.type";
 import { KoiDetailModel } from "~/types/kois.type";
-import {
-  deleteKoiById,
-  fetchKoisOfBreederWithStatus,
-  postAuctionKoi,
-} from "~/utils/apiUtils";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage, getCategoryName } from "~/utils/dataConverter";
 import PaginationComponent from "../../../components/common/PaginationComponent";
 import AuctionKoiPopup from "./AuctionKoiPopup";
+import { fetchKoisOfBreederWithStatus } from "~/apis/users/breeder.apis";
+import { postAuctionKoi } from "~/apis/auctionkoi.apis";
+import { deleteKoiById } from "~/apis/koi.apis";
 
 interface BreederKoiManagementProps {
   auction_id: number;

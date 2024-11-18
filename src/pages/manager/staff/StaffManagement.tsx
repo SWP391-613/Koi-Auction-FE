@@ -11,11 +11,11 @@ import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { STAFF_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import usePagination from "~/hooks/usePagination";
 import { Staff, StaffRegisterDTO } from "~/types/users.type";
-import { createStaff, deleteStaff } from "~/utils/apiUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import CreateStaffDialog from "./CreateStaffDialog";
 import EditStaffDialog from "./EditStaffDialog";
+import { createStaff, deleteStaff } from "~/apis/users/staff.apis";
 
 const StaffManagement = () => {
   const [openCreateDialog, setOpenCreateDialog] = useState(false);

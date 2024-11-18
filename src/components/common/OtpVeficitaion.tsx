@@ -3,13 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { verifyOtpIsCorrect } from "~/apis/otp.apis";
+import { verifyOtpToVerifyUser } from "~/apis/user.apis";
 import { ROUTING_PATH } from "~/constants/endPoints";
 import {
   ERROR_MESSAGE,
   SUCCESS_MESSAGE,
   VALIDATION_MESSAGE,
 } from "~/constants/message";
-import { verifyOtpIsCorrect, verifyOtpToVerifyUser } from "~/utils/apiUtils";
 
 const validFromStates = [
   "login",

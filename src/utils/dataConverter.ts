@@ -3,6 +3,7 @@ import {
   convertTimestamp,
   convertToJavaLocalDateTime,
   formatDateTimeString,
+  formatDateV2,
 } from "./dateTimeUtils";
 import axios from "axios";
 import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";
@@ -119,4 +120,16 @@ export const displayKoiStatus = (
   } else {
     return "Available";
   }
+};
+
+export const createAuctionFromApi = (apiData: AuctionModel): AuctionModel => {
+  return {
+    id: apiData.id,
+    title: apiData.title,
+    start_time: formatDateV2(apiData.start_time.toString()),
+    end_time: formatDateV2(apiData.end_time.toString()),
+    end_time_countdown: apiData.end_time,
+    status: apiData.status,
+    auctioneer_id: apiData.auctioneer_id,
+  };
 };

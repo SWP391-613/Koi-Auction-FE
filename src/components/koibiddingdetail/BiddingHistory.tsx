@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ERROR_MESSAGE } from "~/constants/message";
 import { Bid, BiddingHistoryProps } from "~/types/bids.type";
-import { fetchBidHistory } from "~/utils/apiUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { formatDate } from "~/utils/dateTimeUtils";
 import LoadingComponent from "../shared/LoadingComponent";
+import { fetchBidHistory } from "~/apis/bidding.apis";
 
 const BiddingHistory: React.FC<BiddingHistoryProps> = ({
   auctionKoiId,

@@ -2,13 +2,13 @@ import AddIcon from "@mui/icons-material/Add";
 import { Alert, Button, Container, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { getMembersData } from "~/apis/users/member.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import { MEMBER_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { Member } from "~/types/users.type";
-import { getMembersData } from "~/utils/apiUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 

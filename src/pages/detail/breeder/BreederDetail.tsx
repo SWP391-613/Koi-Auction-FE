@@ -101,11 +101,14 @@ const BreederDetail: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 m-10 transition-du bg-white">
         <div className=" rounded-lg flex flex-col justify-around">
           <div className="flex flex-col p-6 items-center">
-            <img
-              src={user.avatar_url}
-              alt={`${user.first_name} ${user.last_name}`}
-              className="mb-4"
-            />
+            <div className="flex justify-center items-center">
+              <img
+                src={user.avatar_url}
+                alt={`${user.first_name} ${user.last_name}`}
+                className="mb-4 w-[15rem] rounded-full"
+              />
+            </div>
+
             {user.status_name !== "VERIFIED" && (
               <button
                 onClick={handleVerify}

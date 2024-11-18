@@ -200,11 +200,13 @@ const UserDetail: React.FC = () => {
         {/* User Info and Avatar */}
         <div className="rounded-lg flex flex-col justify-around mr-10">
           <div className="flex flex-col justify-start">
-            <img
-              src={user.avatar_url}
-              alt={`${user.first_name} ${user.last_name}`}
-              className="mb-4"
-            />
+            <div className="flex justify-center items-center">
+              <img
+                src={user.avatar_url}
+                alt={`${user.first_name} ${user.last_name}`}
+                className="mb-4 w-[15rem] rounded-full"
+              />
+            </div>
 
             {user.status_name !== "VERIFIED" &&
               renderActionButton(

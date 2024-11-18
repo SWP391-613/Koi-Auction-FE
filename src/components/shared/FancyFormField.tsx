@@ -1,21 +1,21 @@
 import React from "react";
-import { Control, Controller, FieldValues } from "react-hook-form";
+import { Control, Controller, FieldValues, Path } from "react-hook-form";
 
-interface FancyFormFieldProps {
-  name: string;
+interface FancyFormFieldProps<T extends FieldValues> {
+  name: Path<T>;
   label: string;
   type?: string;
-  control: Control<FieldValues>;
+  control: Control<T>;
   errors: any;
 }
 
-const FancyFormField: React.FC<FancyFormFieldProps> = ({
+const FancyFormField = <T extends FieldValues>({
   name,
   label,
   type = "text",
   control,
   errors,
-}) => {
+}: FancyFormFieldProps<T>) => {
   return (
     <Controller
       name={name}
@@ -26,14 +26,14 @@ const FancyFormField: React.FC<FancyFormFieldProps> = ({
             {...field}
             type={type}
             id={name}
-            required=""
+            required
             placeholder=""
             spellCheck="false"
             autoComplete="off"
             className="peer text-black dark:text-white pl-2 h-[40px] min-h-[40px] pr-[40px] leading-normal appearance-none resize-none box-border text-base w-full text-inherit block text-left border border-solid bg-white dark:bg-zinc-800 rounded-[10px] m-0 p-0 outline-0 focus-visible:outline-0 focus-visible:border-teal-500 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#71717a2e] dark:focus-visible:ring-[#14b8a61a]"
           />
           <label
-            htmlFor={name}
+            htmlFor={name.toString()}
             className="cursor-text text-[--clr] inline-block z-0 text-sm mb-px font-normal text-start select-none absolute duration-300 transform origin-[0] translate-x-[32px] peer-focus-visible:text-teal-500 peer-focus-visible:translate-x-[8px] peer-[:not(:placeholder-shown)]:translate-x-[8px] peer-focus-visible:translate-y-[-36px] peer-[:not(:placeholder-shown)]:translate-y-[-36px]"
           >
             {label}

@@ -107,14 +107,6 @@ const MemberManagement = () => {
         <div className="border-2 p-6 rounded-xl">
           <Typography variant="h5">Total Member: {totalItems}</Typography>
         </div>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={handleCreate}
-        >
-          Add New Member
-        </Button>
       </div>
 
       <table className="whitespace-no-wrap w-full">
@@ -170,7 +162,7 @@ const MemberManagement = () => {
               <td className="px-4 py-3 text-sm">{member.updated_at}</td>
               <td className="px-4 py-3 text-sm">
                 <div className="flex items-center space-x-4 text-sm">
-                  <CrudButton
+                  {/* <CrudButton
                     onClick={() => handleView(member.id)}
                     ariaLabel="View Member"
                     svgPath="view.svg"
@@ -180,7 +172,7 @@ const MemberManagement = () => {
                     onClick={() => handleEdit(member.id)}
                     ariaLabel="Edit Member"
                     svgPath="edit.svg"
-                  />
+                  /> */}
 
                   <CrudButton
                     onClick={() => handleDelete(member.id)}

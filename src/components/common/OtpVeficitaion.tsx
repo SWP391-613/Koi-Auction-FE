@@ -71,17 +71,21 @@ const OtpVerification: React.FC = () => {
     try {
       if (state.from === "login") {
         await verifyOtpIsCorrect(email, otpString);
-        // Redirect to /forgot-password if coming from login
+        toast.success(SUCCESS_MESSAGE.OTP_VERIFY_SUCCESS);
         setTimeout(
           () => navigate(ROUTING_PATH.FORGOT_PASSWORD, { state: { email } }),
           3000,
         );
       } else {
         await verifyOtpToVerifyUser(email, otpString);
-        // Redirect to home page or other pages as per requirement
-        setTimeout(() => navigate("/"), 3000);
+        toast.success(SUCCESS_MESSAGE.OTP_VERIFY_SUCCESS);
+        toast.info("Please login again to continue", {
+          autoClose: 2000,
+          onClose: () => {
+            setTimeout(() => navigate("/"), 1000);
+          }
+        });
       }
-      toast.success(SUCCESS_MESSAGE.OTP_VERIFY_SUCCESS);
     } catch (error: Error | any) {
       console.error(error);
       toast.error(error.message || ERROR_MESSAGE.OTP_VERIFICATION_ERROR);

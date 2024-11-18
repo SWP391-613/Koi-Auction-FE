@@ -21,6 +21,12 @@ import FormField from "~/components/forms/FormField";
 import CheckboxField from "~/components/forms/CheckboxField";
 import AuthFormContainer from "~/components/forms/AuthFormContainer";
 import { routeUserToEachPage } from "~/components/auth/RoleBasedRoute";
+import { emailRegex } from "~/constants/regex";
+import {
+  GENERAL_TOAST_MESSAGE,
+  LOGIN_FORM_TOAST_MESSAGE,
+  OTP_TOAST_MESSAGE,
+} from "~/constants/message";
 
 const Login: React.FC = () => {
   const { authLogin } = useAuth();
@@ -43,8 +49,14 @@ const Login: React.FC = () => {
 
   const handleForgotPassword = async () => {
     const email = getValues("email");
-    if (!email || !(await yup.string().email().isValid(email))) {
-      toast.error("Please enter a valid email address to reset your password.");
+    if (
+      !email ||
+      !emailRegex.test(email) ||
+      !(await yup.string().email().isValid(email))
+    ) {
+      toast.error(
+        LOGIN_FORM_TOAST_MESSAGE.INVALID_EMAIL_FORGOT_PASSWORD_FORMAT,
+      );
       return;
     }
 
@@ -59,10 +71,10 @@ const Login: React.FC = () => {
           },
         });
       } else {
-        toast.error("Failed to send OTP");
+        toast.error(OTP_TOAST_MESSAGE.FAILED_TO_SEND_OTP);
       }
     } catch (error) {
-      toast.error("An unexpected error occurred.");
+      toast.error(GENERAL_TOAST_MESSAGE.UNEXPECTED_ERROR);
     }
   };
 

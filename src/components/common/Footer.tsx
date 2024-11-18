@@ -7,7 +7,9 @@ import SecurityIcon from "@mui/icons-material/Security";
 import classNames from "classnames";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { FOOTER_LABEL } from "~/constants/label";
 import { useNavbar } from "../../contexts/NavbarContext";
+import { ROUTING_PATH } from "~/constants/endPoints";
 interface FooterLinkProps {
   href: string;
   icon: JSX.Element;
@@ -59,18 +61,30 @@ const Footer: React.FC = () => {
   const { isNavCollapsed } = useNavbar();
 
   const navLinks: FooterLinkProps[] = [
-    { href: "/", icon: <HomeIcon />, text: "Home" },
-    { href: "/auctions", icon: <AuctionIcon />, text: "Auctions" },
-    { href: "/about", icon: <InfoIcon />, text: "About" },
+    { href: ROUTING_PATH.ROOT, icon: <HomeIcon />, text: FOOTER_LABEL.HOME },
+    {
+      href: ROUTING_PATH.AUCTIONS,
+      icon: <AuctionIcon />,
+      text: FOOTER_LABEL.AUCTIONS,
+    },
+    { href: ROUTING_PATH.ABOUT, icon: <InfoIcon />, text: FOOTER_LABEL.ABOUT },
   ];
 
   const policyLinks: FooterLinkProps[] = [
-    { href: "/privacy", icon: <SecurityIcon />, text: "Privacy Policy" },
-    { href: "/terms", icon: <DescriptionIcon />, text: "Terms and Conditions" },
+    {
+      href: ROUTING_PATH.PRIVACY,
+      icon: <SecurityIcon />,
+      text: FOOTER_LABEL.PRIVACY_POLICY,
+    },
+    {
+      href: ROUTING_PATH.TERMS,
+      icon: <DescriptionIcon />,
+      text: FOOTER_LABEL.TERMS_AND_CONDITIONS,
+    },
   ];
 
   const accountLinks: FooterLinkProps[] = [
-    { href: "/auth", icon: <LoginIcon />, text: "Login" },
+    { href: ROUTING_PATH.AUTH, icon: <LoginIcon />, text: FOOTER_LABEL.LOGIN },
   ];
 
   return (

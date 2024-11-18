@@ -9,6 +9,9 @@ import { Clock } from "../clock/Clock";
 import { RoleIcon } from "../icons/RoleIcon";
 import { UserProfile } from "../userProfile/UserProfile";
 import VerifyPopup from "../verifyPopup/VerifyPopup";
+import { ROUTING_PATH } from "~/constants/endPoints";
+import { GENERAL_TOAST_MESSAGE } from "~/constants/message";
+import { RoleName } from "~/types/roles.type";
 
 const Header = () => {
   const { isNavCollapsed } = useNavbar();
@@ -20,25 +23,25 @@ const Header = () => {
   const handleRoleIconClick = () => {
     if (isLoggedIn && user) {
       switch (user.role_name) {
-        case "manager":
-          navigate("/managers");
+        case RoleName.MANAGER:
+          navigate(ROUTING_PATH.MANAGERS);
           break;
-        case "staff":
-          navigate("/staffs");
+        case RoleName.STAFF:
+          navigate(ROUTING_PATH.STAFFS);
           break;
-        case "breeder":
-          navigate("/breeders");
+        case RoleName.BREEDER:
+          navigate(ROUTING_PATH.BREEDERS);
           break;
-        case "member":
+        case RoleName.MEMBER:
           if (user.status_name !== "VERIFIED") {
             setIsVerifyPopupOpen(true);
           } else {
-            navigate("/users/orders");
+            navigate(ROUTING_PATH.USERS_ORDERS);
           }
           break;
       }
     } else {
-      toast.warning("Please login to access this feature!", {
+      toast.warning(GENERAL_TOAST_MESSAGE.PLEASE_LOGIN_TO_ACCESS_THIS_FEATURE, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,

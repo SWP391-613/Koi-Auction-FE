@@ -22,7 +22,7 @@ const AddKoi = () => {
   return (
     <div className="flex flex-col gap-5 bg-white mt-5 mb-24">
       <div className="flex flex-col justify-center items-center gap-5">
-        <Typography variant="h3" sx={{ textAlign: "center" }}>
+        <Typography variant="h4" sx={{ textAlign: "center" }}>
           Add New Koi
         </Typography>
         <div>

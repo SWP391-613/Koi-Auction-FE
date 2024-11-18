@@ -4,6 +4,7 @@ import { useKoiInAuctionSearch } from "~/hooks/useSearch";
 import PaginationComponent from "../common/PaginationComponent";
 import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
+import { SEARCH_DESCRIPTION, SEARCH_LABEL } from "~/constants/label";
 
 interface KoiInAuctionSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
@@ -31,7 +32,7 @@ const KoiInAuctionSearchComponent: React.FC<
           variant="h5"
           sx={{ textAlign: "left", marginBottom: "1rem" }}
         >
-          Search All Our Available Koi
+          {SEARCH_LABEL.SEARCH_ALL_OUR_AVAILABLE_KOI}
         </Typography>
         <SearchBar
           value={query}
@@ -44,8 +45,7 @@ const KoiInAuctionSearchComponent: React.FC<
           sx={{ textAlign: "left", marginTop: "1rem" }}
           color="error"
         >
-          *Note: Search on name, sex, length, year born, breeder, price, ceiling
-          price, description, bid step, bid method....
+          {SEARCH_DESCRIPTION.SEARCH_ALL_OUR_AVAILABLE_KOI_DESCRIPTION}
         </Typography>
       </div>
       {loading && (

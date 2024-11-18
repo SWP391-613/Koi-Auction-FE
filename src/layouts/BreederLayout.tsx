@@ -5,6 +5,7 @@ import PaymentTransactions from "~/components/shared/PaymentTransactions";
 import KoiRegisterAuctions from "~/pages/auctions/register/KoiRegisterAuctions";
 import AddKoi from "~/pages/detail/breeder/AddKoi";
 import BreederDetail from "~/pages/detail/breeder/BreederDetail";
+import KoiOwnerSearch from "~/pages/detail/breeder/KoiOwnerSearch";
 import KoiWishList from "~/pages/kois/KoiWishList";
 
 const BreederLayout: React.FC = () => {
@@ -20,6 +21,7 @@ const BreederLayout: React.FC = () => {
     <DashboardLayout title="Breeder Dashboard" navLinks={navLinks}>
       <Routes>
         <Route path="" element={<BreederDetail />} />
+        <Route path="kois" element={<KoiOwnerSearch />} />
         <Route path="/add-koi" element={<AddKoi />} />
         <Route path="auctions/register" element={<KoiRegisterAuctions />} />
         <Route path="wishlist" element={<KoiWishList />} />

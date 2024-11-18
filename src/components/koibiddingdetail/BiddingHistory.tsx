@@ -1,20 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { ERROR_MESSAGE } from "~/constants/message";
+import { Bid, BiddingHistoryProps } from "~/types/bids.type";
 import { fetchBidHistory } from "~/utils/apiUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
-
-// Define the interface for checking AuctionKoi is On-going
-interface BiddingHistoryProps {
-  auctionKoiId: number;
-  latestBid: Bid | null;
-}
-// Define the interface for the bid history
-export interface Bid {
-  auction_koi_id: number;
-  bidder_id: number;
-  bid_amount: number;
-  bid_time: string;
-  bidder_name: string;
-}
+import { formatDate } from "~/utils/dateTimeUtils";
+import LoadingComponent from "../shared/LoadingComponent";
 
 const BiddingHistory: React.FC<BiddingHistoryProps> = ({
   auctionKoiId,
@@ -31,7 +21,7 @@ const BiddingHistory: React.FC<BiddingHistoryProps> = ({
         setBidHistory(history.sort((a, b) => b.bid_amount - a.bid_amount));
         setLoading(false);
       } catch (err) {
-        setError("Failed to fetch bidding history");
+        setError(ERROR_MESSAGE.FAILED_TO_FETCH_BIDDING_HISTORY);
         setLoading(false);
       }
     };
@@ -51,12 +41,7 @@ const BiddingHistory: React.FC<BiddingHistoryProps> = ({
     }
   }, [latestBid]);
 
-  const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleString();
-  };
-
-  if (loading)
-    return <div className="text-center py-4">Loading bidding history...</div>;
+  if (loading) return <LoadingComponent />;
   if (error)
     return <div className="text-center py-4 text-red-500">{error}</div>;
 

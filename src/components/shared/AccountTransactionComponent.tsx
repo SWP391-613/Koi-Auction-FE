@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { createDepositPayment, createDrawOutRequest } from "~/utils/apiUtils";
 import { PaymentDTO } from "~/types/payments.type";
 import { Autocomplete } from "@mui/material";
+import { ERROR_MESSAGE, GENERAL_TOAST_MESSAGE } from "~/constants/message";
 
 interface AccountTransactionComponentProps {
   userId: number;
@@ -61,8 +62,8 @@ const AccountTransactionComponent: React.FC<
         }));
         setBanks(banksList);
       } catch (error) {
-        console.error("Failed to fetch banks:", error);
-        toast.error("Failed to load banks list");
+        console.error(ERROR_MESSAGE.FAILED_TO_LOAD_BANKS_LIST, error);
+        toast.error(GENERAL_TOAST_MESSAGE.FAILED_TO_LOAD_BANKS_LIST);
       }
     };
 
@@ -73,12 +74,12 @@ const AccountTransactionComponent: React.FC<
     e.preventDefault();
 
     if (amount <= 0) {
-      toast.error("Amount must be greater than 0.");
+      toast.error(GENERAL_TOAST_MESSAGE.AMOUNT_MUST_BE_GREATER_THAN_ZERO);
       return;
     }
 
     if (transactionType === "drawout" && !selectedBank) {
-      toast.error("Please select a bank.");
+      toast.error(GENERAL_TOAST_MESSAGE.PLEASE_SELECT_BANK);
       return;
     }
 
@@ -101,11 +102,13 @@ const AccountTransactionComponent: React.FC<
         if (response.paymentUrl) {
           window.location.href = response.paymentUrl;
         } else {
-          toast.error("Failed to create payment URL");
+          toast.error(GENERAL_TOAST_MESSAGE.FAILED_TO_CREATE_PAYMENT_URL);
         }
       } else {
         await createDrawOutRequest(paymentDTO, token);
-        toast.success("Draw-out request created successfully");
+        toast.success(
+          GENERAL_TOAST_MESSAGE.DRAW_OUT_REQUEST_CREATED_SUCCESSFULLY,
+        );
         onTransactionSuccess();
       }
     } catch (error: any) {
@@ -117,13 +120,13 @@ const AccountTransactionComponent: React.FC<
           } else if ("message" in errorData) {
             toast.error(errorData.message);
           } else {
-            toast.error("An unexpected error occurred");
+            toast.error(GENERAL_TOAST_MESSAGE.UNEXPECTED_ERROR);
           }
         } else {
           toast.error(String(errorData));
         }
       } else {
-        toast.error("An unexpected error occurred");
+        toast.error(GENERAL_TOAST_MESSAGE.UNEXPECTED_ERROR);
       }
     }
   };

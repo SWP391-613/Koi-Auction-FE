@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { AuctionModel } from "~/types/auctions.type";
 import AuctionSearchComponent from "../search/AuctionSearchComponent";
 import LoadingComponent from "./LoadingComponent";
+import { ERROR_MESSAGE } from "~/constants/message";
 
 interface AuctionListProps {
   fetchAuctionsData: (
@@ -42,7 +43,7 @@ const AuctionList: React.FC<AuctionListProps> = ({
         setAuctions(fetchedAuctions);
         setHasMorePages(fetchedAuctions.length === itemsPerPage);
       } catch (error) {
-        console.error("Error fetching auctions:", error);
+        console.error(ERROR_MESSAGE.FAILED_TO_FETCH_AUCTIONS, error);
         setAuctions([]);
       } finally {
         setIsLoading(false);
@@ -51,13 +52,6 @@ const AuctionList: React.FC<AuctionListProps> = ({
 
     loadAuctions();
   }, [currentPage, fetchAuctionsData, itemsPerPage, isSearchActive]);
-
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    page: number,
-  ) => {
-    setCurrentPage(page);
-  };
 
   const handleSearchStateChange = (isActive: boolean) => {
     setIsSearchActive(isActive);

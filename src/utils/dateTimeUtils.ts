@@ -129,3 +129,7 @@ export function formatDateTimeString(dateTime: string): string {
   // Combine date and time with a space instead of 'T'
   return `${date} ${time}`;
 }
+
+export const formatDate = (dateString: string): string => {
+  return new Date(dateString).toLocaleString();
+};

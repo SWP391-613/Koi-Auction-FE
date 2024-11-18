@@ -1,5 +1,6 @@
 import React from "react";
 import NavigateButton from "../shared/NavigateButton";
+import { ROUTING_PATH } from "~/constants/endPoints";
 
 const NotFound = () => {
   return (
@@ -17,7 +18,7 @@ const NotFound = () => {
             homepage.
           </p>
           <NavigateButton
-            to="/"
+            to={ROUTING_PATH.ROOT}
             text="Back to homepage"
             className="rounded px-8 py-3 font-semibold dark:bg-violet-600 dark:text-gray-50"
           />

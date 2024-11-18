@@ -1,6 +1,5 @@
 import axios, { AxiosError } from "axios";
 import { format, isToday, isTomorrow, isYesterday } from "date-fns";
-import { Bid } from "~/components/koibiddingdetail/BiddingHistory";
 import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 import { BidRequest } from "~/pages/auctions/KoiBidding";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/detail/breeder/BreederDetail";
@@ -40,6 +39,8 @@ import {
 } from "~/types/users.type";
 import { environment } from "../environments/environment";
 import { getUserCookieToken } from "./auth.utils";
+import { ERROR_MESSAGE } from "~/constants/message";
+import { Bid } from "~/types/bids.type";
 
 export const login = async (payload: LoginDTO): Promise<UserLoginResponse> => {
   try {
@@ -173,15 +174,15 @@ export const fetchAuctions = async (
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error(
-        "Error fetching auctions:",
+        ERROR_MESSAGE.FAILED_TO_FETCH_AUCTIONS,
         error.response?.data?.message || error.message,
       );
     } else {
       if (error instanceof Error) {
-        console.error("Error fetching auctions:", error.message);
+        console.error(ERROR_MESSAGE.FAILED_TO_FETCH_AUCTIONS, error.message);
       } else {
         console.error(
-          "Error fetching auctions:",
+          ERROR_MESSAGE.FAILED_TO_FETCH_AUCTIONS,
           "An unexpected error occurred",
         );
       }
@@ -216,15 +217,15 @@ export const fetchAuctionsByStatus = async (
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error(
-        "Error fetching auctions:",
+        ERROR_MESSAGE.FAILED_TO_FETCH_AUCTIONS,
         error.response?.data?.message || error.message,
       );
     } else {
       if (error instanceof Error) {
-        console.error("Error fetching auctions:", error.message);
+        console.error(ERROR_MESSAGE.FAILED_TO_FETCH_AUCTIONS, error.message);
       } else {
         console.error(
-          "Error fetching auctions:",
+          ERROR_MESSAGE.FAILED_TO_FETCH_AUCTIONS,
           "An unexpected error occurred",
         );
       }

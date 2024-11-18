@@ -1,5 +1,6 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { ROUTING_PATH } from "~/constants/endPoints";
 import { useAuth } from "~/contexts/AuthContext";
 import { getUserCookieToken } from "~/utils/auth.utils";
 
@@ -8,7 +9,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
-  redirectPath = "/login",
+  redirectPath = ROUTING_PATH.AUTH,
 }) => {
   const { isLoggedIn } = useAuth();
   const token = getUserCookieToken();

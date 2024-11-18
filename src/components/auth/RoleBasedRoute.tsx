@@ -37,14 +37,9 @@ const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
   }
 
   const roles = user?.roles || (parseRoles(storedRoles) as Role[]);
-
-  console.log("User roles:", roles);
-  console.log("Allowed roles:", allowedRoles);
-
   const hasAllowedRole = roles.some((role: Role) =>
     allowedRoles.includes(role),
   );
-  console.log("Has allowed role:", hasAllowedRole);
 
   if (!hasAllowedRole) {
     return <Navigate to="/unauthorized" replace />;

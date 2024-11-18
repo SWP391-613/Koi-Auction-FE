@@ -31,10 +31,16 @@ import { AuctionModel } from "~/types/auctions.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { formatCurrency } from "~/utils/currencyUtils";
-import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "~/constants/message";
+import {
+  BIDDING_MESSAGE,
+  ERROR_MESSAGE,
+  GENERAL_TOAST_MESSAGE,
+  SUCCESS_MESSAGE,
+} from "~/constants/message";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import BiddingChart from "~/components/biddingChart/BiddingChart";
 import { BID_METHOD } from "~/types/auctions.type";
+import { ROUTING_PATH } from "~/constants/endPoints";
 
 // Define the BidRequest interface
 export type BidRequest = {
@@ -109,8 +115,8 @@ const KoiBidding: React.FC = () => {
           setUserHighestBid(response.bid_amount);
         });
       } catch (error) {
-        console.error("Error loading data:", error);
-        toast.error("Failed to load auction details. Please try again.");
+        console.error(ERROR_MESSAGE.FAILED_TO_LOAD_AUCTION_DETAILS, error);
+        toast.error(GENERAL_TOAST_MESSAGE.FAILED_TO_LOAD_AUCTION_DETAILS);
       }
     };
 
@@ -164,15 +170,12 @@ const KoiBidding: React.FC = () => {
       });
 
       if (response.isSold) {
-        toast.success(
-          "Congratulations! You've won the auction. Redirecting to order page...",
-          {
-            onClose: () => {
-              navigate(`/users/orders`); // or navigate to a specific order if you have an order ID
-            },
-            autoClose: 3000, // Adjust this value to control how long the toast is displayed before redirecting
+        toast.success(BIDDING_MESSAGE.CONGRATULATION_WINNING_BID, {
+          onClose: () => {
+            navigate(ROUTING_PATH.USERS_ORDERS); // or navigate to a specific order if you have an order ID
           },
-        );
+          autoClose: 3000, // Adjust this value to control how long the toast is displayed before redirecting
+        });
       } else {
         toast.success(SUCCESS_MESSAGE.BID_PLACED);
       }

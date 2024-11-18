@@ -68,6 +68,7 @@ import KoiManagement from "./pages/managements/KoiManagement";
 import BreederManagement from "./pages/managements/BreederManagement";
 import StaffManagement from "./pages/manager/staff/StaffManagement";
 import MemberManagement from "./pages/managements/MemberManagement";
+import KoiOwnerSearch from "./pages/detail/breeder/KoiOwnerSearch";
 
 const TITLE = "Koi Auction";
 
@@ -283,6 +284,7 @@ function AppContent() {
                       </Route>
                       <Route path="/breeders/*">
                         <Route path="" element={<BreederDetail />} />
+                        <Route path="kois" element={<KoiOwnerSearch />} />
                         <Route path="add-koi" element={<AddKoi />} />
                         <Route
                           path="auctions/register"

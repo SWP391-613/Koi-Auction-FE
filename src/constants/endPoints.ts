@@ -3,6 +3,19 @@ export const API_URL_DEPLOYMENT =
 export const API_URL_DEVELOPMENT = "http://localhost:4000/api/v1";
 
 export const ROUTING_PATH = {
+  ROOT: "/",
+  AUCTIONS: "/auctions",
+  ABOUT: "/about",
+  BLOG: "/blog",
+  PRIVACY: "/privacy",
+  TERMS: "/terms",
+  AUTH: "/auth",
+  MANAGERS: "/managers",
+  STAFFS: "/staffs",
+  BREEDERS: "/breeders",
+  MEMBERS: "/members",
+  FORGOT_PASSWORD: "/forgot-password",
+  USERS_ORDERS: "/users/orders",
   MANAGERS_HOME: "/managers",
   MANAGERS_KOI: "/managers/koi",
   MANAGERS_AUCTIONS: "/managers/auctions",

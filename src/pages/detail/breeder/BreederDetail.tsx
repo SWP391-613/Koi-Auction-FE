@@ -1,30 +1,22 @@
-import { Button, Divider, Rating, Typography } from "@mui/material";
+import { faEdit, faUserCheck } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, Divider, Typography } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ScrollToTop from "react-scroll-to-top";
 import { toast, ToastContainer } from "react-toastify";
-import PaginationComponent from "~/components/common/PaginationComponent";
-import KoiBreederViewGrid from "~/components/search/KoiBreederViewGrid";
-import KoiOwnerSearchComponent from "~/components/search/KoiOwnerSearchComponent";
+import AccountTransactionComponent from "~/components/shared/AccountTransactionComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
-import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { useAuth } from "~/contexts/AuthContext";
-import { environment } from "~/environments/environment";
 import { useUserData } from "~/hooks/useUserData";
 import { KoiDetailModel } from "~/types/kois.type";
-import { fetchKoisOfBreeder, formatDate, sendOtp } from "~/utils/apiUtils";
-import { getCookie } from "~/utils/cookieUtils";
-import { extractErrorMessage } from "~/utils/dataConverter";
-import "./BreederDetail.scss";
-import ScrollToTop from "react-scroll-to-top";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faUserCheck } from "@fortawesome/free-solid-svg-icons";
-import UserDetailDialog from "../member/UserDetailDialog";
-import { formatCurrency } from "~/utils/currencyUtils";
-import AccountTransactionComponent from "~/components/shared/AccountTransactionComponent";
 import { UserResponse } from "~/types/users.type";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { formatDate, sendOtp } from "~/utils/apiUtils";
+import { getCookie } from "~/utils/cookieUtils";
+import { formatCurrency } from "~/utils/currencyUtils";
+import UserDetailDialog from "../member/UserDetailDialog";
+import "./BreederDetail.scss";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -39,66 +31,19 @@ export type KoiOfBreeder = {
 };
 
 const BreederDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const [kois, setKois] = useState<KoiDetailModel[]>([]);
-  const [totalKoi, setTotalKoi] = useState(0); // State to hold total koi count
-  const [currentPage, setCurrentPage] = useState(1);
-  const [hasMorePages, setHasMorePages] = useState(true); // To track if more pages are available
-  const itemsPerPage = 16; // Number of koi per page
-  const [updateField, setUpdateField] = useState("");
-  const [updateValue, setUpdateValue] = useState("");
   const navigate = useNavigate();
-  const { isLoggedIn } = useAuth();
   const { user, loading, error, setUser } = useUserData();
   const userId = getCookie("user_id");
   const accessToken = getCookie("access_token");
-  const [isSearchActive, setIsSearchActive] = useState(false);
   const [openModal, setOpenModal] = useState(false); // Modal state for showing user details
   const [fetchedUser, setFetchedUser] = useState<UserResponse>();
   const [showAbout, setShowAbout] = useState(true);
-  const handleSearchStateChange = (isActive: boolean) => {
-    setIsSearchActive(isActive);
-  };
   const toggleAbout = () => setShowAbout(!showAbout);
 
   // Close the modal
   const handleClose = () => {
     setOpenModal(false);
   };
-
-  const fetchKoiData = async () => {
-    if (!userId || !accessToken) return;
-
-    try {
-      const API_URL_DEVELOPMENT =
-        import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
-      const response = await fetchKoisOfBreeder(
-        parseInt(userId),
-        currentPage - 1,
-        itemsPerPage,
-        accessToken,
-      );
-
-      if (response) {
-        setKois(response.item);
-        setTotalKoi(response.total_item);
-        setHasMorePages(response.item.length === itemsPerPage);
-      }
-    } catch (error) {
-      const errorMessage = extractErrorMessage(
-        error,
-        "Failed to fetch koi data",
-      );
-      toast.error(errorMessage);
-      console.error("Không thể lấy dữ liệu cá Koi:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (isLoggedIn && userId && accessToken) {
-      fetchKoiData();
-    }
-  }, [currentPage, isLoggedIn, userId, accessToken]);
 
   const handleUpdate = async () => {
     const userId = getCookie("user_id"); // Retrieve user id from cookie
@@ -141,65 +86,16 @@ const BreederDetail: React.FC = () => {
     }
   };
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    page: number,
-  ) => {
-    setCurrentPage(page); // Update the current page when pagination changes
-  };
-
   if (loading) return <LoadingComponent />;
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
 
-  const renderCrudButtons = (koi: KoiDetailModel) => (
-    <>
-      <CrudButton
-        onClick={() => handleEdit(koi.id)}
-        ariaLabel="Edit"
-        svgPath="edit.svg"
-      />
-      <CrudButton
-        onClick={() => handleDelete(koi.id)}
-        ariaLabel="Delete"
-        svgPath="delete.svg"
-      />
-    </>
-  );
-
-  const handleEdit = (id: number) => {
-    navigate(`/kois/${id}`);
-  };
-
-  const handleDelete = async (id: number) => {
-    const confirmDelete = confirm("Are you sure you want to delete this koi?");
-    if (!confirmDelete) return;
-
-    try {
-      const response = await axios.delete(`${API_URL_DEVELOPMENT}/kois/${id}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      if (response.status === 200) {
-        toast.success("Your Koi deleted successfully");
-        setCurrentPage(1);
-        fetchKoiData();
-      }
-    } catch (error) {
-      const errorMessage = extractErrorMessage(error, "Failed to delete koi.");
-      toast.error(errorMessage);
-    }
-  };
-
   const handleTransactionSuccess = () => {
-    fetchKoiData();
     toast.success("Transaction request sent successfully");
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto mt-12 mb-36">
       <AccountVerificationAlert user={user} />
       <div className="grid grid-cols-1 md:grid-cols-3 m-10 transition-du bg-white">
         <div className=" rounded-lg flex flex-col justify-around">
@@ -232,10 +128,6 @@ const BreederDetail: React.FC = () => {
             <div>
               <h2 className="text-lg font-bold">Address</h2>
               <p className="text-xl ">{user.address || "Not provided"}</p>
-            </div>
-            <div>
-              <p className="text-lg font-bold ">Total Koi</p>
-              <p className="text-xl ">{totalKoi}</p>{" "}
             </div>
             <div>
               <p className="text-lg font-bold">Status</p>
@@ -305,12 +197,6 @@ const BreederDetail: React.FC = () => {
 
       {/* Modal for showing fetched user data */}
       <UserDetailDialog openModal={openModal} handleClose={handleClose} />
-      <KoiOwnerSearchComponent
-        onSearchStateChange={handleSearchStateChange}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-        renderActions={renderCrudButtons}
-      />
       <ScrollToTop smooth />
       <ToastContainer />
     </div>

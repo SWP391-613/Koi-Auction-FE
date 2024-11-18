@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ROUTING_PATH } from "~/constants/endPoints";
 import {
   ERROR_MESSAGE,
   SUCCESS_MESSAGE,
@@ -72,7 +73,7 @@ const OtpVerification: React.FC = () => {
         await verifyOtpIsCorrect(email, otpString);
         // Redirect to /forgot-password if coming from login
         setTimeout(
-          () => navigate("/forgot-password", { state: { email } }),
+          () => navigate(ROUTING_PATH.FORGOT_PASSWORD, { state: { email } }),
           3000,
         );
       } else {
@@ -110,7 +111,7 @@ const OtpVerification: React.FC = () => {
       <div className="flex gap-5">
         <Button
           onClick={() => {
-            navigate("/auth");
+            navigate(ROUTING_PATH.AUTH);
           }}
           sx={{ marginTop: "1rem" }}
         >

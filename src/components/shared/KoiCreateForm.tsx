@@ -17,6 +17,13 @@ import { AddNewKoiDTO } from "~/types/kois.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { categoryMap } from "~/utils/dataConverter";
 import AddKoiPreviewCart from "./AddKoiPreviewCart";
+import { koiNameRegex } from "~/constants/regex";
+import {
+  KOI_CREATE_VALIDATION_MESSAGE,
+  SNACKBAR_VALIDATION_MESSAGE,
+} from "~/constants/validation.message";
+import { ERROR_MESSAGE } from "~/constants/message";
+import { KOI_CREATE_FORM_LABEL } from "~/constants/label";
 
 interface KoiCreatePopupForm {
   open?: boolean;
@@ -46,18 +53,10 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const navigate = useNavigate();
 
   useEffect(() => {
     setFormData((prevData) => ({ ...prevData, owner_id }));
   }, [owner_id]);
-
-  const handleDropdownChange = (event: SelectChangeEvent<string>) => {
-    setFormData({
-      ...formData,
-      name: event.target.value, // Update the name field in formData
-    });
-  };
 
   const handleInputChange = (
     e:
@@ -91,45 +90,65 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
 
     // Validate name
     if (!formData.name) {
-      newErrors.name = "Koi name is required";
+      newErrors.name = KOI_CREATE_VALIDATION_MESSAGE.KOI_NAME_IS_REQUIRED;
+    }
+
+    if (!koiNameRegex.test(formData.name)) {
+      newErrors.name =
+        KOI_CREATE_VALIDATION_MESSAGE.KOI_NAME_MUST_FOLLOWING_FORMAT;
     }
 
     // Validate base price
-    if (formData.base_price <= 0) {
-      newErrors.base_price = "Base price must be greater than 0";
+    if (!formData.base_price) {
+      newErrors.base_price =
+        KOI_CREATE_VALIDATION_MESSAGE.BASE_PRICE_IS_REQUIRED;
+    }
+
+    if (formData.base_price < 1000000 || formData.base_price > 50000000) {
+      newErrors.base_price =
+        KOI_CREATE_VALIDATION_MESSAGE.BASE_PRICE_GREATER_THAN_1_MILLION;
     }
 
     // Validate gender
     if (!formData.gender) {
-      newErrors.gender = "Gender is required";
+      newErrors.gender = KOI_CREATE_VALIDATION_MESSAGE.GENDER_IS_REQUIRED;
     }
 
     // Validate length
+    if (!formData.length) {
+      newErrors.length = KOI_CREATE_VALIDATION_MESSAGE.LENGTH_IS_REQUIRED;
+    }
+
     if (formData.length <= 0 || formData.length >= 125) {
-      newErrors.length = "Length must be greater than 0 and less than 125";
+      newErrors.length =
+        KOI_CREATE_VALIDATION_MESSAGE.LENGTH_MUST_BE_GREATER_THAN_ZERO_AND_LESS_THAN_125;
     }
 
     // Validate year born
     if (!formData.year_born) {
-      newErrors.year_born = "Year born is required";
+      newErrors.year_born = KOI_CREATE_VALIDATION_MESSAGE.YEAR_BORN_IS_REQUIRED;
     }
 
     if (formData.year_born < 0) {
-      newErrors.year_born = "Year born cannot be negative";
+      newErrors.year_born =
+        KOI_CREATE_VALIDATION_MESSAGE.YEAR_BORN_CANNOT_BE_NEGATIVE;
     }
 
     if (formData.year_born > new Date().getFullYear()) {
-      newErrors.year_born = "Year born cannot be in the future";
+      newErrors.year_born =
+        KOI_CREATE_VALIDATION_MESSAGE.YEAR_BORN_CANNOT_BE_IN_FUTURE;
     }
 
     // Validate category
     if (formData.category_id <= 0) {
-      newErrors.category_id = "Category is required";
+      newErrors.category_id =
+        KOI_CREATE_VALIDATION_MESSAGE.CATEGORY_IS_REQUIRED;
     }
 
     // Validate thumbnail
     if (!formData.thumbnail) {
-      newErrors.thumbnail = "Thumbnail URL is required";
+      newErrors.thumbnail =
+        KOI_CREATE_VALIDATION_MESSAGE.THUMBNAIL_URL_IS_REQUIRED;
     }
 
     setErrors(newErrors);
@@ -138,7 +157,9 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
 
   const handleSubmit = async () => {
     if (!validateForm()) {
-      setSnackbarMessage("Please fix the errors in the form.");
+      setSnackbarMessage(
+        SNACKBAR_VALIDATION_MESSAGE.PLEASE_FIX_THE_ERRORS_IN_THE_FORM,
+      );
       setSnackbarOpen(true);
       return;
     }
@@ -146,7 +167,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
     try {
       const token = getUserCookieToken();
       console.log(formData);
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/api/v1/kois`,
         formData,
         {
@@ -156,11 +177,11 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
         },
       );
 
-      setSnackbarMessage("Koi created successfully!");
+      setSnackbarMessage(SNACKBAR_VALIDATION_MESSAGE.KOI_CREATE_SUCCESS);
       setSnackbarOpen(true);
       onSuccess();
     } catch (error) {
-      console.error("Error creating koi:", error);
+      console.error(ERROR_MESSAGE.ERROR_CREATING_KOI, error);
       toast.error((error as any).response.data.reason);
     }
   };
@@ -174,7 +195,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
               fullWidth
               margin="normal"
               name="name"
-              label="Name"
+              label={KOI_CREATE_FORM_LABEL.NAME}
               value={formData.name}
               sx={{ backgroundColor: "white" }}
               onChange={handleInputChange}
@@ -223,7 +244,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
                 sx={{ backgroundColor: "white" }}
                 margin="normal"
                 name="length"
-                label="Length"
+                label={KOI_CREATE_FORM_LABEL.LENGTH}
                 type="number"
                 value={formData.length || ""}
                 inputProps={{ min: 0 }}
@@ -236,7 +257,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
                 sx={{ backgroundColor: "white" }}
                 margin="normal"
                 name="year_born"
-                label="Year Born"
+                label={KOI_CREATE_FORM_LABEL.YEAR_BORN}
                 type="number"
                 value={formData.year_born || ""}
                 inputProps={{
@@ -253,7 +274,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
               sx={{ backgroundColor: "white" }}
               margin="normal"
               name="thumbnail"
-              label="Thumbnail URL"
+              label={KOI_CREATE_FORM_LABEL.THUMBNAIL_URL}
               value={formData.thumbnail}
               onChange={handleInputChange}
               error={!!errors.thumbnail}
@@ -264,7 +285,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
               sx={{ backgroundColor: "white" }}
               margin="normal"
               name="base_price"
-              label="Base Price (VND)"
+              label={KOI_CREATE_FORM_LABEL.BASE_PRICE}
               type="number"
               value={formData.base_price || ""}
               inputProps={{ min: 0 }}
@@ -277,7 +298,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
               sx={{ backgroundColor: "white" }}
               margin="normal"
               name="description"
-              label="Description"
+              label={KOI_CREATE_FORM_LABEL.DESCRIPTION}
               multiline
               rows={3}
               value={formData.description}

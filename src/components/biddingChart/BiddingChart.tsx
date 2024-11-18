@@ -13,6 +13,7 @@ import { formatCurrency } from "~/utils/currencyUtils";
 import { format } from "date-fns";
 import { Bid } from "../koibiddingdetail/BiddingHistory";
 import LoadingComponent from "../shared/LoadingComponent";
+import { BIDDING_MESSAGE } from "~/constants/message";
 
 interface BiddingChartProps {
   auctionKoiId: number;
@@ -58,7 +59,7 @@ const BiddingChart: React.FC<BiddingChartProps> = ({
           .reverse();
         setChartData(formattedData);
       } catch (error) {
-        console.error("Error loading bidding history:", error);
+        console.error(BIDDING_MESSAGE.ERROR_LOADING_BIDDING_HISTORY, error);
       } finally {
         setLoading(false);
       }

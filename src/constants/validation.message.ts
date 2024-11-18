@@ -27,3 +27,30 @@ export const FORGOT_PASSWORD_VALIDATION_MESSAGE = {
   CONFIRM_PASSWORD_IS_REQUIRED: "Confirm Password is required",
   PASSWORD_MISMATCH: "Passwords must match confirm password",
 } as const;
+
+export const KOI_CREATE_VALIDATION_MESSAGE = {
+  KOI_NAME_IS_REQUIRED: "Koi name is required",
+  KOI_NAME_MUST_FOLLOWING_FORMAT:
+    "Koi name must not contain any number, every first letter need capitalized",
+  BASE_PRICE_IS_REQUIRED: "Base price is required",
+  BASE_PRICE_GREATER_THAN_1_MILLION:
+    "Base koi price must be equals or greater than 1.000.000 VND and equals or less than 50.000.000 VND",
+  GENDER_IS_REQUIRED: "Gender is required",
+  LENGTH_IS_REQUIRED: "Length is required",
+  LENGTH_MUST_BE_GREATER_THAN_ZERO_AND_LESS_THAN_125:
+    "Length must be equals or greater than 0(cm) and equals or less than 125(cm)",
+  YEAR_BORN_IS_REQUIRED: "Year born is required",
+  YEAR_BORN_CANNOT_BE_NEGATIVE: "Year born cannot be negative",
+  YEAR_BORN_CANNOT_BE_IN_FUTURE: "Year born cannot be in the future",
+  CATEGORY_IS_REQUIRED: "Category is required",
+  THUMBNAIL_URL_IS_REQUIRED: "Thumbnail URL is required",
+} as const;
+
+export const SNACKBAR_VALIDATION_MESSAGE = {
+  PLEASE_FIX_THE_ERRORS_IN_THE_FORM: "Please fix the errors in the form",
+  KOI_CREATE_SUCCESS: "Koi created successfully!",
+} as const;
+
+export const GENERAL_VALIDATION_MESSAGE = {
+  PLEASE_FIX_THE_ERRORS_IN_THE_FORM: "Please fix the errors in the form",
+} as const;

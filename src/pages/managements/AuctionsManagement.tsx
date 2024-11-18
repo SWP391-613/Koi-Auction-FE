@@ -95,7 +95,7 @@ export const AuctionsManagement: React.FC = () => {
         }
         setAuctions(fetchedAuctions);
       } catch (error) {
-        console.error("Error fetching auctions:", error);
+        console.error(ERROR_MESSAGE.FAILED_TO_FETCH_AUCTIONS, error);
         setAuctions([]);
       } finally {
         setLoading(false);

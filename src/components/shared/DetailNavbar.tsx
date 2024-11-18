@@ -19,6 +19,7 @@ const DetailNavbar = () => {
       ],
       breeder: [
         { label: "My Profile", path: basePath },
+        { label: "My Kois", path: `${basePath}/kois` },
         { label: "Add Koi", path: `${basePath}/add-koi` },
         { label: "Register to Auction", path: `${basePath}/auctions/register` },
         { label: "Pending Koi", path: `${basePath}/wishlist` },

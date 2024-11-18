@@ -4,6 +4,7 @@ import PaginationComponent from "../common/PaginationComponent";
 import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
 import { useAllKoiSearch } from "~/hooks/useSearch";
+import { SEARCH_DESCRIPTION, SEARCH_LABEL } from "~/constants/label";
 
 interface AllKoiOwnerhComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
@@ -29,7 +30,7 @@ const AllKoiSearchComponent: React.FC<AllKoiOwnerhComponentProps> = () => {
           variant="h6"
           sx={{ textAlign: "left", marginBottom: "1rem" }}
         >
-          Search All Koi
+          {SEARCH_LABEL.SEARCH_ALL_KOI}
         </Typography>
         <SearchBar
           value={query}
@@ -42,7 +43,7 @@ const AllKoiSearchComponent: React.FC<AllKoiOwnerhComponentProps> = () => {
           sx={{ textAlign: "left", marginTop: "1rem" }}
           color="error"
         >
-          *Note: Search on name, sex, length, age, price, decription,....
+          {SEARCH_DESCRIPTION.SEARCH_ALL_KOI_DESCRIPTION}
         </Typography>
       </div>
       {loading && (

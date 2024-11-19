@@ -22,7 +22,7 @@ const BreederManagement = () => {
   const [breeders, setBreeders] = useState<Breeder[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(0);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [openAddDialog, setOpenAddDialog] = useState(false);

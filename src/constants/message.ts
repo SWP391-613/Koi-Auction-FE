@@ -21,6 +21,8 @@ export const SUCCESS_MESSAGE = {
     "Breeder deleted successfully, , refresh the page to apply changes",
   DELETE_MEMBER_SUCCESS:
     "Member deleted successfully, , refresh the page to apply changes",
+  REVOKE_KOI_FROM_AUCTION_SUCCESS:
+    "Koi revoked from auction successfully!, refresh the page to apply changes",
 } as const;
 
 export const ERROR_MESSAGE = {
@@ -45,6 +47,9 @@ export const ERROR_MESSAGE = {
   UNEXPECTED_ERROR: "An unexpected error occurred.",
   LOGIN_ERROR: "An error occurred during login",
   REGISTER_ERROR: "An error occurred during registration",
+
+  REVOKE_KOI_FROM_AUCTION_ERROR:
+    "An error occurred during revoke koi from auction",
 
   FETCH_USER_DETAILS_ERROR: "An error occurred during fetch user details",
 

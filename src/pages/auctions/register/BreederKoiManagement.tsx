@@ -15,7 +15,7 @@ import { extractErrorMessage, getCategoryName } from "~/utils/dataConverter";
 import PaginationComponent from "../../../components/common/PaginationComponent";
 import AuctionKoiPopup from "./AuctionKoiPopup";
 import { fetchKoisOfBreederWithStatus } from "~/apis/users/breeder.apis";
-import { postAuctionKoi } from "~/apis/auctionkoi.apis";
+import { postAuctionKoi, revokeKoiFromAuction } from "~/apis/auctionkoi.apis";
 import { deleteKoiById } from "~/apis/koi.apis";
 import { formatCurrency } from "~/utils/currencyUtils";
 
@@ -147,8 +147,21 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
     }
   };
 
-  const handleCancel = async (id: number) => {
-    alert(`Cancel koi: ${id}`);
+  const handleRevokeKoi = async (koi_id: number, auction_id: number) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to revoke koi id ${koi_id} from auction: ${auction_id}, this action cannot be undo, please take serious`,
+    );
+    if (!confirmed) return;
+    try {
+      const response = await revokeKoiFromAuction(koi_id, auction_id);
+      if (response.status_code === 200) {
+        toast.success(SUCCESS_MESSAGE.REVOKE_KOI_FROM_AUCTION_SUCCESS);
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unexpected error occurred";
+      toast.error(errorMessage);
+    }
   };
 
   const handleDelete = async (id: number) => {
@@ -158,7 +171,7 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
     if (!confirmed) return;
 
     try {
-      await deleteKoiById(id, accessToken); // Use the utility function
+      await deleteKoiById(id); // Use the utility function
       toast.success(SUCCESS_MESSAGE.DELETE_KOI_SUCCESS);
       setKois((prevKois) => prevKois.filter((koi) => koi.id !== id)); // Update state
     } catch (err: any) {
@@ -267,7 +280,7 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
                           svgPath="approve.svg"
                         />
                         <CrudButton
-                          onClick={() => handleCancel(koi.id)}
+                          onClick={() => handleRevokeKoi(koi.id, auction_id)}
                           ariaLabel="Cancel"
                           svgPath="notapprove.svg"
                         />

@@ -55,7 +55,9 @@ const RulesPopup: React.FC<RulesPopupProps> = ({ open, onClose, anchorEl }) => {
           </ul>
           <hr className="my-4" />
           <Typography variant="body2" className="mt-2 text-green-600">
-            Note: We will charge 10% of the base price as a service fee
+            Note: We will charge 10% of the base price as a service fee, please
+            check this info clearly before submitting your auction. You cannot
+            undo after submitting.
           </Typography>
         </Paper>
       </ClickAwayListener>

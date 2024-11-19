@@ -48,6 +48,9 @@ export const ERROR_MESSAGE = {
 
   FETCH_USER_DETAILS_ERROR: "An error occurred during fetch user details",
 
+  VERIFY_OTP_ERROR: "An error occurred during OTP verification",
+  SEND_OTP_ERROR: "An error occurred during sending OTP",
+
   CREATE_AUCTION_ERROR: "An error occurred during auction creation",
   FETCH_AUCTION_ERROR: "An error occurred during auction fetching",
   FETCH_AUCTION_BY_STATUS_ERROR:
@@ -120,6 +123,11 @@ export const GENERAL_TOAST_MESSAGE = {
   FAILED_TO_CREATE_PAYMENT_URL: "Failed to create payment URL.",
   DRAW_OUT_REQUEST_CREATED_SUCCESSFULLY:
     "Draw-out request created successfully.",
+  LOGIN_SUCCESSFULLY: "Login successfully!",
+  WRONG_EMAIL_OR_PASSWORD: "Wrong email or password",
+  PLEASE_ENTER_VALID_EMAIL_TO_FORGOT_PASSWORD:
+    "Please enter a valid email to reset your password.",
+  REGISTER_SUCCESSFULLY: "Registered successfully!",
 } as const;
 
 export const VALIDATION_MESSAGE = {

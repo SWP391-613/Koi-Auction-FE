@@ -19,6 +19,8 @@ import {
 } from "~/utils/validation.utils";
 import styles from "./styles.module.css";
 import { LoginDTO, UserRegisterDTO } from "~/types/users.type";
+import { emailRegex } from "~/constants/regex";
+import { ROUTING_PATH } from "~/constants/endPoints";
 
 const LoginForm = () => {
   const { authLogin } = useAuth();
@@ -40,15 +42,21 @@ const LoginForm = () => {
 
   const handleForgotPassword = async () => {
     const email = getValues("email");
-    if (!email || !(await yup.string().email().isValid(email))) {
-      toast.error("Please enter a valid email address to reset your password.");
+    if (
+      !email ||
+      !emailRegex.test(email) ||
+      !(await yup.string().email().isValid(email))
+    ) {
+      toast.error(
+        GENERAL_TOAST_MESSAGE.PLEASE_ENTER_VALID_EMAIL_TO_FORGOT_PASSWORD,
+      );
       return;
     }
 
     try {
       const response = await sendOtpForgotPassword(email);
       if (response.status === 200) {
-        navigate("/otp-verification", {
+        navigate(ROUTING_PATH.OTP_VERIFICATION, {
           state: {
             email,
             from: "login",
@@ -75,13 +83,13 @@ const LoginForm = () => {
           username: response.username,
           refresh_token: response.refresh_token,
         });
-        toast.success("Login successfully!");
+        toast.success(GENERAL_TOAST_MESSAGE.LOGIN_SUCCESSFULLY);
         setTimeout(() => {
           navigate(routeUserToEachPage(response.roles[0]));
         }, 2000);
       }
     } catch (error) {
-      toast.error("Wrong email or password");
+      toast.error(GENERAL_TOAST_MESSAGE.WRONG_EMAIL_OR_PASSWORD);
     }
   };
 
@@ -120,10 +128,6 @@ const LoginForm = () => {
       <button className={styles.formButton}>Sign In</button>
       <div className="flex flex-col items-center">
         <span className="w-1/5 border-b dark:border-gray-600 md:w-1/2 mx-auto"></span>
-        {/* <Typography variant="h6" className="text-gray-500">
-          Or continue with
-        </Typography> */}
-        {/* <SocialLinks /> */}
       </div>
     </form>
   );
@@ -151,15 +155,22 @@ const RegisterForm = () => {
 
   const onSubmit = async (data: UserRegisterDTO) => {
     try {
-      await register(data);
-      toast.success("Registered successfully");
-      navigate("/otp-verification", {
-        state: {
-          email: data.email,
-          from: "register",
-          statusCode: 200,
-        },
-      });
+      const response = await register(data);
+
+      if (response.status_code !== 201) {
+        throw new Error(response.reason);
+      }
+
+      toast.success(GENERAL_TOAST_MESSAGE.REGISTER_SUCCESSFULLY);
+      setTimeout(() => {
+        navigate(ROUTING_PATH.OTP_VERIFICATION, {
+          state: {
+            email: data.email,
+            from: "register",
+            statusCode: 200,
+          },
+        });
+      }, 3000);
     } catch (error: any) {
       const errorMessage =
         error instanceof Error ? error.message : "An unexpected error occurred";

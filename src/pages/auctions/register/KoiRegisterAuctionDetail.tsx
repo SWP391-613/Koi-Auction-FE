@@ -12,6 +12,7 @@ import LoadingComponent from "~/components/shared/LoadingComponent";
 import { fetchAuctionById } from "~/apis/auction.apis";
 import { fetchAuctionKoi } from "~/apis/auctionkoi.apis";
 import { fetchKoiById } from "~/apis/koi.apis";
+import { Typography } from "@mui/material";
 
 const KoiRegisterAuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();
@@ -102,7 +103,7 @@ const KoiRegisterAuctionDetail: React.FC = () => {
             <span
               className={`rounded-lg px-4 py-2 text-lg font-bold ${getAuctionStatusColor(auction.status)}`}
             >
-              {auction.status}
+              Status: {auction.status}
             </span>
           </div>
           <div className="mt-5">
@@ -126,6 +127,9 @@ const KoiRegisterAuctionDetail: React.FC = () => {
             </span>
           </div>
         </div>
+        <Typography variant="h4" className="text-center mt-5">
+          *Note: This koi is already registered in the {auction.title}.
+        </Typography>
         <KoiInAuctionGrid kois={koiWithAuctionKoiData} auction={auction} />
         <BreederKoiManagement
           auction_id={auction.id}

@@ -3,8 +3,8 @@ export const KOI_MANAGEMENT_HEADER = [
   "Name",
   "Sex",
   "Length",
-  "Age",
-  "Koi",
+  "Year Born",
+  "Thumbnail",
   "Base Price",
   "Status",
   "Display",
@@ -14,11 +14,12 @@ export const KOI_MANAGEMENT_HEADER = [
 ];
 
 export const BREEDER_KOI_MANAGEMENT_HEADER = [
+  "Id",
   "Name",
   "Sex",
   "Length",
-  "Age",
-  "Koi",
+  "Year Born",
+  "Thumbnail",
   "Base Price",
   "Status",
   "Category ID",

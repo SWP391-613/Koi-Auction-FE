@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ToastContainer, toast } from "react-toastify";
@@ -21,6 +21,42 @@ const ForgotPassword: React.FC = () => {
     resolver: yupResolver(forgotPasswordValidationSchema),
   });
 
+  const timeoutRef = useRef<number | null>(null);
+
+  // Function to reset the timeout
+  const resetTimeout = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    // Set timeout for 5 minutes (300000 milliseconds)
+    timeoutRef.current = window.setTimeout(() => {
+      toast.error("You have been inactive for 3 minutes. Please try again.");
+      setTimeout(() => {
+        navigate("/auth");
+      }, 5000);
+    }, 300000); // 5 minutes
+  };
+
+  // Effect to set up the inactivity timer
+  useEffect(() => {
+    // Set the initial timer
+    resetTimeout();
+
+    // Add event listeners for user activity
+    const handleActivity = () => resetTimeout();
+    window.addEventListener("mousemove", handleActivity);
+    window.addEventListener("keydown", handleActivity);
+
+    // Cleanup event listeners and timeout on component unmount
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      window.removeEventListener("mousemove", handleActivity);
+      window.removeEventListener("keydown", handleActivity);
+    };
+  }, []);
+
   const onSubmit = async (data: { password: string }) => {
     if (!email) {
       toast.error("Email not provided. Please try again.");
@@ -36,9 +72,11 @@ const ForgotPassword: React.FC = () => {
     }
   };
 
-  if (!email) {
-    return <div>Invalid access. Please start from the login page.</div>;
-  }
+  useEffect(() => {
+    if (!email) {
+      navigate("/auth"); // Redirect if no email in location state
+    }
+  }, [email, navigate]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
@@ -89,6 +127,10 @@ const ForgotPassword: React.FC = () => {
         >
           Reset Password
         </button>
+        <div>
+          *Note: This form will expire in 3 minutes if left inactive, please
+          complete the form within the time limit.
+        </div>
       </form>
       <ToastContainer />
     </div>

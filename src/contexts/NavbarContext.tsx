@@ -18,7 +18,7 @@ export function NavbarProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const handleResize = () => {
       setIsNavCollapsed(true);
-      setIsMobileNavVisible(window.innerWidth >= 768);
+      setIsMobileNavVisible(window.innerWidth < 768);
     };
 
     window.addEventListener("resize", handleResize);

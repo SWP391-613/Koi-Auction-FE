@@ -101,7 +101,10 @@ const DetailNavbar = () => {
       {/* Mobile Toggle Button */}
       <button
         title={isMobileNavVisible ? "Close" : "Open"}
-        onClick={toggleMobileNav}
+        onClick={(e) => {
+          e.preventDefault(); // Prevent default behavior
+          toggleMobileNav();
+        }}
         className="md:hidden fixed top-2 right-2 z-50 bg-white p-2 rounded-lg shadow-md"
       >
         <FontAwesomeIcon icon={isMobileNavVisible ? faTimes : faBars} />

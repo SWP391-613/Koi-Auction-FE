@@ -46,20 +46,20 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
         <Link
           to={`/auctionkois/${auction.id}/${koi.auctionKoiData.id}`}
           key={koi.id}
-          className="transform overflow-hidden m-1 md:m-5 rounded-[1.5rem] bg-white shadow-md transition-transform hover:scale-102"
+          className="transform overflow-hidden m-1 mb-3 md:m-5 rounded-[1.5rem] bg-white shadow-md transition-all hover:scale-102"
         >
           <div className="flex flex-col">
-            <div className="relative flex md:justify-center bg-gradient-to-r from-[#1365b4] to-[#1584cb] duration-300 ease-in-out">
-              <div className="h-[17rem] w-[50%] md:h-[28rem] md:w-[23rem] flex justify-center">
-                <div className="absolute w-[30%] h-[60%] top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 md:w-[60%] md:h-[90%] md:top-1/2 md:left-1/2">
+            <div className="relative flex md:justify-center bg-gradient-to-r from-[#1365b4] to-[#1584cb] duration-300 ease-in-out ">
+              <div className="h-[17rem] w-full md:h-[28rem] md:w-[23rem] flex justify-center">
+                <div className="absolute w-full h-full top-1/2 left-1/2 -translate-x-3/4 sm:-translate-x-1/2 -translate-y-1/2 p-4">
                   <img
                     src={koi.thumbnail}
                     alt={koi.name}
-                    className="h-full w-full drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.2)] duration-500 hover:drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.35)] opacity-100"
+                    className="h-full w-full object-contain drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.2)] duration-500 hover:drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.35)] opacity-100"
                   />
                 </div>
               </div>
-              <div className="absolute top-3 left-3 bg-opacity-50 text-white rounded-full p-3 text-lg flex items-center">
+              <div className="absolute top-2 left-2 bg-opacity-50 text-white p-2 text-lg flex items-center z-10">
                 {koiBreeders.item.find(
                   (breeder) => breeder.id === koi.owner_id,
                 ) && (
@@ -70,7 +70,7 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
                       )?.avatar_url
                     }
                     alt="Breeder Avatar"
-                    className="w-[50%]"
+                    className="w-12 h-12 md:w-1/2 md:h-1/2 object-contain"
                   />
                 )}
               </div>
@@ -78,7 +78,7 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="absolute top-3 right-3 bg-black bg-opacity-20 backdrop-blur-sm text-white rounded-full px-4 py-2 text-sm font-medium flex items-center shadow-lg border border-white/30"
+                className="hidden sm:flex absolute top-3 right-3 bg-black bg-opacity-20 backdrop-blur-sm text-white rounded-full px-4 py-2 text-sm font-medium flex items-center shadow-lg border border-white/30"
               >
                 <div className="flex gap-2 justify-center items-center">
                   {convertDataToReadable(koi.auctionKoiData.bid_method)}
@@ -90,10 +90,10 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
                 <FontAwesomeIcon icon={faTag} className="mr-1" />
                 {koi.id}
               </div>
-              <div className="sm:hidden bg-gray-300 rounded-xl m-3 p-2 text-md font-bold w-1/2">
+              <div className="sm:hidden bg-gray-300 rounded-xl m-3 p-2 text-md font-bold absolute right-0 top-0">
                 <KoiDetails
                   category={getCategoryName(koi.category_id)}
-                  sex={koi.sex}
+                  sex={convertDataToReadable(koi.sex)}
                   length={koi.length}
                   year_born={koi.year_born}
                 />
@@ -105,9 +105,18 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
               </div>
             </div>
             <div className="p-4 bg-gray-300 sm:flex sm:flex-col">
-              <h2 className="text-xl mt-1 mb-1 text-black font-semibold">
-                {koi.name}
-              </h2>
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl mt-1 mb-1 text-black font-semibold">
+                  {koi.name}
+                </h2>
+                <div className="sm:hidden flex gap-2 justify-center items-center text-black bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium flex items-center shadow-lg border border-white/30">
+                  {convertDataToReadable(koi.auctionKoiData.bid_method)}
+                  <FontAwesomeIcon
+                    icon={faMoneyBill}
+                    className="mr-1 text-green-700"
+                  />
+                </div>
+              </div>
               <div className="hidden sm:flex flex-col sm:flex-row">
                 <hr className="w-full border-t border-gray-400 my-2" />
               </div>

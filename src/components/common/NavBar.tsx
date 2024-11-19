@@ -180,8 +180,10 @@ const Header = () => {
       <div className="md:hidden fixed top-2 left-2 z-[60]">
         <button
           title={isMobileNavVisible ? "Close" : "Open"}
-          onClick={toggleMobileNav}
-          className="opacity-30 hover:opacity-100
+          onClick={(e) => {
+            toggleMobileNav();
+          }}
+          className="opacity-30 hover:opacity-100 w-12 h-12
             bg-[#1E2640] text-white p-2 rounded-lg shadow-lg
             transition-opacity duration-300"
         >

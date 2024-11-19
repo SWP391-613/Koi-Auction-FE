@@ -3452,7 +3452,7 @@ keyv@^4.5.3:
     json-buffer "3.0.1"
 
 "koiproject@file:":
-  version "0.0.0"
+  version "1.0.0"
   resolved "file:"
   dependencies:
     "@cloudinary/react" "^1.13.1"

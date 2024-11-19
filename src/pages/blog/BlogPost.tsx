@@ -19,7 +19,7 @@ const BlogPost: React.FC = () => {
       <div className="mx-auto max-w-4xl">
         <NavigateButton
           icon={<FontAwesomeIcon icon={faArrowLeft} />}
-          text="Back to Blog"
+          text="Blogs"
           to="/blog"
           className="mb-8 text-blue-600 hover:text-blue-700"
         />

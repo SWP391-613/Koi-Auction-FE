@@ -45,6 +45,9 @@ export const ERROR_MESSAGE = {
   UNEXPECTED_ERROR: "An unexpected error occurred.",
   LOGIN_ERROR: "An error occurred during login",
   REGISTER_ERROR: "An error occurred during registration",
+
+  FETCH_USER_DETAILS_ERROR: "An error occurred during fetch user details",
+
   CREATE_AUCTION_ERROR: "An error occurred during auction creation",
   FETCH_AUCTION_ERROR: "An error occurred during auction fetching",
   FETCH_AUCTION_BY_STATUS_ERROR:

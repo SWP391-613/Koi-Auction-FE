@@ -90,6 +90,9 @@ const BreederDetail: React.FC = () => {
   if (loading) return <LoadingComponent />;
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
+  if (user.role_name !== "breeder") {
+    navigate("/notfound");
+  }
 
   const handleTransactionSuccess = () => {
     toast.success("Transaction request sent successfully");
@@ -158,10 +161,10 @@ const BreederDetail: React.FC = () => {
             {user.role_name.charAt(0).toUpperCase() + user.role_name.slice(1)}
           </h2>
           {user.status_name == "VERIFIED" && (
-            <div className="flex flex-col items-center">
+            <>
               <div className="flex justify-center items-center gap-5">
-                <p className="text-xl font-bold">Account Balance:</p>
-                <p className="text-3xl text-green-600 font-bold">
+                <p className="text-xl font-bold mb-5">Account Balance:</p>
+                <p className="text-3xl text-green-600 font-bold mb-5">
                   {user.account_balance !== null
                     ? formatCurrency(user.account_balance)
                     : "No money"}
@@ -172,7 +175,7 @@ const BreederDetail: React.FC = () => {
                 token={getCookie("access_token") || ""}
                 onTransactionSuccess={handleTransactionSuccess}
               />
-            </div>
+            </>
           )}
           {/* About Button */}
           <div className="text-left">

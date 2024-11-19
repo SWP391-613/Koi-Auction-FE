@@ -146,3 +146,28 @@ export const undoDeleteUser = async (id: number): Promise<void> => {
     );
   }
 };
+
+export const fetchUserDetails = async () => {
+  try {
+    const response = await axios.post(
+      `${DYNAMIC_API_URL}/users/details`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${getUserCookieToken()}`,
+        },
+      },
+    );
+
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error) {
+    handleAxiosError(
+      error,
+      ERROR_MESSAGE.UNEXPECTED_ERROR,
+      false,
+      ERROR_MESSAGE.FETCH_USER_DETAILS_ERROR,
+    );
+  }
+};

@@ -196,7 +196,7 @@ const UserDetail: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3">
         {/* User Info and Avatar */}
-        <div className="rounded-lg flex flex-col justify-around mr-10">
+        <div className="rounded-lg flex flex-col justify-around mr-10 p-6">
           <div className="flex flex-col justify-start">
             <div className="flex justify-center items-center">
               <img
@@ -258,10 +258,10 @@ const UserDetail: React.FC = () => {
           </h2>
 
           {user.status_name == "VERIFIED" && (
-            <div className="mb-6 flex flex-col items-center">
+            <>
               <div className="flex justify-center items-center gap-5">
-                <p className="text-xl font-bold">Account Balance:</p>
-                <p className="text-3xl text-green-600 font-bold">
+                <p className="text-xl font-bold mb-5">Account Balance:</p>
+                <p className="text-3xl text-green-600 font-bold mb-5">
                   {user.account_balance !== null
                     ? formatCurrency(user.account_balance)
                     : "No money"}
@@ -272,7 +272,7 @@ const UserDetail: React.FC = () => {
                 token={getCookie("access_token") || ""}
                 onTransactionSuccess={handleTransactionSuccess}
               />
-            </div>
+            </>
           )}
           {/* About Button */}
           <div className="text-left">

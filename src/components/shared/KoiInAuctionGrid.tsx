@@ -1,15 +1,14 @@
 import { faMoneyBill, faStar, faTag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import { fetchBreedersData } from "~/apis/users/breeder.apis";
 import { KoiWithAuctionKoiData } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
 import { BreedersResponse } from "~/types/paginated.types";
 import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter"; // Adjust the import path as needed
 import KoiDetails from "../auctiondetail/KoiDetails";
-import { motion } from "framer-motion";
 
 interface KoiInAuctionGridProps {
   kois: KoiWithAuctionKoiData[];
@@ -29,13 +28,10 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
   useEffect(() => {
     const fetchAllBreeders = async () => {
       try {
-        const response = await axios.get(`${DYNAMIC_API_URL}/breeders`, {
-          params: {
-            page: 0,
-            limit: 20,
-          },
-        });
-        setKoiBreeders(response.data || []);
+        const response = await fetchBreedersData(0, 20);
+        if (response) {
+          setKoiBreeders(response || []);
+        }
       } catch (error) {
         console.error("Error fetching breeders:", error);
       }

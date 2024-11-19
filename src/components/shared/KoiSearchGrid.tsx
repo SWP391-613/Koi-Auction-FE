@@ -1,20 +1,14 @@
+import { faMoneyBill, faStar, faTag } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { motion } from "framer-motion";
 import React, { ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faTag,
-  faStar,
-  faMoneyBill,
-} from "@fortawesome/free-solid-svg-icons";
+import ScrollToTop from "react-scroll-to-top";
+import { fetchBreedersData } from "~/apis/users/breeder.apis";
+import { KoiInAuctionDetailModel } from "~/types/kois.type";
+import { BreedersResponse } from "~/types/paginated.types";
 import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter";
 import KoiDetails from "../auctiondetail/KoiDetails";
-import { KoiInAuctionDetailModel, KoiDetailModel } from "~/types/kois.type";
-import ScrollToTop from "react-scroll-to-top";
-import { motion } from "framer-motion";
-import { BreedersResponse } from "~/types/paginated.types";
-import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 
 type BaseKoiProps<T> = {
   kois: T[];
@@ -44,13 +38,10 @@ const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
   useEffect(() => {
     const fetchAllBreeders = async () => {
       try {
-        const response = await axios.get(`${API_URL_DEVELOPMENT}/breeders`, {
-          params: {
-            page: 0,
-            limit: 20,
-          },
-        });
-        setKoiBreeders(response.data || []);
+        const response = await fetchBreedersData(0, 20);
+        if (response) {
+          setKoiBreeders(response || []);
+        }
       } catch (error) {
         console.error("Error fetching breeders:", error);
       }

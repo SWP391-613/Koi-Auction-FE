@@ -65,7 +65,7 @@ export const fetchBreedersData = async (page: number, itemsPerPage: number) => {
       `${DYNAMIC_API_URL}/breeders`,
       {
         params: {
-          page: page - 1, // Adjusting for zero-based indexing
+          page: page,
           limit: itemsPerPage,
         },
         headers: {

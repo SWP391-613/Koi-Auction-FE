@@ -1,4 +1,4 @@
-import { Alert, Container } from "@mui/material";
+import { Alert, Container, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -31,8 +31,9 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(0);
   const navigate = useNavigate();
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const itemsPerPage = 8; // Adjusted to match the API limit parameter
   const [selectedKoiId, setSelectedKoiId] = useState<number | null>(null);
@@ -56,13 +57,14 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
       try {
         const koiData = await fetchKoisOfBreederWithStatus(
           parseInt(userId),
-          page - 1,
+          page,
           itemsPerPage,
         ); // Use the utility function
         const data = koiData;
 
         if (data && Array.isArray(data.item)) {
           setKois(data.item);
+          setTotalItems(data.total_item);
           setTotalPages(data.total_page);
         } else {
           throw new Error("Unexpected data structure from API");
@@ -187,6 +189,11 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
 
   return (
     <div className="w-full overflow-x-auto p-10">
+      <div>
+        <Typography variant="h4" className="mb-4">
+          Total koi not in auction: {totalItems}
+        </Typography>
+      </div>
       <div className="overflow-hidden px-4 py-4 sm:-mx-8 sm:px-8">
         <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
           <table className="min-w-full leading-normal">
@@ -195,6 +202,11 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
               {kois.length > 0 ? (
                 kois.map((koi) => (
                   <tr key={koi.id}>
+                    <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                      <p className="whitespace-no-wrap text-gray-900">
+                        {koi.id || "N/A"}
+                      </p>
+                    </td>
                     <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                       <p className="whitespace-no-wrap text-gray-900">
                         {koi.name || "N/A"}

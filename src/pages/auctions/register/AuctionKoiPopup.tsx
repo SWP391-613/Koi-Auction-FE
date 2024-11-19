@@ -224,6 +224,7 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
           placeholder="Enter base price (VND)"
           error={!!basePriceError}
           inputProps={{
+            step: "5000",
             max: MAX_BASE_PRICE,
             min: originalBasePrice,
           }}

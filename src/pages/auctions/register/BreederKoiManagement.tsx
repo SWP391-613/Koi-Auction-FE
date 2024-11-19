@@ -279,11 +279,6 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
                           ariaLabel="Push"
                           svgPath="approve.svg"
                         />
-                        <CrudButton
-                          onClick={() => handleRevokeKoi(koi.id, auction_id)}
-                          ariaLabel="Cancel"
-                          svgPath="notapprove.svg"
-                        />
                       </div>
                     </td>
                   </tr>

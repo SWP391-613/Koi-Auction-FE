@@ -21,16 +21,14 @@ const KoiDetails: React.FC<KoiDetailsProps> = ({
   year_born,
 }) => {
   return (
-    <div className="mx-auto grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-2">
+    <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-2">
       <div className="flex items-center w-full">
         <FontAwesomeIcon
           icon={faEarthAsia}
           className="mr-2 text-[#4086c7]  sm:block"
         />
         <div className="w-full pl-2">
-          <label className="text-gray-500 text-sm sm:hidden md:block">
-            Category
-          </label>
+          <label className="text-gray-500 text-sm">Category</label>
           <p className="text-black font-semibold">{category || "Unknown"}</p>
         </div>
       </div>
@@ -40,9 +38,7 @@ const KoiDetails: React.FC<KoiDetailsProps> = ({
           className="mr-2 text-[#4086c7]  sm:block"
         />
         <div className="w-full pl-2">
-          <label className="text-gray-500 text-sm sm:hidden md:block">
-            Sex
-          </label>
+          <label className="text-gray-500 text-sm">Sex</label>
           <p className="text-black font-semibold">{sex || "Unknown"}</p>
         </div>
       </div>
@@ -52,9 +48,7 @@ const KoiDetails: React.FC<KoiDetailsProps> = ({
           className="mr-2 text-[#4086c7]  sm:block"
         />
         <div className="w-full pl-2">
-          <label className="text-gray-500 text-sm sm:hidden md:block">
-            Length
-          </label>
+          <label className="text-gray-500 text-sm">Length</label>
           <p className="text-black font-semibold">{length}cm</p>
         </div>
       </div>
@@ -64,9 +58,7 @@ const KoiDetails: React.FC<KoiDetailsProps> = ({
           className="mr-2 text-[#4086c7]  sm:block"
         />
         <div className="w-full pl-2">
-          <label className="text-gray-500 text-sm sm:hidden md:block">
-            Year Born
-          </label>
+          <label className="text-gray-500 text-sm">Year Born</label>
           <p className="text-black font-semibold">{year_born}</p>
         </div>
       </div>

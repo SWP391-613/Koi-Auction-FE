@@ -64,12 +64,6 @@ const AuctionDetail: React.FC = () => {
     fetchAuction();
   }, [id]);
 
-  const isAuctionEnded = (endDate: string) => {
-    console.log("endDate", endDate);
-    const parsedDate = parse(endDate, "MMM d, yyyy 'at' h:mm a", new Date());
-    return isPast(parsedDate);
-  };
-
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -93,7 +87,7 @@ const AuctionDetail: React.FC = () => {
   return (
     <>
       <div className="flex flex-col p-5">
-        <div className="ml-10 mt-6 mb-5 flex flex-col pt-3 pl-6 justify-between">
+        <div className="mt-6 mb-5 md:ml-10 flex flex-col pt-3 pl-6 justify-between">
           <NavigateButton
             to={`/auctions`}
             icon={<FontAwesomeIcon icon={faArrowLeft} />}
@@ -102,14 +96,14 @@ const AuctionDetail: React.FC = () => {
           />
           <Typography variant="h6">
             Name: &nbsp;
-            <span className="text-2xl font-semibold text-black">
+            <span className="text-xl md:text-2xl font-semibold text-black">
               {auction.title}
             </span>
           </Typography>
           <Typography variant="h6">
             Status: &nbsp;
             <FontAwesomeIcon icon={faClock} className="mr-2 text-blue-500" />
-            <span className="text-xl text-black glow-text">
+            <span className="text-sm md:text-xl text-black glow-text">
               {getAuctionStatusV2(
                 auction.start_time.toString(),
                 auction.end_time.toString(),
@@ -118,13 +112,13 @@ const AuctionDetail: React.FC = () => {
           </Typography>
           <Typography variant="h6">
             Start Time: &nbsp;
-            <span className="text-xl text-black">
+            <span className="text-sm md:text-xl text-black">
               {auction.start_time.toString()}
             </span>
           </Typography>
           <Typography variant="h6">
             End Time: &nbsp;
-            <span className="text-xl text-black">
+            <span className="text-sm md:text-xl text-black">
               {auction.end_time.toString()}
             </span>
           </Typography>

@@ -19,7 +19,7 @@ const NotFound = () => {
           </p>
           <NavigateButton
             to={ROUTING_PATH.ROOT}
-            text="Back to homepage"
+            text="Homepage"
             className="rounded px-8 py-3 font-semibold dark:bg-violet-600 dark:text-gray-50"
           />
         </div>

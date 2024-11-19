@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // import first
 
@@ -87,6 +87,11 @@ const cld = new Cloudinary({
 
 function AppContent() {
   const { isNavCollapsed, isMobileNavVisible } = useNavbar();
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to the top on route change
+  }, [location]);
 
   return (
     <HelmetProvider>

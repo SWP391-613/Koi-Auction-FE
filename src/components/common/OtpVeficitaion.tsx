@@ -94,7 +94,7 @@ const OtpVerification: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#F1F1F1]">
       <h2 className="text-2xl mb-4">Enter OTP provided</h2>
       <div className="flex space-x-2 mb-4">
         {otp.map((digit, index) => (
@@ -113,23 +113,13 @@ const OtpVerification: React.FC = () => {
         * Please enter the 6-digits one time password (OTP) that we sent to your
         registered email
       </span>
-      <div className="flex gap-5">
-        <Button
-          onClick={() => {
-            navigate(ROUTING_PATH.AUTH);
-          }}
-          sx={{ marginTop: "1rem" }}
-        >
-          Login now
-        </Button>
-        <Button
-          onClick={handleSubmit}
-          variant="contained"
-          sx={{ marginTop: "1rem" }}
-        >
-          Verify OTP
-        </Button>
-      </div>
+      <Button
+        onClick={handleSubmit}
+        variant="contained"
+        sx={{ marginTop: "1rem" }}
+      >
+        Submit
+      </Button>
       <ToastContainer />
     </div>
   );

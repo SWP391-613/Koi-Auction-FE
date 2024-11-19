@@ -3,6 +3,7 @@ import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
 import { AuctionKoi, BidMethod } from "~/types/auctionkois.type";
 import { QuantityKoiInAuctionByBidMethod } from "~/types/auctions.type";
+import { getUserCookieToken } from "~/utils/auth.utils";
 import { handleAxiosError } from "~/utils/errors.utils";
 
 export const fetchAuctionKoi = async (auctionId: number) => {
@@ -94,6 +95,30 @@ export const fetchQuantityKoiInAuctionByBidMethod = async () => {
       ERROR_MESSAGE.UNEXPECTED_ERROR,
       false,
       ERROR_MESSAGE.FETCH_QUANTITY_KOI_IN_AUCTION_BY_BID_METHOD_ERROR,
+    );
+  }
+};
+
+export const revokeKoiFromAuction = async (
+  koi_id: number,
+  auction_id: number,
+) => {
+  try {
+    const response = await axios.put(
+      `${DYNAMIC_API_URL}/auctionkois/revoke/koi/${koi_id}/auction/${auction_id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getUserCookieToken()}`,
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    handleAxiosError(
+      error,
+      ERROR_MESSAGE.UNEXPECTED_ERROR,
+      true,
+      ERROR_MESSAGE.REVOKE_KOI_FROM_AUCTION_ERROR,
     );
   }
 };

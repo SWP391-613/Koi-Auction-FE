@@ -1,13 +1,16 @@
+import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { verifyOtpIsCorrect } from "~/apis/otp.apis";
+import { verifyOtpToVerifyUser } from "~/apis/user.apis";
+import { ROUTING_PATH } from "~/constants/endPoints";
 import {
   ERROR_MESSAGE,
   SUCCESS_MESSAGE,
   VALIDATION_MESSAGE,
 } from "~/constants/message";
-import { verifyOtpIsCorrect, verifyOtpToVerifyUser } from "~/utils/apiUtils";
 
 const validFromStates = [
   "login",
@@ -69,17 +72,21 @@ const OtpVerification: React.FC = () => {
     try {
       if (state.from === "login") {
         await verifyOtpIsCorrect(email, otpString);
-        // Redirect to /forgot-password if coming from login
+        toast.success(SUCCESS_MESSAGE.OTP_VERIFY_SUCCESS);
         setTimeout(
-          () => navigate("/forgot-password", { state: { email } }),
+          () => navigate(ROUTING_PATH.FORGOT_PASSWORD, { state: { email } }),
           3000,
         );
       } else {
         await verifyOtpToVerifyUser(email, otpString);
-        // Redirect to home page or other pages as per requirement
-        setTimeout(() => navigate("/"), 3000);
+        toast.success(SUCCESS_MESSAGE.OTP_VERIFY_SUCCESS);
+        toast.info("Please login again to continue", {
+          autoClose: 2000,
+          onClose: () => {
+            setTimeout(() => navigate("/"), 1000);
+          },
+        });
       }
-      toast.success(SUCCESS_MESSAGE.OTP_VERIFY_SUCCESS);
     } catch (error: Error | any) {
       console.error(error);
       toast.error(error.message || ERROR_MESSAGE.OTP_VERIFICATION_ERROR);
@@ -103,15 +110,26 @@ const OtpVerification: React.FC = () => {
         ))}
       </div>
       <span className="text-zinc-500 text-[12px] text-center">
-        Please enter the 6-digits one time password (OTP) that we sent to your
+        * Please enter the 6-digits one time password (OTP) that we sent to your
         registered email
       </span>
-      <button
-        onClick={handleSubmit}
-        className="mt-4 bg-sky-500 text-white py-2 px-4 rounded-md hover:bg-sky-600/80 transition duration-300"
-      >
-        Verify OTP
-      </button>
+      <div className="flex gap-5">
+        <Button
+          onClick={() => {
+            navigate(ROUTING_PATH.AUTH);
+          }}
+          sx={{ marginTop: "1rem" }}
+        >
+          Login now
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          variant="contained"
+          sx={{ marginTop: "1rem" }}
+        >
+          Verify OTP
+        </Button>
+      </div>
       <ToastContainer />
     </div>
   );

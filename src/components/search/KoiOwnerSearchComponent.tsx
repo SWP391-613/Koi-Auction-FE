@@ -5,6 +5,7 @@ import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
 import { useKoiOwnerSearch } from "~/hooks/useSearch";
 import { KoiDetailModel } from "~/types/kois.type";
+import { SEARCH_DESCRIPTION, SEARCH_LABEL } from "~/constants/label";
 
 interface KoiOwnerSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
@@ -42,7 +43,7 @@ const KoiOwnerSearchComponent: React.FC<KoiOwnerSearchComponentProps> = ({
           variant="h6"
           sx={{ textAlign: "left", marginBottom: "1rem" }}
         >
-          Search Koi
+          {SEARCH_LABEL.SEARCH_ALL_KOI}
         </Typography>
         <SearchBar
           value={query}
@@ -55,7 +56,7 @@ const KoiOwnerSearchComponent: React.FC<KoiOwnerSearchComponentProps> = ({
           sx={{ textAlign: "left", marginTop: "1rem" }}
           color="error"
         >
-          *Note: Search on name, sex, length, age, price, description....
+          {SEARCH_DESCRIPTION.SEARCH_ALL_KOI_DESCRIPTION}
         </Typography>
       </div>
       {loading && (

@@ -16,6 +16,8 @@ import classNames from "classnames"; // Install this package for easier class ma
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ROUTING_PATH } from "~/constants/endPoints";
+import { NAVBAR_LABEL } from "~/constants/label";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavbar } from "../../contexts/NavbarContext";
 import { useUserData } from "../../hooks/useUserData";
@@ -82,92 +84,6 @@ const HeaderButton: React.FC<HeaderButtonProps> = ({
   );
 };
 
-const Sidebar: React.FC<{
-  isOpen: boolean;
-  onClose: () => void;
-  navButtons: NavButton[];
-  accountButtons: NavButton[];
-  isActive: (path: string) => boolean; // Added this line
-}> = ({ isOpen, onClose, navButtons, accountButtons, isActive }) => {
-  // Added isActive here
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ x: "100%" }}
-          animate={{ x: 0 }}
-          exit={{ x: "100%" }}
-          transition={{ type: "tween", duration: 0.3 }}
-          className="fixed inset-y-0 right-0 z-50 w-72 bg-white shadow-lg md:hidden overflow-y-auto"
-        >
-          <div className="flex flex-col h-full bg-gray-100">
-            <div className="flex justify-end p-4">
-              <button
-                onClick={onClose}
-                aria-label="Close navigation menu"
-                className="bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors duration-200"
-              >
-                <FontAwesomeIcon
-                  icon={faTimes}
-                  className="h-6 w-6 text-gray-600"
-                />
-              </button>
-            </div>
-            <div className="px-4 py-2 flex-grow bg-gray-100">
-              <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">
-                Navigation
-              </h2>
-              <nav>
-                <ul className="space-y-4">
-                  {navButtons.map((button, index) => (
-                    <li key={index}>
-                      <Link
-                        to={button.to ?? ""}
-                        className={`flex items-center p-3 rounded-lg ${
-                          button.to && isActive(button.to)
-                            ? "bg-blue-50 text-blue-700"
-                            : "text-gray-700 hover:bg-gray-50"
-                        } transition-colors duration-150`}
-                        onClick={onClose}
-                      >
-                        {button.icon} &nbsp;
-                        <span className="text-lg">{button.text}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-              <h2 className="text-2xl font-bold mt-8 mb-6 text-gray-800 border-b pb-2">
-                Account
-              </h2>
-              <nav>
-                <ul className="space-y-4">
-                  {accountButtons.map((button, index) => (
-                    <li key={index}>
-                      <Link
-                        to={button.to ?? ""}
-                        className={`flex items-center p-3 rounded-lg ${
-                          button.to && isActive(button.to)
-                            ? "bg-blue-50 text-blue-700"
-                            : "text-gray-700 hover:bg-gray-50"
-                        } transition-colors duration-150`}
-                        onClick={onClose}
-                      >
-                        {button.icon} &nbsp;
-                        <span className="text-lg">{button.text}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-};
-
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -180,28 +96,23 @@ const Header = () => {
   const navButtons: NavButton[] = useMemo(() => {
     const baseButtons = [
       {
-        text: "Home",
-        to: "/",
+        text: NAVBAR_LABEL.HOME,
+        to: ROUTING_PATH.ROOT,
         icon: <FontAwesomeIcon icon={faHouse} />,
       },
       {
-        text: "Auctions",
-        to: "/auctions",
+        text: NAVBAR_LABEL.AUCTIONS,
+        to: ROUTING_PATH.AUCTIONS,
         icon: <FontAwesomeIcon icon={faFire} />,
       },
-      // {
-      //   text: "Kois",
-      //   to: "/kois",
-      //   icon: <FontAwesomeIcon icon={faFish} />,
-      // },
       {
-        text: "Blogs",
-        to: "/blog",
+        text: NAVBAR_LABEL.BLOGS,
+        to: ROUTING_PATH.BLOG,
         icon: <FontAwesomeIcon icon={faBook} />,
       },
       {
-        text: "About",
-        to: "/about",
+        text: NAVBAR_LABEL.ABOUT,
+        to: ROUTING_PATH.ABOUT,
         icon: <FontAwesomeIcon icon={faQuestion} />,
       },
     ];
@@ -211,24 +122,11 @@ const Header = () => {
 
   const accountButtons: NavButton[] = useMemo(() => {
     if (isLoggedIn && user) {
-      const getMyAccountUrl = () => {
-        switch (user.role_name) {
-          case "breeder":
-            return "/breeders";
-          case "staff":
-            return "/staffs"; //notice the s at the end
-          case "manager":
-            return "/managers";
-          default:
-            return `/users/${user.id}`;
-        }
-      };
-
       return [
         {
           // do like switch case
           text: "Privacy Policy",
-          to: getMyAccountUrl(),
+          to: "/privacy",
           icon: <SecurityIcon />,
         },
         {

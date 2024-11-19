@@ -1,8 +1,12 @@
 import {
   differenceInDays,
+  format,
   isAfter,
   isBefore,
+  isToday,
+  isTomorrow,
   isValid,
+  isYesterday,
   parse,
   parseISO,
 } from "date-fns";
@@ -38,6 +42,9 @@ export const getAuctionStatus = (
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
 
     if (diffDays < 1) {
+      if (isYesterday(end)) {
+        return "Ended yesterday";
+      }
       return "Ended today";
     } else if (diffDays < 30) {
       return `Ended ${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
@@ -81,6 +88,9 @@ export const getAuctionStatusV2 = (
     const diffDays = differenceInDays(now, end);
 
     if (diffDays < 1) {
+      if (isYesterday(end)) {
+        return "Ended yesterday";
+      }
       return "Ended today";
     } else if (diffDays < 30) {
       return `Ended ${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
@@ -129,3 +139,21 @@ export function formatDateTimeString(dateTime: string): string {
   // Combine date and time with a space instead of 'T'
   return `${date} ${time}`;
 }
+
+export const formatDate = (dateString: string): string => {
+  return new Date(dateString).toLocaleString();
+};
+
+export const formatDateV2 = (dateString: string): string => {
+  const date = new Date(dateString);
+
+  if (isToday(date)) {
+    return `${format(date, "MMM d, yyyy 'at' h:mm a")}`;
+  } else if (isYesterday(date)) {
+    return `${format(date, "MMM d, yyyy 'at' h:mm a")}`;
+  } else if (isTomorrow(date)) {
+    return `${format(date, "MMM d, yyyy 'at' h:mm a")}`;
+  } else {
+    return format(date, "MMM d, yyyy 'at' h:mm a");
+  }
+};

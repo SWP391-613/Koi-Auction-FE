@@ -16,6 +16,8 @@ export type UserBase = {
   google_account_id: number;
   role_name: string;
   account_balance: number;
+  created_at: string;
+  updated_at: string;
 };
 
 export type LoginDTO = {
@@ -33,6 +35,11 @@ export type UserLoginResponse = {
   token: string;
   status: UserStatus;
   refresh_token: string;
+};
+
+export type UserRegisterResponse = {
+  message: string;
+  single_data: Omit<UserBase, "password">;
 };
 
 export type UserRegisterBase = {
@@ -61,9 +68,15 @@ export type StaffRegisterDTO = Omit<UserRegisterBase, "password"> & {
   avatar_url?: string;
 };
 
-export type Breeder = UserBase;
-export type Member = UserBase;
-export type Staff = UserBase;
+export type Breeder = UserBase & {
+  koi_count: number;
+};
+export type Member = UserBase & {
+  order_count: number;
+};
+export type Staff = UserBase & {
+  auction_count: number;
+};
 
 export type UserDetailsResponse = UserBase & {
   created_at: string | null;

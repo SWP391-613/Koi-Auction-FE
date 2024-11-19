@@ -13,6 +13,7 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { OrderResponse, OrderStatus } from "~/types/orders.type";
 import { BreedersResponse } from "~/types/paginated.types";
 import { getOrderStatusColor } from "~/utils/colorUtils";
@@ -36,15 +37,12 @@ const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({
   useEffect(() => {
     const fetchAllBreeders = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:4000/api/v1/breeders`,
-          {
-            params: {
-              page: 0,
-              limit: 20,
-            },
+        const response = await axios.get(`${DYNAMIC_API_URL}/breeders`, {
+          params: {
+            page: 0,
+            limit: 20,
           },
-        );
+        });
         setKoiBreeders(response.data || []);
       } catch (error) {
         console.error("Error fetching breeders:", error);

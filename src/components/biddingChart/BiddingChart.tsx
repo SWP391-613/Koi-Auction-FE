@@ -8,11 +8,12 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { fetchBidHistory } from "~/utils/apiUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { format } from "date-fns";
-import { Bid } from "../koibiddingdetail/BiddingHistory";
 import LoadingComponent from "../shared/LoadingComponent";
+import { BIDDING_MESSAGE } from "~/constants/message";
+import { fetchBidHistory } from "~/apis/bidding.apis";
+import { Bid } from "~/types/bids.type";
 
 interface BiddingChartProps {
   auctionKoiId: number;
@@ -49,16 +50,18 @@ const BiddingChart: React.FC<BiddingChartProps> = ({
     const loadBiddingHistory = async () => {
       try {
         const history = await fetchBidHistory(auctionKoiId);
-        const formattedData = history
-          .map((bid: Bid) => ({
-            time: format(new Date(bid.bid_time), "HH:mm:ss"),
-            amount: bid.bid_amount,
-            bidder: bid.bidder_name,
-          }))
-          .reverse();
-        setChartData(formattedData);
+        if (history) {
+          const formattedData = history
+            .map((bid: Bid) => ({
+              time: format(new Date(bid.bid_time), "HH:mm:ss"),
+              amount: bid.bid_amount,
+              bidder: bid.bidder_name,
+            }))
+            .reverse();
+          setChartData(formattedData);
+        }
       } catch (error) {
-        console.error("Error loading bidding history:", error);
+        console.error(BIDDING_MESSAGE.ERROR_LOADING_BIDDING_HISTORY, error);
       } finally {
         setLoading(false);
       }

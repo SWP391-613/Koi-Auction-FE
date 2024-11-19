@@ -64,6 +64,11 @@ import OrderManagement from "./pages/managements/OrderManagement";
 import PaymentManagement from "./pages/managements/PaymentManagement";
 import VNPayReturn from "./pages/payments/VNPayReturn";
 import BreederInfo from "./pages/static/BreederInfo";
+import KoiManagement from "./pages/managements/KoiManagement";
+import BreederManagement from "./pages/managements/BreederManagement";
+import StaffManagement from "./pages/manager/staff/StaffManagement";
+import MemberManagement from "./pages/managements/MemberManagement";
+import KoiOwnerSearch from "./pages/detail/breeder/KoiOwnerSearch";
 
 const TITLE = "Koi Auction";
 
@@ -260,7 +265,13 @@ function AppContent() {
                           path="auctions"
                           element={<AuctionsManagement />}
                         />
-                        <Route path="verify/kois" element={<VerifyKoiList />} />
+                        <Route path="kois" element={<KoiManagement />} />
+                        <Route
+                          path="breeders"
+                          element={<BreederManagement />}
+                        />
+                        <Route path="staffs" element={<StaffManagement />} />
+                        <Route path="members" element={<MemberManagement />} />
                         <Route path="orders" element={<OrderManagement />} />
                         <Route
                           path="payments"
@@ -273,6 +284,7 @@ function AppContent() {
                       </Route>
                       <Route path="/breeders/*">
                         <Route path="" element={<BreederDetail />} />
+                        <Route path="kois" element={<KoiOwnerSearch />} />
                         <Route path="add-koi" element={<AddKoi />} />
                         <Route
                           path="auctions/register"
@@ -335,7 +347,6 @@ function AppContent() {
               </div>
               <Footer />
             </div>
-            <ToastContainer />
           </div>
         </ThemeProvider>
         <Analytics />
@@ -349,6 +360,7 @@ function App() {
   return (
     <NavbarProvider>
       <AppContent />
+      <ToastContainer />
     </NavbarProvider>
   );
 }

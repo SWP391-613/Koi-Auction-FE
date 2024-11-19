@@ -10,21 +10,31 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import AllKoiSearchComponent from "~/components/search/AllKoiSearchComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
-import { KoiDetailModel } from "~/types/kois.type";
-import { createKoi, deleteKoiById, getKoiData } from "~/utils/apiUtils";
+import {
+  KoiDetailModel,
+  QuantityKoiByGenderResponse,
+  QuantityKoiByStatusResponse,
+} from "~/types/kois.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { formatCurrency } from "~/utils/currencyUtils";
 import { createFormData, extractErrorMessage } from "~/utils/dataConverter";
 import PaginationComponent from "../../components/common/PaginationComponent";
 import BreederEditKoiDialog from "../kois/BreederEditKoiDialog";
-import { formatCurrency } from "~/utils/currencyUtils";
+import { createKoi, deleteKoiById, getKoiData } from "~/apis/koi.apis";
+import {
+  CONFIRMATION_MESSAGE,
+  ERROR_MESSAGE,
+  SUCCESS_MESSAGE,
+} from "~/constants/message";
 
 const KoiManagement = () => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
@@ -34,7 +44,7 @@ const KoiManagement = () => {
   const navigate = useNavigate();
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const itemsPerPage = 8; // Adjusted to match the API limit parameter
+  const itemsPerPage = 20; // Adjusted to match the API limit parameter
   const [selectedKoiId, setSelectedKoiId] = useState<number | null>(null);
   const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false);
   const [newKoi, setNewKoi] = useState<Partial<KoiDetailModel>>({
@@ -44,6 +54,10 @@ const KoiManagement = () => {
     year_born: 0,
   });
   const [koiImage, setKoiImage] = useState<File | null>(null);
+  const [koiCountGender, setKoiCountGender] =
+    useState<QuantityKoiByGenderResponse | null>(null);
+  const [koiCountStatus, setKoiCountStatus] =
+    useState<QuantityKoiByStatusResponse | null>(null);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const handleSearchStateChange = (isActive: boolean) => {
     setIsSearchActive(isActive);
@@ -80,7 +94,42 @@ const KoiManagement = () => {
         setLoading(false); // Reset loading state
       }
     };
+
+    const fetchKoiGenderCount = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get<QuantityKoiByGenderResponse>(
+          `${DYNAMIC_API_URL}/kois/count-by-gender`,
+        );
+        setKoiCountGender(response.data);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    //http://localhost:4000/api/v1/kois/count-by-status
+    const fetchKoiStatusCount = async () => {
+      try {
+        const response = await axios.get(
+          `${DYNAMIC_API_URL}/kois/count-by-status`,
+        );
+        setKoiCountStatus(response.data);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchKois();
+    fetchKoiGenderCount();
+    fetchKoiStatusCount();
   }, [page, itemsPerPage]);
 
   const handlePageChange = (
@@ -96,18 +145,21 @@ const KoiManagement = () => {
 
   const handleDelete = async (id: number) => {
     const confirmed = window.confirm(
-      `Are you sure you want to delete koi: ${id}?`,
+      `${CONFIRMATION_MESSAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_KOI} ${id}?`,
     );
     if (!confirmed) return;
 
     try {
-      await deleteKoiById(id, accessToken); // Use the utility function
-      toast.success("Koi deleted successfully!");
+      await deleteKoiById(id); // Use the utility function
+      toast.success(SUCCESS_MESSAGE.DELETE_KOI_SUCCESS);
       setKois((prevKois) => prevKois.filter((koi) => koi.id !== id)); // Update state
-    } catch (err: any) {
-      const errorMessage = extractErrorMessage(err, "Error deleting koi");
-      toast.error(errorMessage); // Notify user of the error
-      setError(errorMessage); // Set error state
+    } catch (error: any) {
+      const errorMessage =
+        error instanceof Error ? error.message : "An unexpected error occurred";
+
+      console.log(errorMessage);
+
+      toast.error(errorMessage);
     }
   };
 
@@ -173,20 +225,46 @@ const KoiManagement = () => {
 
   return (
     <div className="m-5 overflow-x-auto">
-      <AllKoiSearchComponent onSearchStateChange={handleSearchStateChange} />
       <div className="">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Koi Management</h1>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleOpenCreateDialog}
-            startIcon={<AddIcon />}
-          >
-            Create New Koi
-          </Button>
+        <div className="mb-6 flex justify-between">
+          <div className="flex gap-5">
+            <div className="border-2 p-6 rounded-xl">
+              <Typography variant="h5">
+                Total: {koiCountGender?.total} koi
+              </Typography>
+              <Typography variant="body1">
+                {" "}
+                Male: {koiCountGender?.male}
+              </Typography>
+              <Typography variant="body1">
+                {" "}
+                Female: {koiCountGender?.female}
+              </Typography>
+              <Typography variant="body1">
+                {" "}
+                Unknown: {koiCountGender?.unknown}
+              </Typography>
+            </div>
+            <div className="border-2 p-6 rounded-xl">
+              <Typography variant="h5">
+                Total: {koiCountStatus?.total} koi
+              </Typography>
+              <Typography variant="body1">
+                Unverified: {koiCountStatus?.unverified}
+              </Typography>
+              <Typography variant="body1">
+                Verified: {koiCountStatus?.verified}
+              </Typography>
+              <Typography variant="body1">
+                Sold: {koiCountStatus?.sold}
+              </Typography>
+              <Typography variant="body1">
+                Rejected: {koiCountStatus?.rejected}
+              </Typography>
+            </div>
+          </div>
         </div>
-        <div className="-mx-4 overflow-hidden px-4 py-4 sm:-mx-8 sm:px-8">
+        <div className="px-4 py-4 sm:-mx-8 sm:px-8">
           <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
             <table className="min-w-full leading-normal">
               <TableHeaderComponent headers={KOI_MANAGEMENT_HEADER} />
@@ -196,28 +274,28 @@ const KoiManagement = () => {
                     <tr key={koi.id}>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.id || "N/A"}
+                          {koi.id}
                         </p>
                       </td>
 
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.name || "N/A"}
+                          {koi.name}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.sex || "N/A"}
+                          {koi.sex}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.length || "N/A"}
+                          {koi.length}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.year_born || "N/A"}
+                          {koi.year_born}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
@@ -240,22 +318,22 @@ const KoiManagement = () => {
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.status_name || "N/A"}
+                          {koi.status_name}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.is_display || "N/A"}
+                          {koi.is_display}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.owner_id || "N/A"}
+                          {koi.owner_id}
                         </p>
                       </td>
                       <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                         <p className="whitespace-no-wrap text-gray-900">
-                          {koi.category_id || "N/A"}
+                          {koi.category_id}
                         </p>
                       </td>
 
@@ -310,7 +388,7 @@ const KoiManagement = () => {
         </div>
       </div>
       <Dialog open={openCreateDialog} onClose={handleCloseCreateDialog}>
-        <DialogTitle>Create New Koi</DialogTitle>
+        <DialogTitle>Add New Koi</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus

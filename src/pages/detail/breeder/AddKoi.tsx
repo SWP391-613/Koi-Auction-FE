@@ -20,10 +20,20 @@ const AddKoi = () => {
   }, [userId]);
 
   return (
-    <div className="flex flex-col gap-5 bg-white p-10 rounded-2xl">
-      <Typography variant="h3" sx={{ textAlign: "center" }}>
-        Create New Koi
-      </Typography>
+    <div className="flex flex-col gap-5 bg-white mt-5 mb-24">
+      <div className="flex flex-col justify-center items-center gap-5">
+        <Typography variant="h4" sx={{ textAlign: "center" }}>
+          Add New Koi
+        </Typography>
+        <div>
+          <Typography
+            variant="body1"
+            sx={{ textAlign: "center", color: "gray" }}
+          >
+            *Note: Please fill in all the required fields to create a new koi.
+          </Typography>
+        </div>
+      </div>
       <KoiCreateForm
         onSuccess={handleKoiCreated}
         owner_id={parseInt(userId!)}

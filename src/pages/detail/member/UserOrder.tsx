@@ -11,37 +11,33 @@ import {
   Chip,
   Container,
   Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   Typography,
   useMediaQuery,
   useTheme,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
 } from "@mui/material";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, Link as RouterLink, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getUserOrderByStatus } from "~/apis/order.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import SearchBar from "~/components/shared/SearchBar";
 import { useUserData } from "~/hooks/useUserData";
 import { OrderResponse, OrderStatus } from "~/types/orders.type";
+import { BreedersResponse } from "~/types/paginated.types";
+import { getUserCookieToken } from "~/utils/auth.utils";
 import { getOrderStatusColor } from "~/utils/colorUtils";
-import { getCookie } from "~/utils/cookieUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import {
   canAcceptShip,
   canConfirmOrder,
   canLeaveFeedback,
 } from "~/utils/orderUtils";
-import { getUserOrderByStatus } from "../../../utils/apiUtils";
-import { koiBreeders } from "~/utils/data/koibreeders";
-import OrderSearchComponent from "~/components/search/OrderSearchComponent";
-import { getUserCookieToken } from "~/utils/auth.utils";
-import { BreedersResponse } from "~/types/paginated.types";
-import axios from "axios";
 
 const UserOrder = () => {
   const theme = useTheme();
@@ -87,15 +83,12 @@ const UserOrder = () => {
 
     const fetchAllBreeders = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:4000/api/v1/breeders`,
-          {
-            params: {
-              page: 0,
-              limit: 20,
-            },
+        const response = await axios.get(`API_URL_DEVELOPMENT/breeders`, {
+          params: {
+            page: 0,
+            limit: 20,
           },
-        );
+        });
         setKoiBreeders(response.data || []);
       } catch (error) {
         console.error("Error fetching breeders:", error);
@@ -232,20 +225,20 @@ const UserOrder = () => {
                 >
                   {koiBreeders.item.find(
                     (breeder) =>
-                      breeder.id === order.order_details[0].koi.owner.id,
+                      breeder.id === order.order_details[0].koi.owner_id,
                   ) && (
-                    <div className="">
+                    <div className="flex">
                       <Link
-                        to={`/breeder/${order.order_details[0].koi.owner.id}/info`}
+                        to={`/breeder/${order.order_details[0].koi.owner_id}/info`}
                         onClick={(event) => event.stopPropagation()}
-                        className="inline"
+                        className="inline mt-3 mr-1"
                       >
                         <img
                           src={
                             koiBreeders.item.find(
                               (breeder) =>
                                 breeder.id ===
-                                order.order_details[0].koi.owner.id,
+                                order.order_details[0].koi.owner_id,
                             )?.avatar_url
                           }
                           alt="Breeder Avatar"
@@ -254,7 +247,7 @@ const UserOrder = () => {
                         />
                       </Link>
                       <Link
-                        to={`/breeder/${order.order_details[0].koi.owner.id}/info`}
+                        to={`/breeder/${order.order_details[0].koi.owner_id}/info`}
                         onClick={(event) => event.stopPropagation()}
                         className="inline-block"
                       >

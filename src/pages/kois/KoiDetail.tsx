@@ -13,13 +13,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { KoiDetailItem } from "~/components/koibiddingdetail/KoiBiddingDetailComponent";
 import { KoiDetailModel } from "~/types/kois.type";
-import { getKoiById } from "~/utils/apiUtils";
 import { getStatusColor } from "~/utils/colorUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { getCategoryName } from "~/utils/dataConverter";
 import { useAuth } from "../../contexts/AuthContext";
 import BreederEditKoiDialog from "./BreederEditKoiDialog";
 import { getUserCookieToken, isTokenValid } from "~/utils/auth.utils";
+import { fetchKoiById } from "~/apis/koi.apis";
 
 interface KoiDetailItemProps {
   icon: IconDefinition;
@@ -44,7 +44,7 @@ const KoiDetail: React.FC = () => {
 
     const fetchKoiData = async () => {
       try {
-        const response = await getKoiById(parseInt(id || ""));
+        const response = await fetchKoiById(parseInt(id || ""));
 
         if (!response) {
           navigate("/notfound");

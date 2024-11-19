@@ -20,12 +20,12 @@ import {
   PaymentStatus,
   PaymentType,
 } from "~/types/payments.type";
-import { getUserPaymentHistoryByStatus } from "~/utils/apiUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { getPaymentStatusColor } from "~/utils/colorUtils";
 import { ToastContainer } from "react-toastify";
 import PaginationComponent from "../common/PaginationComponent";
+import { getUserPaymentHistoryByStatus } from "~/apis/payment.apis";
 
 const formatPaymentDate = (dateArray: number[]): string => {
   const [year, month, day, hour, minute] = dateArray;
@@ -103,12 +103,29 @@ const PaymentTransactions: React.FC = () => {
     setPage(1);
   };
 
-  if (loading) return <CircularProgress />;
+  if (loading)
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "50vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   if (error) return <Alert severity="error">{error}</Alert>;
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" component="h1" gutterBottom>
+      <Typography
+        variant="h4"
+        component="h1"
+        gutterBottom
+        className="text-center"
+      >
         Payment Transactions
       </Typography>
 

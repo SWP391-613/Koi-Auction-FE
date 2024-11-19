@@ -6,9 +6,9 @@ import {
   eraseCookie,
   parseRoles,
 } from "~/utils/cookieUtils";
-import { doLogout } from "~/utils/apiUtils";
 import { UserLoginResponse, UserStatus } from "~/types/users.type";
 import { AuthLoginData } from "~/types/auth.types";
+import { doLogout } from "~/apis/auth.apis";
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -29,19 +29,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const token = getCookie("access_token");
-    const roles = parseRoles(getCookie("user_roles"));
-    const id = getCookie("user_id");
-    const username = getCookie("username");
-    const status = getCookie("status");
+    if (token) {
+      const roles = parseRoles(getCookie("user_roles") || "[]");
+      const id = getCookie("user_id");
+      const username = getCookie("username");
+      const status = getCookie("status");
 
-    if (token && roles.length > 0 && id && username && status) {
       setIsLoggedIn(true);
       setUser({
         token,
-        roles,
-        id: parseInt(id, 10),
-        username,
-        status: status as UserStatus,
+        roles: roles.length ? roles : [],
+        id: id ? parseInt(id, 10) : 0,
+        username: username || "",
+        status: (status as UserStatus) || "UNVERIFIED",
       });
     }
   }, []);

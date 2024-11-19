@@ -1,8 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { fetchAuctions } from "~/utils/apiUtils";
 import { AuctionCart } from "./AuctionCart";
 import AuctionList from "~/components/shared/AuctionList";
+import { fetchAuctions } from "~/apis/auction.apis";
 
 const Auctions: React.FC = () => {
   return (

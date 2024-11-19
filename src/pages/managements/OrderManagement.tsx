@@ -21,10 +21,10 @@ import SearchBar from "~/components/shared/SearchBar";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import OrderSearchGrid from "~/components/shared/OrderSearchGrid";
 import { OrderStatus } from "~/types/orders.type";
-import { updateOrderStatus } from "~/utils/apiUtils"; // You'll need to create this function
 import { getOrderStatusColor } from "~/utils/colorUtils";
 import { toast } from "react-toastify";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { updateOrderStatus } from "~/apis/order.apis";
 
 const OrderManagement: React.FC = () => {
   const {
@@ -96,10 +96,6 @@ const OrderManagement: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" component="h1" gutterBottom>
-        Order Management
-      </Typography>
-
       <Box sx={{ my: 4 }}>
         <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
           <FormControl sx={{ minWidth: 200 }}>

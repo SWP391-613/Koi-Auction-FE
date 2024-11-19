@@ -60,3 +60,18 @@ export type UpdateKoiDTO = {
   status_name: KoiTrackingStatus;
   thumbnail: string;
 };
+
+export type QuantityKoiByGenderResponse = {
+  total: number;
+  male: number;
+  female: number;
+  unknown: number;
+};
+
+export type QuantityKoiByStatusResponse = {
+  total: number;
+  unverified: number;
+  verified: number;
+  rejected: number;
+  sold: number;
+};

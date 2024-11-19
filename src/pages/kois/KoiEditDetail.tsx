@@ -11,12 +11,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { KoiDetailItem } from "~/components/koibiddingdetail/KoiBiddingDetailComponent";
 import { KoiDetailModel } from "~/types/kois.type";
-import { getKoiById } from "~/utils/apiUtils";
 import { getStatusColor } from "~/utils/colorUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { getCategoryName } from "~/utils/dataConverter";
 import { useAuth } from "../../contexts/AuthContext";
 import { getUserCookieToken } from "~/utils/auth.utils";
+import { fetchKoiById } from "~/apis/koi.apis";
 
 interface KoiEditDetailItemProps {
   icon: IconDefinition;
@@ -39,7 +39,7 @@ const KoiEditDetail: React.FC = () => {
 
     const fetchKoiData = async () => {
       try {
-        const response = await getKoiById(parseInt(id || ""), token);
+        const response = await fetchKoiById(parseInt(id || ""));
 
         // Check if the response is valid
         if (!response) {

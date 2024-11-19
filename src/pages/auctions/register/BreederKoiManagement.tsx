@@ -9,23 +9,24 @@ import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "~/constants/message";
 import { BREEDER_KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { BidMethod } from "~/types/auctionkois.type";
 import { KoiDetailModel } from "~/types/kois.type";
-import {
-  deleteKoiById,
-  fetchKoisOfBreederWithStatus,
-  postAuctionKoi,
-} from "~/utils/apiUtils";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage, getCategoryName } from "~/utils/dataConverter";
 import PaginationComponent from "../../../components/common/PaginationComponent";
 import AuctionKoiPopup from "./AuctionKoiPopup";
+import { fetchKoisOfBreederWithStatus } from "~/apis/users/breeder.apis";
+import { postAuctionKoi } from "~/apis/auctionkoi.apis";
+import { deleteKoiById } from "~/apis/koi.apis";
+import { formatCurrency } from "~/utils/currencyUtils";
 
 interface BreederKoiManagementProps {
   auction_id: number;
+  onKoiRegistered?: () => void;
 }
 
 const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
   auction_id,
+  onKoiRegistered,
 }) => {
   const [kois, setKois] = useState<KoiDetailModel[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -117,17 +118,30 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
         ceilPrice,
         accessToken,
       );
-      console.log(
-        `Data: ${selectedKoiId}, ${auction_id}, ${basePrice}, ${bidStep}, ${bidMethod}, ${ceilPrice}, ${accessToken}`,
-      );
       toast.success(SUCCESS_MESSAGE.REGISTER_KOI_SUCCESS);
-      setOpenPopup(false); // Close the popup
+      setOpenPopup(false);
+
+      // Refresh the koi list
+      const koiData = await fetchKoisOfBreederWithStatus(
+        parseInt(userId),
+        page - 1,
+        itemsPerPage,
+      );
+      if (koiData && Array.isArray(koiData.item)) {
+        setKois(koiData.item);
+        setTotalPages(koiData.total_page);
+      }
+
+      // Add delay before calling the callback
+      setTimeout(() => {
+        onKoiRegistered?.();
+      }, 5000); // 5 second delay
     } catch (error) {
       const errorMessage = extractErrorMessage(
         error,
         ERROR_MESSAGE.REGISTER_KOI_FAILED,
       );
-      toast.error(errorMessage); // Notify user of the error
+      toast.error(errorMessage);
     }
   };
 
@@ -214,7 +228,7 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
                     </td>
                     <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                       <p className="whitespace-no-wrap text-gray-900">
-                        {koi.base_price || "N/A"}
+                        {formatCurrency(koi.base_price) || "N/A"}
                       </p>
                     </td>
                     <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
@@ -261,16 +275,18 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
               )}
             </tbody>
           </table>
-          <AuctionKoiPopup
-            open={openPopup}
-            onClose={() => setOpenPopup(false)}
-            koiId={selectedKoiId ?? 0}
-            auctionId={auction_id ?? 0}
-            basePrice={
-              kois.filter((koi) => koi.id === selectedKoiId)[0]?.base_price
-            }
-            onSubmit={handlePopupSubmit}
-          />
+          <div className="flex gap-4 justify-center">
+            <AuctionKoiPopup
+              open={openPopup}
+              onClose={() => setOpenPopup(false)}
+              koiId={selectedKoiId ?? 0}
+              auctionId={auction_id ?? 0}
+              basePrice={
+                kois.filter((koi) => koi.id === selectedKoiId)[0]?.base_price
+              }
+              onSubmit={handlePopupSubmit}
+            />
+          </div>
           <div className="xs:flex-row xs:justify-between flex flex-col items-center border-t bg-white px-5 py-5">
             <PaginationComponent
               totalPages={totalPages}

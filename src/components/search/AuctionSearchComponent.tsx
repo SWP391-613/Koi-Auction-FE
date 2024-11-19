@@ -5,6 +5,7 @@ import { useAuctionSearch } from "~/hooks/useSearch";
 import { AuctionCart } from "~/pages/auctions/AuctionCart";
 import PaginationComponent from "../common/PaginationComponent";
 import SearchBar from "../shared/SearchBar";
+import { SEARCH_DESCRIPTION, SEARCH_LABEL } from "~/constants/label";
 
 interface AuctionSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
@@ -30,7 +31,7 @@ const AuctionSearchComponent: React.FC<AuctionSearchComponentProps> = () => {
           variant="h5"
           sx={{ textAlign: "left", marginBottom: "1rem" }}
         >
-          Search All Our Auction
+          {SEARCH_LABEL.SEARCH_ALL_OUR_AUCTION}
         </Typography>
         <SearchBar
           value={query}
@@ -43,7 +44,7 @@ const AuctionSearchComponent: React.FC<AuctionSearchComponentProps> = () => {
           sx={{ textAlign: "left", marginTop: "1rem" }}
           color="error"
         >
-          *Note: Search on name, status, start date, end date,...
+          {SEARCH_DESCRIPTION.SEARCH_ALL_OUR_AUCTION_DESCRIPTION}
         </Typography>
       </div>
       {loading && <p className="mt-2">Searching...</p>}

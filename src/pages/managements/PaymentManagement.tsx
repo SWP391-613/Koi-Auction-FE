@@ -24,7 +24,7 @@ import { PaymentStatus } from "~/types/payments.type";
 import { getPaymentStatusColor } from "~/utils/colorUtils";
 import { toast, ToastContainer } from "react-toastify";
 import { getUserCookieToken } from "~/utils/auth.utils";
-import { updatePaymentStatus } from "~/utils/apiUtils";
+import { updatePaymentStatus } from "~/apis/payment.apis";
 
 const PaymentManagement: React.FC = () => {
   const {
@@ -80,10 +80,6 @@ const PaymentManagement: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" component="h1" gutterBottom>
-        Payment Management
-      </Typography>
-
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
         <FormControl sx={{ minWidth: 200 }}>
           <InputLabel>Payment Status</InputLabel>

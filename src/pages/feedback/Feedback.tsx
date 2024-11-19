@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Typography, Box, Rating, TextField, Button } from "@mui/material";
 import { toast } from "react-toastify";
 import { Order, OrderDetail } from "~/types/orders.type";
-import { fetchOrderById, submitFeedback } from "../../utils/apiUtils";
+import { fetchOrderById, submitFeedback } from "../../apis/apiUtils";
 import { getCookie } from "../../utils/cookieUtils";
 import { formatCurrency } from "../../utils/currencyUtils";
 import { useAuth } from "~/contexts/AuthContext";

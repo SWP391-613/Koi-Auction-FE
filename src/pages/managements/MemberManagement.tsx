@@ -1,14 +1,20 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Alert, Button, Container } from "@mui/material";
+import { Alert, Button, Container, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { softDeleteUser, undoDeleteUser } from "~/apis/user.apis";
+import { getMembersData } from "~/apis/users/member.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
+import {
+  CONFIRMATION_MESSAGE,
+  ERROR_MESSAGE,
+  SUCCESS_MESSAGE,
+} from "~/constants/message";
 import { MEMBER_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { Member } from "~/types/users.type";
-import { getMembersData } from "~/utils/apiUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 
@@ -17,8 +23,9 @@ const MemberManagement = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const itemsPerPage = 8; // A
+  const itemsPerPage = 20;
 
   useEffect(() => {
     const fetchMembers = async () => {
@@ -29,6 +36,7 @@ const MemberManagement = () => {
 
         if (data && Array.isArray(data.item)) {
           setMembers(data.item);
+          setTotalItems(data.total_item);
           setTotalPages(data.total_page);
         } else {
           throw new Error("Unexpected data structure");
@@ -78,9 +86,40 @@ const MemberManagement = () => {
     alert(`Edit member ${id}`);
   };
 
-  const handleDelete = (id: number) => {
-    // Implement delete logic
-    alert(`Delete member ${id}`);
+  const handleDelete = async (id: number) => {
+    const confirmReject = confirm(
+      `${CONFIRMATION_MESSAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_MEMBER} ${id}`,
+    );
+    if (!confirmReject) return;
+
+    try {
+      await softDeleteUser(id);
+      toast.success(SUCCESS_MESSAGE.DELETE_MEMBER_SUCCESS);
+    } catch (error) {
+      const errorMessage = extractErrorMessage(
+        error,
+        ERROR_MESSAGE.DELETE_MEMBER_FAILED,
+      );
+      toast.error(errorMessage);
+    }
+  };
+
+  const handleUndoDelete = async (id: number) => {
+    const confirmReject = confirm(
+      `${CONFIRMATION_MESSAGE.ARE_YOU_SURE_YOU_WANT_TO_REDO_THIS_MEMBER} ${id}`,
+    );
+    if (!confirmReject) return;
+
+    try {
+      await undoDeleteUser(id);
+      toast.success(SUCCESS_MESSAGE.REDO_MEMBER_SUCCESS);
+    } catch (error) {
+      const errorMessage = extractErrorMessage(
+        error,
+        ERROR_MESSAGE.REDO_MEMBER_FAILED,
+      );
+      toast.error(errorMessage);
+    }
   };
 
   if (loading) {
@@ -100,17 +139,11 @@ const MemberManagement = () => {
   }
 
   return (
-    <div className="w-full overflow-x-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Member Management</h1>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={handleCreate}
-        >
-          Add New Member
-        </Button>
+    <div className="m-5 overflow-x-auto">
+      <div className="mb-6 flex justify-between">
+        <div className="border-2 p-6 rounded-xl">
+          <Typography variant="h5">Total Member: {totalItems}</Typography>
+        </div>
       </div>
 
       <table className="whitespace-no-wrap w-full">
@@ -161,14 +194,11 @@ const MemberManagement = () => {
               <td className="px-4 py-3 text-sm">
                 {formatCurrency(member.account_balance)}
               </td>
+              <td className="px-4 py-3 text-sm">{member.order_count}</td>
+              <td className="px-4 py-3 text-sm">{member.created_at}</td>
+              <td className="px-4 py-3 text-sm">{member.updated_at}</td>
               <td className="px-4 py-3 text-sm">
                 <div className="flex items-center space-x-4 text-sm">
-                  <CrudButton
-                    onClick={() => handleView(member.id)}
-                    ariaLabel="View Member"
-                    svgPath="view.svg"
-                  />
-
                   <CrudButton
                     onClick={() => handleEdit(member.id)}
                     ariaLabel="Edit Member"
@@ -179,6 +209,12 @@ const MemberManagement = () => {
                     onClick={() => handleDelete(member.id)}
                     ariaLabel="Delete Member"
                     svgPath="delete.svg"
+                  />
+
+                  <CrudButton
+                    onClick={() => handleUndoDelete(member.id)}
+                    ariaLabel="Redo breeder"
+                    svgPath="redo.svg"
                   />
                 </div>
               </td>

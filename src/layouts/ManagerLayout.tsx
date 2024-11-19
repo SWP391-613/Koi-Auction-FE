@@ -8,6 +8,8 @@ import KoiManagement from "../pages/managements/KoiManagement";
 import MemberManagement from "../pages/managements/MemberManagement";
 import StaffManagement from "../pages/manager/staff/StaffManagement";
 import { AuctionsManagement } from "~/pages/managements/AuctionsManagement";
+import OrderManagement from "~/pages/managements/OrderManagement";
+import PaymentManagement from "~/pages/managements/PaymentManagement";
 
 const ManagerLayout: React.FC = () => {
   const navLinks = [
@@ -24,10 +26,12 @@ const ManagerLayout: React.FC = () => {
       <Routes>
         <Route path="" element={<ManagerDetail />} />
         <Route path="auctions" element={<AuctionsManagement />} />
-        <Route path="member" element={<MemberManagement />} />
+        <Route path="koi" element={<KoiManagement />} />
         <Route path="breeder" element={<BreederManagement />} />
         <Route path="staff" element={<StaffManagement />} />
-        <Route path="koi" element={<KoiManagement />} />
+        <Route path="member" element={<MemberManagement />} />
+        <Route path="orders" element={<OrderManagement />} />
+        <Route path="payments" element={<PaymentManagement />} />
         <Route path="koi-detail" element={<KoiDetail />} />
       </Routes>
     </DashboardLayout>

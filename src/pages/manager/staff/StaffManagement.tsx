@@ -1,33 +1,30 @@
 import AddIcon from "@mui/icons-material/Add";
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-} from "@mui/material";
-import axios, { Axios } from "axios";
+import { Button, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { undoDeleteUser } from "~/apis/user.apis";
+import { deleteStaff } from "~/apis/users/staff.apis";
+import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
+import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import {
+  CONFIRMATION_MESSAGE,
+  ERROR_MESSAGE,
+  SUCCESS_MESSAGE,
+} from "~/constants/message";
+import { STAFF_MANAGEMENT_HEADER } from "~/constants/tableHeader";
+import usePagination from "~/hooks/usePagination";
 import { Staff, StaffRegisterDTO } from "~/types/users.type";
 import { getCookie } from "~/utils/cookieUtils";
-import CreateStaffDialog from "./CreateStaffDialog";
-import EditStaffDialog from "./EditStaffDialog";
-import "react-toastify/dist/ReactToastify.css";
-import { toast, ToastContainer } from "react-toastify";
-import usePagination from "~/hooks/usePagination";
-import { ENDPOINT_STAFFS } from "~/constants/endPoints";
-import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
-import { STAFF_MANAGEMENT_HEADER } from "~/constants/tableHeader";
-import { createStaff, deleteStaff } from "~/utils/apiUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
-import PaginationComponent from "~/components/common/PaginationComponent";
+import AddStaffDialog from "./AddStaffDialog";
+import EditStaffDialog from "./EditStaffDialog";
 
 const StaffManagement = () => {
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
-
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [selectedStaffId, setSelectedStaffId] = useState<number | null>(null);
   const navigate = useNavigate();
@@ -58,11 +55,12 @@ const StaffManagement = () => {
     error,
     page,
     totalPages,
+    totalItems,
     handlePageChange,
     refetch,
   } = usePagination<Staff>({
-    apiUrl: ENDPOINT_STAFFS.BASE,
-    itemsPerPage: 8,
+    apiUrl: `${DYNAMIC_API_URL}/staffs`,
+    itemsPerPage: 20,
     accessToken,
   });
 
@@ -71,24 +69,42 @@ const StaffManagement = () => {
   const handleDelete = useCallback(
     async (id: number) => {
       const confirmed = window.confirm(
-        `Are you sure you want to delete staff: ${id}?`,
+        `${CONFIRMATION_MESSAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_STAFF} ${id}?`,
       );
       if (!confirmed) return;
 
       try {
         await deleteStaff(id, accessToken); // Use the utility function for API call
-        toast.success("Staff deleted successfully!");
+        toast.success(SUCCESS_MESSAGE.DELETE_STAFF_SUCCESS);
         refetch(); // Refetch the data after successful deletion
       } catch (error) {
         const errorMessage = extractErrorMessage(
           error,
-          "Failed to delete staff. Please try again.",
+          ERROR_MESSAGE.DELETE_STAFF_FAILED,
         );
         toast.error(errorMessage);
       }
     },
     [accessToken, refetch],
   );
+
+  const handleUndoDelete = async (id: number) => {
+    const confirmReject = confirm(
+      `${CONFIRMATION_MESSAGE.ARE_YOU_SURE_YOU_WANT_TO_REDO_THIS_STAFF} ${id}`,
+    );
+    if (!confirmReject) return;
+
+    try {
+      await undoDeleteUser(id);
+      toast.success(SUCCESS_MESSAGE.REDO_STAFF_SUCCESS);
+    } catch (error) {
+      const errorMessage = extractErrorMessage(
+        error,
+        ERROR_MESSAGE.REDO_STAFF_FAILED,
+      );
+      toast.error(errorMessage);
+    }
+  };
 
   const handleEdit = useCallback((id: number) => {
     setSelectedStaffId(id);
@@ -109,36 +125,14 @@ const StaffManagement = () => {
     [],
   );
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setNewStaff((prevStaff) => ({
-        ...prevStaff,
-        [name]: value,
-      }));
-    },
-    [],
-  );
-
-  const handleCreateStaff = useCallback(async () => {
-    try {
-      await createStaff(newStaff, accessToken);
-      toast.success("Staff created successfully!");
-      handleCloseCreateDialog();
-      refetch(); // Refetch the data after successful creation
-    } catch (error) {
-      const errorMessage = extractErrorMessage(
-        error,
-        "An error occurred during staff creation",
-      );
-      toast.error(errorMessage);
-    }
-  }, [newStaff, accessToken, handleCloseCreateDialog, refetch]);
+  const handleInputChange = (name: string, value: unknown) => {};
 
   return (
     <div className="m-5 overflow-x-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Staffs Management</h1>
+      <div className="mb-6 flex justify-between">
+        <div className="border-2 p-6 rounded-xl">
+          <Typography variant="h5">Total Staff: {totalItems}</Typography>
+        </div>
         <Button
           variant="contained"
           color="primary"
@@ -149,12 +143,10 @@ const StaffManagement = () => {
         </Button>
       </div>
 
-      <CreateStaffDialog
+      <AddStaffDialog
         open={openCreateDialog}
         onClose={handleCloseCreateDialog}
-        newStaff={newStaff}
         onInputChange={handleInputChange}
-        onCreateStaff={handleCreateStaff}
       />
 
       <table className="whitespace-no-wrap w-full">
@@ -188,6 +180,9 @@ const StaffManagement = () => {
               <td className="px-4 py-3 text-sm">{staff.is_subscription}</td>
               <td className="px-4 py-3 text-sm">{staff.date_of_birth}</td>
               <td className="px-4 py-3 text-sm">{staff.account_balance}</td>
+              <td className="px-4 py-3 text-sm">{staff.auction_count}</td>
+              <td className="px-4 py-3 text-sm">{staff.created_at}</td>
+              <td className="px-4 py-3 text-sm">{staff.updated_at}</td>
               <td className="px-4 py-3 text-sm">
                 <div className="flex items-center space-x-4 text-sm">
                   <CrudButton
@@ -199,6 +194,11 @@ const StaffManagement = () => {
                     onClick={() => handleDelete(staff.id)}
                     ariaLabel="Delete"
                     svgPath="delete.svg"
+                  />
+                  <CrudButton
+                    onClick={() => handleUndoDelete(staff.id)}
+                    ariaLabel="Redo breeder"
+                    svgPath="redo.svg"
                   />
                 </div>
               </td>

@@ -2,12 +2,10 @@ import { Typography } from "@mui/material";
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PaginationComponent from "~/components/common/PaginationComponent";
 import KoiBreederViewGrid from "~/components/search/KoiBreederViewGrid";
-import KoiUnverifiedSearchComponent from "~/components/search/KoiUnverifiedSearchComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { useAuth } from "~/contexts/AuthContext";
-import { environment } from "~/environments/environment";
 import { KoiDetailModel } from "~/types/kois.type";
 import { KoisResponse } from "~/types/paginated.types";
 import { getCookie } from "~/utils/cookieUtils";
@@ -48,10 +46,8 @@ const KoiWishList: React.FC = () => {
 
     try {
       setIsLoading(true);
-      const API_URL_DEVELOPMENT =
-        import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
       const response = await axios.get<KoisResponse>(
-        `${API_URL_DEVELOPMENT}/breeders/kois/status`,
+        `${DYNAMIC_API_URL}/breeders/kois/status`,
         {
           params: {
             breeder_id: userId,
@@ -74,7 +70,7 @@ const KoiWishList: React.FC = () => {
       }
     } catch (error) {
       console.error("Cannot fetch Koi data:", error);
-      setError("Failed to fetch Koi data");
+      setError("Failed to fetch your verify Koi data");
     } finally {
       setIsLoading(false);
     }
@@ -108,13 +104,24 @@ const KoiWishList: React.FC = () => {
   return (
     <div>
       {kois.length > 0 && userId ? (
-        <>
-          <KoiUnverifiedSearchComponent
-            onSearchStateChange={handleSearchStateChange}
-          />
-          <Typography variant="h3">This Kois is waiting to Verified</Typography>
+        <div className="ml-16 mr-16 mb-16">
+          <Typography variant="h4" className="text-center">
+            Your Kois is waiting to Verified
+          </Typography>
+          <Typography
+            variant="body1"
+            className="text-center text-gray-500"
+            sx={{ marginTop: "15px" }}
+          >
+            *Note: Please wait until your koi is verified by our team. We will
+            send result email back, thanks for your patience. From Koi Auction
+            Team.
+          </Typography>
+          <Typography variant="body2" className="text-left">
+            Showing 1 - {kois.length} of {totalKoi} results.
+          </Typography>
           <KoiBreederViewGrid kois={kois} handleView={handleView} />
-        </>
+        </div>
       ) : (
         <div className="flex flex-col justify-center items-center h-[30rem]">
           <Typography

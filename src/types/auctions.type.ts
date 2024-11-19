@@ -27,3 +27,17 @@ export const BID_METHOD = {
   DESCENDING_BID: "DESCENDING_BID",
   FIXED_PRICE: "FIXED_PRICE",
 } as const;
+
+export type QuantityKoiInAuctionByBidMethod = {
+  total: number;
+  ascending_bid: number;
+  descending_bid: number;
+  fixed_price: number;
+};
+
+export type AuctionStatusCount = {
+  total: number;
+  upcoming: number;
+  ongoing: number;
+  ended: number;
+};

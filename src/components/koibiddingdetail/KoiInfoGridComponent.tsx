@@ -19,6 +19,7 @@ import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter";
 import CountdownClock from "../auctions/CountdownClock";
 import LoginOrRegister from "../auth/LoginOrRegister";
 import { KoiDetailItem } from "./KoiBiddingDetailComponent";
+import { KOI_INFO_LABEL } from "~/constants/label";
 
 interface KoiInfoGridProps {
   koi: KoiDetailModel;
@@ -36,51 +37,53 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
   const koiInfoItems = [
     {
       icon: faVenusMars,
-      label: "Sex",
+      label: KOI_INFO_LABEL.SEX,
       value: convertDataToReadable(koi.sex),
       bgColor: "bg-gray-300",
     },
     {
       icon: faRuler,
-      label: "Length",
+      label: KOI_INFO_LABEL.LENGTH,
       value: koi.length,
       bgColor: "bg-gray-300",
     },
     {
       icon: faCalendarDays,
-      label: "Year Born",
+      label: KOI_INFO_LABEL.YEAR_BORN,
       value: koi.year_born,
       bgColor: "bg-gray-300",
     },
     {
       icon: faFish,
-      label: "Category",
+      label: KOI_INFO_LABEL.CATEGORY,
       value: getCategoryName(koi.category_id),
       bgColor: "bg-gray-300",
     },
-    {
-      icon: faDollarSign,
-      label: "Base Price",
-      value: ["DESCENDING_BID", "SEALED_BID"].includes(auctionKoi.bid_method)
-        ? ""
-        : formatCurrency(auctionKoi.base_price),
-      bgColor: "bg-blue-200",
-    },
+    auctionKoi.bid_method !== "DESCENDING_BID" &&
+      auctionKoi.bid_method !== "SEALED_BID" && {
+        icon: faDollarSign,
+        label:
+          auctionKoi.bid_method === "FIXED_PRICE"
+            ? KOI_INFO_LABEL.SALES_PRICE
+            : KOI_INFO_LABEL.BASE_PRICE,
+        value: formatCurrency(auctionKoi.base_price),
+        bgColor: "bg-blue-200",
+      },
     {
       icon: faGavel,
       label:
         auctionKoi.bid_method === "DESCENDING_BID"
-          ? "Current Price"
-          : "Current Bid",
+          ? KOI_INFO_LABEL.CURRENT_PRICE
+          : KOI_INFO_LABEL.CURRENT_BID,
       value:
         auctionKoi.bid_method === "SEALED_BID" && !auctionKoi.is_sold
-          ? "Hidden"
+          ? KOI_INFO_LABEL.HIDDEN
           : formatCurrency(auctionKoi.current_bid),
       bgColor: "bg-green-200",
     },
     {
       icon: faHandHoldingHeart,
-      label: "Bid Method",
+      label: KOI_INFO_LABEL.BID_METHOD,
       value: convertDataToReadable(auctionKoi.bid_method),
       bgColor: "bg-blue-200",
     },
@@ -88,13 +91,13 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
       ? [
           {
             icon: faArrowUp,
-            label: "Bid Step",
+            label: KOI_INFO_LABEL.BID_STEP,
             value: formatCurrency(auctionKoi.bid_step),
             bgColor: "bg-blue-200",
           },
         ]
       : []),
-  ];
+  ].filter(Boolean);
 
   const accessToken = getUserCookieToken();
 

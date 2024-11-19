@@ -4,16 +4,14 @@ import KoiInAuctionGrid from "~/components/shared/KoiInAuctionGrid";
 import { useAuth } from "~/contexts/AuthContext";
 import { AuctionKoi, KoiWithAuctionKoiData } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
-import {
-  fetchAuctionById,
-  fetchAuctionKoi,
-  getKoiById,
-} from "~/utils/apiUtils";
 import { getAuctionStatusColor } from "~/utils/colorUtils";
 import { getCookie } from "~/utils/cookieUtils";
 import { getAuctionStatusV2 } from "~/utils/dateTimeUtils";
 import BreederKoiManagement from "./BreederKoiManagement";
 import LoadingComponent from "~/components/shared/LoadingComponent";
+import { fetchAuctionById } from "~/apis/auction.apis";
+import { fetchAuctionKoi } from "~/apis/auctionkoi.apis";
+import { fetchKoiById } from "~/apis/koi.apis";
 
 const KoiRegisterAuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();
@@ -26,41 +24,43 @@ const KoiRegisterAuctionDetail: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const token = getCookie("access_token");
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     if (!token) return;
 
     const fetchAuction = async () => {
-      setLoading(true); // Set loading to true before starting the fetch
+      setLoading(true);
       try {
         const auctionData = await fetchAuctionById(Number(id));
-        setAuction(auctionData);
-
         if (auctionData) {
+          setAuction(auctionData);
           const auctionKoiData = await fetchAuctionKoi(auctionData.id!);
-          const koiDetailsPromises = auctionKoiData.map(
-            (auctionKoi: AuctionKoi) => getKoiById(auctionKoi.koi_id, token),
-          );
-          const koiDetails = await Promise.all(koiDetailsPromises);
+          if (auctionKoiData) {
+            const koiDetailsPromises = auctionKoiData.map(
+              (auctionKoi: AuctionKoi) => fetchKoiById(auctionKoi.koi_id),
+            );
+            const koiDetails = await Promise.all(koiDetailsPromises);
 
-          const combined = koiDetails.map((koiDetail, index) => ({
-            ...koiDetail,
-            auctionKoiData: auctionKoiData[index],
-          }));
+            const combined = koiDetails.map((koiDetail, index) => ({
+              ...koiDetail,
+              auctionKoiData: auctionKoiData[index],
+            }));
 
-          setKoiWithAuctionKoiData(combined);
+            setKoiWithAuctionKoiData(combined);
+          }
         } else {
           setError("No Upcoming Auction Found.");
         }
       } catch (err) {
         setError("Error fetching auction data.");
       } finally {
-        setLoading(false); // Set loading to false once the fetch is done
+        setLoading(false);
       }
     };
 
     fetchAuction();
-  }, [id, token]);
+  }, [id, token, refreshTrigger]);
 
   if (loading) {
     return (
@@ -127,7 +127,10 @@ const KoiRegisterAuctionDetail: React.FC = () => {
           </div>
         </div>
         <KoiInAuctionGrid kois={koiWithAuctionKoiData} auction={auction} />
-        <BreederKoiManagement auction_id={auction.id} />
+        <BreederKoiManagement
+          auction_id={auction.id}
+          onKoiRegistered={() => setRefreshTrigger((prev) => prev + 1)}
+        />
       </div>
     </>
   );

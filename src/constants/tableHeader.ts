@@ -37,6 +37,9 @@ export const STAFF_MANAGEMENT_HEADER = [
   "Subscription",
   "Date of Birth",
   "Balance",
+  "Number of Auctions",
+  "Created At",
+  "Updated At",
   "Actions",
 ];
 
@@ -50,6 +53,9 @@ export const BREEDER_MANAGEMENT_HEADER = [
   "Active",
   "Subscription",
   "Balance",
+  "Total Koi",
+  "Created At",
+  "Updated At",
   "Actions",
 ];
 
@@ -66,6 +72,9 @@ export const MEMBER_MANAGEMENT_HEADER = [
   "Subscription",
   "Date of Birth",
   "Balance",
+  "Total Orders",
+  "Created At",
+  "Updated At",
   "Actions",
 ];
 

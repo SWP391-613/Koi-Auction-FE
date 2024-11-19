@@ -89,7 +89,10 @@ const Footer: React.FC = () => {
 
   return (
     <footer
-      className={`bg-[#CACBCF] p-8 text-white shadow-lg ${isNavCollapsed ? "pl-24" : "pl-72"} transition-all duration-300`}
+      className={`bg-[#CACBCF] p-8 text-white shadow-lg
+        ${isNavCollapsed ? "md:pl-24" : "md:pl-72"}
+        pl-4
+        transition-all duration-300`}
     >
       <div className="mx-auto flex justify-start gap-5 flex-col md:flex-row">
         <Link to="/" className="md:mb-0 flex items-center justify-center">

@@ -71,6 +71,9 @@ const ManagerDetail: React.FC = () => {
   if (loading) return <LoadingComponent />;
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
+  if (user.role_name !== "manager") {
+    navigate("/notfound");
+  }
 
   const accessToken = getCookie("access_token");
   if (!accessToken) {
@@ -88,7 +91,7 @@ const ManagerDetail: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3">
         {/* User Info and Avatar */}
-        <div className="rounded-lg flex flex-col justify-around mr-10">
+        <div className="rounded-lg flex flex-col justify-around mr-10 p-6">
           <div className="flex flex-col justify-start">
             <div className="flex justify-center items-center">
               <img

@@ -1,6 +1,11 @@
 import {
   Box,
   Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
@@ -16,6 +21,9 @@ import {
   createDepositPayment,
   createDrawOutRequest,
 } from "~/apis/payment.apis";
+import { Bank, fetchBankList } from "~/apis/external.apis";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserCheck } from "@fortawesome/free-solid-svg-icons";
 
 interface AccountTransactionComponentProps {
   userId: number;
@@ -32,7 +40,7 @@ interface BankOption {
 const AccountTransactionComponent: React.FC<
   AccountTransactionComponentProps
 > = ({ userId, token, onTransactionSuccess }) => {
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState<number | "">("");
   const [transactionType, setTransactionType] = useState<"deposit" | "drawout">(
     "deposit",
   );
@@ -40,9 +48,27 @@ const AccountTransactionComponent: React.FC<
   const [bankName, setBankName] = useState<string>("");
   const [banks, setBanks] = useState<BankOption[]>([]);
   const [selectedBank, setSelectedBank] = useState<BankOption | null>(null);
+
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(Number(e.target.value));
+    const value = e.target.value;
+
+    // Allow empty string or valid numbers
+    if (value === "") {
+      setAmount("");
+    } else {
+      const numValue = Number(value);
+      // Only update if it's a valid number and greater than 0
+      if (!isNaN(numValue)) {
+        setAmount(numValue);
+      }
+    }
   };
+
+  const handlePresetAmountSelect = (event: SelectChangeEvent<number>) => {
+    setAmount(event.target.value as number);
+  };
+
+  const amountOptions = [100000, 200000, 500000, 1000000, 2000000, 5000000];
 
   const handleTransactionTypeChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -57,8 +83,8 @@ const AccountTransactionComponent: React.FC<
   useEffect(() => {
     const fetchBanks = async () => {
       try {
-        const response = await axios.get("https://api.vietqr.io/v2/banks");
-        const banksList = response.data.data.map((bank: any) => ({
+        const response = await fetchBankList();
+        const banksList = response.data.map((bank: Bank) => ({
           name: bank.name,
           shortName: bank.shortName,
           code: bank.code,
@@ -75,6 +101,11 @@ const AccountTransactionComponent: React.FC<
 
   const handleTransaction = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!amount) {
+      toast.error(GENERAL_TOAST_MESSAGE.AMOUNT_MUST_BE_GREATER_THAN_ZERO);
+      return;
+    }
 
     if (amount <= 0) {
       toast.error(GENERAL_TOAST_MESSAGE.AMOUNT_MUST_BE_GREATER_THAN_ZERO);
@@ -135,7 +166,7 @@ const AccountTransactionComponent: React.FC<
   };
 
   return (
-    <Box sx={{ maxWidth: 400, margin: "0 auto", padding: 2 }}>
+    <>
       <form onSubmit={handleTransaction}>
         <ToggleButtonGroup
           color="primary"
@@ -152,22 +183,43 @@ const AccountTransactionComponent: React.FC<
             Draw Out
           </ToggleButton>
         </ToggleButtonGroup>
-        <Box sx={{ marginBottom: 2 }}>
-          <TextField
-            fullWidth
-            type="number"
-            label={`Amount to ${transactionType === "deposit" ? "Deposit" : "Draw Out"}`}
-            value={amount}
-            onChange={handleAmountChange}
-            required
-            variant="outlined"
-            InputProps={{ inputProps: { min: 1 } }}
-          />
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3">
+            <TextField
+              fullWidth
+              type="number"
+              label={`Amount to ${transactionType === "deposit" ? "Deposit" : "Draw Out"}`}
+              value={amount}
+              onChange={handleAmountChange}
+              required
+              variant="outlined"
+              InputProps={{
+                inputProps: {
+                  min: 10000,
+                  step: "10000",
+                },
+              }}
+            />
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Preset Amounts</InputLabel>
+              <Select
+                value={amount}
+                onChange={handlePresetAmountSelect}
+                label="Preset Amounts"
+              >
+                {amountOptions.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
           {transactionType === "drawout" && (
-            <>
+            <div className="flex flex-col">
               <TextField
                 fullWidth
-                label="Bank Number"
+                label="Bank Account Number"
                 value={bankNumber}
                 onChange={(e) => setBankNumber(e.target.value)}
                 required
@@ -186,26 +238,23 @@ const AccountTransactionComponent: React.FC<
                     fullWidth
                     label="Select Bank"
                     required
-                    sx={{ mb: 2 }}
                   />
                 )}
               />
-            </>
+            </div>
           )}
-        </Box>
-        <Box sx={{ textAlign: "center" }}>
-          <Button
+        </div>
+        <Box sx={{ textAlign: "right", mt: 2 }}>
+          <button
             type="submit"
-            variant="contained"
-            color="primary"
-            sx={{ padding: "10px 20px" }}
+            className="bg-green-600 text-white px-4 py-2 rounded-md text-xl hover:bg-green-500 transition"
           >
-            {transactionType === "deposit" ? "Deposit" : "Draw Out"}
-          </Button>
+            Continue
+          </button>
         </Box>
       </form>
       <ToastContainer />
-    </Box>
+    </>
   );
 };
 

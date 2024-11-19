@@ -17,6 +17,8 @@ export const ROUTING_PATH = {
   STAFFS: "/staffs",
   BREEDERS: "/breeders",
   MEMBERS: "/members",
+  ORDERS: "/orders",
+  PAYMENTS: "/payments",
   FORGOT_PASSWORD: "/forgot-password",
   USERS_ORDERS: "/users/orders",
   MANAGERS_HOME: "/managers",

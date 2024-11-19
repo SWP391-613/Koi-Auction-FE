@@ -36,7 +36,7 @@ const AllKoiSearchComponent: React.FC<AllKoiOwnerhComponentProps> = () => {
           value={query}
           onChange={setQuery}
           loading={loading}
-          placeholder="Search for koi..."
+          placeholder={SEARCH_LABEL.EXAMPLE_KOI_SEARCH}
         />
         <Typography
           variant="body2"

@@ -10,10 +10,9 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import { fetchBreedersData } from "~/apis/users/breeder.apis";
 import { OrderResponse, OrderStatus } from "~/types/orders.type";
 import { BreedersResponse } from "~/types/paginated.types";
 import { getOrderStatusColor } from "~/utils/colorUtils";
@@ -37,13 +36,10 @@ const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({
   useEffect(() => {
     const fetchAllBreeders = async () => {
       try {
-        const response = await axios.get(`${DYNAMIC_API_URL}/breeders`, {
-          params: {
-            page: 0,
-            limit: 20,
-          },
-        });
-        setKoiBreeders(response.data || []);
+        const response = await fetchBreedersData(0, 20);
+        if (response) {
+          setKoiBreeders(response || []);
+        }
       } catch (error) {
         console.error("Error fetching breeders:", error);
       }

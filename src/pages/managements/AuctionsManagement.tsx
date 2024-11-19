@@ -25,7 +25,7 @@ import {
 } from "~/apis/auction.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { AUCTION_STATUS } from "~/constants/auctionStatus";
+import { AUCTION_STATUS } from "~/constants/status";
 import { ERROR_MESSAGE } from "~/constants/message";
 import { AuctionKoi } from "~/types/auctionkois.type";
 import {

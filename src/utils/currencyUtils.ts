@@ -22,3 +22,13 @@ export const formatCurrency = (
 
   return new Intl.NumberFormat(locale, options).format(value);
 };
+
+// ex: 1000000 -> 1,000,000
+export const formatNumber = (value: number | string): string => {
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
+// ex: 1,000,000 -> 1000000
+export const parseMoney = (value: string): number => {
+  return parseInt(value.replace(/\./g, ""), 10);
+};

@@ -9,7 +9,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import { KoiInfoGridComponent } from "~/components/koibiddingdetail/KoiInfoGridComponent";
-import { AUCTION_STATUS } from "~/constants/auctionStatus";
+import { AUCTION_STATUS } from "~/constants/status";
 import { useUserData } from "~/hooks/useUserData";
 
 import {

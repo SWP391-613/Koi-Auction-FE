@@ -4,6 +4,7 @@ import { getCookie } from "~/utils/cookieUtils";
 import { useNavigate } from "react-router-dom";
 import { UserDetailsResponse } from "~/types/users.type";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import { fetchUserDetails } from "~/apis/user.apis";
 
 export const useUserData = () => {
   const [user, setUser] = useState<UserDetailsResponse | null>(null);
@@ -22,28 +23,17 @@ export const useUserData = () => {
       }
 
       try {
-        const response = await axios.post(
-          `${DYNAMIC_API_URL}/users/details`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          },
-        );
-
-        if (response.status === 200) {
-          setUser(response.data);
-        } else {
-          throw new Error("Failed to fetch user data");
+        const response = await fetchUserDetails();
+        if (response) {
+          setUser(response);
         }
       } catch (error) {
-        if (axios.isAxiosError(error)) {
-          setError(error.response?.data?.message || "An error occurred");
-        } else {
-          setError("An unexpected error occurred");
-        }
-        console.error("Failed to fetch user data:", error);
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred";
+        setError(errorMessage);
+        console.log("Error fetching user details:", error);
       } finally {
         setLoading(false);
       }

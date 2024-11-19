@@ -1,13 +1,13 @@
-import { faStar, faTag } from "@fortawesome/free-solid-svg-icons";
+import { faMoneyBill, faStar, faTag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import { fetchBreedersData } from "~/apis/users/breeder.apis";
 import { KoiWithAuctionKoiData } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
 import { BreedersResponse } from "~/types/paginated.types";
-import { getCategoryName } from "~/utils/dataConverter"; // Adjust the import path as needed
+import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter"; // Adjust the import path as needed
 import KoiDetails from "../auctiondetail/KoiDetails";
 
 interface KoiInAuctionGridProps {
@@ -28,13 +28,10 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
   useEffect(() => {
     const fetchAllBreeders = async () => {
       try {
-        const response = await axios.get(`${DYNAMIC_API_URL}/breeders`, {
-          params: {
-            page: 0,
-            limit: 20,
-          },
-        });
-        setKoiBreeders(response.data || []);
+        const response = await fetchBreedersData(0, 20);
+        if (response) {
+          setKoiBreeders(response || []);
+        }
       } catch (error) {
         console.error("Error fetching breeders:", error);
       }
@@ -73,13 +70,22 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
                       )?.avatar_url
                     }
                     alt="Breeder Avatar"
-                    className="w-[25%]"
+                    className="w-[50%]"
                   />
                 )}
               </div>
-              <div className="absolute top-3 right-2 bg-opacity-50 text-white rounded-full p-3 text-sm flex items-center">
-                {koi.auctionKoiData.bid_method}
-              </div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="absolute top-3 right-3 bg-black bg-opacity-20 backdrop-blur-sm text-white rounded-full px-4 py-2 text-sm font-medium flex items-center shadow-lg border border-white/30"
+              >
+                <div className="flex gap-2 justify-center items-center">
+                  {convertDataToReadable(koi.auctionKoiData.bid_method)}
+                  <FontAwesomeIcon icon={faMoneyBill} className="mr-1" />
+                </div>
+              </motion.div>
+
               <div className="absolute bottom-9 left-2 md:bottom-2 md:left-3 text-white rounded-full p-1 text-md font-bold">
                 <FontAwesomeIcon icon={faTag} className="mr-1" />
                 {koi.id}
@@ -108,7 +114,7 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
               <div className="hidden sm:block">
                 <KoiDetails
                   category={getCategoryName(koi.category_id)}
-                  sex={koi.sex}
+                  sex={convertDataToReadable(koi.sex)}
                   length={koi.length}
                   year_born={koi.year_born}
                 />

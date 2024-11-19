@@ -1,5 +1,8 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ROUTING_PATH } from "~/constants/endPoints";
+import { TOP_NAVBAR_LABEL } from "~/constants/label";
+import { USER_STATUS } from "~/constants/status";
 import { useUserData } from "~/hooks/useUserData";
 
 const DetailNavbar = () => {
@@ -8,40 +11,73 @@ const DetailNavbar = () => {
   const { user } = useUserData();
 
   const getNavLinks = () => {
-    if (!user || user.status_name !== "VERIFIED") return [];
+    if (!user || user.status_name !== USER_STATUS.VERIFIED) return [];
 
     const basePath = `/${user.role_name}s`;
     const links = {
       member: [
-        { label: "My Profile", path: `users/${user.id}` },
-        { label: "Orders", path: "users/orders" },
-        { label: "Payments", path: "users/payments" },
+        { label: TOP_NAVBAR_LABEL.MY_PROFILE, path: basePath },
+        { label: TOP_NAVBAR_LABEL.ORDERS, path: `${basePath}/orders` },
+        { label: TOP_NAVBAR_LABEL.PAYMENTS, path: `${basePath}/payments` },
       ],
       breeder: [
-        { label: "My Profile", path: basePath },
-        { label: "My Kois", path: `${basePath}/kois` },
-        { label: "Add Koi", path: `${basePath}/add-koi` },
-        { label: "Register to Auction", path: `${basePath}/auctions/register` },
-        { label: "Pending Koi", path: `${basePath}/wishlist` },
-        { label: "Payments", path: `${basePath}/payments` },
+        { label: TOP_NAVBAR_LABEL.MY_PROFILE, path: basePath },
+        { label: TOP_NAVBAR_LABEL.MY_KOI, path: `${basePath}/kois` },
+        { label: TOP_NAVBAR_LABEL.ADD_KOI, path: `${basePath}/add-koi` },
+        {
+          label: TOP_NAVBAR_LABEL.REGISTER_TO_AUCTION,
+          path: `${basePath}/auctions/register`,
+        },
+        { label: TOP_NAVBAR_LABEL.PENDING_KOI, path: `${basePath}/wishlist` },
+        { label: TOP_NAVBAR_LABEL.PAYMENTS, path: `${basePath}/payments` },
       ],
       staff: [
-        { label: "My Profile", path: basePath },
-        { label: "Auction Management", path: `${basePath}/auctions` },
-        { label: "Verify Kois", path: `${basePath}/verify/kois` },
-        { label: "Order Management", path: `${basePath}/orders` },
-        { label: "Payment Management", path: `${basePath}/payments` },
-        { label: "Notifications", path: `${basePath}/send-notifications` },
+        { label: TOP_NAVBAR_LABEL.MY_PROFILE, path: basePath },
+        {
+          label: TOP_NAVBAR_LABEL.AUCTION_MANAGEMENT,
+          path: `${basePath}/auctions`,
+        },
+        { label: TOP_NAVBAR_LABEL.VERIFY_KOI, path: `${basePath}/verify/kois` },
+        {
+          label: TOP_NAVBAR_LABEL.ORDER_MANAGEMENT,
+          path: `${basePath}/orders`,
+        },
+        {
+          label: TOP_NAVBAR_LABEL.PAYMENT_MANAGEMENT,
+          path: `${basePath}/payments`,
+        },
+        {
+          label: TOP_NAVBAR_LABEL.NOTIFICATIONS,
+          path: `${basePath}/send-notifications`,
+        },
       ],
       manager: [
-        { label: "My Profile", path: basePath },
-        { label: "Auction Management", path: `${basePath}/auctions` },
-        { label: "Koi Management", path: `${basePath}/kois` },
-        { label: "Breeder Management", path: `${basePath}/breeders` },
-        { label: "Staff Management", path: `${basePath}/staffs` },
-        { label: "Member Management", path: `${basePath}/members` },
-        { label: "Order Management", path: `${basePath}/orders` },
-        { label: "Payment Management", path: `${basePath}/payments` },
+        { label: TOP_NAVBAR_LABEL.MY_PROFILE, path: basePath },
+        {
+          label: TOP_NAVBAR_LABEL.AUCTION_MANAGEMENT,
+          path: `${basePath}/auctions`,
+        },
+        { label: TOP_NAVBAR_LABEL.KOI_MANAGEMENT, path: `${basePath}/kois` },
+        {
+          label: TOP_NAVBAR_LABEL.BREEDER_MANAGEMENT,
+          path: `${basePath}/breeders`,
+        },
+        {
+          label: TOP_NAVBAR_LABEL.STAFF_MANAGEMENT,
+          path: `${basePath}/staffs`,
+        },
+        {
+          label: TOP_NAVBAR_LABEL.MEMBER_MANAGEMENT,
+          path: `${basePath}/members`,
+        },
+        {
+          label: TOP_NAVBAR_LABEL.ORDER_MANAGEMENT,
+          path: `${basePath}/orders`,
+        },
+        {
+          label: TOP_NAVBAR_LABEL.PAYMENT_MANAGEMENT,
+          path: `${basePath}/payments`,
+        },
       ],
     };
 
@@ -49,10 +85,10 @@ const DetailNavbar = () => {
   };
 
   const shouldShowNavbar =
-    location.pathname.includes("/users") ||
-    location.pathname.includes("/breeders") ||
-    location.pathname.includes("/staffs") ||
-    location.pathname.includes("/managers");
+    location.pathname.includes(ROUTING_PATH.MEMBERS) ||
+    location.pathname.includes(ROUTING_PATH.BREEDERS) ||
+    location.pathname.includes(ROUTING_PATH.STAFFS) ||
+    location.pathname.includes(ROUTING_PATH.MANAGERS);
 
   if (!shouldShowNavbar) return null;
 

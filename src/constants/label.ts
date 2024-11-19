@@ -35,13 +35,15 @@ export const SEARCH_LABEL = {
   SEARCH_ALL_OUR_AUCTION: "Search all our auction",
   SEARCH_ALL_OUR_UPCOMING_AUCTION: "Search all our upcoming auction",
   SEARCH_ALL_OUR_AVAILABLE_KOI: "Search all our available koi",
+  EXAMPLE_KOI_SEARCH: "e.g. Showa, Ascending Bid, etc.",
+  EXAMPLE_AUCTION_SEARCH: "e.g. Ongoing, Upcoming, Ended, etc.",
 } as const;
 
 export const SEARCH_DESCRIPTION = {
   SEARCH_ALL_KOI_DESCRIPTION:
     "*Note: Search on name, sex, length, age, price, description,....",
   SEARCH_ALL_OUR_AUCTION_DESCRIPTION: `*Note: Search on name, status, start date, end date,...`,
-  SEARCH_ALL_OUR_AVAILABLE_KOI_DESCRIPTION: `*Note: Search on name, sex, length, year born, breeder, price, ceiling
+  SEARCH_ALL_OUR_AVAILABLE_KOI_DESCRIPTION: `*Note: Search on koi name, sex, length, year born, breeder name, price, ceiling
           price, description, bid step, bid method....`,
 } as const;
 
@@ -54,7 +56,7 @@ export const KOI_CREATE_FORM_LABEL = {
   THUMBNAIL_URL: "Thumbnail URL",
 } as const;
 
-export const DETAIL_NAVBAR_LABEL = {
+export const TOP_NAVBAR_LABEL = {
   MY_PROFILE: "My Profile",
   //member
   ORDERS: "Orders",
@@ -62,9 +64,10 @@ export const DETAIL_NAVBAR_LABEL = {
 
   //staff
   NOTIFICATIONS: "Notifications",
-  VERIFY_KOIS: "Verify Kois",
+  VERIFY_KOI: "Verify Koi",
 
   //breeder
+  MY_KOI: "My Koi",
   ADD_KOI: "Add Koi",
   PENDING_KOI: "Pending Koi",
   REGISTER_TO_AUCTION: "Register to Auction",

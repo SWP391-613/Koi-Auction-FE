@@ -42,8 +42,10 @@ export const UserProfile: React.FC<UserProfileProps> = ({
         return "/staffs";
       case "manager":
         return "/managers";
+      case "member":
+        return "/members";
       default:
-        return `/users/${user.id}`;
+        return "/";
     }
   };
 

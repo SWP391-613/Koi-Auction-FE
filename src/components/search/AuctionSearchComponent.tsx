@@ -37,7 +37,7 @@ const AuctionSearchComponent: React.FC<AuctionSearchComponentProps> = () => {
           value={query}
           onChange={setQuery}
           loading={loading}
-          placeholder="Search for auctions..."
+          placeholder={SEARCH_LABEL.EXAMPLE_AUCTION_SEARCH}
         />
         <Typography
           variant="body2"

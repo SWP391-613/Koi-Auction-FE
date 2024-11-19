@@ -1,7 +1,12 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faTag, faStar } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faTag,
+  faStar,
+  faMoneyBill,
+} from "@fortawesome/free-solid-svg-icons";
 import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter";
 import KoiDetails from "../auctiondetail/KoiDetails";
 import { KoiInAuctionDetailModel, KoiDetailModel } from "~/types/kois.type";
@@ -142,9 +147,16 @@ const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="absolute top-3 right-2 bg-black bg-opacity-20 backdrop-blur-sm text-white rounded-full px-4 py-2 text-sm font-medium flex items-center shadow-lg border border-white/30"
+                className="absolute top-3 right-3 bg-black bg-opacity-20 backdrop-blur-sm text-white rounded-full px-4 py-2 text-sm font-medium flex items-center shadow-lg border border-white/30"
               >
-                {convertDataToReadable(koi.bid_method)}
+                <div className="flex gap-2 justify-center items-center">
+                  {convertDataToReadable(koi.bid_method)}
+                  <FontAwesomeIcon
+                    key={index}
+                    icon={faMoneyBill}
+                    className="mr-1"
+                  />
+                </div>
               </motion.div>
 
               <motion.div

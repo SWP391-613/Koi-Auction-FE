@@ -251,8 +251,8 @@ function AppContent() {
                           </PageTransition>
                         }
                       />
-                      <Route path="/users/*">
-                        <Route path=":id" element={<UserDetail />} />
+                      <Route path="/members/*">
+                        <Route path="" element={<UserDetail />} />
                         <Route path="orders" element={<UserOrder />} />
                         <Route
                           path="payments"

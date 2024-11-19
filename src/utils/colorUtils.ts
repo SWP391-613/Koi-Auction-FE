@@ -1,4 +1,4 @@
-import { AUCTION_STATUS } from "~/constants/auctionStatus";
+import { AUCTION_STATUS } from "~/constants/status";
 import { OrderStatus } from "~/types/orders.type";
 import { PaymentStatus } from "~/types/payments.type";
 

@@ -28,6 +28,7 @@ import UserDetailDialog from "./UserDetailDialog";
 import { formatDateV2 } from "~/utils/dateTimeUtils";
 import { sendOtp } from "~/apis/otp.apis";
 import { sendRequestUpdateRole } from "~/apis/mail.apis";
+import NotFound from "~/components/error/NotFound";
 
 const UserDetail: React.FC = () => {
   const { user, loading: userLoading, loading, error, setUser } = useUserData();
@@ -50,6 +51,9 @@ const UserDetail: React.FC = () => {
   if (loading) return <LoadingComponent />;
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
+  if (user.role_name !== "member") {
+    navigate("/notfound");
+  }
 
   const handleUpdate = async () => {
     const userId = getCookie("user_id");

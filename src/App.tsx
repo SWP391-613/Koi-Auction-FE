@@ -86,7 +86,7 @@ const cld = new Cloudinary({
 });
 
 function AppContent() {
-  const { isNavCollapsed } = useNavbar();
+  const { isNavCollapsed, isMobileNavVisible } = useNavbar();
 
   return (
     <HelmetProvider>
@@ -102,7 +102,11 @@ function AppContent() {
               <div className="flex flex-grow">
                 <Header />
                 <main
-                  className={`flex-1 ${isNavCollapsed ? "ml-20" : "ml-60"} pt-16 transition-all duration-300`}
+                  className={`flex-1 transition-all duration-300
+                    ${isNavCollapsed ? "md:ml-20" : "md:ml-60"}
+                    ${isMobileNavVisible ? "mb-[60px]" : "mb-0"}
+                    md:mb-0
+                    pt-16`}
                 >
                   <DetailNavbar />
                   <Routes>

@@ -28,7 +28,9 @@ const KoiDetails: React.FC<KoiDetailsProps> = ({
           className="mr-2 text-[#4086c7]  sm:block"
         />
         <div className="w-full pl-2">
-          <label className="text-gray-500 text-sm">Category</label>
+          <label className="text-gray-500 text-sm sm:hidden md:block">
+            Category
+          </label>
           <p className="text-black font-semibold">{category || "Unknown"}</p>
         </div>
       </div>
@@ -38,7 +40,9 @@ const KoiDetails: React.FC<KoiDetailsProps> = ({
           className="mr-2 text-[#4086c7]  sm:block"
         />
         <div className="w-full pl-2">
-          <label className="text-gray-500 text-sm">Sex</label>
+          <label className="text-gray-500 text-sm sm:hidden md:block">
+            Sex
+          </label>
           <p className="text-black font-semibold">{sex || "Unknown"}</p>
         </div>
       </div>
@@ -48,7 +52,9 @@ const KoiDetails: React.FC<KoiDetailsProps> = ({
           className="mr-2 text-[#4086c7]  sm:block"
         />
         <div className="w-full pl-2">
-          <label className="text-gray-500 text-sm">Length</label>
+          <label className="text-gray-500 text-sm sm:hidden md:block">
+            Length
+          </label>
           <p className="text-black font-semibold">{length}cm</p>
         </div>
       </div>
@@ -58,7 +64,9 @@ const KoiDetails: React.FC<KoiDetailsProps> = ({
           className="mr-2 text-[#4086c7]  sm:block"
         />
         <div className="w-full pl-2">
-          <label className="text-gray-500 text-sm">Year Born</label>
+          <label className="text-gray-500 text-sm sm:hidden md:block">
+            Year Born
+          </label>
           <p className="text-black font-semibold">{year_born}</p>
         </div>
       </div>

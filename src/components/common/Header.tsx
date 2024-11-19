@@ -59,13 +59,13 @@ const Header = () => {
         initial={{ y: 0 }}
         transition={{ duration: 0.3 }}
         className={`
-          fixed top-0
-          ${isNavCollapsed ? "left-20" : "left-60"}
-          right-0
+          fixed top-0 right-0
+          ${isNavCollapsed ? "md:left-20" : "md:left-60"}
+          left-0
           h-16
           bg-gray-300
           shadow-sm
-          z-50
+          z-[51]
           transition-all
           duration-300
         `}

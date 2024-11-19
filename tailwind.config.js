@@ -29,6 +29,9 @@ module.exports = {
       animation: {
         "border-flow": "border-flow 3s ease infinite",
       },
+      screens: {
+        md: "768px",
+      },
     },
   },
   plugins: [],

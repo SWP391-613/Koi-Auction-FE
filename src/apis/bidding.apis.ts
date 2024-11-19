@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
 import { BidRequest } from "~/pages/auctions/KoiBidding";
 import { Bid } from "~/types/bids.type";
@@ -11,7 +11,7 @@ export const fetchBidHistory = async (
 ): Promise<Bid[] | void> => {
   try {
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}/bidding/${auctionKoiId}`,
+      `${DYNAMIC_API_URL}/bidding/${auctionKoiId}`,
     );
     return response.data;
   } catch (error) {
@@ -29,7 +29,7 @@ export const placeBid = async (
 ): Promise<{ isSold: boolean }> => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/bidding/bid/${bid.auction_koi_id}`,
+      `${DYNAMIC_API_URL}/bidding/bid/${bid.auction_koi_id}`,
       bid,
       {
         headers: {
@@ -61,7 +61,7 @@ export const getUserHighestBidInAuctionKoi = async (
   userId: number,
 ): Promise<Bid> => {
   const response = await axios.get(
-    `${API_URL_DEVELOPMENT}/bidding/${auctionKoiId}/${userId}`,
+    `${DYNAMIC_API_URL}/bidding/${auctionKoiId}/${userId}`,
     {
       headers: {
         Authorization: `Bearer ${getUserCookieToken()}`,

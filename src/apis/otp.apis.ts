@@ -1,11 +1,11 @@
 import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
 
 export const sendOtp = async (email: string): Promise<any> => {
   try {
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}/otp/send?type=mail&recipient=${email}`,
+      `${DYNAMIC_API_URL}/otp/send?type=mail&recipient=${email}`,
     );
     if (response.status === 200) {
       console.log("OTP sent successfully");
@@ -26,7 +26,7 @@ export const sendOtp = async (email: string): Promise<any> => {
 export const sendOtpForgotPassword = async (email: string): Promise<any> => {
   try {
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}/forgot-password?toEmail=${email}`,
+      `${DYNAMIC_API_URL}/forgot-password?toEmail=${email}`,
     );
     if (response.status === 200) {
       console.log("OTP sent successfully");
@@ -49,7 +49,7 @@ export const verifyOtpIsCorrect = async (
   otp: string,
 ): Promise<any> => {
   try {
-    const response = await axios.post(`${API_URL_DEVELOPMENT}/otp/verify`, {
+    const response = await axios.post(`${DYNAMIC_API_URL}/otp/verify`, {
       email,
       otp,
     });

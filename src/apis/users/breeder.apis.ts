@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { handleAxiosError } from "~/utils/errors.utils";
@@ -14,7 +14,7 @@ export const fetchKoisOfBreeder = async (
 ): Promise<KoisOfBreeder | void> => {
   try {
     const response = await axios.get<KoisOfBreeder>(
-      `${API_URL_DEVELOPMENT}/breeders/kois`,
+      `${DYNAMIC_API_URL}/breeders/kois`,
       {
         params: { breeder_id, page, limit },
         headers: {
@@ -40,7 +40,7 @@ export const fetchKoisOfBreederWithStatus = async (
 ): Promise<KoisOfBreeder | void> => {
   try {
     const response = await axios.get<KoisOfBreeder>(
-      `${API_URL_DEVELOPMENT}/breeders/kois/not-in-auction`,
+      `${DYNAMIC_API_URL}/breeders/kois/not-in-auction`,
       {
         params: { breeder_id, page, limit },
         headers: {
@@ -62,7 +62,7 @@ export const fetchKoisOfBreederWithStatus = async (
 export const fetchBreedersData = async (page: number, itemsPerPage: number) => {
   try {
     const response = await axios.get<BreedersResponse>(
-      `${API_URL_DEVELOPMENT}/breeders`,
+      `${DYNAMIC_API_URL}/breeders`,
       {
         params: {
           page: page - 1, // Adjusting for zero-based indexing

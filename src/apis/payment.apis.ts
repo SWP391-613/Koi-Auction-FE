@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
 import {
   PaymentDTO,
@@ -14,7 +14,7 @@ export const createDepositPayment = async (
 ) => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/payments/create_deposit_payment`,
+      `${DYNAMIC_API_URL}/payments/create_deposit_payment`,
       paymentRequest,
       {
         headers: {
@@ -39,7 +39,7 @@ export const createCashOrderPayment = async (
 ): Promise<any> => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/payments/cash/create_order_payment`,
+      `${DYNAMIC_API_URL}/payments/cash/create_order_payment`,
       paymentRequest,
       {
         headers: {
@@ -60,7 +60,7 @@ export const createOnlineOrderPayment = async (
 ): Promise<any> => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/payments/vnpay/create_order_payment`,
+      `${DYNAMIC_API_URL}/payments/vnpay/create_order_payment`,
       paymentRequest,
       {
         headers: {
@@ -81,7 +81,7 @@ export const createOrderPayment = async (
 ): Promise<any> => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/payments/create_order_payment`,
+      `${DYNAMIC_API_URL}/payments/create_order_payment`,
       paymentDTO,
       {
         headers: {
@@ -109,7 +109,7 @@ export const createDrawOutRequest = async (
   token: string,
 ) => {
   const response = await axios.post(
-    `${API_URL_DEVELOPMENT}/payments/create_drawout_request`,
+    `${DYNAMIC_API_URL}/payments/create_drawout_request`,
     paymentDTO,
     {
       headers: {
@@ -128,7 +128,7 @@ export const getUserPaymentHistoryByStatus = async (
   token?: string,
 ): Promise<PaymentPaginationResponse> => {
   const response = await axios.get(
-    `${API_URL_DEVELOPMENT}/payments/user/${user_id}/get-sorted-payments`,
+    `${DYNAMIC_API_URL}/payments/user/${user_id}/get-sorted-payments`,
     {
       params: { status: status, page, limit },
       headers: { Authorization: `Bearer ${getUserCookieToken() || token}` },
@@ -144,7 +144,7 @@ export const updatePaymentStatus = async (
 ) => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/payments/${paymentId}/update-payment-status`,
+      `${DYNAMIC_API_URL}/payments/${paymentId}/update-payment-status`,
       { status: paymentStatus },
       {
         headers: {

@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createNewAuction } from "~/apis/auction.apis";
 import { AUCTION_STATUS } from "~/constants/auctionStatus";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { AddNewAuctionDTO, AuctionModel } from "~/types/auctions.type";
 import { Staff } from "~/types/users.type";
 import { getCookie } from "~/utils/cookieUtils";
@@ -86,7 +86,7 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
     setLoading(true);
     try {
       const response = await axios.get<StaffApiResponse>(
-        `${API_URL_DEVELOPMENT}/staffs`,
+        `${DYNAMIC_API_URL}/staffs`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

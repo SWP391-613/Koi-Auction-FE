@@ -17,7 +17,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { KOI_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import {
   KoiDetailModel,
@@ -99,7 +99,7 @@ const KoiManagement = () => {
       setLoading(true);
       try {
         const response = await axios.get<QuantityKoiByGenderResponse>(
-          `${API_URL_DEVELOPMENT}/kois/count-by-gender`,
+          `${DYNAMIC_API_URL}/kois/count-by-gender`,
         );
         setKoiCountGender(response.data);
       } catch (error) {
@@ -115,7 +115,7 @@ const KoiManagement = () => {
     const fetchKoiStatusCount = async () => {
       try {
         const response = await axios.get(
-          `${API_URL_DEVELOPMENT}/kois/count-by-status`,
+          `${DYNAMIC_API_URL}/kois/count-by-status`,
         );
         setKoiCountStatus(response.data);
       } catch (error) {

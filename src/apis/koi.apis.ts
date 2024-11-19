@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
 import { KoiDetailModel, UpdateKoiDTO } from "~/types/kois.type";
 import { KoiInAuctionResponse, KoisResponse } from "~/types/paginated.types";
@@ -9,7 +9,7 @@ import { handleAxiosError } from "~/utils/errors.utils";
 export async function fetchKoiById(id: number) {
   try {
     const response = await axios.get<KoiDetailModel>(
-      `${API_URL_DEVELOPMENT}/kois/${id}`,
+      `${DYNAMIC_API_URL}/kois/${id}`,
     );
     return response.data;
   } catch (error) {
@@ -27,15 +27,12 @@ export const getKoiData = async (
   limit: number,
 ): Promise<KoisResponse | void> => {
   try {
-    const response = await axios.get<KoisResponse>(
-      `${API_URL_DEVELOPMENT}/kois`,
-      {
-        params: {
-          page: page - 1, // Assuming the API is zero-based
-          limit: limit,
-        },
+    const response = await axios.get<KoisResponse>(`${DYNAMIC_API_URL}/kois`, {
+      params: {
+        page: page - 1, // Assuming the API is zero-based
+        limit: limit,
       },
-    );
+    });
 
     return response.data;
   } catch (error) {
@@ -55,7 +52,7 @@ export const getKoiInAuctionData = async (
 ): Promise<KoiInAuctionResponse | void> => {
   try {
     const response = await axios.get<KoiInAuctionResponse>(
-      `${API_URL_DEVELOPMENT}/auctionkois/get-kois-by-keyword`,
+      `${DYNAMIC_API_URL}/auctionkois/get-kois-by-keyword`,
       {
         params: {
           keyword: "",
@@ -78,7 +75,7 @@ export const getKoiInAuctionData = async (
 
 export const deleteKoiById = async (id: number): Promise<void> => {
   try {
-    const response = await axios.delete(`${API_URL_DEVELOPMENT}/kois/${id}`, {
+    const response = await axios.delete(`${DYNAMIC_API_URL}/kois/${id}`, {
       headers: {
         Authorization: `Bearer ${getUserCookieToken()}`,
       },
@@ -99,15 +96,11 @@ export const deleteKoiById = async (id: number): Promise<void> => {
 
 export const updateKoi = async (koiId: number, koi: KoiDetailModel) => {
   try {
-    const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/kois/${koiId}`,
-      koi,
-      {
-        headers: {
-          Authorization: `Bearer ${getUserCookieToken()}`,
-        },
+    const response = await axios.put(`${DYNAMIC_API_URL}/kois/${koiId}`, koi, {
+      headers: {
+        Authorization: `Bearer ${getUserCookieToken()}`,
       },
-    );
+    });
     return response.data;
   } catch (error) {
     handleAxiosError(
@@ -121,7 +114,7 @@ export const updateKoi = async (koiId: number, koi: KoiDetailModel) => {
 
 export const fetchKoi = async (koiId: number) => {
   try {
-    const response = await axios.get(`${API_URL_DEVELOPMENT}/kois/${koiId}`, {
+    const response = await axios.get(`${DYNAMIC_API_URL}/kois/${koiId}`, {
       headers: {
         Authorization: `Bearer ${getUserCookieToken()}`,
       },
@@ -146,7 +139,7 @@ export const createKoi = async (
   formData: FormData,
 ): Promise<KoiDetailModel> => {
   const response = await axios.post<KoiDetailModel>(
-    `${API_URL_DEVELOPMENT}/kois`,
+    `${DYNAMIC_API_URL}/kois`,
     formData,
     {
       headers: {

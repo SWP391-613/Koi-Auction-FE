@@ -6,9 +6,8 @@ import { toast } from "react-toastify";
 import { fetchKoisOfBreeder } from "~/apis/users/breeder.apis";
 import KoiOwnerSearchComponent from "~/components/search/KoiOwnerSearchComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { useAuth } from "~/contexts/AuthContext";
-import { environment } from "~/environments/environment";
 import { KoiDetailModel } from "~/types/kois.type";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
@@ -48,8 +47,6 @@ const KoiOwnerSearch: React.FC = () => {
     if (!userId || !accessToken) return;
 
     try {
-      const API_URL_DEVELOPMENT =
-        import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
       const response = await fetchKoisOfBreeder(
         parseInt(userId),
         currentPage - 1,
@@ -87,7 +84,7 @@ const KoiOwnerSearch: React.FC = () => {
     if (!confirmDelete) return;
 
     try {
-      const response = await axios.delete(`${API_URL_DEVELOPMENT}/kois/${id}`, {
+      const response = await axios.delete(`${DYNAMIC_API_URL}/kois/${id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

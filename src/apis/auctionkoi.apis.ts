@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
 import { AuctionKoi, BidMethod } from "~/types/auctionkois.type";
 import { QuantityKoiInAuctionByBidMethod } from "~/types/auctions.type";
@@ -8,7 +8,7 @@ import { handleAxiosError } from "~/utils/errors.utils";
 export const fetchAuctionKoi = async (auctionId: number) => {
   try {
     const response = await axios.get<AuctionKoi[]>(
-      `${API_URL_DEVELOPMENT}/auctionkois/auction/${auctionId}`,
+      `${DYNAMIC_API_URL}/auctionkois/auction/${auctionId}`,
     );
     return response.data;
   } catch (error) {
@@ -27,7 +27,7 @@ export const fetchAuctionKoiDetails = async (
 ): Promise<AuctionKoi | null> => {
   try {
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}/auctionkois/${auctionId}/${auctionKoiId}`,
+      `${DYNAMIC_API_URL}/auctionkois/${auctionId}/${auctionKoiId}`,
     );
     return response.data;
   } catch (error) {
@@ -61,7 +61,7 @@ export const postAuctionKoi = async (
 
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/auctionkois`,
+      `${DYNAMIC_API_URL}/auctionkois`,
       auctionKoiPayload,
       {
         headers: {
@@ -85,7 +85,7 @@ export const postAuctionKoi = async (
 export const fetchQuantityKoiInAuctionByBidMethod = async () => {
   try {
     const response = await axios.get<QuantityKoiInAuctionByBidMethod>(
-      `${API_URL_DEVELOPMENT}/auctionkois/count-by-bid-method`,
+      `${DYNAMIC_API_URL}/auctionkois/count-by-bid-method`,
     );
     return response.data;
   } catch (error) {

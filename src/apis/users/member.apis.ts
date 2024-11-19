@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { MembersResponse } from "~/types/paginated.types";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { handleAxiosError } from "~/utils/errors.utils";
@@ -9,7 +9,7 @@ export const getMembersData = async (
   limit: number,
 ): Promise<MembersResponse> => {
   const response = await axios.get<MembersResponse>(
-    `${API_URL_DEVELOPMENT}/members`,
+    `${DYNAMIC_API_URL}/members`,
     {
       params: {
         page: page - 1,

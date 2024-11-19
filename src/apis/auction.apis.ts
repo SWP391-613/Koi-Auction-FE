@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
 import {
   AddNewAuctionDTO,
@@ -15,7 +15,7 @@ export const createNewAuction = async (
 ): Promise<AddNewAuctionDTO | void> => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/auctions`,
+      `${DYNAMIC_API_URL}/auctions`,
       newAuction,
       {
         headers: {
@@ -40,7 +40,7 @@ export const createNewAuction = async (
 
 export const fetchAuctions = async (page: number, limit: number) => {
   try {
-    const response = await axios.get(`${API_URL_DEVELOPMENT}/auctions`, {
+    const response = await axios.get(`${DYNAMIC_API_URL}/auctions`, {
       params: { page, limit },
     });
     return response.data;
@@ -63,7 +63,7 @@ export const fetchAuctionsByStatus = async (
 ) => {
   try {
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}/auctions/koi_register`,
+      `${DYNAMIC_API_URL}/auctions/koi_register`,
       {
         params: { page, limit, status },
         headers: {
@@ -85,7 +85,7 @@ export const fetchAuctionsByStatus = async (
 
 export const fetchAuctionById = async (id: number) => {
   try {
-    const response = await axios.get(`${API_URL_DEVELOPMENT}/auctions/${id}`);
+    const response = await axios.get(`${DYNAMIC_API_URL}/auctions/${id}`);
     return createAuctionFromApi(response.data);
   } catch (error) {
     handleAxiosError(
@@ -104,7 +104,7 @@ export const updateAuction = async (
 ): Promise<void> => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/auctions/${id}`,
+      `${DYNAMIC_API_URL}/auctions/${id}`,
       auction,
       {
         headers: {
@@ -127,14 +127,11 @@ export const deleteAuction = async (
   accessToken: string,
 ): Promise<void> => {
   try {
-    const response = await axios.delete(
-      `${API_URL_DEVELOPMENT}/auctions/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+    const response = await axios.delete(`${DYNAMIC_API_URL}/auctions/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
       },
-    );
+    });
     if (response.status === 204) {
       console.log("Auction deleted successfully");
     }
@@ -151,7 +148,7 @@ export const deleteAuction = async (
 export const endAuctionEmergency = async (auctionId: number) => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/auctions/end/${auctionId}`,
+      `${DYNAMIC_API_URL}/auctions/end/${auctionId}`,
       {},
       {
         headers: {
@@ -173,7 +170,7 @@ export const endAuctionEmergency = async (auctionId: number) => {
 export const fetchAuctionStatusCount = async () => {
   try {
     const response = await axios.get<AuctionStatusCount>(
-      `${API_URL_DEVELOPMENT}/auctions/count-by-auction-status`,
+      `${DYNAMIC_API_URL}/auctions/count-by-auction-status`,
     );
     return response.data;
   } catch (error) {

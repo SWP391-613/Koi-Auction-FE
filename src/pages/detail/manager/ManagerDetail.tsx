@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { useUserData } from "~/hooks/useUserData";
 
 import { getCookie } from "~/utils/cookieUtils";
@@ -37,12 +37,9 @@ const ManagerDetail: React.FC = () => {
     }
 
     try {
-      const response = await axios.get(
-        `${API_URL_DEVELOPMENT}/users/${userId}`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        },
-      );
+      const response = await axios.get(`${DYNAMIC_API_URL}/users/${userId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
       setFetchedUser(response.data); // Save fetched data to state
       setOpenModal(true); // Open the modal to display the data
     } catch (error) {

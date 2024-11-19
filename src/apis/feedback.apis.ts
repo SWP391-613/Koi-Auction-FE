@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { FeedbackRequest } from "~/pages/detail/member/Feedback";
 
 export const submitFeedback = async (
@@ -8,7 +8,7 @@ export const submitFeedback = async (
 ): Promise<void> => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/feedbacks`,
+      `${DYNAMIC_API_URL}/feedbacks`,
       feedbackData,
       {
         headers: {
@@ -31,7 +31,7 @@ export const submitFeedback = async (
 export const getFeedbackByOrderId = async (orderId: number, token: string) => {
   try {
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}/feedbacks/order/${orderId}`,
+      `${DYNAMIC_API_URL}/feedbacks/order/${orderId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

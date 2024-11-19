@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { OrderResponse, OrderStatus } from "~/types/orders.type";
 import { BreedersResponse } from "~/types/paginated.types";
 import { getOrderStatusColor } from "~/utils/colorUtils";
@@ -37,7 +37,7 @@ const OrderSearchGrid: React.FC<OrderSearchGridProps> = ({
   useEffect(() => {
     const fetchAllBreeders = async () => {
       try {
-        const response = await axios.get(`${API_URL_DEVELOPMENT}/breeders`, {
+        const response = await axios.get(`${DYNAMIC_API_URL}/breeders`, {
           params: {
             page: 0,
             limit: 20,

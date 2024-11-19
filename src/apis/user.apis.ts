@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { handleAxiosError } from "~/utils/errors.utils";
@@ -11,7 +11,7 @@ export const updateAccountBalance = async (
 ) => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/users/${userId}/deposit/${payment}`,
+      `${DYNAMIC_API_URL}/users/${userId}/deposit/${payment}`,
       {}, // If your API expects a body, add it here
       {
         headers: {
@@ -35,7 +35,7 @@ export const verifyOtpToVerifyUser = async (
   otp: string,
 ): Promise<any> => {
   try {
-    const response = await axios.post(`${API_URL_DEVELOPMENT}/users/verify`, {
+    const response = await axios.post(`${DYNAMIC_API_URL}/users/verify`, {
       email,
       otp,
     });
@@ -62,7 +62,7 @@ export const updateUserField = async (
   token: string,
 ): Promise<void> => {
   const response = await axios.put(
-    `${API_URL_DEVELOPMENT}/users/${userId}`,
+    `${DYNAMIC_API_URL}/users/${userId}`,
     { [field]: value },
     {
       headers: {
@@ -82,7 +82,7 @@ export const updateUserRole = async (
 ): Promise<void> => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/users/${id}/update-role/${roleId}`,
+      `${DYNAMIC_API_URL}/users/${id}/update-role/${roleId}`,
       {},
       {
         headers: {
@@ -105,7 +105,7 @@ export const updateUserRole = async (
 
 export const softDeleteUser = async (id: number): Promise<void> => {
   try {
-    const response = await axios.delete(`${API_URL_DEVELOPMENT}/users/${id}`, {
+    const response = await axios.delete(`${DYNAMIC_API_URL}/users/${id}`, {
       headers: {
         Authorization: `Bearer ${getUserCookieToken()}`,
       },
@@ -126,7 +126,7 @@ export const softDeleteUser = async (id: number): Promise<void> => {
 export const undoDeleteUser = async (id: number): Promise<void> => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/users/${id}/restore`,
+      `${DYNAMIC_API_URL}/users/${id}/restore`,
       {},
       {
         headers: {

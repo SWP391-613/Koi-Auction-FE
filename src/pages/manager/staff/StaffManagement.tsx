@@ -9,7 +9,7 @@ import { deleteStaff } from "~/apis/users/staff.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import {
   CONFIRMATION_MESSAGE,
   ERROR_MESSAGE,
@@ -59,7 +59,7 @@ const StaffManagement = () => {
     handlePageChange,
     refetch,
   } = usePagination<Staff>({
-    apiUrl: `${API_URL_DEVELOPMENT}/staffs`,
+    apiUrl: `${DYNAMIC_API_URL}/staffs`,
     itemsPerPage: 20,
     accessToken,
   });

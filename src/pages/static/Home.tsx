@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { default as React, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { useAuth } from "~/contexts/AuthContext";
 import { KoiInAuctionDetailModel } from "~/types/kois.type";
 import { BreedersResponse } from "~/types/paginated.types";
@@ -61,7 +61,7 @@ const Home = () => {
 
     const fetchAllBreeders = async () => {
       try {
-        const response = await axios.get(`${API_URL_DEVELOPMENT}/breeders`, {
+        const response = await axios.get(`${DYNAMIC_API_URL}/breeders`, {
           params: {
             page: 0,
             limit: 20,

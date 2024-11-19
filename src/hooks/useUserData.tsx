@@ -3,7 +3,7 @@ import axios from "axios";
 import { getCookie } from "~/utils/cookieUtils";
 import { useNavigate } from "react-router-dom";
 import { UserDetailsResponse } from "~/types/users.type";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 
 export const useUserData = () => {
   const [user, setUser] = useState<UserDetailsResponse | null>(null);
@@ -23,7 +23,7 @@ export const useUserData = () => {
 
       try {
         const response = await axios.post(
-          `${API_URL_DEVELOPMENT}/users/details`,
+          `${DYNAMIC_API_URL}/users/details`,
           {},
           {
             headers: {

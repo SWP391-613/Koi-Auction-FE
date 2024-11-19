@@ -17,7 +17,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { updateUserRole } from "~/apis/user.apis";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { Member } from "~/types/users.type";
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
@@ -49,7 +49,7 @@ const AddBreederDialog: React.FC<AddBreederDialogProps> = ({
 
     setLoading(true);
     try {
-      const response = await axios.get(`${API_URL_DEVELOPMENT}/members`, {
+      const response = await axios.get(`${DYNAMIC_API_URL}/members`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },

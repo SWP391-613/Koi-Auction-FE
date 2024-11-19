@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
 import { Staff, StaffRegisterDTO } from "~/types/users.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
@@ -10,15 +10,11 @@ export const createStaff = async (
   token: string,
 ): Promise<void> => {
   try {
-    const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/staffs`,
-      staffData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    const response = await axios.post(`${DYNAMIC_API_URL}/staffs`, staffData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
-    );
+    });
   } catch (error) {
     handleAxiosError(
       error,
@@ -31,7 +27,7 @@ export const createStaff = async (
 
 export const deleteStaff = async (id: number, token: string): Promise<void> => {
   try {
-    const response = await axios.delete(`${API_URL_DEVELOPMENT}/staffs/${id}`, {
+    const response = await axios.delete(`${DYNAMIC_API_URL}/staffs/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -55,7 +51,7 @@ export const updateStaff = async (
 ): Promise<void> => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/staffs/${staffId}`,
+      `${DYNAMIC_API_URL}/staffs/${staffId}`,
       staffData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -77,12 +73,9 @@ export const updateStaff = async (
 
 export const getStaffData = async (staffId: number): Promise<any> => {
   try {
-    const response = await axios.get(
-      `${API_URL_DEVELOPMENT}/staffs/${staffId}`,
-      {
-        headers: { Authorization: `Bearer ${getUserCookieToken()}` },
-      },
-    );
+    const response = await axios.get(`${DYNAMIC_API_URL}/staffs/${staffId}`, {
+      headers: { Authorization: `Bearer ${getUserCookieToken()}` },
+    });
 
     if (response.status !== 200) {
       throw new Error("Failed to fetch staff data");

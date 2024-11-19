@@ -9,7 +9,7 @@ import KoiBreederViewGrid from "~/components/search/KoiBreederViewGrid";
 import KoiUnverifiedSearchComponent from "~/components/search/KoiUnverifiedSearchComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { useAuth } from "~/contexts/AuthContext";
 import { environment } from "~/environments/environment";
 import { KoiDetailModel } from "~/types/kois.type";
@@ -42,7 +42,7 @@ const VerifyKoiList: React.FC = () => {
     setLoading(true);
     try {
       await axios.put(
-        `${API_URL_DEVELOPMENT}/kois/status/${id}`,
+        `${DYNAMIC_API_URL}/kois/status/${id}`,
         {
           tracking_status: "VERIFIED",
         },
@@ -70,7 +70,7 @@ const VerifyKoiList: React.FC = () => {
 
     try {
       await axios.put(
-        `${API_URL_DEVELOPMENT}/kois/status/${id}`,
+        `${DYNAMIC_API_URL}/kois/status/${id}`,
         {
           tracking_status: "REJECTED",
         },
@@ -99,10 +99,8 @@ const VerifyKoiList: React.FC = () => {
 
     try {
       setLoading(true);
-      const API_URL_DEVELOPMENT =
-        import.meta.env.VITE_API_BASE_URL + environment.be.apiPrefix;
       const response = await axios.get<KoisResponse>(
-        `${API_URL_DEVELOPMENT}/kois/status`,
+        `${DYNAMIC_API_URL}/kois/status`,
         {
           params: {
             status: "UNVERIFIED",

@@ -9,7 +9,7 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { emailRegex } from "~/constants/regex";
 import { UpdateUserDTO, UserResponse, UserStatus } from "~/types/users.type";
 import { getCookie } from "~/utils/cookieUtils";
@@ -82,7 +82,7 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
       const fetchUser = async () => {
         try {
           const response = await axios.get<UserResponse>(
-            `${API_URL_DEVELOPMENT}/users/${userId}`,
+            `${DYNAMIC_API_URL}/users/${userId}`,
           );
           setFetchedUser(response.data);
 
@@ -166,7 +166,7 @@ const UserDetailDialog: React.FC<UserDetailDialogProps> = ({
       };
 
       await axios.put(
-        `${API_URL_DEVELOPMENT}/users/details/${userId}`,
+        `${DYNAMIC_API_URL}/users/details/${userId}`,
         updatedFields,
         {
           headers: { Authorization: `Bearer ${accessToken}` },

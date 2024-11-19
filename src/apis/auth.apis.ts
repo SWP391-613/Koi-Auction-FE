@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
 import {
   LoginDTO,
@@ -12,7 +12,7 @@ import { handleAxiosError } from "~/utils/errors.utils";
 export const login = async (payload: LoginDTO) => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/users/login`,
+      `${DYNAMIC_API_URL}/users/login`,
       payload,
     );
     return response.data;
@@ -29,7 +29,7 @@ export const login = async (payload: LoginDTO) => {
 
 export const register = async (payload: UserRegisterDTO) => {
   try {
-    const response = await axios.post(`${API_URL_DEVELOPMENT}/users/register`, {
+    const response = await axios.post(`${DYNAMIC_API_URL}/users/register`, {
       first_name: payload.first_name || "",
       last_name: payload.last_name || "",
       email: payload.email || "",
@@ -55,7 +55,7 @@ export const register = async (payload: UserRegisterDTO) => {
 export const doLogout = async (token: string) => {
   try {
     const response = await axios.post(
-      `${API_URL_DEVELOPMENT}/users/logout`,
+      `${DYNAMIC_API_URL}/users/logout`,
       {},
       {
         headers: {

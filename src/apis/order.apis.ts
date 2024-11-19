@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
 import { environment } from "~/environments/environment";
 import {
@@ -16,7 +16,7 @@ export const fetchOrderDetails = async (
 ): Promise<OrderDetail[]> => {
   try {
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}/orders_details/order/${orderId}`,
+      `${DYNAMIC_API_URL}/orders_details/order/${orderId}`,
       {
         headers: {
           Authorization: `Bearer ${getUserCookieToken()}`,
@@ -39,7 +39,7 @@ export const fetchOrderById = async (
   orderId: number,
   token: string,
 ): Promise<Order> => {
-  const response = await axios.get(`${API_URL_DEVELOPMENT}/orders/${orderId}`, {
+  const response = await axios.get(`${DYNAMIC_API_URL}/orders/${orderId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -53,7 +53,7 @@ export const fetchUserOrders = async (
 ): Promise<Order[]> => {
   try {
     const response = await axios.get(
-      `${API_URL_DEVELOPMENT}${environment.be.endPoint.orders}/user/${userId}`,
+      `${DYNAMIC_API_URL}${environment.be.endPoint.orders}/user/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -73,7 +73,7 @@ export const updateOrder = async (
 ): Promise<Order> => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}${environment.be.endPoint.orders}/${order.id}`,
+      `${DYNAMIC_API_URL}${environment.be.endPoint.orders}/${order.id}`,
       order,
       {
         headers: {
@@ -102,7 +102,7 @@ export const getUserOrderByStatus = async (
   token?: string,
 ): Promise<OrderPaginationResponse> => {
   const response = await axios.get(
-    `${API_URL_DEVELOPMENT}/orders/user/${userId}/get-active-sorted-orders`,
+    `${DYNAMIC_API_URL}/orders/user/${userId}/get-active-sorted-orders`,
     {
       params: { keyword: status, page, limit },
       headers: { Authorization: `Bearer ${getUserCookieToken() || token}` },
@@ -112,7 +112,7 @@ export const getUserOrderByStatus = async (
 };
 
 export const getOrderById = async (orderId: number): Promise<Order> => {
-  const response = await axios.get(`${API_URL_DEVELOPMENT}/orders/${orderId}`, {
+  const response = await axios.get(`${DYNAMIC_API_URL}/orders/${orderId}`, {
     headers: { Authorization: `Bearer ${getUserCookieToken()}` },
   });
   return response.data;
@@ -125,7 +125,7 @@ export const updateOrderStatus = async (
 ) => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/orders/${orderId}/update-order-status`,
+      `${DYNAMIC_API_URL}/orders/${orderId}/update-order-status`,
       { status: newStatus },
       {
         headers: {
@@ -150,7 +150,7 @@ export const confirmOrder = async (
 ): Promise<Order> => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/orders/${orderId}/confirm-delivery`,
+      `${DYNAMIC_API_URL}/orders/${orderId}/confirm-delivery`,
       { status: newStatus },
       {
         headers: {

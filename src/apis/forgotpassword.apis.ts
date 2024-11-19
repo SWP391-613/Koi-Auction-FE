@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { UpdatePasswordDTO } from "~/types/users.type";
 
 export const updateUserPassword = async (
@@ -7,7 +7,7 @@ export const updateUserPassword = async (
 ): Promise<void> => {
   try {
     const response = await axios.put(
-      `${API_URL_DEVELOPMENT}/forgot-password`,
+      `${DYNAMIC_API_URL}/forgot-password`,
       newPassword,
     );
     if (response.status === 200) {

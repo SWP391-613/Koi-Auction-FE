@@ -1,13 +1,15 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faTag, faStar } from "@fortawesome/free-solid-svg-icons";
-import { getCategoryName } from "~/utils/dataConverter";
+import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter";
 import KoiDetails from "../auctiondetail/KoiDetails";
 import { KoiInAuctionDetailModel, KoiDetailModel } from "~/types/kois.type";
 import ScrollToTop from "react-scroll-to-top";
-import { koiBreeders } from "~/utils/data/koibreeders";
 import { motion } from "framer-motion";
+import { BreedersResponse } from "~/types/paginated.types";
+import axios from "axios";
+import { API_URL_DEVELOPMENT } from "~/constants/endPoints";
 
 type BaseKoiProps<T> = {
   kois: T[];
@@ -29,11 +31,34 @@ const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
   getLinkUrl,
   buttonEffect,
 }: KoiSearchGridProps<T>) => {
+  const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>({
+    total_page: 0,
+    total_item: 0,
+    item: [],
+  });
+  useEffect(() => {
+    const fetchAllBreeders = async () => {
+      try {
+        const response = await axios.get(`${API_URL_DEVELOPMENT}/breeders`, {
+          params: {
+            page: 0,
+            limit: 20,
+          },
+        });
+        setKoiBreeders(response.data || []);
+      } catch (error) {
+        console.error("Error fetching breeders:", error);
+      }
+    };
+
+    fetchAllBreeders();
+  }, []);
+
   return (
     <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {kois.map((koi: T, index) => (
         <motion.div
-          key={koi.id}
+          key={koi.id + index}
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
@@ -98,14 +123,17 @@ const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
                 transition={{ delay: 0.2 }}
                 className="absolute top-3 left-3 bg-opacity-50 text-white p-3 text-lg flex items-center"
               >
-                {koiBreeders.find((breeder) => breeder.id === koi.owner_id) && (
+                {koiBreeders.item.find(
+                  (breeder) => breeder.id === koi.owner_id,
+                ) && (
                   <img
                     src={
-                      koiBreeders.find((breeder) => breeder.id === koi.owner_id)
-                        ?.avatar_url
+                      koiBreeders.item.find(
+                        (breeder) => breeder.id === koi.owner_id,
+                      )?.avatar_url
                     }
                     alt="Breeder Avatar"
-                    className="w-[25%]"
+                    className="w-[50%]"
                   />
                 )}
               </motion.div>
@@ -114,9 +142,9 @@ const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="absolute top-3 right-2 bg-opacity-50 text-white rounded-full p-3 text-sm flex items-center"
+                className="absolute top-3 right-2 bg-black bg-opacity-20 backdrop-blur-sm text-white rounded-full px-4 py-2 text-sm font-medium flex items-center shadow-lg border border-white/30"
               >
-                {koi.bid_method}
+                {convertDataToReadable(koi.bid_method)}
               </motion.div>
 
               <motion.div
@@ -132,7 +160,7 @@ const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
               <div className="sm:hidden bg-gray-300 rounded-xl m-3 p-2 text-md font-bold w-1/2">
                 <KoiDetails
                   category={getCategoryName(koi.category_id)}
-                  sex={koi.sex}
+                  sex={convertDataToReadable(koi.sex)}
                   length={koi.length}
                   year_born={koi.year_born}
                 />
@@ -157,8 +185,8 @@ const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
               </div>
               <div className="hidden sm:block">
                 <KoiDetails
-                  category={koi.category_id.toString()}
-                  sex={koi.sex}
+                  category={getCategoryName(koi.category_id)}
+                  sex={convertDataToReadable(koi.sex)}
                   length={koi.length}
                   year_born={koi.year_born}
                 />

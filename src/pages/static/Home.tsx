@@ -328,7 +328,7 @@ const Home = () => {
                       className="w-full h-48 object-cover"
                     />
                     <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-md text-sm">
-                      {format(new Date(), "dd/MM/yyyy")}
+                      {format(post.date, "dd/MM/yyyy")}
                     </div>
                   </div>
 

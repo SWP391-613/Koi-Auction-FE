@@ -126,7 +126,7 @@ const BreederKoiManagement: React.FC<BreederKoiManagementProps> = ({
       // Refresh the koi list
       const koiData = await fetchKoisOfBreederWithStatus(
         parseInt(userId),
-        page - 1,
+        page,
         itemsPerPage,
       );
       if (koiData && Array.isArray(koiData.item)) {

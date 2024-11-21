@@ -61,9 +61,7 @@ const VNPayReturn: React.FC = () => {
           case "deposit":
             if (paymentResult.userId) {
               navigate(
-                user?.role_name === "breeder"
-                  ? "/breeders/"
-                  : `/users/${paymentResult.userId}`,
+                user?.role_name === "breeder" ? "/breeders/" : `/members/`,
               );
             }
             break;

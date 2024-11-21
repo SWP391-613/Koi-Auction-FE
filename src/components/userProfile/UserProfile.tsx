@@ -17,6 +17,16 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   const { authLogout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -34,7 +44,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   }, []);
 
   const getMyAccountUrl = (user: any) => {
-    if (!user) return "/auth";
+    if (!user) return isMobile ? "/login" : "/auth";
     switch (user.role_name) {
       case "breeder":
         return "/breeders";
@@ -60,7 +70,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
       <div className="relative">
         {!isLoggedIn ? (
           <button
-            onClick={() => navigate("/auth")}
+            onClick={() => navigate(getMyAccountUrl(null))}
             className="relative flex overflow-hidden items-center text-sm font-medium bg-[#CF0A0A] text-white shadow hover:bg-red/90 h-9 px-4 py-2 max-w-52 whitespace-pre md:flex group w-full justify-center gap-2 rounded-md transition-all duration-300 ease-out"
           >
             <span className="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-40"></span>

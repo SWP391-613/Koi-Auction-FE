@@ -13,6 +13,8 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { useUserData } from "~/hooks/useUserData";
 import {
@@ -26,6 +28,7 @@ import { getPaymentStatusColor } from "~/utils/colorUtils";
 import { ToastContainer } from "react-toastify";
 import PaginationComponent from "../common/PaginationComponent";
 import { getUserPaymentHistoryByStatus } from "~/apis/payment.apis";
+import { convertDataToReadable } from "~/utils/dataConverter";
 
 const formatPaymentDate = (dateArray: number[]): string => {
   const [year, month, day, hour, minute] = dateArray;
@@ -50,6 +53,9 @@ const PaymentTransactions: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState<PaymentStatus>(
     PaymentStatus.ALL,
   );
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
 
   const PaymentTypeView = (paymentType: PaymentType) => {
     switch (paymentType) {
@@ -119,18 +125,32 @@ const PaymentTransactions: React.FC = () => {
   if (error) return <Alert severity="error">{error}</Alert>;
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
       <Typography
         variant="h4"
         component="h1"
         gutterBottom
-        className="text-center"
+        sx={{
+          textAlign: "center",
+          fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" },
+        }}
       >
         Payment Transactions
       </Typography>
 
-      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <FormControl sx={{ minWidth: 200 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          mb: 2,
+          width: "100%",
+        }}
+      >
+        <FormControl
+          sx={{
+            minWidth: { xs: "100%", sm: 200 },
+          }}
+        >
           <InputLabel>Payment Status</InputLabel>
           <Select
             value={selectedStatus}
@@ -149,7 +169,18 @@ const PaymentTransactions: React.FC = () => {
       </Box>
 
       {payments.length === 0 ? (
-        <Alert severity="info">No payments found</Alert>
+        <div className="flex flex-col justify-center items-center h-full">
+          <Typography
+            variant="h6"
+            sx={{
+              color: "primary.main",
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            Empty {convertDataToReadable(selectedStatus)} payments
+          </Typography>
+        </div>
       ) : (
         <Paper elevation={3}>
           {payments.map((payment, index) => (
@@ -159,12 +190,20 @@ const PaymentTransactions: React.FC = () => {
                 sx={{
                   p: 2,
                   display: "grid",
-                  gridTemplateColumns: "400px 200px 200px 200px auto",
+                  gridTemplateColumns: {
+                    xs: "1fr",
+                    sm: "1fr 1fr",
+                    md: "400px 200px 200px 200px auto",
+                  },
                   alignItems: "center",
                   gap: 2,
                 }}
               >
-                <Box>
+                <Box
+                  sx={{
+                    gridColumn: { xs: "1", sm: "1 / -1", md: "auto" },
+                  }}
+                >
                   <Typography variant="subtitle1">
                     Payment #{payment.id}
                   </Typography>
@@ -172,7 +211,12 @@ const PaymentTransactions: React.FC = () => {
                     {formatPaymentDate(payment.payment_date)}
                   </Typography>
                 </Box>
-                <Box>
+
+                <Box
+                  sx={{
+                    gridColumn: { xs: "1", sm: "auto", md: "auto" },
+                  }}
+                >
                   <Typography variant="body2">
                     <strong>Method:</strong> {payment.payment_method}
                   </Typography>
@@ -181,7 +225,12 @@ const PaymentTransactions: React.FC = () => {
                     {PaymentTypeView(payment.payment_type)}
                   </Typography>
                 </Box>
-                <Box>
+
+                <Box
+                  sx={{
+                    gridColumn: { xs: "1", sm: "auto", md: "auto" },
+                  }}
+                >
                   <Typography variant="body2">
                     <strong>Amount:</strong>{" "}
                     {formatCurrency(payment.payment_amount)}
@@ -197,7 +246,14 @@ const PaymentTransactions: React.FC = () => {
                     </Typography>
                   )}
                 </Box>
-                <Box sx={{ justifySelf: "flex-end" }}>
+
+                <Box
+                  sx={{
+                    justifySelf: { xs: "start", sm: "end" },
+                    gridColumn: { xs: "1", sm: "1 / -1", md: "auto" },
+                    mt: { xs: 1, sm: 2, md: 0 },
+                  }}
+                >
                   <Chip
                     label={payment.payment_status}
                     color={getPaymentStatusColor(payment.payment_status)}
@@ -209,7 +265,16 @@ const PaymentTransactions: React.FC = () => {
           ))}
         </Paper>
       )}
-      <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+
+      <Box
+        sx={{
+          mt: 4,
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+          overflow: "auto",
+        }}
+      >
         <PaginationComponent
           totalPages={totalPages}
           currentPage={page}

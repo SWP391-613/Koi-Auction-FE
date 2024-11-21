@@ -122,22 +122,23 @@ const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
                 )}
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="hidden sm:flex absolute top-3 right-3 bg-black bg-opacity-20 backdrop-blur-sm text-white rounded-full px-4 py-2 text-sm font-medium flex items-center shadow-lg border border-white/30"
-              >
-                <div className="flex gap-2 justify-center items-center">
-                  {convertDataToReadable(koi.bid_method)}
-                  <FontAwesomeIcon
-                    key={index}
-                    icon={faMoneyBill}
-                    className="mr-1"
-                  />
-                </div>
-              </motion.div>
-
+              {koi.bid_method && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="hidden sm:flex absolute top-3 right-3 bg-black bg-opacity-20 backdrop-blur-sm text-white rounded-full px-4 py-2 text-sm font-medium flex items-center shadow-lg border border-white/30"
+                >
+                  <div className="flex gap-2 justify-center items-center">
+                    {convertDataToReadable(koi.bid_method)}
+                    <FontAwesomeIcon
+                      key={index}
+                      icon={faMoneyBill}
+                      className="mr-1"
+                    />
+                  </div>
+                </motion.div>
+              )}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -172,14 +173,16 @@ const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
                 <h2 className="text-xl mt-1 mb-1 text-black font-semibold">
                   {koi.name}
                 </h2>
-                <div className="sm:hidden flex gap-2 justify-center items-center text-black bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium flex items-center shadow-lg border border-white/30">
-                  {convertDataToReadable(koi.bid_method)}
-                  <FontAwesomeIcon
-                    key={index}
-                    icon={faMoneyBill}
-                    className="mr-1 text-green-700"
-                  />
-                </div>
+                {koi.bid_method && (
+                  <div className="sm:hidden flex gap-2 justify-center items-center text-black bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium flex items-center shadow-lg border border-white/30">
+                    {convertDataToReadable(koi.bid_method)}
+                    <FontAwesomeIcon
+                      key={index}
+                      icon={faMoneyBill}
+                      className="mr-1 text-green-700"
+                    />
+                  </div>
+                )}
               </div>
               <div className="hidden sm:flex flex-col sm:flex-row">
                 <hr className="w-full border-t border-gray-400 my-2" />

@@ -1,11 +1,13 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faTag, faStar } from "@fortawesome/free-solid-svg-icons";
-import { getCategoryName } from "~/utils/dataConverter"; // Adjust the import path as needed
+import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter"; // Adjust the import path as needed
 import KoiDetails from "../auctiondetail/KoiDetails";
 import { KoiDetailModel } from "~/types/kois.type";
-import { koiBreeders } from "~/utils/data/koibreeders";
+import axios from "axios";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import { BreedersResponse } from "~/types/paginated.types";
 
 interface KoiBreederSearchGridProps {
   kois: KoiDetailModel[];
@@ -19,6 +21,28 @@ const KoiBreederSearchGrid: React.FC<KoiBreederSearchGridProps> = ({
   kois,
   renderActions,
 }) => {
+  const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>({
+    total_page: 0,
+    total_item: 0,
+    item: [],
+  });
+  useEffect(() => {
+    const fetchAllBreeders = async () => {
+      try {
+        const response = await axios.get(`${DYNAMIC_API_URL}/breeders`, {
+          params: {
+            page: 0,
+            limit: 20,
+          },
+        });
+        setKoiBreeders(response.data || []);
+      } catch (error) {
+        console.error("Error fetching breeders:", error);
+      }
+    };
+    fetchAllBreeders();
+  }, []);
+
   return (
     <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {kois.map((koi: KoiDetailModel) => (
@@ -39,14 +63,17 @@ const KoiBreederSearchGrid: React.FC<KoiBreederSearchGridProps> = ({
                 </div>
               </div>
               <div className="absolute top-3 left-3 bg-opacity-50 text-white rounded-full p-3 text-lg flex items-center">
-                {koiBreeders.find((breeder) => breeder.id === koi.owner_id) && (
+                {koiBreeders.item.find(
+                  (breeder) => breeder.id === koi.owner_id,
+                ) && (
                   <img
                     src={
-                      koiBreeders.find((breeder) => breeder.id === koi.owner_id)
-                        ?.avatar_url
+                      koiBreeders.item.find(
+                        (breeder) => breeder.id === koi.owner_id,
+                      )?.avatar_url
                     }
                     alt="Breeder Avatar"
-                    className="w-[25%]"
+                    className="w-12 h-12 md:w-1/2 md:h-1/2 object-contain"
                   />
                 )}
               </div>
@@ -57,7 +84,7 @@ const KoiBreederSearchGrid: React.FC<KoiBreederSearchGridProps> = ({
               <div className="sm:hidden bg-gray-300 rounded-xl m-3 p-2 text-md font-bold w-1/2">
                 <KoiDetails
                   category={getCategoryName(koi.category_id)}
-                  sex={koi.sex}
+                  sex={convertDataToReadable(koi.sex)}
                   length={koi.length}
                   year_born={koi.year_born}
                 />
@@ -77,8 +104,8 @@ const KoiBreederSearchGrid: React.FC<KoiBreederSearchGridProps> = ({
               </div>
               <div className="hidden sm:block">
                 <KoiDetails
-                  category={koi.category_id.toString()}
-                  sex={koi.sex}
+                  category={getCategoryName(koi.category_id)}
+                  sex={convertDataToReadable(koi.sex)}
                   length={koi.length}
                   year_born={koi.year_born}
                 />

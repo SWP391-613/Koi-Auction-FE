@@ -5,6 +5,7 @@ import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
 import { useKoiOwnerSearchNotAuth } from "~/hooks/useSearch";
 import { SEARCH_DESCRIPTION, SEARCH_LABEL } from "~/constants/label";
+import KoiBreederSearchGrid from "../shared/KoiBreederSearchGrid";
 
 interface KoiOwnerSearchNotAuthComponentProps {
   owner_id: number;
@@ -65,7 +66,7 @@ const KoiOwnerSearchNotAuthComponent: React.FC<
             Showing 1 - {results.length} of {totalItems} results.
           </Typography>
 
-          <KoiSearchGrid kois={results} />
+          <KoiBreederSearchGrid kois={results} />
           <PaginationComponent
             totalPages={totalPages}
             currentPage={page}

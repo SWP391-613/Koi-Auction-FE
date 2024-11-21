@@ -208,12 +208,6 @@ const BreederManagement = () => {
               <td className="px-4 py-3 text-sm">
                 <div className="flex items-center space-x-4 text-sm">
                   <CrudButton
-                    onClick={() => handleEdit(breeder.id)}
-                    ariaLabel="Edit breeder"
-                    svgPath="edit.svg"
-                  />
-
-                  <CrudButton
                     onClick={() => handleDelete(breeder.id)}
                     ariaLabel="Delete breeder"
                     svgPath="delete.svg"

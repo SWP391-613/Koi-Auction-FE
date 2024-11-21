@@ -55,7 +55,7 @@ const AddStaffDialog: React.FC<AddStaffProps> = ({
         },
         params: {
           page: 0,
-          limit: 10,
+          limit: 50,
         },
       });
       setMemberList(response.data.item);

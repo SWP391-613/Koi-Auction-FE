@@ -36,7 +36,7 @@ const Header = () => {
           if (user.status_name !== "VERIFIED") {
             setIsVerifyPopupOpen(true);
           } else {
-            navigate(ROUTING_PATH.USERS_ORDERS);
+            navigate(ROUTING_PATH.MEMBERS_ORDERS);
           }
           break;
       }

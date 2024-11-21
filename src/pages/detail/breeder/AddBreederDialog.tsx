@@ -55,7 +55,7 @@ const AddBreederDialog: React.FC<AddBreederDialogProps> = ({
         },
         params: {
           page: 0,
-          limit: 10,
+          limit: 50,
         },
       });
       setMemberList(response.data.item);

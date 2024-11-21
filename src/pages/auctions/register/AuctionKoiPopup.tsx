@@ -31,6 +31,29 @@ interface AuctionKoiPopupProps {
 const MIN_BID_STEP = 50000;
 const auctionNeedCeilingPrice: string[] = ["DESCENDING_BID", "ASCENDING_BID"];
 const MAX_BASE_PRICE = 50000000;
+const numberRegex = /^[1-9]\d*$/;
+
+const inputValidator = {
+  pattern: "\\d*",
+  onKeyDown: (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    if (e.ctrlKey && e.key === "a") {
+      return; // Allow Ctrl+A
+    }
+
+    // Prevent decimal point
+    if (
+      !/[0-9]/.test(e.key) && // Not a digit
+      e.key !== "Backspace" &&
+      e.key !== "ArrowLeft" &&
+      e.key !== "ArrowRight"
+    ) {
+      // Not a digit) {
+      e.preventDefault();
+    }
+  },
+};
 
 const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
   open,
@@ -40,10 +63,10 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
   basePrice: originalBasePrice, // Rename the prop for clarity
   onSubmit,
 }) => {
-  const [bidStep, setBidStep] = useState<number>(0);
-  const [basePrice, setBasePrice] = useState<number>(originalBasePrice);
+  const [bidStep, setBidStep] = useState("");
+  const [basePrice, setBasePrice] = useState("");
   const [bidMethod, setBidMethod] = useState<BidMethod>("ASCENDING_BID");
-  const [ceilPrice, setCeilPrice] = useState<number>(0);
+  const [ceilPrice, setCeilPrice] = useState("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [basePriceError, setBasePriceError] = useState<string>("");
   const [ceilPriceError, setCeilPriceError] = useState<string>("");
@@ -51,23 +74,135 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
   const [showRules, setShowRules] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    field: "basePrice" | "bidStep" | "ceilPrice",
+  ) => {
+    const value = e.target.value;
+
+    // Common validation function
+    const validateInput = (stringValue: string) => {
+      // Convert to number, defaulting to 0 if empty
+      const numValue = stringValue === "" ? 0 : Number(stringValue);
+
+      if (numValue < 0) {
+        setCeilPriceError("Ceil Price must be greater than 0.");
+        return false;
+      }
+
+      switch (field) {
+        case "basePrice":
+          // Ensure base price is within valid range
+          if (numValue < originalBasePrice) {
+            setBasePriceError(
+              `Price must be greater than or equal to the original price of ${formatCurrency(originalBasePrice)}.`,
+            );
+            return false;
+          }
+          if (numValue > MAX_BASE_PRICE) {
+            setBasePriceError(
+              `Price cannot exceed ${formatCurrency(MAX_BASE_PRICE)}.`,
+            );
+            return false;
+          }
+
+          setBasePriceError("");
+          return true;
+
+        case "bidStep":
+          // Validate bid step for non-fixed price methods
+          if (bidMethod !== "FIXED_PRICE" && numValue < MIN_BID_STEP) {
+            setErrorMessage(
+              `Bid step must be at least ${formatCurrency(MIN_BID_STEP)}.`,
+            );
+            return false;
+          }
+
+          setErrorMessage("");
+          return true;
+
+        case "ceilPrice":
+          // Skip ceiling price validation for FIXED_PRICE
+          if (bidMethod === "FIXED_PRICE") {
+            setCeilPriceError("");
+            return true;
+          }
+
+          // Convert base price and bid step to numbers, defaulting to 0
+          const currentBasePrice = basePrice === "" ? 0 : Number(basePrice);
+          const currentBidStep = bidStep === "" ? 0 : Number(bidStep);
+
+          // Validate ceiling price
+          if (
+            numValue > 0 &&
+            numValue < currentBasePrice + 10 * currentBidStep
+          ) {
+            setCeilPriceError(
+              `Ceiling price must be greater than ${formatCurrency(currentBasePrice + 10 * currentBidStep)} (base price + 10 times of bid step).`,
+            );
+            return false;
+          }
+
+          // Require ceiling price for ascending/descending bid methods
+          if (
+            (bidMethod === "ASCENDING_BID" || bidMethod === "DESCENDING_BID") &&
+            numValue === 0
+          ) {
+            setCeilPriceError(
+              `Ceiling price is required for ${bidMethod} bid method.`,
+            );
+            return false;
+          }
+
+          setCeilPriceError("");
+          return true;
+
+        default:
+          return true;
+      }
+    };
+
+    // Handle input for specific fields
+    switch (field) {
+      case "basePrice":
+        setBasePrice(value);
+        validateInput(value);
+        break;
+      case "bidStep":
+        setBidStep(value);
+        validateInput(value);
+        break;
+      case "ceilPrice":
+        setCeilPrice(value);
+        validateInput(value);
+        break;
+    }
+  };
+
   useEffect(() => {
-    if (bidMethod !== "FIXED_PRICE" && bidStep < MIN_BID_STEP) {
+    const bidStepNum = bidStep === "" ? 0 : Number(bidStep);
+    const basePriceNum = basePrice === "" ? 0 : Number(basePrice);
+
+    if (bidMethod !== "FIXED_PRICE" && bidStepNum < MIN_BID_STEP) {
       setErrorMessage(
         `Bid step must be at least ${formatCurrency(MIN_BID_STEP)}.`,
       );
+    } else if (bidStepNum >= basePriceNum) {
+      setErrorMessage(`Bid step must be less than base price.`);
     } else {
       setErrorMessage("");
     }
   }, [bidStep, bidMethod]); // Add bidMethod to dependencies
 
   useEffect(() => {
+    const basePriceNum = basePrice === "" ? 0 : Number(basePrice);
+
     // Check if the base price is within valid range
-    if (basePrice < originalBasePrice) {
+    if (basePriceNum < originalBasePrice) {
       setBasePriceError(
         `Price must be greater than or equal to the original price of ${formatCurrency(originalBasePrice)}.`,
       );
-    } else if (basePrice > MAX_BASE_PRICE) {
+    } else if (basePriceNum > MAX_BASE_PRICE) {
       setBasePriceError(
         `Price cannot exceed ${formatCurrency(MAX_BASE_PRICE)}.`,
       );
@@ -77,8 +212,10 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
   }, [basePrice, originalBasePrice]);
 
   useEffect(() => {
-    if (!basePriceError && basePrice >= originalBasePrice) {
-      const fee = Math.floor(basePrice * 0.1);
+    const basePriceNum = basePrice === "" ? 0 : Number(basePrice);
+
+    if (!basePriceError && basePriceNum >= originalBasePrice) {
+      const fee = Math.floor(basePriceNum * 0.1);
       setFeePriceMessage(
         `*We will charge 10% of the base price (${formatCurrency(fee)}) as registration fee.*`,
       );
@@ -87,38 +224,19 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
     }
   }, [basePrice, basePriceError, originalBasePrice]);
 
-  useEffect(() => {
-    // Skip ceiling price validation for FIXED_PRICE
-    if (bidMethod === "FIXED_PRICE") {
-      setCeilPriceError("");
-      return;
-    }
-
-    if (ceilPrice > 0 && ceilPrice < basePrice + 10 * bidStep) {
-      setCeilPriceError(
-        `Ceiling price must be greater than ${formatCurrency(basePrice + 10 * bidStep)} (base price + 10 times of bid step).`,
-      );
-    } else if (
-      (bidMethod === "ASCENDING_BID" || bidMethod === "DESCENDING_BID") &&
-      ceilPrice === 0
-    ) {
-      setCeilPriceError(
-        `Ceiling price is required for ${bidMethod} bid method.`,
-      );
-    } else {
-      setCeilPriceError("");
-    }
-  }, [ceilPrice, basePrice, bidMethod, bidStep]);
-
   const handleSubmit = () => {
+    const basePriceNum = basePrice === "" ? 0 : Number(basePrice);
+    const bidStepNum = bidStep === "" ? 0 : Number(bidStep);
+    const ceilPriceNum = ceilPrice === "" ? 0 : Number(ceilPrice);
+
     // Only check bidStep and ceilPrice errors for non-FIXED_PRICE methods
     if (bidMethod === "FIXED_PRICE") {
       if (!basePriceError) {
-        onSubmit(basePrice, 0, bidMethod, 0);
+        onSubmit(basePriceNum, 0, bidMethod, 0);
       }
     } else {
       if (!errorMessage && !basePriceError && !ceilPriceError) {
-        onSubmit(basePrice, bidStep, bidMethod, ceilPrice);
+        onSubmit(basePriceNum, bidStepNum, bidMethod, ceilPriceNum);
       }
     }
   };
@@ -138,8 +256,8 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
 
     // Reset bid step and ceiling price if FIXED_PRICE is selected
     if (newMethod === "FIXED_PRICE") {
-      setBidStep(0);
-      setCeilPrice(0);
+      setBidStep("0");
+      setCeilPrice("0");
     }
   };
 
@@ -220,19 +338,15 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
           fullWidth
           margin="normal"
           value={basePrice}
-          onChange={(e) => setBasePrice(Number(e.target.value))}
+          onChange={(e) => handleInputChange(e, "basePrice")}
           placeholder="Enter base price (VND)"
           error={!!basePriceError}
-          inputProps={{
-            step: "5000",
-            max: MAX_BASE_PRICE,
-            min: originalBasePrice,
-          }}
+          inputProps={inputValidator}
         />
         {basePriceError && (
           <FormHelperText error>{basePriceError}</FormHelperText>
         )}
-        {feePriceMessage && basePrice >= originalBasePrice && (
+        {feePriceMessage && Number(basePrice) >= originalBasePrice && (
           <FormHelperText sx={{ color: "green" }}>
             {feePriceMessage}
           </FormHelperText>
@@ -245,10 +359,11 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
           fullWidth
           margin="normal"
           value={bidStep}
-          onChange={(e) => setBidStep(Number(e.target.value))}
+          onChange={(e) => handleInputChange(e, "bidStep")}
           placeholder="Enter bid step (VND)"
           error={!!errorMessage}
           disabled={bidMethod === "FIXED_PRICE"}
+          inputProps={inputValidator}
         />
         {errorMessage && <FormHelperText error>{errorMessage}</FormHelperText>}
 
@@ -259,10 +374,11 @@ const AuctionKoiPopup: React.FC<AuctionKoiPopupProps> = ({
           fullWidth
           margin="normal"
           value={ceilPrice}
-          onChange={(e) => setCeilPrice(Number(e.target.value))}
+          onChange={(e) => handleInputChange(e, "ceilPrice")}
           placeholder="Enter ceiling price (VND)"
           disabled={bidMethod === "FIXED_PRICE"}
           error={!!ceilPriceError}
+          inputProps={inputValidator}
         />
         {ceilPriceError && (
           <FormHelperText error>{ceilPriceError}</FormHelperText>

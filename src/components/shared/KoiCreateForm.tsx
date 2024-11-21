@@ -32,6 +32,15 @@ interface KoiCreatePopupForm {
   owner_id: number;
 }
 
+const minBasePrice = 1000000;
+const maxBasePrice = 50000000;
+const inputPropsBasePrice = { min: minBasePrice, max: maxBasePrice };
+const inputPropsYearBorn = {
+  min: 0, // Set the minimum year (e.g., 1900)
+  max: new Date().getFullYear(), // Set the maximum year to the current year
+};
+const inputPropsLength = { min: 0, max: 125 };
+
 const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
   open,
   onSuccess,
@@ -67,7 +76,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
     const { name, value } = e.target;
 
     // For number fields, ensure value is not negative
-    if (["length", "age", "base_price", "category_id"].includes(name)) {
+    if (["length", "base_price", "category_id", "year_born"].includes(name)) {
       const numValue = Number(value);
       if (numValue < 0) return; // Prevent negative values
     }
@@ -75,10 +84,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
     setFormData((prevData) => ({
       ...prevData,
       [name]:
-        name === "category_id" ||
-        name === "age" ||
-        name === "length" ||
-        name === "base_price"
+        name === "category_id" || name === "length" || name === "year_born"
           ? value === ""
             ? (value as unknown as number)
             : Number(value)
@@ -244,7 +250,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
                 label={KOI_CREATE_FORM_LABEL.LENGTH}
                 type="number"
                 value={formData.length || ""}
-                inputProps={{ min: 0 }}
+                inputProps={inputPropsLength}
                 onChange={handleInputChange}
                 error={!!errors.length}
                 helperText={errors.length}
@@ -257,10 +263,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
                 label={KOI_CREATE_FORM_LABEL.YEAR_BORN}
                 type="number"
                 value={formData.year_born || ""}
-                inputProps={{
-                  min: 0, // Set the minimum year (e.g., 1900)
-                  max: new Date().getFullYear(), // Set the maximum year to the current year
-                }}
+                inputProps={inputPropsYearBorn}
                 onChange={handleInputChange}
                 error={!!errors.year_born}
                 helperText={errors.year_born}
@@ -285,7 +288,7 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
               label={KOI_CREATE_FORM_LABEL.BASE_PRICE}
               type="number"
               value={formData.base_price || ""}
-              inputProps={{ min: 0 }}
+              inputProps={inputPropsBasePrice}
               onChange={handleInputChange}
               error={!!errors.base_price}
               helperText={errors.base_price}

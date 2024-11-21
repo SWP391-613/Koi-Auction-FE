@@ -20,6 +20,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import BreederEditKoiDialog from "./BreederEditKoiDialog";
 import { getUserCookieToken, isTokenValid } from "~/utils/auth.utils";
 import { fetchKoiById } from "~/apis/koi.apis";
+import LoadingComponent from "~/components/shared/LoadingComponent";
+import { useUserData } from "~/hooks/useUserData";
 
 interface KoiDetailItemProps {
   icon: IconDefinition;
@@ -32,6 +34,7 @@ interface KoiDetailItemProps {
 
 const KoiDetail: React.FC = () => {
   const { isLoggedIn } = useAuth();
+  const { user, loading: userLoading, error, setUser } = useUserData();
   const { id } = useParams<{ id: string }>();
   const [koi, setKoi] = useState<KoiDetailModel | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -44,6 +47,7 @@ const KoiDetail: React.FC = () => {
 
     const fetchKoiData = async () => {
       try {
+        console.log("data: " + user);
         const response = await fetchKoiById(parseInt(id || ""));
 
         if (!response) {
@@ -71,7 +75,7 @@ const KoiDetail: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingComponent />;
   }
 
   if (!koi || !selectedKoiId) {
@@ -94,15 +98,18 @@ const KoiDetail: React.FC = () => {
           <div className="mb-4 items-center rounded-2xl">
             <div className="flex justify-between items-center">
               <h2 className="m-4 text-4xl font-bold">{koi.name}</h2>
-              {isTokenValid() && ( // Check if token is valid
-                <button
-                  onClick={handleEdit}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                >
-                  <FontAwesomeIcon icon={faPencilAlt} className="mr-2" />
-                  Edit
-                </button>
-              )}
+              {isTokenValid() &&
+                koi.status_name === "UNVERIFIED" &&
+                user &&
+                user.role_name !== "breeder" && ( // Check if token is valid
+                  <button
+                    onClick={handleEdit}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    <FontAwesomeIcon icon={faPencilAlt} className="mr-2" />
+                    Edit
+                  </button>
+                )}
             </div>
             {isTokenValid() && ( // Check if token is valid
               <KoiDetailItem
@@ -166,7 +173,7 @@ const KoiDetail: React.FC = () => {
           </div>
         </div>
 
-        {openEditDialog && (
+        {koi.status_name === "UNVERIFIED" && openEditDialog && (
           <BreederEditKoiDialog
             open={openEditDialog}
             onClose={handleCloseEditDialog}

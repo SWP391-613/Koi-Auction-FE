@@ -28,20 +28,33 @@ const KoiOwnerSearch: React.FC = () => {
   const userId = getCookie("user_id");
   const accessToken = getCookie("access_token");
 
-  const renderCrudButtons = (koi: KoiDetailModel) => (
-    <>
-      <CrudButton
-        onClick={() => handleEdit(koi.id)}
-        ariaLabel="Edit"
-        svgPath="edit.svg"
-      />
-      <CrudButton
-        onClick={() => handleDelete(koi.id)}
-        ariaLabel="Delete"
-        svgPath="delete.svg"
-      />
-    </>
-  );
+  const renderCrudButtons = (koi: KoiDetailModel) => {
+    if (koi.status_name === "UNVERIFIED" || koi.status_name === "REJECTED") {
+      return (
+        <>
+          <CrudButton
+            onClick={() => handleEdit(koi.id)}
+            ariaLabel="Edit"
+            svgPath="edit.svg"
+          />
+          <CrudButton
+            onClick={() => handleDelete(koi.id)}
+            ariaLabel="Delete"
+            svgPath="delete.svg"
+          />
+        </>
+      );
+    } else if (koi.status_name === "VERIFIED") {
+      return (
+        <CrudButton
+          onClick={() => handleDelete(koi.id)}
+          ariaLabel="Delete"
+          svgPath="delete.svg"
+        />
+      );
+    }
+    return null;
+  };
 
   const fetchKoiData = async () => {
     if (!userId || !accessToken) return;

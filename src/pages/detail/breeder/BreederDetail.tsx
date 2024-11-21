@@ -18,6 +18,7 @@ import UserDetailDialog from "../member/UserDetailDialog";
 import "./BreederDetail.scss";
 import { formatDateV2 } from "~/utils/dateTimeUtils";
 import { sendOtp } from "~/apis/otp.apis";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -56,7 +57,7 @@ const BreederDetail: React.FC = () => {
     }
 
     try {
-      const response = await axios.get(`API_URL_DEVELOPMENT/users/${userId}`, {
+      const response = await axios.get(`${DYNAMIC_API_URL}/users/${userId}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       setFetchedUser(response.data); // Save fetched data to state

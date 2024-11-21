@@ -171,7 +171,7 @@ const KoiBidding: React.FC = () => {
       if (response.isSold) {
         toast.success(BIDDING_MESSAGE.CONGRATULATION_WINNING_BID, {
           onClose: () => {
-            navigate(ROUTING_PATH.USERS_ORDERS); // or navigate to a specific order if you have an order ID
+            navigate(ROUTING_PATH.MEMBERS_ORDERS); // or navigate to a specific order if you have an order ID
           },
           autoClose: 5000, // Adjust this value to control how long the toast is displayed before redirecting
         });

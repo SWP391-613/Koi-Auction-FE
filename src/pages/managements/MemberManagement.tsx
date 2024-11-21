@@ -200,12 +200,6 @@ const MemberManagement = () => {
               <td className="px-4 py-3 text-sm">
                 <div className="flex items-center space-x-4 text-sm">
                   <CrudButton
-                    onClick={() => handleEdit(member.id)}
-                    ariaLabel="Edit Member"
-                    svgPath="edit.svg"
-                  />
-
-                  <CrudButton
                     onClick={() => handleDelete(member.id)}
                     ariaLabel="Delete Member"
                     svgPath="delete.svg"

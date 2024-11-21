@@ -27,6 +27,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { getUserOrderByStatus } from "~/apis/order.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { useUserData } from "~/hooks/useUserData";
 import { OrderResponse, OrderStatus } from "~/types/orders.type";
 import { BreedersResponse } from "~/types/paginated.types";
@@ -83,7 +84,7 @@ const UserOrder = () => {
 
     const fetchAllBreeders = async () => {
       try {
-        const response = await axios.get(`API_URL_DEVELOPMENT/breeders`, {
+        const response = await axios.get(`${DYNAMIC_API_URL}/breeders`, {
           params: {
             page: 0,
             limit: 20,

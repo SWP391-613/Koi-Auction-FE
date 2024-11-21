@@ -186,11 +186,6 @@ const StaffManagement = () => {
               <td className="px-4 py-3 text-sm">
                 <div className="flex items-center space-x-4 text-sm">
                   <CrudButton
-                    onClick={() => handleEdit(staff.id)}
-                    ariaLabel="Edit"
-                    svgPath="edit.svg"
-                  />
-                  <CrudButton
                     onClick={() => handleDelete(staff.id)}
                     ariaLabel="Delete"
                     svgPath="delete.svg"

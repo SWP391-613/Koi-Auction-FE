@@ -24,6 +24,7 @@ import {
 } from "~/constants/validation.message";
 import { ERROR_MESSAGE } from "~/constants/message";
 import { KOI_CREATE_FORM_LABEL } from "~/constants/label";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
 
 interface KoiCreatePopupForm {
   open?: boolean;
@@ -167,15 +168,11 @@ const KoiCreateForm: React.FC<KoiCreatePopupForm> = ({
     try {
       const token = getUserCookieToken();
       console.log(formData);
-      await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v1/kois`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      await axios.post(`${DYNAMIC_API_URL}/kois`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       setSnackbarMessage(SNACKBAR_VALIDATION_MESSAGE.KOI_CREATE_SUCCESS);
       setSnackbarOpen(true);

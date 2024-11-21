@@ -12,70 +12,84 @@ const Terms: React.FC = () => {
     {
       title: "Acceptance of Terms",
       content:
-        "By using fkoi88.me, you agree to be bound by the following Terms of Service. These Terms apply to all users of the Site and govern your access and use of the Site and the services provided therein, including the koi auction services. If you do not agree to these Terms, you must discontinue your use of the Site and services.",
+        "By accessing and using fkoi88.me, you acknowledge and agree to comply with these Terms and Conditions. These Terms apply to all users and govern the use of our platform and services, including koi auction services. If you do not agree with these Terms, we kindly request you discontinue the use of our Site and services.",
     },
     {
-      title: "Registration",
+      title: "Member Registration",
       content:
-        "To access certain features of the Site and participate in koi auctions, you will need to register an account with fkoi88.me. By registering, you warrant that you have provided true and accurate information and agree to keep your account information up-to-date.",
+        "To access certain features of the platform and participate in koi auctions, you are required to register an account with fkoi88.me. By registering, you affirm that the information provided is accurate and truthful and agree to keep your account details up to date.",
     },
     {
       title: "Breeder Registration",
       content:
-        "To register as a breeder on our Site, you must provide your name, contact information, and a detailed description of your koi breeding practices.\n" +
-        "Please contact us at contact@fkoi88.me for more information. You agree to provide accurate and truthful information about your koi and to comply with all applicable laws and regulations. We will respond to your registration request within 7 business days.",
+        "To register as a breeder, you must provide your name, contact information, and a detailed description of your koi breeding practices. For additional assistance, please contact us at contact@fkoi88.me. By registering, you agree to provide accurate information about your koi and adhere to all relevant legal and regulatory requirements. We will respond to your registration request within seven business days.",
     },
     {
-      title: "Koi Registration to Auction",
+      title: "Koi Registration for Auction",
       content:
-        "To register a koi to auction, you must provide a detailed description of the koi, including its appearance, size, and any other relevant information. You agree to provide accurate and truthful information about the koi and to comply with all applicable laws and regulations. We claim 10% of the koi's base price as our service fee.",
+        "To list a koi for auction, you must submit a detailed description, including its appearance, size, and other pertinent information. You agree to provide accurate and truthful details and comply with all applicable laws and regulations. A service fee of 10% of the koi's base price will be retained by our platform.",
     },
     {
       title: "Compliance with Applicable Laws",
       content:
-        "As we offer our services to users across various provinces in Vietnam, it is your responsibility to ensure compliance with all applicable local, state, and federal laws and regulations when using our Site and services.",
+        "As our services extend across various provinces in Vietnam, it is your responsibility to ensure full compliance with all relevant local, state, and national laws when using our platform.",
     },
     {
       title: "Bidding and Auction Terms",
       content:
-        "All bids placed on our Site are final and binding. Upon winning a koi auction, you are obligated to make a payment for the koi won, according to the terms set out below.",
+        "1. The bidding feature is available exclusively to registered members. By placing a bid, you agree to honor the bid amount if you win the auction. Bids cannot be retracted or canceled once submitted.\n" +
+        "2. Breeder accounts are designated solely for selling koi and are not permitted to participate in bidding.\n" +
+        "3. All bids are considered final and binding. If you win an auction, you are obligated to complete the payment as outlined in our payment terms.\n" +
+        "4. Except for the winner of the auction, all other bidders will have their bid amounts refunded to their account balance within 24 hours of the auction's close.",
+    },
+    {
+      title: "Auction Methods",
+      content:
+        "1. Ascending Bid Method: Members may bid multiple times, and the highest bidder at the auction's close or the first to meet or exceed the ceiling price will be declared the winner.\n" +
+        "2. Descending Bid Method: Auctions start at a ceiling price, which decreases at fixed intervals (e.g., every five minutes). The first bid placed wins the auction.\n" +
+        "3. Fixed Bid Method: The koi is offered at a fixed price, and the first person to place a bid wins the auction.",
+    },
+    {
+      title: "Order Agreement",
+      content:
+        "The system will automatically generate an order for the winning koi based on the winner's information. If the winner does not confirm the order and provide necessary details within 72 hours, the order will be canceled, and the bid amount will not be refunded to the winner's account balance.",
     },
     {
       title: "Payment Terms",
       content:
-        "Payments for koi won in auction must be made within 72 hours after winning the auction. If payment is not received in time, we reserve the right to cancel the transaction and the koi may not be guaranteed to ship.",
+        "Payments for koi won at auction must be made within 72 hours of winning. Failure to complete payment within this timeframe may result in cancellation of the transaction, and the koi may no longer be available for shipment.",
     },
     {
       title: "Shipping and Delivery",
       content:
-        "Koi purchased on our Site will be shipped and received in accordance with the associated Breeder's best practices and quarantine procedures. We will make every effort to ensure the safe and timely arrival of your koi, but we cannot guarantee their survival during shipping and receiving from Japan as well as shipping from our US facility to the winner.",
+        "Koi purchased through fkoi88.me will be shipped in alignment with the breeder's best practices and quarantine protocols. While we strive to ensure safe and timely delivery, we cannot guarantee the koi's survival during shipping from the breeder's facility or our facility to the buyer.",
     },
     {
       title: "Refund Policy",
       content:
-        "1. For Bidders: In the unfortunate event that your koi dies during shipping Koi to your location, you will be refunded the full amount of your purchase to your account balance (including shipping fee and koi bid price).\n" +
-        "2. For Breeder: In the unfortunate event that your koi dies during shipping Koi from our facility to winner's location, you will be refunded the full amount of your cost to your account balance (including shipping fee and koi bid base price)",
+        "1. For Bidders: If your koi dies during shipping to your location, you will receive a full refund (including the koi price and shipping fee) to your account balance.\n" +
+        "2. For Breeders: If your koi dies during shipping from our facility to the buyer, you will be refunded the cost of the koi (including the base price and shipping fee) to your account balance.",
     },
     {
       title: "Disclaimer of Warranties",
       content:
-        "1. For Bidders: In case of winner's order cancellation (our shipper is unreachable and transfer koi to the winner), winner's purchase will not be refunded to their account balance.\n" +
-        "2. For Breeder: In case of Koi dies during shipping from our facility to winner's location, we will not be responsible for the loss.",
+        "1. For Bidders: In cases where the order is canceled due to unavailability of delivery (e.g., shipper is unreachable), refunds will not be issued to the bidder's account balance.\n" +
+        "2. For Breeders: In cases where the koi dies during shipping from our facility to the buyer, fkoi88.me will not be held responsible for the loss.",
     },
     {
       title: "Indemnification",
       content:
-        "You agree to indemnify, defend, and hold harmless fkoi88.me, its affiliates, and their respective officers, employees, and agents from any and all claims, losses, or damages arising out of your breach of these Terms or your use of the Site or services.",
+        "You agree to indemnify and hold fkoi88.me, its affiliates, and their respective employees, officers, and agents harmless against any claims, losses, or damages arising from your breach of these Terms or your use of the platform and its services.",
     },
     {
       title: "Governing Law and Jurisdiction",
       content:
-        "These Terms shall be governed by and construed in accordance with the laws of the Vietnam, without regard to principles of conflict of laws. Any disputes arising from or relating to these Terms, the Site, or services shall be resolved by a court of competent jurisdiction in the Vietnam.",
+        "These Terms are governed by the laws of Vietnam. Any disputes arising in connection with these Terms, the platform, or its services will be resolved in a court of competent jurisdiction within Vietnam.",
     },
     {
       title: "Modifications to Terms",
       content:
-        "We reserve the right to modify these Terms at any time without prior notice. Your continued use of the Site and our services will signify your acceptance of the updated Terms.",
+        "We reserve the right to amend these Terms at any time. Your continued use of the platform signifies your acceptance of any updates or modifications to these Terms.",
     },
   ];
 
@@ -121,11 +135,14 @@ const Terms: React.FC = () => {
                     </span>
                   </div>
                   <div className="flex-1">
-                    <h2 className="text-xl font-bold text-gray-900 mb-3">
+                    <h2 className="text-2xl font-bold text-black mb-3">
                       {section.title}
                     </h2>
                     {section.content.split("\n").map((line, index) => (
-                      <p key={index} className="text-gray-600 leading-relaxed">
+                      <p
+                        key={index}
+                        className="text-gray-900 text-lg leading-relaxed"
+                      >
                         {line}
                       </p>
                     ))}

@@ -115,6 +115,7 @@ export const BIDDING_MESSAGE = {
   ERROR_LOADING_BIDDING_HISTORY: "Error loading bidding history.",
   CONGRATULATION_WINNING_BID:
     "Congratulations! You've won the auction. Redirecting to order page...",
+  BIDDING_DIVISIBLE_BY_1000: "Bidding amount must be divisible by 1000.",
 } as const;
 
 export const GENERAL_TOAST_MESSAGE = {

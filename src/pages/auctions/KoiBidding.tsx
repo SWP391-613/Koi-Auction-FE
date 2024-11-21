@@ -122,12 +122,28 @@ const KoiBidding: React.FC = () => {
     // Initial load
     loadData();
 
-    // Set up auto-refresh interval
-    const refreshInterval = setInterval(loadData, 30000); // 30 seconds
+    // Set up auto-refresh interval only if auction is NOT ongoing
+    let refreshInterval: NodeJS.Timeout | undefined;
 
-    // Cleanup interval on component unmount
-    return () => clearInterval(refreshInterval);
-  }, [auctionId, auctionKoiId, user?.id, latestBid, userHighestBid]);
+    if (auction && auction.status !== AUCTION_STATUS.ONGOING) {
+      refreshInterval = setInterval(loadData, 15000); // 15 seconds
+      console.log("Refresh interval started for non-ongoing auction");
+    }
+
+    return () => {
+      if (refreshInterval) {
+        clearInterval(refreshInterval);
+        console.log("Refresh interval cleared");
+      }
+    };
+  }, [
+    auctionId,
+    auctionKoiId,
+    user?.id,
+    latestBid,
+    userHighestBid,
+    auction?.status,
+  ]);
 
   useEffect(() => {
     let unsubscribe: (() => void) | undefined;
@@ -161,6 +177,9 @@ const KoiBidding: React.FC = () => {
   const handlePlaceBid = useCallback(async () => {
     if (!user || !auctionKoi)
       return toast.error(ERROR_MESSAGE.REQUIRED_LOGIN_TO_BID);
+    //check bid amount is divisible by 1000 (vietnamese min currency unit)
+    if (bidAmount % 1000 !== 0)
+      return toast.error(BIDDING_MESSAGE.BIDDING_DIVISIBLE_BY_1000);
     try {
       const response = await placeBid({
         auction_koi_id: auctionKoi.id,
@@ -243,9 +262,12 @@ const KoiBidding: React.FC = () => {
                     onChange={(e) => setBidAmount(Number(e.target.value))}
                     variant="outlined"
                     placeholder="Enter bid amount"
+                    // min step is 1000 (vietnamese min currency unit)
                     fullWidth
                     inputProps={{
                       style: { textAlign: "right" },
+                      min: 0,
+                      step: 1000,
                     }}
                     sx={{
                       "& .MuiOutlinedInput-root": {

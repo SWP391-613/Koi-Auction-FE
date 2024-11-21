@@ -345,11 +345,6 @@ const KoiManagement = () => {
                             svgPath="view.svg"
                           />
                           <CrudButton
-                            onClick={() => handleEdit(koi.id)}
-                            ariaLabel="Edit"
-                            svgPath="edit.svg"
-                          />
-                          <CrudButton
                             onClick={() => handleDelete(koi.id)}
                             ariaLabel="Delete"
                             svgPath="delete.svg"

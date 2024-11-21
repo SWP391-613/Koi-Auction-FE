@@ -323,15 +323,16 @@ export const AuctionsManagement: React.FC = () => {
             </Typography>
           </div>
         </div>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={handleAddAuction}
-        >
-          Add New Auction
-        </Button>
       </div>
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{ mt: 2, mb: 3 }}
+        startIcon={<AddIcon />}
+        onClick={handleAddAuction}
+      >
+        Add New Auction
+      </Button>
 
       <TableContainer component={Paper}>
         <Table>

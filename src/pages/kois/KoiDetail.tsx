@@ -101,7 +101,7 @@ const KoiDetail: React.FC = () => {
               {isTokenValid() &&
                 koi.status_name === "UNVERIFIED" &&
                 user &&
-                user.role_name !== "breeder" && ( // Check if token is valid
+                user.role_name === "breeder" && ( // Check if token is valid
                   <button
                     onClick={handleEdit}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"

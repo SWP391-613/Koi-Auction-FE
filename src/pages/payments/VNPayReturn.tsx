@@ -66,7 +66,7 @@ const VNPayReturn: React.FC = () => {
             }
             break;
           case "order":
-            navigate("/users/orders");
+            navigate("/members/orders");
             break;
         }
       }, 5000);

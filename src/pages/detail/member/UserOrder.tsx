@@ -335,7 +335,7 @@ const UserOrder = () => {
                   </Box>
                 )}
 
-                {canAcceptShip(order) && (
+                {/* {canAcceptShip(order) && (
                   <Box
                     sx={{
                       mt: 2,
@@ -353,7 +353,7 @@ const UserOrder = () => {
                       SHIPPED!
                     </Button>
                   </Box>
-                )}
+                )} */}
 
                 {canLeaveFeedback(order) && (
                   <Box

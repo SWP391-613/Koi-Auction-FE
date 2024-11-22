@@ -9,7 +9,7 @@ import {
   faVenusMars,
   faWallet,
 } from "@fortawesome/free-solid-svg-icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AuctionKoi } from "~/types/auctionkois.type";
 import { KoiDetailModel } from "~/types/kois.type";
 import { UserDetailsResponse } from "~/types/users.type";
@@ -20,6 +20,7 @@ import CountdownClock from "../auctions/CountdownClock";
 import LoginOrRegister from "../auth/LoginOrRegister";
 import { KoiDetailItem } from "./KoiBiddingDetailComponent";
 import { KOI_INFO_LABEL } from "~/constants/label";
+import { fetchUserDetails } from "~/apis/user.apis";
 
 interface KoiInfoGridProps {
   koi: KoiDetailModel;
@@ -34,6 +35,26 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
   user,
   endTime,
 }) => {
+  const [currentBalance, setCurrentBalance] = useState<number | null>(
+    user?.account_balance || null,
+  );
+
+  // Add effect to update balance when auctionKoi.current_bid changes
+  useEffect(() => {
+    const updateUserBalance = async () => {
+      if (user) {
+        try {
+          const updatedUser = await fetchUserDetails();
+          setCurrentBalance(updatedUser.account_balance);
+        } catch (error) {
+          console.error("Failed to fetch updated user balance:", error);
+        }
+      }
+    };
+
+    updateUserBalance();
+  }, [auctionKoi.current_bid]); // Dependency on current_bid
+
   const koiInfoItems = [
     {
       icon: faVenusMars,
@@ -44,7 +65,7 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
     {
       icon: faRuler,
       label: KOI_INFO_LABEL.LENGTH,
-      value: koi.length,
+      value: koi.length + " cm",
       bgColor: "bg-gray-300",
     },
     {
@@ -125,7 +146,7 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
             <KoiDetailItem
               icon={faWallet}
               label="Your Balance"
-              value={`${formatCurrency(user.account_balance)}`}
+              value={`${formatCurrency(currentBalance || user.account_balance)}`}
               bgColor="bg-yellow-200"
               textColor="text-green-700"
             />

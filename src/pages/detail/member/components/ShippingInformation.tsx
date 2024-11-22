@@ -371,6 +371,14 @@ export const ShippingInformation: React.FC<ShippingInformationProps> = ({
                     street_address: e.target.value,
                   })
                 }
+                inputProps={{
+                  required: true,
+                }}
+                error={!selectedAddress.street_address}
+                helperText={
+                  !selectedAddress.street_address &&
+                  "Street address is required"
+                }
               />
             </Grid>
           </Grid>

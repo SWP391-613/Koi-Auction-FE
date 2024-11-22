@@ -257,7 +257,10 @@ const UserOrderDetail: React.FC = () => {
           }
         } catch (error) {
           console.error("Error saving order:", error);
-          toast.error("Failed to save order changes");
+          toast.error(
+            `Failed to save order changes, ${error.response.data.phoneNumber}.`,
+          );
+          setError("Failed to save order changes");
         } finally {
           setLoading(false);
         }
@@ -266,6 +269,16 @@ const UserOrderDetail: React.FC = () => {
   };
 
   const handleUpdateShipping = (updatedOrder: Order) => {
+    if (
+      updatedOrder.shipping_address === undefined ||
+      updatedOrder.phone_number === undefined
+    ) {
+      toast.error(
+        "Shipping address and phone number are required to save the order",
+      );
+      return;
+    }
+
     setTempOrderUpdates((prev) => ({
       ...prev,
       ...updatedOrder,
@@ -571,21 +584,22 @@ const UserOrderDetail: React.FC = () => {
               </Button>
             )}
 
-            {order.status === OrderStatus.PENDING && (
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<PaymentIcon />}
-                onClick={() =>
-                  handleOpenDialog(
-                    "payment",
-                    "Are you sure you want to process the payment for this order?",
-                  )
-                }
-              >
-                Process Payment
-              </Button>
-            )}
+            {order.status === OrderStatus.PENDING &&
+              Object.keys(tempOrderUpdates).length === 0 && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<PaymentIcon />}
+                  onClick={() =>
+                    handleOpenDialog(
+                      "payment",
+                      "Are you sure you want to process the payment for this order?",
+                    )
+                  }
+                >
+                  Process Payment
+                </Button>
+              )}
             {order &&
               (order.status === OrderStatus.PENDING ||
                 order.status === OrderStatus.PROCESSING) && (

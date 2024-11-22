@@ -3,7 +3,7 @@ import {
   faMoneyCheckDollar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { TextField, Typography } from "@mui/material";
+import { TextField, Tooltip, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
@@ -40,6 +40,8 @@ import { fetchAuctionById } from "~/apis/auction.apis";
 import { fetchKoiById } from "~/apis/koi.apis";
 import { getUserHighestBidInAuctionKoi } from "~/apis/bidding.apis";
 import { placeBid } from "~/apis/bidding.apis";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline"; // Add this import
+import BiddingRulesPopup from "./BiddingRulePopup";
 
 // Define the BidRequest interface
 export type BidRequest = {
@@ -64,6 +66,8 @@ const KoiBidding: React.FC = () => {
   const navigate = useNavigate();
   const token = getUserCookieToken();
   const [viewMode, setViewMode] = useState<"list" | "chart">("list");
+  const [showRules, setShowRules] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const isAuctionOngoing = useCallback(
     () => auction?.status === AUCTION_STATUS.ONGOING,
@@ -73,6 +77,16 @@ const KoiBidding: React.FC = () => {
     () => !isAuctionOngoing(),
     [isAuctionOngoing],
   );
+
+  const handleHelpMouseEnter = (event: React.MouseEvent<HTMLDivElement>) => {
+    setAnchorEl(event.currentTarget);
+    setShowRules(true);
+  };
+
+  const handleHelpMouseLeave = () => {
+    setShowRules(false);
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -213,13 +227,40 @@ const KoiBidding: React.FC = () => {
 
   return (
     <div className="container mx-auto">
-      <div className="ml-10 mt-6">
+      <div className="ml-10 mt-6 flex items-center justify-between relative">
         <NavigateButton
           to={`/auctions/${auctionId}`}
           icon={<FontAwesomeIcon icon={faArrowLeft} />}
           text="Auction"
-          className="rounded bg-gray-200 px-5 py-3 text-lg text-black transition hover:bg-gray-200"
+          className="rounded bg-gray-200 px-5 py-3 text-lg text-black transition hover:bg-gray-300"
         />
+        <div
+          onMouseEnter={handleHelpMouseEnter}
+          onMouseLeave={handleHelpMouseLeave}
+          style={{
+            cursor: "pointer",
+          }}
+        >
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            className="font-bold flex items-center"
+          >
+            Bidding Rules &nbsp;
+            <Tooltip title="Rules">
+              <HelpOutlineIcon color="primary" />
+            </Tooltip>
+          </Typography>
+        </div>
+
+        {/* Rules Popup */}
+        {showRules && anchorEl && (
+          <BiddingRulesPopup
+            open={showRules}
+            onClose={() => setShowRules(false)}
+            anchorEl={anchorEl}
+          />
+        )}
       </div>
       <div className="m-5 flex flex-col gap-4 md:flex-row">
         {/* Koi Image and Media Gallery */}
@@ -319,7 +360,7 @@ const KoiBidding: React.FC = () => {
               <div className="mb-4 rounded-2xl bg-gray-200">
                 <h3 className="mb-2 text-xl font-semibold">Past Bids</h3>
                 <p>
-                  {auctionKoi.current_bid > 0 ? (
+                  {auctionKoi.current_bid > 0 && auctionKoi.is_sold ? (
                     `This koi has been sold for ${formatCurrency(auctionKoi.current_bid)}`
                   ) : (
                     <div className="bg-gray-300 p-4 rounded-2xl">

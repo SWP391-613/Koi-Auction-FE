@@ -141,7 +141,7 @@ const MemberManagement = () => {
   return (
     <div className="m-5 overflow-x-auto">
       <div className="mb-6 flex justify-between">
-        <div className="border-2 p-6 rounded-xl">
+        <div className="border-2 border-sky-500 p-6 rounded-xl">
           <Typography variant="h5">Total Member: {totalItems}</Typography>
         </div>
       </div>

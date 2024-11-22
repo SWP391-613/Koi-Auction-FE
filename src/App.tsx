@@ -317,10 +317,10 @@ function AppContent() {
                           path="payments"
                           element={<PaymentManagement />}
                         />
-                        <Route
+                        {/* <Route
                           path="send-notifications"
                           element={<SendNotifications />}
-                        />
+                        /> */}
                       </Route>
                       <Route path="members/orders/*">
                         <Route path="" element={<UserOrder />} />

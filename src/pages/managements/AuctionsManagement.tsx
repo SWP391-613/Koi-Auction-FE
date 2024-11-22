@@ -16,6 +16,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CustomButton from "~/components/shared/CustomButton";
 import {
   deleteAuction,
   endAuctionEmergency,
@@ -293,7 +294,7 @@ export const AuctionsManagement: React.FC = () => {
   return (
     <div className="m-5 overflow-x-auto">
       <div className="mb-6 flex justify-between">
-        <div className="flex flex-col gap-5 border-2 p-6 rounded-xl">
+        <div className="flex flex-col gap-5 border-2 border-sky-500 p-6 rounded-xl">
           <div>
             <Typography variant="h5">
               Total Auctions: {auctionStatusCount?.total}
@@ -326,15 +327,10 @@ export const AuctionsManagement: React.FC = () => {
           </div>
         </div>
       </div>
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{ mt: 2, mb: 3 }}
-        startIcon={<AddIcon />}
-        onClick={handleAddAuction}
-      >
-        Add New Auction
-      </Button>
+      <CustomButton onClick={handleAddAuction}>
+      <AddIcon className="mr-2" />
+      New Auction
+    </CustomButton>
 
       <TableContainer component={Paper}>
         <Table>

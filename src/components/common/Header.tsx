@@ -12,6 +12,7 @@ import VerifyPopup from "../verifyPopup/VerifyPopup";
 import { ROUTING_PATH } from "~/constants/endPoints";
 import { GENERAL_TOAST_MESSAGE } from "~/constants/message";
 import { RoleName } from "~/types/roles.type";
+import "./Header.css";
 
 const Header = () => {
   const { isNavCollapsed } = useNavbar();
@@ -19,6 +20,10 @@ const Header = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const [isVerifyPopupOpen, setIsVerifyPopupOpen] = useState(false);
+
+  const handleLogoClick = () => {
+    navigate(ROUTING_PATH.ROOT);
+  };
 
   const handleRoleIconClick = () => {
     if (isLoggedIn && user) {
@@ -74,6 +79,13 @@ const Header = () => {
           <div className="mr-4 hidden md:block">
             <Clock />
           </div>
+          <div 
+            className="shine cursor-pointer" 
+            onClick={handleLogoClick}
+          >
+            FKOI88
+          </div>
+
           <div className="flex items-center space-x-6 ">
             <RoleIcon
               isLoggedIn={isLoggedIn}

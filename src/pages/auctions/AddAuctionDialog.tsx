@@ -79,14 +79,13 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
   const fetchStaffList = async () => {
     const accessToken = getCookie("access_token");
     if (!accessToken) {
-      navigate("/login");
       return;
     }
 
     setLoading(true);
     try {
       const response = await axios.get<StaffApiResponse>(
-        `${DYNAMIC_API_URL}/staffs`,
+        `${DYNAMIC_API_URL}/staffs/active`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -120,7 +119,9 @@ const AddAuctionDialog: React.FC<AddAuctionDialogProps> = ({
     console.log("Data to be submitted:", auctionData);
     try {
       await createNewAuction(auctionData);
-      toast.success("Auction added successfully");
+      toast.success(
+        "Auction added successfully, refresh the page to see the changes.",
+      );
       setSnackbarMessage("Koi created successfully!");
       setSnackbarOpen(true);
       console.log("Auction added successfully");

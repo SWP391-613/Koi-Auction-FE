@@ -89,5 +89,4 @@ export const AUCTION_KOI_HEADER = [
   "Is Sold",
   "Bid Method",
   "Bid Step",
-  "Actions",
 ];

@@ -49,7 +49,7 @@ const AuctionKoiView: React.FC<AuctionKoiViewProps> = ({
                 <td className="px-6 py-4">{is_sold ? "Yes" : "No"}</td>
                 <td className="px-6 py-4">{bid_method ?? "N/A"}</td>
                 <td className="px-6 py-4">{bid_step}</td>
-                <td className="px-6 py-4 flex space-x-2">
+                {/* <td className="px-6 py-4 flex space-x-2">
                   <Button
                     startIcon={<EditIcon />}
                     onClick={() => onEdit(koi_id)}
@@ -62,7 +62,7 @@ const AuctionKoiView: React.FC<AuctionKoiViewProps> = ({
                   >
                     Delete
                   </Button>
-                </td>
+                </td> */}
               </tr>
             ),
           )}

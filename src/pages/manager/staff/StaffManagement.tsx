@@ -69,7 +69,7 @@ const StaffManagement = () => {
   const handleDelete = useCallback(
     async (id: number) => {
       const confirmed = window.confirm(
-        `${CONFIRMATION_MESSAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_STAFF} ${id}?`,
+        `${CONFIRMATION_MESSAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_STAFF}?`,
       );
       if (!confirmed) return;
 

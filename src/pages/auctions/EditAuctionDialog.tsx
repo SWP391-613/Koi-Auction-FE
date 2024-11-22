@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
+  Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { AuctionModel } from "~/types/auctions.type";
@@ -25,6 +26,12 @@ interface EditAuctionDialogProps {
   formatDateForInput: (date: string) => string;
 }
 
+interface ValidationErrors {
+  title?: string;
+  start_time: string;
+  end_time: string;
+}
+
 const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
   open,
   onClose,
@@ -37,9 +44,151 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
   onDelete,
   formatDateForInput,
 }) => {
+  const [errors, setErrors] = useState<ValidationErrors>({
+    title: "",
+    start_time: "",
+    end_time: "",
+  });
+
+  const isUpcoming = editingAuction?.status === "UPCOMING";
+
+  // Helper function to format duration
+  const formatDuration = (hours: number, minutes: number): string => {
+    const formattedHours = Math.floor(hours);
+    const formattedMinutes = Math.round(minutes);
+
+    if (formattedHours === 0) {
+      return `${formattedMinutes} minutes`;
+    } else if (formattedMinutes === 0) {
+      return `${formattedHours} hours`;
+    }
+    return `${formattedHours} hours and ${formattedMinutes} minutes`;
+  };
+
+  // Validate title format (capitalize first letter of each word)
+  // const validateTitle = (title: string): string => {
+  //   if (!isUpcoming) return "";
+  //   if (!title.trim()) return "Title is required";
+  //   const words = title.split(" ");
+  //   const isCorrectFormat = words.every(
+  //     (word) =>
+  //       word.length > 0 && word.charAt(0) === word.charAt(0).toUpperCase(),
+  //   );
+  //   return isCorrectFormat ? "" : "Each word must start with a capital letter";
+  // };
+
+  // Validate start time is not in the past and calculate the time difference
+  const validateStartTime = (startTime: string): string => {
+    if (!isUpcoming) return "";
+    const start = new Date(startTime);
+    const now = new Date();
+
+    if (start <= now) {
+      const diffMs = now.getTime() - start.getTime();
+      const diffHours = diffMs / (1000 * 60 * 60);
+      const diffMinutes = (diffHours % 1) * 60;
+
+      const duration = formatDuration(diffHours, diffMinutes);
+      return `Start time cannot be in the past (${duration} ago)`;
+    }
+
+    if (start > now) {
+      const diffMs = start.getTime() - now.getTime();
+      const diffHours = diffMs / (1000 * 60 * 60);
+      const diffMinutes = (diffHours % 1) * 60;
+
+      const duration = formatDuration(diffHours, diffMinutes);
+      return `Auction will start in ${duration}`;
+    }
+
+    return "";
+  };
+
+  // Validate end time is at least 2 days after start time
+  const validateEndTime = (startTime: string, endTime: string): string => {
+    if (!isUpcoming) return "";
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+
+    // Calculate the time difference
+    const diffMs = end.getTime() - start.getTime();
+    const diffHours = diffMs / (1000 * 60 * 60);
+    const diffDays = Math.floor(diffHours / 24);
+    const remainingHours = diffHours % 24;
+    const remainingMinutes = (remainingHours % 1) * 60;
+
+    if (end <= start) {
+      return "End time must be after start time";
+    }
+
+    if (diffHours < 48) {
+      // Less than 2 days
+      const hoursNeeded = 48 - diffHours;
+      return `Duration must be at least 2 days. Current duration: ${diffDays} days, ${Math.floor(remainingHours)} hours, and ${Math.round(remainingMinutes)} minutes. Please add ${formatDuration(hoursNeeded, 0)} more.`;
+    }
+
+    // If valid, return the duration as an informative message
+    return `Duration: ${diffDays} days, ${Math.floor(remainingHours)} hours, and ${Math.round(remainingMinutes)} minutes`;
+  };
+
+  // Custom input change handler with validation
+  const handleInputChangeWithValidation = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const { name, value } = event.target;
+
+    // Call the original onInputChange
+    onInputChange(event);
+
+    // Only perform validation if the auction is upcoming
+    if (!isUpcoming) {
+      setErrors({ title: "", start_time: "", end_time: "" });
+      return;
+    }
+
+    // Perform validation based on field name
+    if (name === "start_time") {
+      const startTimeError = validateStartTime(value);
+      const endTimeError = editingAuction?.end_time
+        ? validateEndTime(value, editingAuction.end_time as string)
+        : "";
+      setErrors((prev) => ({
+        ...prev,
+        start_time: startTimeError,
+        end_time: endTimeError,
+      }));
+    } else if (name === "end_time") {
+      setErrors((prev) => ({
+        ...prev,
+        end_time: validateEndTime(editingAuction?.start_time as string, value),
+      }));
+    }
+  };
+
+  // Validate all fields on initial load and when editingAuction changes
+  useEffect(() => {
+    if (editingAuction) {
+      setErrors({
+        start_time: validateStartTime(editingAuction.start_time as string),
+        end_time: validateEndTime(
+          editingAuction.start_time as string,
+          editingAuction.end_time as string,
+        ),
+      });
+    }
+  }, [editingAuction]);
+
+  // Check if form has blocking errors
+  const hasBlockingErrors = (): boolean => {
+    if (!errors.title || errors.title.includes("must start with")) return false;
+    if (errors.start_time?.includes("cannot be in the past")) return true;
+    if (errors.end_time?.includes("must be at least")) return true;
+    return false;
+  };
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xl" fullWidth>
-      <DialogTitle>Edit Auction</DialogTitle>
+      <DialogTitle>Edit Auction: {editingAuction?.title}</DialogTitle>
       <DialogContent>
         {editingAuction && (
           <>
@@ -52,7 +201,11 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
               fullWidth
               variant="standard"
               value={editingAuction.title}
-              onChange={onInputChange}
+              onChange={handleInputChangeWithValidation}
+              error={
+                !!errors.title && !errors.title.includes("must start with")
+              }
+              helperText={errors.title}
             />
             <TextField
               margin="dense"
@@ -65,7 +218,11 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
                 shrink: true,
               }}
               value={formatDateForInput(editingAuction.start_time as string)}
-              onChange={onInputChange}
+              onChange={handleInputChangeWithValidation}
+              error={
+                !!errors.start_time && errors.start_time.includes("cannot")
+              }
+              helperText={errors.start_time}
             />
             <TextField
               margin="dense"
@@ -78,38 +235,46 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
                 shrink: true,
               }}
               value={formatDateForInput(editingAuction.end_time as string)}
-              onChange={onInputChange}
+              onChange={handleInputChangeWithValidation}
+              error={
+                !!errors.end_time && !errors.end_time.includes("Duration:")
+              }
+              helperText={errors.end_time}
             />
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold mb-2">Kois in Auction</h3>
-              <Button
-                startIcon={<AddIcon />}
-                onClick={() => alert("Add Koi")}
+            <div className="mt-5 flex flex-col justify-center">
+              <Typography variant="h5" sx={{ mb: 3 }}>
+                Kois in this auction
+              </Typography>
+              <AuctionKoiView
+                auctionKois={auctionKois}
+                handleEdit={onEdit}
+                onDelete={onDelete}
               />
-              <div className="overflow-x-auto">
-                <AuctionKoiView
-                  auctionKois={auctionKois}
-                  handleEdit={onEdit}
-                  onDelete={onDelete}
-                />
-              </div>
             </div>
             <div className="mt-16"></div>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => handleEndAuction(editingAuction.id)}
-            >
-              End Auction
-            </Button>
+            {editingAuction.status === "ONGOING" && (
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => handleEndAuction(editingAuction.id)}
+              >
+                End Auction
+              </Button>
+            )}
           </>
         )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={onSubmit}>
-          Save
-        </Button>
+        {editingAuction?.status === "UPCOMING" && (
+          <Button
+            variant="contained"
+            onClick={onSubmit}
+            disabled={hasBlockingErrors()}
+          >
+            Save
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );

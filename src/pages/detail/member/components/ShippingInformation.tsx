@@ -135,6 +135,9 @@ export const ShippingInformation: React.FC<ShippingInformationProps> = ({
     return format(addDays(today, days), "MMM dd, yyyy");
   };
 
+  //regex for phone number validation
+  const phoneNumberRegex = /^\d{10}$/;
+
   const handleSave = () => {
     const formattedAddress = formatAddressToString(selectedAddress);
     const estimatedDate = format(
@@ -149,6 +152,19 @@ export const ShippingInformation: React.FC<ShippingInformationProps> = ({
     });
 
     setIsEditingAddress(false);
+  };
+
+  // Add this function to validate the fields
+  const isFormValid = () => {
+    return (
+      firstName.trim() !== "" && // Ensure first name is not empty
+      lastName.trim() !== "" && // Ensure last name is not empty
+      selectedAddress.street_address.trim() !== "" && // Ensure street address is not empty
+      selectedAddress.province_code !== "" && // Ensure province is selected
+      selectedAddress.district_code !== "" && // Ensure district is selected
+      selectedAddress.ward_code !== "" && // Ensure ward is selected
+      phoneNumberRegex.test(phoneNumber) // Ensure phone number is valid
+    );
   };
 
   const handleShippingMethodChange = (
@@ -277,6 +293,8 @@ export const ShippingInformation: React.FC<ShippingInformationProps> = ({
                   onTempUpdate({ first_name: e.target.value });
                 }}
                 required
+                error={!firstName}
+                helperText={!firstName && "First name is required"}
                 sx={{ mb: 2 }}
               />
             </Grid>
@@ -290,6 +308,8 @@ export const ShippingInformation: React.FC<ShippingInformationProps> = ({
                   onTempUpdate({ last_name: e.target.value });
                 }}
                 required
+                error={!lastName}
+                helperText={!lastName && "Last name is required"}
                 sx={{ mb: 2 }}
               />
             </Grid>
@@ -304,7 +324,11 @@ export const ShippingInformation: React.FC<ShippingInformationProps> = ({
                   onTempUpdate({ phone_number: e.target.value });
                 }}
                 inputProps={{ minLength: 5 }}
-                helperText="Phone number must be at least 5 characters"
+                error={!phoneNumberRegex.test(phoneNumber)} // Show error if regex does not match
+                helperText={
+                  !phoneNumberRegex.test(phoneNumber) &&
+                  "Phone number must be 10 digits long and contain only numbers"
+                }
                 sx={{ mb: 2 }}
               />
             </Grid>
@@ -408,6 +432,7 @@ export const ShippingInformation: React.FC<ShippingInformationProps> = ({
                   shipping_method: shippingMethod,
                 });
               }}
+              disabled={!isFormValid()}
             >
               Save Changes
             </Button>

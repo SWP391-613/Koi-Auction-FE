@@ -25,6 +25,11 @@ const Terms: React.FC = () => {
         "To register as a breeder, you must provide your name, contact information, and a detailed description of your koi breeding practices. For additional assistance, please contact us at contact@fkoi88.me. By registering, you agree to provide accurate information about your koi and adhere to all relevant legal and regulatory requirements. We will respond to your registration request within seven business days.",
     },
     {
+      title: "Request to List Koi for Auction",
+      content:
+        "Breeder (Koi Farm) please contact us at contact@fkoi88.me. We will respond and provide further auction when your request is approved.",
+    },
+    {
       title: "Koi Registration for Auction",
       content:
         "To list a koi for auction, you must submit a detailed description, including its appearance, size, and other pertinent information. You agree to provide accurate and truthful details and comply with all applicable laws and regulations. A service fee of 10% of the koi's base price will be retained by our platform.",

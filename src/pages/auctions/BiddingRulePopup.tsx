@@ -33,56 +33,86 @@ const BiddingRulesPopup: React.FC<RulesPopupProps> = ({
           }}
         >
           <Typography variant="h6" className="mb-4 font-bold text-gray-800">
-            Bidding Rules
+            Auction Bidding Guidelines
           </Typography>
-          <p className="font-bold text-gray-600">
-            - Our Platform held auctions with 3 different methods: Ascending
-            Bid, Descending Bid, and Fixed Price Method.
-          </p>
-          <p className="font-bold text-gray-600">
-            - Anyone can participate in the auction and view realtime updates on
-            the auction & bidding information.
-          </p>
-          <p className="font-bold text-gray-600">
-            - Only the Registered Members (except Breeder account) can bid on
-            the auction.
-          </p>
-          <hr className="my-2" />
-          <ul className="list-disc pl-6 space-y-2 text-gray-600">
-            <li className="font-bold">For Ascending Bid Methods:</li>
-            <p>
-              - Members may bid multiple times, and the highest bidder at the
-              auction's close or the first to meet or exceed the ceiling price
-              will be declared the winner.
-            </p>
-            <p>
-              - The bid step is the minimum amount by which a bid must be
-              raised.
-            </p>
-          </ul>
-          <ul className="list-disc pl-6 space-y-2 text-gray-600 mt-4">
-            <li className="font-bold">For Descending Bid Method:</li>
-            <p>
-              - The price starts at a ceiling price and decreases at a
-              predetermined rate until a buyer is found.
-            </p>
-            <p>
-              - The first buyer to meet or exceed the current price will be
-              declared the winner.
-            </p>
-          </ul>
-          <ul className="list-disc pl-6 space-y-2 text-gray-600 mt-4">
-            <li className="font-bold">For Fixed Price Method:</li>
-            <p>
-              - The price is fixed and the first buyer to meet or exceed the
-              fixed price will be declared the winner.
-            </p>
-          </ul>
-          <hr className="my-4" />
-          <Typography variant="body2" className="mt-2 text-green-600">
-            Note: Make sure you have enough balance in your account to bid on
-            the auction.
-          </Typography>
+
+          <div className="text-gray-600 space-y-4">
+            <section className="space-y-2">
+              <h3 className="font-bold">General Rules</h3>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>
+                  Our platform supports three auction formats: Ascending-Price,
+                  Descending-Price, and Fixed-Price auctions.
+                </li>
+                <li>
+                  All visitors can view real-time auction information and
+                  bidding activities.
+                </li>
+                <li>
+                  Only registered members (excluding Breeder accounts) are
+                  eligible to place bids.
+                </li>
+              </ul>
+            </section>
+
+            <section className="space-y-2">
+              <h3 className="font-bold">Ascending-Price Auction</h3>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>
+                  Bidders may submit multiple bids throughout the auction
+                  duration.
+                </li>
+                <li>
+                  The auction concludes when either:
+                  <ul className="list-circle pl-6 mt-1">
+                    <li>The auction time expires (highest bidder wins)</li>
+                    <li>
+                      A bid meets or exceeds the ceiling price (first qualifier
+                      wins)
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  Each new bid must exceed the current highest bid by at least
+                  the specified bid increment.
+                </li>
+              </ul>
+            </section>
+
+            <section className="space-y-2">
+              <h3 className="font-bold">Descending-Price Auction</h3>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>
+                  The auction begins at a ceiling price and decreases at fixed
+                  intervals.
+                </li>
+                <li>
+                  The first bidder to accept the current price wins the auction.
+                </li>
+                <li>
+                  Once a valid bid is placed, the auction ends immediately.
+                </li>
+              </ul>
+            </section>
+
+            <section className="space-y-2">
+              <h3 className="font-bold">Fixed-Price Auction</h3>
+              <ul className="list-disc pl-6 space-y-2">
+                <li>The item is offered at a non-negotiable price.</li>
+                <li>
+                  The first bidder to accept the fixed price wins the auction.
+                </li>
+              </ul>
+            </section>
+          </div>
+
+          <div className="mt-6 p-4 bg-green-50 rounded-md">
+            <Typography variant="body2" className="text-green-700 font-medium">
+              Important: Before placing a bid, please ensure your account has
+              sufficient funds to cover your maximum bid amount plus any
+              applicable fees.
+            </Typography>
+          </div>
         </Paper>
       </ClickAwayListener>
     </Popper>

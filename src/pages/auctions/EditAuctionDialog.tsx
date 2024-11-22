@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from "react";
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from "@mui/material";
@@ -12,6 +18,11 @@ import AddIcon from "@mui/icons-material/Add";
 import { AuctionModel } from "~/types/auctions.type";
 import { AuctionKoi } from "~/types/auctionkois.type";
 import AuctionKoiView from "~/pages/auctions/AuctionKoiView";
+import { getCookie } from "~/utils/cookieUtils";
+import { Staff } from "~/types/users.type";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import axios from "axios";
+import { StaffsResponse } from "~/types/paginated.types";
 
 interface EditAuctionDialogProps {
   open: boolean;
@@ -44,6 +55,8 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
   onDelete,
   formatDateForInput,
 }) => {
+  const [staffList, setStaffList] = useState<Staff[]>([]);
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({
     title: "",
     start_time: "",
@@ -51,6 +64,18 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
   });
 
   const isUpcoming = editingAuction?.status === "UPCOMING";
+
+  const handleDropdownChange = (event: SelectChangeEvent<string>) => {
+    const { name, value } = event.target;
+
+    // Pass the updated value and name directly to onInputChange
+    onInputChange({
+      target: {
+        name: name || "",
+        value: value,
+      },
+    } as unknown as React.ChangeEvent<HTMLInputElement>);
+  };
 
   // Helper function to format duration
   const formatDuration = (hours: number, minutes: number): string => {
@@ -63,6 +88,34 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
       return `${formattedHours} hours`;
     }
     return `${formattedHours} hours and ${formattedMinutes} minutes`;
+  };
+
+  const fetchStaffList = async () => {
+    const accessToken = getCookie("access_token");
+    if (!accessToken) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.get<StaffsResponse>(
+        `${DYNAMIC_API_URL}/staffs/active`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          params: {
+            page: 0,
+            limit: 10,
+          },
+        },
+      );
+      setStaffList(response.data.item);
+    } catch (error) {
+      console.error("Error fetching staff list:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Validate title format (capitalize first letter of each word)
@@ -168,6 +221,8 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
   // Validate all fields on initial load and when editingAuction changes
   useEffect(() => {
     if (editingAuction) {
+      fetchStaffList();
+
       setErrors({
         start_time: validateStartTime(editingAuction.start_time as string),
         end_time: validateEndTime(
@@ -241,6 +296,24 @@ const EditAuctionDialog: React.FC<EditAuctionDialogProps> = ({
               }
               helperText={errors.end_time}
             />
+            <FormControl fullWidth variant="standard" margin="dense">
+              <InputLabel id="auctioneer-select-label">Auctioneer</InputLabel>
+              <Select
+                labelId="auctioneer-select-label"
+                id="auctioneer-select"
+                name="auctioneer_id"
+                value={editingAuction.auctioneer_id.toString() || ""}
+                onChange={handleDropdownChange}
+                label="Auctioneer"
+              >
+                {staffList?.map((staff, index) => (
+                  <MenuItem key={index} value={staff.id}>
+                    {`${staff.first_name} ${staff.last_name}`}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {loading && <CircularProgress />}
             <div className="mt-5 flex flex-col justify-center">
               <Typography variant="h5" sx={{ mb: 3 }}>
                 Kois in this auction

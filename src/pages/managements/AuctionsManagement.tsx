@@ -328,9 +328,9 @@ export const AuctionsManagement: React.FC = () => {
         </div>
       </div>
       <CustomButton onClick={handleAddAuction}>
-      <AddIcon className="mr-2" />
-      New Auction
-    </CustomButton>
+        <AddIcon className="mr-2" />
+        New Auction
+      </CustomButton>
 
       <TableContainer component={Paper}>
         <Table>

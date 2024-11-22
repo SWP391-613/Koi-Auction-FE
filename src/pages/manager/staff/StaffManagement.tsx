@@ -135,9 +135,9 @@ const StaffManagement = () => {
           <Typography variant="h5">Total Staff: {totalItems}</Typography>
         </div>
         <CustomButton onClick={handleOpenCreateDialog}>
-      <AddIcon className="mr-2" />
-      New Staff
-    </CustomButton>
+          <AddIcon className="mr-2" />
+          New Staff
+        </CustomButton>
       </div>
 
       <AddStaffDialog

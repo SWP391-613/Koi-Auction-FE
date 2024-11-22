@@ -609,11 +609,11 @@ const UserOrderDetail: React.FC = () => {
                 onClick={() =>
                   handleOpenDialog(
                     "delivery",
-                    "Are you sure you want to mark this order as shipped?",
+                    "Are you sure you want to mark this order as delivered?",
                   )
                 }
               >
-                Order Shipped
+                MARK AS DELIVERED
               </Button>
             )}
           </Box>

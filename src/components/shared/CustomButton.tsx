@@ -1,18 +1,18 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from "react";
 
 interface CustomButtonProps {
   onClick?: () => void;
   children: ReactNode;
   className?: string;
-  type?: 'button' | 'submit' | 'reset';
+  type?: "button" | "submit" | "reset";
   disabled?: boolean;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
   onClick,
   children,
-  className = '',
-  type = 'button',
+  className = "",
+  type = "button",
   disabled = false,
 }) => {
   const baseClassName = `group relative h-16 w-64 rounded-lg border bg-sky-800 p-3 text-left text-base font-bold text-gray-50 overflow-hidden
@@ -35,9 +35,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
       disabled={disabled}
       className={baseClassName}
     >
-      <div className="flex items-center justify-start">
-        {children}
-      </div>
+      <div className="flex items-center justify-start">{children}</div>
     </button>
   );
 };

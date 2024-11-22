@@ -79,10 +79,7 @@ const Header = () => {
           <div className="mr-4 hidden md:block">
             <Clock />
           </div>
-          <div 
-            className="shine cursor-pointer" 
-            onClick={handleLogoClick}
-          >
+          <div className="shine cursor-pointer" onClick={handleLogoClick}>
             FKOI88
           </div>
 

@@ -149,9 +149,9 @@ const BreederManagement = () => {
           <Typography variant="h5">Total Breeders: {totalItems}</Typography>
         </div>
         <CustomButton onClick={handleCreate}>
-      <AddIcon className="mr-2" />
-      New Breeder
-    </CustomButton>
+          <AddIcon className="mr-2" />
+          New Breeder
+        </CustomButton>
       </div>
 
       <table className="whitespace-no-wrap w-full">

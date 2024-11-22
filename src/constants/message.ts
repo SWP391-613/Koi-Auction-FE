@@ -7,8 +7,10 @@ export const SUCCESS_MESSAGE = {
   OTP_VERIFY_SUCCESS: "OTP verification successful!",
   HIGHEST_BID_RECEIVED: "New highest bid received!",
   //"Koi registered successfully!"
-  REGISTER_KOI_SUCCESS: "Koi registered successfully!",
-  DELETE_KOI_SUCCESS: "Koi deleted successfully!",
+  REGISTER_KOI_SUCCESS:
+    "Koi registered successfully!, refresh the page to apply changes",
+  DELETE_KOI_SUCCESS:
+    "Koi deleted successfully!, refresh the page to apply changes",
   REDO_BREEDER_SUCCESS:
     "Redo Breeder successfully, refresh the page to apply changes",
   REDO_STAFF_SUCCESS:
@@ -23,6 +25,10 @@ export const SUCCESS_MESSAGE = {
     "Member deleted successfully, , refresh the page to apply changes",
   REVOKE_KOI_FROM_AUCTION_SUCCESS:
     "Koi revoked from auction successfully!, refresh the page to apply changes",
+  AUCTION_UPDATE_SUCCESS:
+    "Auction updated successfully!, refresh the page to apply changes",
+  AUCTION_DELETE_SUCCESS:
+    "Auction deleted successfully!, refresh the page to apply changes",
 } as const;
 
 export const ERROR_MESSAGE = {
@@ -155,13 +161,13 @@ export const LOGIN_FORM_TOAST_MESSAGE = {
 
 export const CONFIRMATION_MESSAGE = {
   ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_KOI:
-    "Are you sure you want to delete this koi?",
+    "Are you sure you want to delete this koi? This action cannot be undone, please proceed with caution.",
   ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_AUCTION:
     "Are you sure you want to delete this auction?",
   ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_BREEDER:
     "Are you sure you want to delete this breeder?",
   ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_STAFF:
-    "Are you sure you want to delete this staff?",
+    "Are you sure you want to delete this staff? Please proceed with caution.",
   ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_MEMBER:
     "Are you sure you want to delete this member?",
   ARE_YOU_SURE_YOU_WANT_TO_REDO_THIS_BREEDER:

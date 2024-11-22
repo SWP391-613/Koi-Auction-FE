@@ -26,7 +26,7 @@ import {
 import PaginationComponent from "~/components/common/PaginationComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { AUCTION_STATUS } from "~/constants/status";
-import { ERROR_MESSAGE } from "~/constants/message";
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "~/constants/message";
 import { AuctionKoi } from "~/types/auctionkois.type";
 import {
   AuctionModel,
@@ -47,7 +47,7 @@ export const AuctionsManagement: React.FC = () => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true);
-  const itemsPerPage = 20;
+  const itemsPerPage = 30;
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [newAuction, setNewAuction] = useState({
@@ -238,7 +238,7 @@ export const AuctionsManagement: React.FC = () => {
 
       try {
         await updateAuction(editingAuction.id!, data);
-        toast.success("Auction updated successfully");
+        toast.success(SUCCESS_MESSAGE.AUCTION_UPDATE_SUCCESS);
       } catch (error) {
         const errorMessage = extractErrorMessage(
           error,
@@ -253,7 +253,7 @@ export const AuctionsManagement: React.FC = () => {
   const handleDeleteAuction = async (id: number): Promise<void> => {
     try {
       await deleteAuction(id, token!);
-      toast.success("Auction deleted successfully");
+      toast.success(SUCCESS_MESSAGE.AUCTION_DELETE_SUCCESS);
     } catch (error) {
       const errorMessage = extractErrorMessage(
         error,
@@ -280,7 +280,9 @@ export const AuctionsManagement: React.FC = () => {
 
     try {
       await endAuctionEmergency(auctionId);
-      toast.success("Auction ended successfully");
+      toast.success(
+        "Auction ended successfully, refresh the page to apply changes",
+      );
     } catch (error) {
       const errorMessage = extractErrorMessage(error, "Failed to end auction");
       console.error(errorMessage);

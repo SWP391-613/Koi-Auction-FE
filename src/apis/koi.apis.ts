@@ -81,7 +81,7 @@ export const deleteKoiById = async (id: number): Promise<void> => {
       },
     });
 
-    if (response.status !== 204) {
+    if (response.status !== 200) {
       throw new Error("Failed to delete koi");
     }
   } catch (error) {

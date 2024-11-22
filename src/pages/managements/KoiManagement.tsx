@@ -145,7 +145,7 @@ const KoiManagement = () => {
 
   const handleDelete = async (id: number) => {
     const confirmed = window.confirm(
-      `${CONFIRMATION_MESSAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_KOI} ${id}?`,
+      `${CONFIRMATION_MESSAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_KOI}`,
     );
     if (!confirmed) return;
 

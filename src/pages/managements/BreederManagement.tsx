@@ -17,6 +17,7 @@ import { BREEDER_MANAGEMENT_HEADER } from "~/constants/tableHeader";
 import { Breeder } from "~/types/users.type";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import AddBreederDialog from "../detail/breeder/AddBreederDialog";
+import CustomButton from "~/components/shared/CustomButton";
 
 const BreederManagement = () => {
   const [breeders, setBreeders] = useState<Breeder[]>([]);
@@ -144,17 +145,13 @@ const BreederManagement = () => {
   return (
     <div className="m-5 overflow-x-auto">
       <div className="mb-6 flex justify-between">
-        <div className="border-2 p-6 rounded-xl">
+        <div className="border-2 border-sky-500 p-6 rounded-xl">
           <Typography variant="h5">Total Breeders: {totalItems}</Typography>
         </div>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-          onClick={handleCreate}
-        >
-          Add New Breeder
-        </Button>
+        <CustomButton onClick={handleCreate}>
+      <AddIcon className="mr-2" />
+      New Breeder
+    </CustomButton>
       </div>
 
       <table className="whitespace-no-wrap w-full">

@@ -227,8 +227,8 @@ const KoiManagement = () => {
     <div className="m-5 overflow-x-auto">
       <div className="">
         <div className="mb-6 flex justify-between">
-          <div className="flex gap-5">
-            <div className="border-2 p-6 rounded-xl">
+          <div className="flex gap-5 border-2 border-sky-500 p-6 rounded-xl">
+            <div className="p-6 rounded-xl">
               <Typography variant="h5">
                 Total: {koiCountGender?.total} koi
               </Typography>
@@ -244,11 +244,6 @@ const KoiManagement = () => {
                 {" "}
                 Unknown: {koiCountGender?.unknown}
               </Typography>
-            </div>
-            <div className="border-2 p-6 rounded-xl">
-              <Typography variant="h5">
-                Total: {koiCountStatus?.total} koi
-              </Typography>
               <Typography variant="body1">
                 Unverified: {koiCountStatus?.unverified}
               </Typography>
@@ -262,6 +257,11 @@ const KoiManagement = () => {
                 Rejected: {koiCountStatus?.rejected}
               </Typography>
             </div>
+            {/* <div className="p-6 rounded-xl"> */}
+            {/* <Typography variant="h5">
+                Total: {koiCountStatus?.total} koi
+              </Typography> */}
+            {/* </div> */}
           </div>
         </div>
         <div className="px-4 py-4 sm:-mx-8 sm:px-8">

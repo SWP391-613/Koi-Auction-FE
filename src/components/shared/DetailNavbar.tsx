@@ -50,10 +50,10 @@ const DetailNavbar = () => {
           label: TOP_NAVBAR_LABEL.PAYMENT_MANAGEMENT,
           path: `${basePath}/payments`,
         },
-        {
-          label: TOP_NAVBAR_LABEL.NOTIFICATIONS,
-          path: `${basePath}/send-notifications`,
-        },
+        // {
+        //   label: TOP_NAVBAR_LABEL.NOTIFICATIONS,
+        //   path: `${basePath}/send-notifications`,
+        // },
       ],
       manager: [
         { label: TOP_NAVBAR_LABEL.MY_PROFILE, path: basePath },

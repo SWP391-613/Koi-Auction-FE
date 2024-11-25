@@ -15,6 +15,7 @@ import UserDetailDialog from "../member/UserDetailDialog";
 import "./StaffDetail.scss";
 import { sendOtp } from "~/apis/otp.apis";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import { RoleName } from "~/types/roles.type";
 
 const StaffDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -75,7 +76,7 @@ const StaffDetail: React.FC = () => {
   if (loading) return <LoadingComponent />;
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
-  if (user.role_name !== "staff") {
+  if (user.role_name !== RoleName.STAFF) {
     navigate("/notfound");
   }
 

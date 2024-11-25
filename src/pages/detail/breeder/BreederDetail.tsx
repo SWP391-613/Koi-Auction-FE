@@ -19,6 +19,7 @@ import "./BreederDetail.scss";
 import { formatDateV2 } from "~/utils/dateTimeUtils";
 import { sendOtp } from "~/apis/otp.apis";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import { RoleName } from "~/types/roles.type";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -91,7 +92,7 @@ const BreederDetail: React.FC = () => {
   if (loading) return <LoadingComponent />;
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
-  if (user.role_name !== "breeder") {
+  if (user.role_name !== RoleName.BREEDER) {
     navigate("/notfound");
   }
 

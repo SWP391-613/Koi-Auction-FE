@@ -1,22 +1,18 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { getCookie } from "~/utils/cookieUtils";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserDetailsResponse } from "~/types/users.type";
-import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { fetchUserDetails } from "~/apis/user.apis";
+import { UserDetailsResponse } from "~/types/users.type";
+import { getUserCookieToken } from "~/utils/auth.utils";
 
 export const useUserData = () => {
-  const [user, setUser] = useState<UserDetailsResponse | null>(null);
+  const [user, setUser] = useState<UserDetailsResponse>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
-      const accessToken = getCookie("access_token");
-
-      if (!accessToken) {
+      if (!getUserCookieToken()) {
         // Allow viewing without login
         setLoading(false);
         return;

@@ -90,7 +90,7 @@ const Header = () => {
               onClick={handleRoleIconClick}
             />
             <div className="h-8 w-px bg-gray-200"></div>
-            <UserProfile isLoggedIn={isLoggedIn} user={user} />
+            {user && <UserProfile isLoggedIn={isLoggedIn} user={user} />}
           </div>
         </div>
       </motion.header>

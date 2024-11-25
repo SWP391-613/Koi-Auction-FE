@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { useUserData } from "~/hooks/useUserData";
+import { RoleName } from "~/types/roles.type";
 
 const VNPayReturn: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -61,7 +62,9 @@ const VNPayReturn: React.FC = () => {
           case "deposit":
             if (paymentResult.userId) {
               navigate(
-                user?.role_name === "breeder" ? "/breeders/" : `/members/`,
+                user?.role_name === RoleName.BREEDER
+                  ? "/breeders/"
+                  : `/members/`,
               );
             }
             break;

@@ -71,7 +71,7 @@ const ManagerDetail: React.FC = () => {
   if (loading) return <LoadingComponent />;
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
-  if (user.role_name !== "manager") {
+  if (user.role_name !== "MANAGER") {
     navigate("/notfound");
   }
 

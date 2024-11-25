@@ -14,7 +14,7 @@ export type UserBase = {
   date_of_birth: string;
   avatar_url: string;
   google_account_id: number;
-  role_name: string;
+  role_name: "MEMBER" | "STAFF" | "BREEDER" | "MANAGER";
   account_balance: number;
   created_at: string;
   updated_at: string;
@@ -78,10 +78,7 @@ export type Staff = UserBase & {
   auction_count: number;
 };
 
-export type UserDetailsResponse = UserBase & {
-  created_at: string | null;
-  updated_at: string | null;
-};
+export type UserDetailsResponse = UserBase;
 
 export type UserStatus = "UNVERIFIED" | "VERIFIED" | "BANNED";
 

@@ -1,12 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
+import { faSignOutAlt, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "~/contexts/AuthContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { RoleName } from "~/types/roles.type";
+import { UserBase } from "~/types/users.type";
 
 interface UserProfileProps {
   isLoggedIn: boolean;
-  user: any;
+  user: UserBase;
 }
 
 export const UserProfile: React.FC<UserProfileProps> = ({
@@ -43,16 +45,16 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const getMyAccountUrl = (user: any) => {
+  const getMyAccountUrl = (user: UserBase) => {
     if (!user) return isMobile ? "/login" : "/auth";
     switch (user.role_name) {
-      case "breeder":
+      case RoleName.BREEDER:
         return "/breeders";
-      case "staff":
+      case RoleName.STAFF:
         return "/staffs";
-      case "manager":
+      case RoleName.MANAGER:
         return "/managers";
-      case "member":
+      case RoleName.MEMBER:
         return "/members";
       default:
         return "/";
@@ -70,7 +72,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
       <div className="relative">
         {!isLoggedIn ? (
           <button
-            onClick={() => navigate(getMyAccountUrl(null))}
+            onClick={() => navigate(getMyAccountUrl(user))}
             className="relative flex overflow-hidden items-center text-sm font-medium bg-[#CF0A0A] text-white shadow hover:bg-red/90 h-9 px-4 py-2 max-w-52 whitespace-pre md:flex group w-full justify-center gap-2 rounded-md transition-all duration-300 ease-out"
           >
             <span className="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-40"></span>

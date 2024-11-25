@@ -29,6 +29,7 @@ import { formatDateV2 } from "~/utils/dateTimeUtils";
 import { sendOtp } from "~/apis/otp.apis";
 import { sendRequestUpdateRole } from "~/apis/mail.apis";
 import NotFound from "~/components/error/NotFound";
+import { RoleName } from "~/types/roles.type";
 
 const UserDetail: React.FC = () => {
   const { user, loading: userLoading, loading, error, setUser } = useUserData();
@@ -51,7 +52,7 @@ const UserDetail: React.FC = () => {
   if (loading) return <LoadingComponent />;
   if (error) return <div>Error: {error}</div>;
   if (!user) return <div>No user data found</div>;
-  if (user.role_name !== "member") {
+  if (user.role_name !== RoleName.MEMBER) {
     navigate("/notfound");
   }
 
@@ -296,7 +297,7 @@ const UserDetail: React.FC = () => {
               </div>
               <div>
                 {user.status_name === "VERIFIED" &&
-                  user.role_name === "member" && (
+                  user.role_name === RoleName.MEMBER && (
                     <button
                       onClick={handleOpenModal}
                       className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500 transition"

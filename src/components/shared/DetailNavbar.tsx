@@ -17,7 +17,7 @@ const DetailNavbar = () => {
   const getNavLinks = () => {
     if (!user || user.status_name !== USER_STATUS.VERIFIED) return [];
 
-    const basePath = `/${user.role_name}s`;
+    const basePath = `/${user.role_name.toLowerCase()}s`;
     const links = {
       member: [
         { label: TOP_NAVBAR_LABEL.MY_PROFILE, path: basePath },
@@ -50,10 +50,10 @@ const DetailNavbar = () => {
           label: TOP_NAVBAR_LABEL.PAYMENT_MANAGEMENT,
           path: `${basePath}/payments`,
         },
-        // {
-        //   label: TOP_NAVBAR_LABEL.NOTIFICATIONS,
-        //   path: `${basePath}/send-notifications`,
-        // },
+        {
+          label: TOP_NAVBAR_LABEL.NOTIFICATIONS,
+          path: `${basePath}/send-notifications`,
+        },
       ],
       manager: [
         { label: TOP_NAVBAR_LABEL.MY_PROFILE, path: basePath },
@@ -93,6 +93,9 @@ const DetailNavbar = () => {
     location.pathname.includes(ROUTING_PATH.BREEDERS) ||
     location.pathname.includes(ROUTING_PATH.STAFFS) ||
     location.pathname.includes(ROUTING_PATH.MANAGERS);
+
+  console.log("Current path:", location.pathname);
+  console.log("Navbar should show:", shouldShowNavbar);
 
   if (!shouldShowNavbar) return null;
 

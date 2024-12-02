@@ -2,7 +2,6 @@ import AddIcon from "@mui/icons-material/Add";
 import { Alert, Button, Container, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { softDeleteUser, undoDeleteUser } from "~/apis/user.apis";
 import { fetchBreedersData } from "~/apis/users/breeder.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
@@ -18,6 +17,7 @@ import { Breeder } from "~/types/users.type";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import AddBreederDialog from "../detail/breeder/AddBreederDialog";
 import CustomButton from "~/components/shared/CustomButton";
+import { userApi } from "~/apis/user.apis";
 
 const BreederManagement = () => {
   const [breeders, setBreeders] = useState<Breeder[]>([]);
@@ -81,7 +81,7 @@ const BreederManagement = () => {
     if (!confirmReject) return;
 
     try {
-      await softDeleteUser(id);
+      await userApi.softDeleteUser(id);
       toast.success(SUCCESS_MESSAGE.DELETE_BREEDER_SUCCESS);
     } catch (error) {
       const errorMessage = extractErrorMessage(
@@ -99,7 +99,7 @@ const BreederManagement = () => {
     if (!confirmReject) return;
 
     try {
-      await undoDeleteUser(id);
+      await userApi.undoDeleteUser(id);
       toast.success(SUCCESS_MESSAGE.REDO_BREEDER_SUCCESS);
     } catch (error) {
       const errorMessage = extractErrorMessage(

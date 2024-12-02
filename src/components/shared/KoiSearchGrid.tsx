@@ -107,19 +107,20 @@ const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
                 transition={{ delay: 0.2 }}
                 className="absolute top-2 left-2 bg-opacity-50 text-white p-2 text-lg flex items-center z-10"
               >
-                {koiBreeders.item.find(
-                  (breeder) => breeder.id === koi.owner_id,
-                ) && (
-                  <img
-                    src={
-                      koiBreeders.item.find(
-                        (breeder) => breeder.id === koi.owner_id,
-                      )?.avatar_url
-                    }
-                    alt="Breeder Avatar"
-                    className="w-12 h-12 md:w-1/2 md:h-1/2 object-contain"
-                  />
-                )}
+                {Array.isArray(koiBreeders.item) &&
+                  koiBreeders.item.find(
+                    (breeder) => breeder.id === koi.owner_id,
+                  ) && (
+                    <img
+                      src={
+                        koiBreeders.item.find(
+                          (breeder) => breeder.id === koi.owner_id,
+                        )?.avatar_url
+                      }
+                      alt="Breeder Avatar"
+                      className="w-12 h-12 md:w-1/2 md:h-1/2 object-contain"
+                    />
+                  )}
               </motion.div>
 
               {koi.bid_method && (

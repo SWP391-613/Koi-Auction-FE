@@ -20,7 +20,7 @@ import CountdownClock from "../auctions/CountdownClock";
 import LoginOrRegister from "../auth/LoginOrRegister";
 import { KoiDetailItem } from "./KoiBiddingDetailComponent";
 import { KOI_INFO_LABEL } from "~/constants/label";
-import { fetchUserDetails } from "~/apis/user.apis";
+import { userApi } from "~/apis/user.apis";
 
 interface KoiInfoGridProps {
   koi: KoiDetailModel;
@@ -44,7 +44,7 @@ export const KoiInfoGridComponent: React.FC<KoiInfoGridProps> = ({
     const updateUserBalance = async () => {
       if (user) {
         try {
-          const updatedUser = await fetchUserDetails();
+          const updatedUser = await userApi.fetchUserDetails();
           setCurrentBalance(updatedUser.account_balance);
         } catch (error) {
           console.error("Failed to fetch updated user balance:", error);

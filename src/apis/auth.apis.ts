@@ -11,10 +11,7 @@ import { handleAxiosError } from "~/utils/errors.utils";
 
 export const login = async (payload: LoginDTO) => {
   try {
-    const response = await axios.post(
-      `${DYNAMIC_API_URL}/users/login`,
-      payload,
-    );
+    const response = await axios.post(`${DYNAMIC_API_URL}/auth/login`, payload);
     return response.data;
   } catch (error) {
     handleAxiosError(
@@ -29,7 +26,7 @@ export const login = async (payload: LoginDTO) => {
 
 export const register = async (payload: UserRegisterDTO) => {
   try {
-    const response = await axios.post(`${DYNAMIC_API_URL}/users/register`, {
+    const response = await axios.post(`${DYNAMIC_API_URL}/auth/register`, {
       first_name: payload.first_name || "",
       last_name: payload.last_name || "",
       email: payload.email || "",
@@ -55,7 +52,7 @@ export const register = async (payload: UserRegisterDTO) => {
 export const doLogout = async (token: string) => {
   try {
     const response = await axios.post(
-      `${DYNAMIC_API_URL}/users/logout`,
+      `${DYNAMIC_API_URL}/auth/logout`,
       {},
       {
         headers: {

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { verifyOtpIsCorrect } from "~/apis/otp.apis";
-import { verifyOtpToVerifyUser } from "~/apis/user.apis";
+import { userApi } from "~/apis/user.apis";
 import { ROUTING_PATH } from "~/constants/endPoints";
 import {
   ERROR_MESSAGE,
@@ -78,7 +78,7 @@ const OtpVerification: React.FC = () => {
           3000,
         );
       } else {
-        await verifyOtpToVerifyUser(email, otpString);
+        await userApi.verifyOtpToVerifyUser(email, otpString);
         toast.success(SUCCESS_MESSAGE.OTP_VERIFY_SUCCESS);
         toast.info("Please login again to continue", {
           autoClose: 2000,

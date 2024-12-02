@@ -19,9 +19,16 @@ const Home = () => {
   const { isLoggedIn } = useAuth();
   const [randomKois, setRandomKois] = useState<KoiInAuctionDetailModel[]>([]);
   const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>({
-    total_page: 0,
-    total_item: 0,
-    item: [],
+    status_code: 0,
+    message: "",
+    is_success: false,
+    data: [],
+    pagination: {
+      total_items: 0,
+      total_pages: 0,
+      current_page: 0,
+      page_size: 0,
+    },
   });
   const [isLoading, setIsLoading] = useState(true);
   const { scrollYProgress } = useScroll();
@@ -256,10 +263,10 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4"
           >
-            {koiBreeders?.item?.length > 0 &&
-              koiBreeders.item.map((breeder, index) => (
+            {koiBreeders?.data?.length > 0 &&
+              koiBreeders.data.map((breeder, index) => (
                 <motion.div
-                  key={`${breeder.id}-${index}`}
+                  key={`${breeder.user_response.id}-${index}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{
                     opacity: isBreedersInView ? 1 : 0,
@@ -267,15 +274,15 @@ const Home = () => {
                   }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="bg-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-4 flex flex-col items-center justify-center cursor-pointer"
-                  onClick={() => handleBreederClick(breeder.id)}
+                  onClick={() => handleBreederClick(breeder.user_response.id)}
                 >
                   <img
-                    src={breeder.avatar_url}
-                    alt={`${breeder.first_name} logo`}
+                    src={breeder.user_response.avatar_url}
+                    alt={`${breeder.user_response.first_name} logo`}
                     className="h-20 w-auto object-contain mb-2"
                   />
                   <p className="text-center font-medium text-gray-700">
-                    {breeder.first_name}
+                    {breeder.user_response.first_name}
                   </p>
                 </motion.div>
               ))}

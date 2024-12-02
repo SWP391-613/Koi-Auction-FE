@@ -35,7 +35,7 @@ export const sendOtpForgotPassword = async (email: string): Promise<any> => {
     handleAxiosError(
       error,
       ERROR_MESSAGE.UNEXPECTED_ERROR,
-      false,
+      true,
       ERROR_MESSAGE.SEND_OTP_ERROR,
     );
   }

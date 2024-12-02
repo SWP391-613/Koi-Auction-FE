@@ -16,7 +16,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { updateUserRole } from "~/apis/user.apis";
+import { userApi } from "~/apis/user.apis";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { Staff } from "~/types/users.type";
 import { getCookie } from "~/utils/cookieUtils";
@@ -77,7 +77,7 @@ const AddStaffDialog: React.FC<AddStaffProps> = ({
     }
 
     try {
-      await updateUserRole(parseInt(selectedMember), 2);
+      await userApi.updateUserRole(parseInt(selectedMember), 2);
       setSnackbarMessage("Member updated to staff successfully");
       setSnackbarOpen(true);
       onClose();

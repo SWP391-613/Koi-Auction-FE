@@ -2,7 +2,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { Alert, Button, Container, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { softDeleteUser, undoDeleteUser } from "~/apis/user.apis";
+import { userApi } from "~/apis/user.apis";
 import { getMembersData } from "~/apis/users/member.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
@@ -93,7 +93,7 @@ const MemberManagement = () => {
     if (!confirmReject) return;
 
     try {
-      await softDeleteUser(id);
+      await userApi.softDeleteUser(id);
       toast.success(SUCCESS_MESSAGE.DELETE_MEMBER_SUCCESS);
     } catch (error) {
       const errorMessage = extractErrorMessage(
@@ -111,7 +111,7 @@ const MemberManagement = () => {
     if (!confirmReject) return;
 
     try {
-      await undoDeleteUser(id);
+      await userApi.undoDeleteUser(id);
       toast.success(SUCCESS_MESSAGE.REDO_MEMBER_SUCCESS);
     } catch (error) {
       const errorMessage = extractErrorMessage(

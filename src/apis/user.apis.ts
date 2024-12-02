@@ -1,173 +1,45 @@
-import axios from "axios";
-import { DYNAMIC_API_URL } from "~/constants/endPoints";
-import { ERROR_MESSAGE } from "~/constants/message";
-import { getUserCookieToken } from "~/utils/auth.utils";
-import { handleAxiosError } from "~/utils/errors.utils";
+// userApi.ts
 
-export const updateAccountBalance = async (
-  userId: number,
-  payment: number,
-  token: string,
-) => {
-  try {
-    const response = await axios.put(
-      `${DYNAMIC_API_URL}/users/${userId}/deposit/${payment}`,
-      {}, // If your API expects a body, add it here
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    return response;
-  } catch (err: any) {
-    handleAxiosError(
-      err,
-      ERROR_MESSAGE.UNEXPECTED_ERROR,
-      false,
-      ERROR_MESSAGE.UPDATE_ACCOUNT_BALANCE_ERROR,
-    );
-  }
-};
+import { handleRequest } from "~/helpers/api.helpers";
+import { api } from "./api";
 
-export const verifyOtpToVerifyUser = async (
-  email: string,
-  otp: string,
-): Promise<any> => {
-  try {
-    const response = await axios.post(`${DYNAMIC_API_URL}/users/verify`, {
-      email,
-      otp,
-    });
+export const userApi = {
+  updateAccountBalance: async (userId: number, payment: number) =>
+    handleRequest(
+      () => api.put(`/users/${userId}/deposit/${payment}`),
+      "Failed to update account balance",
+    ),
 
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      throw new Error("OTP verification failed");
-    }
-  } catch (error) {
-    handleAxiosError(
-      error,
-      ERROR_MESSAGE.UNEXPECTED_ERROR,
-      false,
-      ERROR_MESSAGE.OTP_VERIFICATION_ERROR,
-    );
-  }
-};
+  verifyOtpToVerifyUser: async (email: string, otp: string) =>
+    handleRequest(
+      () => api.post("/users/verify", { email, otp }),
+      "OTP verification failed",
+    ),
 
-export const updateUserField = async (
-  userId: number,
-  field: string,
-  value: any,
-  token: string,
-): Promise<void> => {
-  const response = await axios.put(
-    `${DYNAMIC_API_URL}/users/${userId}`,
-    { [field]: value },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
+  updateUserField: async (userId: number, field: string, value: any) =>
+    handleRequest(
+      () => api.put(`/users/${userId}`, { [field]: value }),
+      "Failed to update user information",
+    ),
 
-  if (response.status !== 200) {
-    throw new Error("Failed to update user information.");
-  }
-};
+  updateUserRole: async (id: number, roleId: number) =>
+    handleRequest(
+      () => api.put(`/users/${id}/update-role/${roleId}`),
+      "Failed to update user role",
+    ),
 
-export const updateUserRole = async (
-  id: number,
-  roleId: number,
-): Promise<void> => {
-  try {
-    const response = await axios.put(
-      `${DYNAMIC_API_URL}/users/${id}/update-role/${roleId}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${getUserCookieToken()}`,
-        },
-      },
-    );
-    if (response.status !== 200) {
-      throw new Error("Failed to update user to breeder");
-    }
-  } catch (error) {
-    handleAxiosError(
-      error,
-      "Failed to update user to breeder",
-      true,
-      "Failed to update user to breeder",
-    );
-  }
-};
+  softDeleteUser: async (id: number) =>
+    handleRequest(() => api.delete(`/users/${id}`), "Failed to delete user"),
 
-export const softDeleteUser = async (id: number): Promise<void> => {
-  try {
-    const response = await axios.delete(`${DYNAMIC_API_URL}/users/${id}`, {
-      headers: {
-        Authorization: `Bearer ${getUserCookieToken()}`,
-      },
-    });
-    if (response.status !== 200) {
-      throw new Error("Failed to delete user");
-    }
-  } catch (error) {
-    handleAxiosError(
-      error,
-      "Failed to delete user",
-      true,
-      "Failed to delete user",
-    );
-  }
-};
-
-export const undoDeleteUser = async (id: number): Promise<void> => {
-  try {
-    const response = await axios.put(
-      `${DYNAMIC_API_URL}/users/${id}/restore`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${getUserCookieToken()}`,
-        },
-      },
-    );
-    if (response.status !== 200) {
-      throw new Error("Failed to restore user");
-    }
-  } catch (error) {
-    handleAxiosError(
-      error,
+  undoDeleteUser: async (id: number) =>
+    handleRequest(
+      () => api.put(`/users/${id}/restore`),
       "Failed to restore user",
-      true,
-      "Failed to restore user",
-    );
-  }
-};
+    ),
 
-export const fetchUserDetails = async () => {
-  try {
-    const response = await axios.post(
-      `${DYNAMIC_API_URL}/users/details`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${getUserCookieToken()}`,
-        },
-      },
-    );
-
-    if (response.status === 200) {
-      return response.data;
-    }
-  } catch (error) {
-    handleAxiosError(
-      error,
-      ERROR_MESSAGE.UNEXPECTED_ERROR,
-      false,
-      ERROR_MESSAGE.FETCH_USER_DETAILS_ERROR,
-    );
-  }
+  fetchUserDetails: async () =>
+    handleRequest(
+      () => api.post("/users/details"),
+      "Failed to fetch user details",
+    ),
 };

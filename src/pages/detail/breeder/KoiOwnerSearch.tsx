@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { fetchKoisOfBreeder } from "~/apis/users/breeder.apis";
+import { breederApi, fetchKoisOfBreeder } from "~/apis/users/breeder.apis";
 import KoiOwnerSearchComponent from "~/components/search/KoiOwnerSearchComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
@@ -60,17 +60,16 @@ const KoiOwnerSearch: React.FC = () => {
     if (!userId || !accessToken) return;
 
     try {
-      const response = await fetchKoisOfBreeder(
+      const response = await breederApi.fetchKoisOfBreeder(
         parseInt(userId),
         currentPage - 1,
         itemsPerPage,
-        accessToken,
       );
 
       if (response) {
-        setKois(response.item);
-        setTotalKoi(response.total_item);
-        setHasMorePages(response.item.length === itemsPerPage);
+        setKois(response.data.item);
+        setTotalKoi(response.data.total_item);
+        setHasMorePages(response.data.item.length === itemsPerPage);
       }
     } catch (error) {
       const errorMessage = extractErrorMessage(

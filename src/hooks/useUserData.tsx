@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchUserDetails } from "~/apis/user.apis";
+import { userApi } from "~/apis/user.apis";
 import { UserDetailsResponse } from "~/types/users.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
 
@@ -19,9 +19,9 @@ export const useUserData = () => {
       }
 
       try {
-        const response = await fetchUserDetails();
-        if (response) {
-          setUser(response);
+        const response = await userApi.fetchUserDetails();
+        if (response?.data) {
+          setUser(response.data);
         }
       } catch (error) {
         const errorMessage =

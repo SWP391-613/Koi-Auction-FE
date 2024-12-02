@@ -1,16 +1,26 @@
 import axios from "axios";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
-import { getUserCookieToken } from "~/utils/auth.utils";
-import { handleAxiosError } from "~/utils/errors.utils";
+import { handleRequest } from "~/helpers/api.helpers";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/detail/breeder/BreederDetail";
 import { BreedersResponse } from "~/types/paginated.types";
+import { getUserCookieToken } from "~/utils/auth.utils";
+import { handleAxiosError } from "~/utils/errors.utils";
+import { api } from "../api";
+
+export const breederApi = {
+  fetchKoisOfBreeder: async (breeder_id: number, page: number, limit: number) =>
+    handleRequest(() =>
+      api.get<KoisOfBreeder>(`/breeders/kois`, {
+        params: { breeder_id, page, limit },
+      }),
+    ),
+};
 
 export const fetchKoisOfBreeder = async (
   breeder_id: number,
   page: number,
   limit: number,
-  access_token: string,
 ): Promise<KoisOfBreeder | void> => {
   try {
     const response = await axios.get<KoisOfBreeder>(
@@ -18,7 +28,7 @@ export const fetchKoisOfBreeder = async (
       {
         params: { breeder_id, page, limit },
         headers: {
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${getUserCookieToken()}`,
         },
       },
     );

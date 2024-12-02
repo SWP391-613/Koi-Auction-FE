@@ -9,6 +9,10 @@ import axios from "axios";
 import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";
 
 export const convertDataToReadable = (method: string) => {
+  if (method === undefined) {
+    return "Unknown";
+  }
+
   //convert from FIXED_PRICE to Fixed Price, all caps to first letter caps, and remove the underscore
   return method
     .split("_")

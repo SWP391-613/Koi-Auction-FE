@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { undoDeleteUser } from "~/apis/user.apis";
 import { deleteStaff } from "~/apis/users/staff.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
@@ -23,6 +22,7 @@ import { extractErrorMessage } from "~/utils/dataConverter";
 import AddStaffDialog from "./AddStaffDialog";
 import EditStaffDialog from "./EditStaffDialog";
 import CustomButton from "~/components/shared/CustomButton";
+import { userApi } from "~/apis/user.apis";
 
 const StaffManagement = () => {
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
@@ -96,7 +96,7 @@ const StaffManagement = () => {
     if (!confirmReject) return;
 
     try {
-      await undoDeleteUser(id);
+      await userApi.undoDeleteUser(id);
       toast.success(SUCCESS_MESSAGE.REDO_STAFF_SUCCESS);
     } catch (error) {
       const errorMessage = extractErrorMessage(

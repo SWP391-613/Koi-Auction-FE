@@ -14,13 +14,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
-          cache: "yarn"
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: yarn install
+        run: pnpm install
 
       - name: Build the project
-        run: yarn run build:prod
+        run: pnpm run build:prod
 
       - name: Deploy to Production Repo
         env:

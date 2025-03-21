@@ -28,7 +28,7 @@ import UserDetailDialog from "./UserDetailDialog";
 import { formatDateV2 } from "~/utils/dateTimeUtils";
 import { sendOtp } from "~/apis/otp.apis";
 import { sendRequestUpdateRole } from "~/apis/mail.apis";
-import NotFound from "~/components/error/NotFound";
+import NotFound from "~/pages/error/NotFound";
 import { RoleName } from "~/types/roles.type";
 
 const UserDetail: React.FC = () => {

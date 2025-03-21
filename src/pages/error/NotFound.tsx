@@ -1,5 +1,5 @@
 import React from "react";
-import NavigateButton from "../shared/NavigateButton";
+import NavigateButton from "../../components/shared/NavigateButton";
 import { ROUTING_PATH } from "~/constants/endPoints";
 
 const NotFound = () => {

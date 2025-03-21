@@ -1,5 +1,5 @@
 import React from "react";
-import NavigateButton from "../shared/NavigateButton";
+import NavigateButton from "../../components/shared/NavigateButton";
 
 const InternalServerError = () => {
   return (

@@ -44,7 +44,7 @@ import {
   fetchQuantityKoiInAuctionByBidMethod,
 } from "~/apis/auctionkoi.apis";
 
-export const AuctionsManagement: React.FC = () => {
+const AuctionsManagement: React.FC = () => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMorePages, setHasMorePages] = useState(true);
@@ -411,3 +411,5 @@ export const AuctionsManagement: React.FC = () => {
     </div>
   );
 };
+
+export default AuctionsManagement;

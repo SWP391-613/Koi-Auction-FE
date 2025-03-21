@@ -1,2 +1,2 @@
 # echo "Running pre-commit hook"
-yarn run prettier:fix
+pnpm run prettier:fix

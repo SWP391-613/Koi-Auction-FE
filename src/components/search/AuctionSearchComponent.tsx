@@ -49,7 +49,7 @@ const AuctionSearchComponent: React.FC<AuctionSearchComponentProps> = () => {
       </div>
       {loading && <p className="mt-2">Searching...</p>}
       {error && <p className="text-red-500 mt-2">{error.message}</p>}
-      {results.length > 0 && !loading && (
+      {results?.length > 0 && !loading && (
         <div className="mt-3 text-gray-500">
           <Typography variant="body2" className="mt-3">
             Showing 1 - {results.length} of {totalItems} results.

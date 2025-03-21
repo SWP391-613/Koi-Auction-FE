@@ -150,7 +150,7 @@ export const undoDeleteUser = async (id: number): Promise<void> => {
 export const fetchUserDetails = async () => {
   try {
     const response = await axios.post(
-      `${DYNAMIC_API_URL}/users/details`,
+      `${DYNAMIC_API_URL}/auth/details`,
       {},
       {
         headers: {

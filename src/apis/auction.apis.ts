@@ -1,8 +1,10 @@
 import axios from "axios";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
+import { ApiResponse } from "~/types/api.type";
 import {
   AddNewAuctionDTO,
+  AuctionDTO,
   AuctionModel,
   AuctionStatusCount,
 } from "~/types/auctions.type";
@@ -38,12 +40,18 @@ export const createNewAuction = async (
   }
 };
 
-export const fetchAuctions = async (page: number, limit: number) => {
+export const fetchAuctions = async (
+  page: number,
+  limit: number,
+): Promise<AuctionModel[]> => {
   try {
-    const response = await axios.get(`${DYNAMIC_API_URL}/auctions`, {
-      params: { page, limit },
-    });
-    return response.data;
+    const response = await axios.get<ApiResponse<AuctionModel[]>>(
+      `${DYNAMIC_API_URL}/auctions`,
+      {
+        params: { page, limit },
+      },
+    );
+    return response.data.data;
   } catch (error) {
     handleAxiosError(
       error,
@@ -52,7 +60,7 @@ export const fetchAuctions = async (page: number, limit: number) => {
       ERROR_MESSAGE.FETCH_AUCTION_ERROR,
     );
 
-    return null;
+    return [];
   }
 };
 

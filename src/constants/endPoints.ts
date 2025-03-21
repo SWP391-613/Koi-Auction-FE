@@ -1,9 +1,8 @@
 export const API_URL_DEPLOYMENT =
   "https://koi-auction-be-az-dtarcyafdhc2gcen.southeastasia-01.azurewebsites.net/api/v1";
-export const API_URL_DEVELOPMENT = "http://localhost:4000/api/v1";
+export const API_URL_DEVELOPMENT = "http://localhost:8080/api/v1";
 
-export const DYNAMIC_API_URL =
-  import.meta.env.VITE_API_BASE_URL ?? API_URL_DEVELOPMENT;
+export const DYNAMIC_API_URL = API_URL_DEVELOPMENT;
 
 export const ROUTING_PATH = {
   ROOT: "/",

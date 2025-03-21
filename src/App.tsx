@@ -69,6 +69,7 @@ import BreederManagement from "./pages/managements/BreederManagement";
 import StaffManagement from "./pages/manager/staff/StaffManagement";
 import MemberManagement from "./pages/managements/MemberManagement";
 import KoiOwnerSearch from "./pages/detail/breeder/KoiOwnerSearch";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const TITLE = "Koi Auction";
 
@@ -95,149 +96,150 @@ function AppContent() {
 
   return (
     <HelmetProvider>
-      <AuthProvider>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <div className="flex flex-col min-h-screen">
-            <Helmet>
-              <title>{TITLE}</title>
-            </Helmet>
+      <ErrorBoundary>
+        <AuthProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
             <div className="flex flex-col min-h-screen">
-              <NavBar />
-              <div className="flex flex-grow">
-                <Header />
-                <main
-                  className={`flex-1 transition-all duration-300
+              <Helmet>
+                <title>{TITLE}</title>
+              </Helmet>
+              <div className="flex flex-col min-h-screen">
+                <NavBar />
+                <div className="flex flex-grow">
+                  <Header />
+                  <main
+                    className={`flex-1 transition-all duration-300
                     ${isNavCollapsed ? "md:ml-20" : "md:ml-60"}
                     ${isMobileNavVisible ? "mb-[60px]" : "mb-0"}
                     md:mb-0
                     pt-16`}
-                >
-                  <DetailNavbar />
-                  <Routes>
-                    {/* Public routes */}
-                    <Route
-                      path="/"
-                      element={
-                        <PageTransition>
-                          <Home />
-                        </PageTransition>
-                      }
-                    />
-                    <Route
-                      path="/about"
-                      element={
-                        <PageTransition>
-                          <About />
-                        </PageTransition>
-                      }
-                    />
-                    <Route
-                      path="/privacy"
-                      element={
-                        <PageTransition>
-                          <Privacy />
-                        </PageTransition>
-                      }
-                    />
-                    <Route
-                      path="/terms"
-                      element={
-                        <PageTransition>
-                          <Terms />
-                        </PageTransition>
-                      }
-                    />
-                    <Route
-                      path="/login"
-                      element={
-                        <PageTransition>
-                          <Login />
-                        </PageTransition>
-                      }
-                    />
-                    <Route
-                      path="/register"
-                      element={
-                        <PageTransition>
-                          <Register />
-                        </PageTransition>
-                      }
-                    />
-                    <Route
-                      path="/auth"
-                      element={
-                        <PageTransition>
-                          <AuthContainer />
-                        </PageTransition>
-                      }
-                    />
-                    <Route path="/notfound" element={<NotFound />} />
-                    <Route
-                      path="/internal-server-error"
-                      element={<InternalServerError />}
-                    />
-                    <Route
-                      path="/otp-verification"
-                      element={
-                        <PageTransition>
-                          <OtpVerification />
-                        </PageTransition>
-                      }
-                    />
-                    <Route
-                      path="/auctions"
-                      element={
-                        <PageTransition>
-                          <Auctions />
-                        </PageTransition>
-                      }
-                    />
-                    <Route
-                      path="/auctions/:id"
-                      element={
-                        <PageTransition>
-                          <AuctionDetail />
-                        </PageTransition>
-                      }
-                    />
-                    <Route
-                      path="/auctionkois/:auctionId/:auctionKoiId"
-                      element={
-                        <PageTransition>
-                          <KoiBidding />
-                        </PageTransition>
-                      }
-                    />
-                    <Route
-                      path="/forgot-password"
-                      element={<ForgotPassword />}
-                    />
-                    <Route
-                      path="/breeder/:id/info"
-                      element={
-                        <PageTransition>
-                          <BreederInfo />
-                        </PageTransition>
-                      }
-                    />
-                    <Route
-                      path="/blog"
-                      element={
-                        <PageTransition>
-                          <BlogList />
-                        </PageTransition>
-                      }
-                    />
-                    <Route
-                      path="/blog/:id"
-                      element={
-                        <PageTransition>
-                          <BlogPost />
-                        </PageTransition>
-                      }
-                    />
-                    {/* <Route
+                  >
+                    <DetailNavbar />
+                    <Routes>
+                      {/* Public routes */}
+                      <Route
+                        path="/"
+                        element={
+                          <PageTransition>
+                            <Home />
+                          </PageTransition>
+                        }
+                      />
+                      <Route
+                        path="/about"
+                        element={
+                          <PageTransition>
+                            <About />
+                          </PageTransition>
+                        }
+                      />
+                      <Route
+                        path="/privacy"
+                        element={
+                          <PageTransition>
+                            <Privacy />
+                          </PageTransition>
+                        }
+                      />
+                      <Route
+                        path="/terms"
+                        element={
+                          <PageTransition>
+                            <Terms />
+                          </PageTransition>
+                        }
+                      />
+                      <Route
+                        path="/login"
+                        element={
+                          <PageTransition>
+                            <Login />
+                          </PageTransition>
+                        }
+                      />
+                      <Route
+                        path="/register"
+                        element={
+                          <PageTransition>
+                            <Register />
+                          </PageTransition>
+                        }
+                      />
+                      <Route
+                        path="/auth"
+                        element={
+                          <PageTransition>
+                            <AuthContainer />
+                          </PageTransition>
+                        }
+                      />
+                      <Route path="/notfound" element={<NotFound />} />
+                      <Route
+                        path="/internal-server-error"
+                        element={<InternalServerError />}
+                      />
+                      <Route
+                        path="/otp-verification"
+                        element={
+                          <PageTransition>
+                            <OtpVerification />
+                          </PageTransition>
+                        }
+                      />
+                      <Route
+                        path="/auctions"
+                        element={
+                          <PageTransition>
+                            <Auctions />
+                          </PageTransition>
+                        }
+                      />
+                      <Route
+                        path="/auctions/:id"
+                        element={
+                          <PageTransition>
+                            <AuctionDetail />
+                          </PageTransition>
+                        }
+                      />
+                      <Route
+                        path="/auctionkois/:auctionId/:auctionKoiId"
+                        element={
+                          <PageTransition>
+                            <KoiBidding />
+                          </PageTransition>
+                        }
+                      />
+                      <Route
+                        path="/forgot-password"
+                        element={<ForgotPassword />}
+                      />
+                      <Route
+                        path="/breeder/:id/info"
+                        element={
+                          <PageTransition>
+                            <BreederInfo />
+                          </PageTransition>
+                        }
+                      />
+                      <Route
+                        path="/blog"
+                        element={
+                          <PageTransition>
+                            <BlogList />
+                          </PageTransition>
+                        }
+                      />
+                      <Route
+                        path="/blog/:id"
+                        element={
+                          <PageTransition>
+                            <BlogPost />
+                          </PageTransition>
+                        }
+                      />
+                      {/* <Route
                       path="/kois"
                       element={
                         <PageTransition>
@@ -246,121 +248,128 @@ function AppContent() {
                       }
                     /> */}
 
-                    {/* Protected routes for logged-in users */}
-                    <Route element={<ProtectedRoute />}>
-                      <Route
-                        path="/auctions/register/:id"
-                        element={<KoiRegisterAuctionDetail />}
-                      />
-                      <Route
-                        path="/kois/:id"
-                        element={
-                          <PageTransition>
-                            <KoiDetail />
-                          </PageTransition>
-                        }
-                      />
-                      <Route path="/members/*">
-                        <Route path="" element={<UserDetail />} />
-                        <Route path="orders" element={<UserOrder />} />
+                      {/* Protected routes for logged-in users */}
+                      <Route element={<ProtectedRoute />}>
                         <Route
-                          path="payments"
-                          element={<PaymentTransactions />}
-                        />
-                      </Route>
-                      <Route path="/managers/*">
-                        <Route path="" element={<ManagerDetail />} />
-                        <Route
-                          path="auctions"
-                          element={<AuctionsManagement />}
-                        />
-                        <Route path="kois" element={<KoiManagement />} />
-                        <Route
-                          path="breeders"
-                          element={<BreederManagement />}
-                        />
-                        <Route path="staffs" element={<StaffManagement />} />
-                        <Route path="members" element={<MemberManagement />} />
-                        <Route path="orders" element={<OrderManagement />} />
-                        <Route
-                          path="payments"
-                          element={<PaymentManagement />}
+                          path="/auctions/register/:id"
+                          element={<KoiRegisterAuctionDetail />}
                         />
                         <Route
-                          path="send-notifications"
-                          element={<SendNotifications />}
+                          path="/kois/:id"
+                          element={
+                            <PageTransition>
+                              <KoiDetail />
+                            </PageTransition>
+                          }
                         />
-                      </Route>
-                      <Route path="/breeders/*">
-                        <Route path="" element={<BreederDetail />} />
-                        <Route path="kois" element={<KoiOwnerSearch />} />
-                        <Route path="add-koi" element={<AddKoi />} />
-                        <Route
-                          path="auctions/register"
-                          element={<KoiRegisterAuctions />}
-                        />
-                        <Route path="wishlist" element={<KoiWishList />} />
-                        <Route
-                          path="payments"
-                          element={<PaymentTransactions />}
-                        />
-                      </Route>
-                      <Route path="/staffs/*">
-                        <Route path="" element={<StaffDetail />} />
-                        <Route
-                          path="auctions"
-                          element={<AuctionsManagement />}
-                        />
-                        <Route path="verify/kois" element={<VerifyKoiList />} />
-                        <Route path="orders" element={<OrderManagement />} />
-                        <Route
-                          path="payments"
-                          element={<PaymentManagement />}
-                        />
-                        {/* <Route
+                        <Route path="/members/*">
+                          <Route path="" element={<UserDetail />} />
+                          <Route path="orders" element={<UserOrder />} />
+                          <Route
+                            path="payments"
+                            element={<PaymentTransactions />}
+                          />
+                        </Route>
+                        <Route path="/managers/*">
+                          <Route path="" element={<ManagerDetail />} />
+                          <Route
+                            path="auctions"
+                            element={<AuctionsManagement />}
+                          />
+                          <Route path="kois" element={<KoiManagement />} />
+                          <Route
+                            path="breeders"
+                            element={<BreederManagement />}
+                          />
+                          <Route path="staffs" element={<StaffManagement />} />
+                          <Route
+                            path="members"
+                            element={<MemberManagement />}
+                          />
+                          <Route path="orders" element={<OrderManagement />} />
+                          <Route
+                            path="payments"
+                            element={<PaymentManagement />}
+                          />
+                          <Route
+                            path="send-notifications"
+                            element={<SendNotifications />}
+                          />
+                        </Route>
+                        <Route path="/breeders/*">
+                          <Route path="" element={<BreederDetail />} />
+                          <Route path="kois" element={<KoiOwnerSearch />} />
+                          <Route path="add-koi" element={<AddKoi />} />
+                          <Route
+                            path="auctions/register"
+                            element={<KoiRegisterAuctions />}
+                          />
+                          <Route path="wishlist" element={<KoiWishList />} />
+                          <Route
+                            path="payments"
+                            element={<PaymentTransactions />}
+                          />
+                        </Route>
+                        <Route path="/staffs/*">
+                          <Route path="" element={<StaffDetail />} />
+                          <Route
+                            path="auctions"
+                            element={<AuctionsManagement />}
+                          />
+                          <Route
+                            path="verify/kois"
+                            element={<VerifyKoiList />}
+                          />
+                          <Route path="orders" element={<OrderManagement />} />
+                          <Route
+                            path="payments"
+                            element={<PaymentManagement />}
+                          />
+                          {/* <Route
                           path="send-notifications"
                           element={<SendNotifications />}
                         /> */}
-                      </Route>
-                      <Route path="members/orders/*">
-                        <Route path="" element={<UserOrder />} />
+                        </Route>
+                        <Route path="members/orders/*">
+                          <Route path="" element={<UserOrder />} />
+                          <Route
+                            path="order-detail/:orderId"
+                            element={<UserOrderDetail />}
+                          />
+                        </Route>
+                        <Route path="/payments/*" element={<PaymentLayout />} />
                         <Route
-                          path="order-detail/:orderId"
-                          element={<UserOrderDetail />}
+                          path="/order-detail/:id"
+                          element={
+                            <PageTransition>
+                              <UserOrderDetail />
+                            </PageTransition>
+                          }
+                        />
+                        <Route
+                          path="/payments/vnpay-payment-return"
+                          element={
+                            <PageTransition>
+                              <VNPayReturn />
+                            </PageTransition>
+                          }
+                        />
+                        <Route
+                          path="/feedback/:orderId"
+                          element={<Feedback orderId={""} />}
                         />
                       </Route>
-                      <Route path="/payments/*" element={<PaymentLayout />} />
-                      <Route
-                        path="/order-detail/:id"
-                        element={
-                          <PageTransition>
-                            <UserOrderDetail />
-                          </PageTransition>
-                        }
-                      />
-                      <Route
-                        path="/payments/vnpay-payment-return"
-                        element={
-                          <PageTransition>
-                            <VNPayReturn />
-                          </PageTransition>
-                        }
-                      />
-                      <Route
-                        path="/feedback/:orderId"
-                        element={<Feedback orderId={""} />}
-                      />
-                    </Route>
-                  </Routes>
-                </main>
+                    </Routes>
+                  </main>
+                </div>
+                <Footer />
               </div>
-              <Footer />
             </div>
-          </div>
-        </ThemeProvider>
-        <Analytics />
-        <SpeedInsights />
-      </AuthProvider>
+          </ThemeProvider>
+          <Analytics />
+          <SpeedInsights />
+        </AuthProvider>
+      </ErrorBoundary>
     </HelmetProvider>
   );
 }

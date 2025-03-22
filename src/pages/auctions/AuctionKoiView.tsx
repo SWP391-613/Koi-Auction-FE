@@ -27,7 +27,7 @@ const AuctionKoiView: React.FC<AuctionKoiViewProps> = ({
             ({
               id,
               auction_id,
-              koi_id,
+              koi,
               base_price,
               current_bid,
               current_bidder_id,
@@ -38,7 +38,7 @@ const AuctionKoiView: React.FC<AuctionKoiViewProps> = ({
               <tr key={id}>
                 <td className="px-6 py-4">{id}</td>
                 <td className="px-6 py-4">{auction_id}</td>
-                <td className="px-6 py-4">{koi_id}</td>
+                <td className="px-6 py-4">{koi.id}</td>
                 <td className="px-6 py-4">
                   {formatCurrency(base_price ?? "Not Set")}
                 </td>

@@ -13,17 +13,16 @@ import { generateBlogPostsPreview } from "~/utils/data/blog.data";
 import FancyButton from "../../components/shared/FancyButton";
 import Kois from "../kois/Kois";
 import { getKoiInAuctionData } from "~/apis/koi.apis";
+import useBreeders from "~/hooks/useBreeders";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 
 const Home = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const [randomKois, setRandomKois] = useState<KoiInAuctionDetailModel[]>([]);
-  const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>(
-    {} as BreedersResponse,
-  );
-  const [isLoading, setIsLoading] = useState(true);
   const { scrollYProgress } = useScroll();
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const { data: koiBreeders, isLoading, error } = useBreeders();
 
   // Add refs for scroll sections
   const featuredRef = useRef(null);
@@ -44,7 +43,6 @@ const Home = () => {
   useEffect(() => {
     const fetchRandomKois = async () => {
       try {
-        setIsLoading(true);
         const response = await getKoiInAuctionData("", 1, 12);
         if (response) {
           console.log("API Response:", response);
@@ -52,27 +50,10 @@ const Home = () => {
         }
       } catch (error) {
         console.error("Error fetching kois:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    const fetchAllBreeders = async () => {
-      try {
-        const response = await axios.get(`${DYNAMIC_API_URL}/breeders`, {
-          params: {
-            page: 0,
-            limit: 20,
-          },
-        });
-        setKoiBreeders(response.data || []);
-      } catch (error) {
-        console.error("Error fetching breeders:", error);
       }
     };
 
     fetchRandomKois();
-    fetchAllBreeders();
   }, []);
 
   const handleBreederClick = (breederId: number) => {
@@ -117,6 +98,9 @@ const Home = () => {
   });
 
   const myVideo = cld.video("background_dbkstv").quality("auto").format("auto");
+
+  if (isLoading) return <LoadingComponent />;
+  if (error) return <div>Error</div>;
 
   return (
     <div>
@@ -254,10 +238,11 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4"
           >
-            {koiBreeders?.data?.length > 0 &&
-              koiBreeders.data.map((breeder, index) => (
+            {koiBreeders &&
+              koiBreeders.length > 0 &&
+              koiBreeders.map((breeder, index) => (
                 <motion.div
-                  key={`${breeder.id}-${index}`}
+                  key={`${breeder.user_response.id}-${index}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{
                     opacity: isBreedersInView ? 1 : 0,
@@ -265,15 +250,15 @@ const Home = () => {
                   }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="bg-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-4 flex flex-col items-center justify-center cursor-pointer"
-                  onClick={() => handleBreederClick(breeder.id)}
+                  onClick={() => handleBreederClick(breeder.user_response.id)}
                 >
                   <img
-                    src={breeder.avatar_url}
-                    alt={`${breeder.first_name} logo`}
+                    src={breeder.user_response.avatar_url}
+                    alt={`${breeder.user_response.first_name} logo`}
                     className="h-20 w-auto object-contain mb-2"
                   />
                   <p className="text-center font-medium text-gray-700">
-                    {breeder.first_name}
+                    {breeder.user_response.first_name}
                   </p>
                 </motion.div>
               ))}

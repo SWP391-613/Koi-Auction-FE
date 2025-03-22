@@ -1,16 +1,14 @@
 import { faMoneyBill, faStar, faTag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import ScrollToTop from "react-scroll-to-top";
-import { fetchBreedersData } from "~/apis/users/breeder.apis";
+import useBreeders from "~/hooks/useBreeders";
 import { KoiInAuctionDetailModel } from "~/types/kois.type";
-import { BreedersResponse } from "~/types/paginated.types";
 import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter";
 import KoiDetails from "../auctiondetail/KoiDetails";
-import axios from "axios";
-import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import LoadingComponent from "./LoadingComponent";
 
 type BaseKoiProps<T> = {
   kois: T[];
@@ -32,25 +30,15 @@ const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
   getLinkUrl,
   buttonEffect,
 }: KoiSearchGridProps<T>) => {
-  const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>(
-    {} as BreedersResponse,
-  );
-  useEffect(() => {
-    const fetchAllBreeders = async () => {
-      try {
-        const response = await axios.get(`${DYNAMIC_API_URL}/breeders`, {
-          params: {
-            page: 0,
-            limit: 20,
-          },
-        });
-        setKoiBreeders(response.data || []);
-      } catch (error) {
-        console.error("Error fetching breeders:", error);
-      }
-    };
-    fetchAllBreeders();
-  }, []);
+  const { data: koiBreeders, isLoading, error } = useBreeders();
+
+  if (isLoading) {
+    return <LoadingComponent />;
+  }
+
+  if (error) {
+    return <div>Error fetching breeders</div>;
+  }
 
   return (
     <div className="mx-auto grid grid-cols-1 min-[500px]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -105,19 +93,22 @@ const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
                 transition={{ delay: 0.2 }}
                 className="absolute top-2 left-2 bg-opacity-50 text-white p-2 text-lg flex items-center z-10"
               >
-                {koiBreeders.data?.find(
-                  (breeder) => breeder.id === koi.owner_id,
-                ) && (
-                  <img
-                    src={
-                      koiBreeders.data?.find(
-                        (breeder) => breeder.id === koi.owner_id,
-                      )?.avatar_url
-                    }
-                    alt="Breeder Avatar"
-                    className="w-12 h-12 md:w-1/2 md:h-1/2 object-contain"
-                  />
-                )}
+                {koiBreeders &&
+                  koiBreeders?.find(
+                    (breeder) => breeder.user_response.id === koi.owner_id,
+                  ) && (
+                    <img
+                      src={
+                        koiBreeders &&
+                        koiBreeders?.find(
+                          (breeder) =>
+                            breeder.user_response.id === koi.owner_id,
+                        )?.user_response.avatar_url
+                      }
+                      alt="Breeder Avatar"
+                      className="w-12 h-12 md:w-1/2 md:h-1/2 object-contain"
+                    />
+                  )}
               </motion.div>
 
               {koi.bid_method && (

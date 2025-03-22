@@ -8,28 +8,23 @@ import { Auction } from "~/pages/auctions/AuctionDetail";
 import { Breeder } from "~/types/users.type";
 import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter";
 import KoiDetails from "../auctiondetail/KoiDetails";
+import useBreeders from "~/hooks/useBreeders";
+import LoadingComponent from "./LoadingComponent";
 
 interface KoiInAuctionGridProps {
   auction: Auction;
 }
 
 const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({ auction }) => {
-  const [koiBreeders, setKoiBreeders] = useState<Breeder[]>([]);
+  const { data: koiBreeders, isLoading, error } = useBreeders();
 
-  useEffect(() => {
-    const fetchAllBreeders = async () => {
-      try {
-        const breeders = await fetchBreedersData(0, 20);
-        if (breeders && Array.isArray(breeders)) {
-          setKoiBreeders(breeders.map((item) => item.user_response));
-        }
-      } catch (error) {
-        console.error("Error fetching breeders:", error);
-      }
-    };
+  if (isLoading) {
+    return <LoadingComponent />;
+  }
 
-    fetchAllBreeders();
-  }, []);
+  if (error) {
+    return <div>Error fetching breeders</div>;
+  }
 
   return (
     <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -51,19 +46,23 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({ auction }) => {
                 </div>
               </div>
               <div className="absolute top-2 left-2 bg-opacity-50 text-white p-2 text-lg flex items-center z-10">
-                {koiBreeders.find(
-                  (breeder) => breeder.id === auctionKoi.koi.owner_id,
-                ) && (
-                  <img
-                    src={
-                      koiBreeders.find(
-                        (breeder) => breeder.id === auctionKoi.koi.owner_id,
-                      )?.avatar_url
-                    }
-                    alt="Breeder Avatar"
-                    className="w-12 h-12 md:w-1/2 md:h-1/2 object-contain"
-                  />
-                )}
+                {koiBreeders &&
+                  koiBreeders.find(
+                    (breeder) =>
+                      breeder.user_response.id === auctionKoi.koi.owner_id,
+                  ) && (
+                    <img
+                      src={
+                        koiBreeders.find(
+                          (breeder) =>
+                            breeder.user_response.id ===
+                            auctionKoi.koi.owner_id,
+                        )?.user_response.avatar_url
+                      }
+                      alt="Breeder Avatar"
+                      className="w-12 h-12 md:w-1/2 md:h-1/2 object-contain"
+                    />
+                  )}
               </div>
               <motion.div
                 initial={{ opacity: 0 }}

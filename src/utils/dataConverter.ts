@@ -10,6 +10,9 @@ import { KoiDetailModel, KoiTrackingStatus } from "~/types/kois.type";
 
 export const convertDataToReadable = (method: string) => {
   //convert from FIXED_PRICE to Fixed Price, all caps to first letter caps, and remove the underscore
+
+  if (method === undefined) return "Unknown Method";
+
   return method
     .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())

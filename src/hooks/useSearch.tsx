@@ -2,17 +2,18 @@ import { debounce } from "@mui/material";
 import axios from "axios";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import { ApiResponse } from "~/types/api.type";
 import { AuctionModel } from "~/types/auctions.type";
 import { KoiDetailModel, KoiInAuctionDetailModel } from "~/types/kois.type";
 import { OrderResponse } from "~/types/orders.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { getCookie } from "~/utils/cookieUtils";
 
-interface SearchResult<T> {
+type SearchResult<T> = {
   item: T[];
   total_page: number;
   total_item: number;
-}
+};
 
 interface SearchHookOptions<T> {
   apiUrl: string;
@@ -20,7 +21,7 @@ interface SearchHookOptions<T> {
   limit?: number;
   requiresAuth?: boolean;
   owner_id?: number;
-  transformResponse?: (data: any) => SearchResult<T>;
+  transformResponse?: (data: any) => ApiResponse<T[]>;
   preload?: boolean;
   defaultQuery?: string;
 }
@@ -59,7 +60,7 @@ export function useSearch<T>({
           headers = { Authorization: `Bearer ${userToken}` };
         }
 
-        const response = await axios.get<SearchResult<T>>(apiUrl, {
+        const response = await axios.get<ApiResponse<T[]>>(apiUrl, {
           params: {
             keyword: searchQuery,
             page: currentPage,
@@ -68,10 +69,11 @@ export function useSearch<T>({
           },
           headers: headers,
         });
+
         const transformedData = transformResponse(response.data);
-        setResults(transformedData.item);
-        setTotalPages(transformedData.total_page);
-        setTotalItems(transformedData.total_item);
+        setResults(transformedData.data);
+        setTotalPages(transformedData.pagination?.total_pages || 0);
+        setTotalItems(transformedData.pagination?.total_items || 0);
       } catch (err) {
         setError(err instanceof Error ? err : new Error("An error occurred"));
         setResults([]);
@@ -201,7 +203,7 @@ export const useKoiInAuctionSearch = (debounceTime = 500) => {
 
 export const useAuctionSearch = (debounceTime = 500) => {
   return useSearch<AuctionModel>({
-    apiUrl: `${DYNAMIC_API_URL}/auctions/get-auctions-by-keyword`,
+    apiUrl: `${DYNAMIC_API_URL}/auctions`,
     limit: 30,
     requiresAuth: false,
     preload: true,

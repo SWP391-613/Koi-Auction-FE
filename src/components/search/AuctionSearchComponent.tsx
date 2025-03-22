@@ -24,6 +24,10 @@ const AuctionSearchComponent: React.FC<AuctionSearchComponentProps> = () => {
     handlePageChange,
   } = useAuctionSearch(500);
 
+  if (results) {
+    console.log(`Data: ${JSON.stringify(results, null, 2)}`);
+  }
+
   return (
     <div className="container mx-auto p-4 mt-14">
       <div className="bg-gray-200 p-4 rounded-xl">

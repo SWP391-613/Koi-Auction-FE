@@ -6,9 +6,9 @@ import { Link } from "react-router-dom";
 import { fetchBreedersData } from "~/apis/users/breeder.apis";
 import { KoiWithAuctionKoiData } from "~/types/auctionkois.type";
 import { AuctionModel } from "~/types/auctions.type";
-import { BreedersResponse } from "~/types/paginated.types";
 import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter"; // Adjust the import path as needed
 import KoiDetails from "../auctiondetail/KoiDetails";
+import { Breeder } from "~/types/users.type";
 
 interface KoiInAuctionGridProps {
   kois: KoiWithAuctionKoiData[];
@@ -19,18 +19,14 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
   kois,
   auction,
 }) => {
-  const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>({
-    total_page: 0,
-    total_item: 0,
-    item: [],
-  });
+  const [koiBreeders, setKoiBreeders] = useState<Breeder[]>([]);
 
   useEffect(() => {
     const fetchAllBreeders = async () => {
       try {
-        const response = await fetchBreedersData(0, 20);
-        if (response) {
-          setKoiBreeders(response || []);
+        const breeders = await fetchBreedersData(0, 20);
+        if (breeders && Array.isArray(breeders)) {
+          setKoiBreeders(breeders.map((item) => item.user_response));
         }
       } catch (error) {
         console.error("Error fetching breeders:", error);
@@ -60,14 +56,11 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
                 </div>
               </div>
               <div className="absolute top-2 left-2 bg-opacity-50 text-white p-2 text-lg flex items-center z-10">
-                {koiBreeders.item.find(
-                  (breeder) => breeder.id === koi.owner_id,
-                ) && (
+                {koiBreeders.find((breeder) => breeder.id === koi.owner_id) && (
                   <img
                     src={
-                      koiBreeders.item.find(
-                        (breeder) => breeder.id === koi.owner_id,
-                      )?.avatar_url
+                      koiBreeders.find((breeder) => breeder.id === koi.owner_id)
+                        ?.avatar_url
                     }
                     alt="Breeder Avatar"
                     className="w-12 h-12 md:w-1/2 md:h-1/2 object-contain"

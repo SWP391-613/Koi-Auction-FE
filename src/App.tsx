@@ -32,16 +32,14 @@ function AppContent() {
   return (
     <HelmetProvider>
       <ErrorBoundary>
-        <AuthProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Suspense fallback={<LoadingComponent />}>
-              <MainLayout>{routeElements}</MainLayout>
-            </Suspense>
-          </ThemeProvider>
-          <Analytics />
-          <SpeedInsights />
-        </AuthProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Suspense fallback={<LoadingComponent />}>
+            <MainLayout>{routeElements}</MainLayout>
+          </Suspense>
+        </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </ErrorBoundary>
     </HelmetProvider>
   );

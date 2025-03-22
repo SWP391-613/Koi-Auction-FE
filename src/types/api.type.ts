@@ -1,6 +1,6 @@
-export type ApiResponse<Data> = {
+export type ApiResponse<T> = {
   message: string;
-  data: Data;
+  data: T;
   status_code?: number;
   is_success?: boolean;
   pagination?: PaginationMeta;

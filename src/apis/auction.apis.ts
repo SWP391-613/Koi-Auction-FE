@@ -44,24 +44,14 @@ export const fetchAuctions = async (
   page: number,
   limit: number,
 ): Promise<AuctionModel[]> => {
-  try {
-    const response = await axios.get<ApiResponse<AuctionModel[]>>(
-      `${DYNAMIC_API_URL}/auctions`,
-      {
-        params: { page, limit },
-      },
-    );
-    return response.data.data;
-  } catch (error) {
-    handleAxiosError(
-      error,
-      ERROR_MESSAGE.UNEXPECTED_ERROR,
-      false,
-      ERROR_MESSAGE.FETCH_AUCTION_ERROR,
-    );
+  const response = await axios.get<ApiResponse<AuctionModel[]>>(
+    `${DYNAMIC_API_URL}/auctions`,
+    {
+      params: { page, limit },
+    },
+  );
 
-    return [];
-  }
+  return response.data.data;
 };
 
 export const fetchAuctionsByStatus = async (
@@ -92,18 +82,10 @@ export const fetchAuctionsByStatus = async (
 };
 
 export const fetchAuctionById = async (id: number) => {
-  try {
-    const response = await axios.get(`${DYNAMIC_API_URL}/auctions/${id}`);
-    return createAuctionFromApi(response.data);
-  } catch (error) {
-    handleAxiosError(
-      error,
-      ERROR_MESSAGE.UNEXPECTED_ERROR,
-      false,
-      ERROR_MESSAGE.FETCH_AUCTION_BY_ID_ERROR,
-    );
-    return null;
-  }
+  const response = await axios.get<ApiResponse<AuctionModel>>(
+    `${DYNAMIC_API_URL}/auctions/${id}`,
+  );
+  return createAuctionFromApi(response.data.data);
 };
 
 export const updateAuction = async (

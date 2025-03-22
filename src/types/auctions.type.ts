@@ -12,7 +12,7 @@ export type AuctionModel = {
   title: string;
   start_time: Date | string;
   end_time: Date | string;
-  end_time_countdown: Date | string;
+  end_time_countdown?: Date | string;
   status: AUCTION_STATUS | string;
   auctioneer_id: number;
 };

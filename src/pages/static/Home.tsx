@@ -18,11 +18,9 @@ const Home = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const [randomKois, setRandomKois] = useState<KoiInAuctionDetailModel[]>([]);
-  const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>({
-    total_page: 0,
-    total_item: 0,
-    item: [],
-  });
+  const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>(
+    {} as BreedersResponse,
+  );
   const [isLoading, setIsLoading] = useState(true);
   const { scrollYProgress } = useScroll();
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
@@ -256,8 +254,8 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4"
           >
-            {koiBreeders?.item?.length > 0 &&
-              koiBreeders.item.map((breeder, index) => (
+            {koiBreeders?.data?.length > 0 &&
+              koiBreeders.data.map((breeder, index) => (
                 <motion.div
                   key={`${breeder.id}-${index}`}
                   initial={{ opacity: 0, y: 20 }}

@@ -5,6 +5,7 @@ import { getUserCookieToken } from "~/utils/auth.utils";
 import { handleAxiosError } from "~/utils/errors.utils";
 import { KoiOfBreeder as KoisOfBreeder } from "~/pages/detail/breeder/BreederDetail";
 import { BreedersResponse } from "~/types/paginated.types";
+import { ApiResponse } from "~/types/api.type";
 
 export const fetchKoisOfBreeder = async (
   breeder_id: number,
@@ -60,27 +61,18 @@ export const fetchKoisOfBreederWithStatus = async (
 };
 
 export const fetchBreedersData = async (page: number, itemsPerPage: number) => {
-  try {
-    const response = await axios.get<BreedersResponse>(
-      `${DYNAMIC_API_URL}/breeders`,
-      {
-        params: {
-          page: page,
-          limit: itemsPerPage,
-        },
-        headers: {
-          Authorization: `Bearer ${getUserCookieToken()}`,
-        },
+  const response = await axios.get<ApiResponse<BreedersResponse[]>>(
+    `${DYNAMIC_API_URL}/breeders`,
+    {
+      params: {
+        page: page,
+        limit: itemsPerPage,
       },
-    );
+      headers: {
+        Authorization: `Bearer ${getUserCookieToken()}`,
+      },
+    },
+  );
 
-    return response.data;
-  } catch (error) {
-    handleAxiosError(
-      error,
-      ERROR_MESSAGE.UNEXPECTED_ERROR,
-      false,
-      ERROR_MESSAGE.FETCH_BREEDERS_ERROR,
-    );
-  }
+  return response.data.data;
 };

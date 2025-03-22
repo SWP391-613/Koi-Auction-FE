@@ -32,11 +32,9 @@ const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
   getLinkUrl,
   buttonEffect,
 }: KoiSearchGridProps<T>) => {
-  const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>({
-    total_page: 0,
-    total_item: 0,
-    item: [],
-  });
+  const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>(
+    {} as BreedersResponse,
+  );
   useEffect(() => {
     const fetchAllBreeders = async () => {
       try {
@@ -107,12 +105,12 @@ const KoiSearchGrid = <T extends KoiInAuctionDetailModel>({
                 transition={{ delay: 0.2 }}
                 className="absolute top-2 left-2 bg-opacity-50 text-white p-2 text-lg flex items-center z-10"
               >
-                {koiBreeders.item.find(
+                {koiBreeders.data?.find(
                   (breeder) => breeder.id === koi.owner_id,
                 ) && (
                   <img
                     src={
-                      koiBreeders.item.find(
+                      koiBreeders.data?.find(
                         (breeder) => breeder.id === koi.owner_id,
                       )?.avatar_url
                     }

@@ -26,20 +26,10 @@ export const fetchAuctionKoiDetails = async (
   auctionId: number,
   auctionKoiId: number,
 ): Promise<AuctionKoi | null> => {
-  try {
-    const response = await axios.get(
-      `${DYNAMIC_API_URL}/auctionkois/${auctionId}/${auctionKoiId}`,
-    );
-    return response.data;
-  } catch (error) {
-    handleAxiosError(
-      error,
-      ERROR_MESSAGE.UNEXPECTED_ERROR,
-      false,
-      ERROR_MESSAGE.FAILED_TO_LOAD_AUCTION_KOI_DETAILS,
-    );
-    return null;
-  }
+  const response = await axios.get(
+    `${DYNAMIC_API_URL}/auctionkois/${auctionId}/${auctionKoiId}`,
+  );
+  return response.data;
 };
 
 export const postAuctionKoi = async (

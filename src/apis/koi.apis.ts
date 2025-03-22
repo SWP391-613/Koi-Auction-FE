@@ -1,25 +1,17 @@
 import axios from "axios";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
+import { ApiResponse } from "~/types/api.type";
 import { KoiDetailModel, UpdateKoiDTO } from "~/types/kois.type";
 import { KoiInAuctionResponse, KoisResponse } from "~/types/paginated.types";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { handleAxiosError } from "~/utils/errors.utils";
 
 export async function fetchKoiById(id: number) {
-  try {
-    const response = await axios.get<KoiDetailModel>(
-      `${DYNAMIC_API_URL}/kois/${id}`,
-    );
-    return response.data;
-  } catch (error) {
-    handleAxiosError(
-      error,
-      ERROR_MESSAGE.UNEXPECTED_ERROR,
-      false,
-      ERROR_MESSAGE.FETCH_KOI_BY_ID_ERROR,
-    );
-  }
+  const response = await axios.get<ApiResponse<KoiDetailModel>>(
+    `${DYNAMIC_API_URL}/kois/${id}`,
+  );
+  return response.data.data;
 }
 
 export const getKoiData = async (

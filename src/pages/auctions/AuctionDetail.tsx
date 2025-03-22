@@ -1,25 +1,33 @@
 import { faArrowLeft, faClock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Typography } from "@mui/material";
-import { isPast, parse } from "date-fns"; // Make sure to install date-fns if you haven't already
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchAuctionById } from "~/apis/auction.apis";
-import { fetchAuctionKoi } from "~/apis/auctionkoi.apis";
-import { fetchKoiById } from "~/apis/koi.apis";
 import KoiInAuctionGrid from "~/components/shared/KoiInAuctionGrid";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import NavigateButton from "~/components/shared/NavigateButton";
 import { useAuth } from "~/contexts/AuthContext";
-import { KoiWithAuctionKoiData } from "~/types/auctionkois.type";
-import { AuctionModel } from "~/types/auctions.type";
-import { getUserCookieToken } from "~/utils/auth.utils";
+import { AuctionKoi, KoiWithAuctionKoiData } from "~/types/auctionkois.type";
+import { AuctionResponse } from "~/types/auctions.type";
 import { getAuctionStatusV2 } from "~/utils/dateTimeUtils";
+
+export type Auction = {
+  id: number;
+  title: string;
+  start_time: Date | string;
+  end_time: Date | string;
+  end_time_countdown?: Date | string;
+  status: string; // Using string instead of AUCTION_STATUS for simplicity
+  auctioneer_id: number;
+  auction_koi: AuctionKoi[];
+};
 
 const AuctionDetail: React.FC = () => {
   const { isLoggedIn, user } = useAuth();
   const { id } = useParams<{ id: string }>();
-  const [auction, setAuction] = useState<AuctionModel | null>(null);
+  const [auction, setAuction] = useState<Auction | null>(null);
+
   const [koiWithAuctionKoiData, setKoiWithAuctionKoiData] = useState<
     KoiWithAuctionKoiData[]
   >([]);
@@ -34,23 +42,6 @@ const AuctionDetail: React.FC = () => {
         const auctionData = await fetchAuctionById(Number(id));
         if (auctionData) {
           setAuction(auctionData);
-
-          if (auctionData) {
-            const auctionKoiData = await fetchAuctionKoi(auctionData.id!);
-            if (auctionKoiData) {
-              const koiDetailsPromises = auctionKoiData.map((auctionKoi) =>
-                fetchKoiById(auctionKoi.koi_id),
-              );
-              const koiDetails = await Promise.all(koiDetailsPromises);
-
-              const combined = koiDetails.map((koiDetail, index) => ({
-                ...koiDetail,
-                auctionKoiData: auctionKoiData[index],
-              }));
-
-              setKoiWithAuctionKoiData(combined);
-            }
-          }
         } else {
           setError("Auction not found.");
         }
@@ -64,13 +55,7 @@ const AuctionDetail: React.FC = () => {
     fetchAuction();
   }, [id]);
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <LoadingComponent />
-      </div>
-    );
-  }
+  if (isLoading) return <LoadingComponent />;
 
   if (error) {
     return <div className="py-8 text-center text-red-500">{error}</div>;
@@ -123,7 +108,7 @@ const AuctionDetail: React.FC = () => {
             </span>
           </Typography>
         </div>
-        <KoiInAuctionGrid kois={koiWithAuctionKoiData} auction={auction} />
+        <KoiInAuctionGrid auction={auction} />
       </div>
     </>
   );

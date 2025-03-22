@@ -1,3 +1,6 @@
+import { ApiResponse } from "./api.type";
+import { AuctionKoi } from "./auctionkois.type";
+
 export type AuctionDTO = {
   title: string;
   start_time: string;
@@ -16,6 +19,17 @@ export type AuctionModel = {
   status: AUCTION_STATUS | string;
   auctioneer_id: number;
 };
+
+export type AuctionResponse = ApiResponse<{
+  id: number;
+  title: string;
+  start_time: Date | string;
+  end_time: Date | string;
+  end_time_countdown?: Date | string;
+  status: AUCTION_STATUS | string;
+  auctioneer_id: number;
+  auction_koi: AuctionKoi[];
+}>;
 
 export type AddNewAuctionDTO = Omit<AuctionModel, "id" | "end_time_countdown">;
 

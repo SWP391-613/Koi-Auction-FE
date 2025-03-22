@@ -4,21 +4,16 @@ import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchBreedersData } from "~/apis/users/breeder.apis";
-import { KoiWithAuctionKoiData } from "~/types/auctionkois.type";
-import { AuctionModel } from "~/types/auctions.type";
-import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter"; // Adjust the import path as needed
-import KoiDetails from "../auctiondetail/KoiDetails";
+import { Auction } from "~/pages/auctions/AuctionDetail";
 import { Breeder } from "~/types/users.type";
+import { convertDataToReadable, getCategoryName } from "~/utils/dataConverter";
+import KoiDetails from "../auctiondetail/KoiDetails";
 
 interface KoiInAuctionGridProps {
-  kois: KoiWithAuctionKoiData[];
-  auction: AuctionModel;
+  auction: Auction;
 }
 
-const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
-  kois,
-  auction,
-}) => {
+const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({ auction }) => {
   const [koiBreeders, setKoiBreeders] = useState<Breeder[]>([]);
 
   useEffect(() => {
@@ -38,10 +33,10 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
 
   return (
     <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {kois.map((koi: KoiWithAuctionKoiData) => (
+      {auction.auction_koi.map((auctionKoi) => (
         <Link
-          to={`/auctionkois/${auction.id}/${koi.auctionKoiData.id}`}
-          key={koi.id}
+          to={`/auctionkois/${auction.id}/${auctionKoi.id}`}
+          key={auctionKoi.id}
           className="transform overflow-hidden m-1 mb-3 md:m-5 rounded-[1.5rem] bg-white shadow-md transition-all hover:scale-102"
         >
           <div className="flex flex-col">
@@ -49,18 +44,21 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
               <div className="h-[17rem] w-full md:h-[28rem] md:w-[23rem] flex justify-center">
                 <div className="absolute w-full h-full top-1/2 left-1/2 -translate-x-3/4 sm:-translate-x-1/2 -translate-y-1/2 p-4">
                   <img
-                    src={koi.thumbnail}
-                    alt={koi.name}
+                    src={auctionKoi.koi.thumbnail}
+                    alt={auctionKoi.koi.name}
                     className="h-full w-full object-contain drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.2)] duration-500 hover:drop-shadow-[9px_-9px_6px_rgba(0,0,0,0.35)] opacity-100"
                   />
                 </div>
               </div>
               <div className="absolute top-2 left-2 bg-opacity-50 text-white p-2 text-lg flex items-center z-10">
-                {koiBreeders.find((breeder) => breeder.id === koi.owner_id) && (
+                {koiBreeders.find(
+                  (breeder) => breeder.id === auctionKoi.koi.owner_id,
+                ) && (
                   <img
                     src={
-                      koiBreeders.find((breeder) => breeder.id === koi.owner_id)
-                        ?.avatar_url
+                      koiBreeders.find(
+                        (breeder) => breeder.id === auctionKoi.koi.owner_id,
+                      )?.avatar_url
                     }
                     alt="Breeder Avatar"
                     className="w-12 h-12 md:w-1/2 md:h-1/2 object-contain"
@@ -74,21 +72,21 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
                 className="hidden sm:flex absolute top-3 right-3 bg-black bg-opacity-20 backdrop-blur-sm text-white rounded-full px-4 py-2 text-sm font-medium flex items-center shadow-lg border border-white/30"
               >
                 <div className="flex gap-2 justify-center items-center">
-                  {convertDataToReadable(koi.auctionKoiData.bid_method)}
+                  {convertDataToReadable(auctionKoi.bid_method)}
                   <FontAwesomeIcon icon={faMoneyBill} className="mr-1" />
                 </div>
               </motion.div>
 
               <div className="absolute bottom-9 left-2 md:bottom-2 md:left-3 text-white rounded-full p-1 text-md font-bold">
                 <FontAwesomeIcon icon={faTag} className="mr-1" />
-                {koi.id}
+                {auctionKoi.id}
               </div>
               <div className="sm:hidden bg-gray-300 rounded-xl m-3 p-2 text-md font-bold absolute right-0 top-0">
                 <KoiDetails
-                  category={getCategoryName(koi.category_id)}
-                  sex={convertDataToReadable(koi.sex)}
-                  length={koi.length}
-                  year_born={koi.year_born}
+                  category={getCategoryName(auctionKoi.koi.category_id)}
+                  sex={convertDataToReadable(auctionKoi.koi.sex)}
+                  length={auctionKoi.koi.length}
+                  year_born={auctionKoi.koi.year_born}
                 />
               </div>
               <div className="absolute bottom-2 left-2 sm:left-auto sm:right-2 text-white rounded-full p-1 text-md font-bold">
@@ -100,10 +98,10 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
             <div className="p-4 bg-gray-300 sm:flex sm:flex-col">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl mt-1 mb-1 text-black font-semibold">
-                  {koi.name}
+                  {auctionKoi.koi.name}
                 </h2>
                 <div className="sm:hidden flex gap-2 justify-center items-center text-black bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-medium flex items-center shadow-lg border border-white/30">
-                  {convertDataToReadable(koi.auctionKoiData.bid_method)}
+                  {convertDataToReadable(auctionKoi.bid_method)}
                   <FontAwesomeIcon
                     icon={faMoneyBill}
                     className="mr-1 text-green-700"
@@ -115,10 +113,10 @@ const KoiInAuctionGrid: React.FC<KoiInAuctionGridProps> = ({
               </div>
               <div className="hidden sm:block">
                 <KoiDetails
-                  category={getCategoryName(koi.category_id)}
-                  sex={convertDataToReadable(koi.sex)}
-                  length={koi.length}
-                  year_born={koi.year_born}
+                  category={getCategoryName(auctionKoi.koi.category_id)}
+                  sex={convertDataToReadable(auctionKoi.koi.sex)}
+                  length={auctionKoi.koi.length}
+                  year_born={auctionKoi.koi.year_born}
                 />
               </div>
             </div>

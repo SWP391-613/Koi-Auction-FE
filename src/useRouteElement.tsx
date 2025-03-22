@@ -32,7 +32,7 @@ const BreederInfo = lazy(() => import("./pages/static/BreederInfo"));
 const BlogList = lazy(() => import("./pages/blog/BlogList"));
 const BlogPost = lazy(() => import("./pages/blog/BlogPost"));
 
-// Protected Routes - Member
+// Protected Routes - Mem
 const KoiDetail = lazy(() => import("./pages/kois/KoiDetail"));
 const UserDetail = lazy(() => import("./pages/detail/member/UserDetail"));
 const UserOrder = lazy(() => import("./pages/detail/member/UserOrder"));

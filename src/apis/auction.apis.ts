@@ -6,6 +6,7 @@ import {
   AddNewAuctionDTO,
   AuctionDTO,
   AuctionModel,
+  AuctionResponse,
   AuctionStatusCount,
 } from "~/types/auctions.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
@@ -82,10 +83,10 @@ export const fetchAuctionsByStatus = async (
 };
 
 export const fetchAuctionById = async (id: number) => {
-  const response = await axios.get<ApiResponse<AuctionModel>>(
+  const response = await axios.get<AuctionResponse>(
     `${DYNAMIC_API_URL}/auctions/${id}`,
   );
-  return createAuctionFromApi(response.data.data);
+  return response.data.data;
 };
 
 export const updateAuction = async (

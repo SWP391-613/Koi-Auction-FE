@@ -12,14 +12,18 @@ import { BreedersResponse } from "~/types/paginated.types";
 import { generateBlogPostsPreview } from "~/utils/data/blog.data";
 import FancyButton from "../../components/shared/FancyButton";
 import Kois from "../kois/Kois";
-import { getKoiInAuctionData } from "~/apis/koi.apis";
 import useBreeders from "~/hooks/useBreeders";
 import LoadingComponent from "~/components/shared/LoadingComponent";
+import { useKoiInAuction } from "~/hooks/useKois";
 
 const Home = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
-  const [randomKois, setRandomKois] = useState<KoiInAuctionDetailModel[]>([]);
+  const {
+    data: randomKois,
+    isLoading: koiLoading,
+    error: koiError,
+  } = useKoiInAuction("", 1, 12);
   const { scrollYProgress } = useScroll();
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const { data: koiBreeders, isLoading, error } = useBreeders();
@@ -39,22 +43,6 @@ const Home = () => {
     margin: "-100px",
   });
   const isNewsInView = useInView(newsRef, { once: true, margin: "-100px" });
-
-  useEffect(() => {
-    const fetchRandomKois = async () => {
-      try {
-        const response = await getKoiInAuctionData("", 1, 12);
-        if (response) {
-          console.log("API Response:", response);
-          setRandomKois(response.item || []);
-        }
-      } catch (error) {
-        console.error("Error fetching kois:", error);
-      }
-    };
-
-    fetchRandomKois();
-  }, []);
 
   const handleBreederClick = (breederId: number) => {
     navigate(`/breeder/${breederId}/info`);

@@ -18,7 +18,7 @@ const queryClient = new QueryClient({
 
 async function enableMocking() {
   if (
-    // process.env.NODE_ENV === "development" ||
+    process.env.NODE_ENV === "development" ||
     process.env.NODE_ENV === "production"
   ) {
     return worker.start({

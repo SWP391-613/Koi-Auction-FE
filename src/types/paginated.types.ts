@@ -13,5 +13,5 @@ export type StaffsResponse = PaginatedResponse<Staff>;
 export type MembersResponse = PaginatedResponse<Member>;
 export type BreedersResponse = ApiResponse<Breeder[]>;
 export type KoisResponse = PaginatedResponse<KoiDetailModel>;
-export type KoiInAuctionResponse = PaginatedResponse<KoiInAuctionDetailModel>;
+export type KoiInAuctionResponse = ApiResponse<KoiInAuctionDetailModel[]>;
 export type CategoryResponse = PaginatedResponse<CategoryModel>;

@@ -1,42 +1,28 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { fetchUserDetails } from "~/apis/user.apis";
-import { UserDetailsResponse } from "~/types/users.type";
+import axios from "axios";
+import { useQuery } from "react-query";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import { ApiResponse } from "~/types/api.type";
+import { UserBase } from "~/types/users.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
 
-export const useUserData = () => {
-  const [user, setUser] = useState<UserDetailsResponse>();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (!getUserCookieToken()) {
-        // Allow viewing without login
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await fetchUserDetails();
-        if (response) {
-          setUser(response);
-        }
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error
-            ? error.message
-            : "An unexpected error occurred";
-        setError(errorMessage);
-        console.log("Error fetching user details:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, [navigate]);
-
-  return { user, loading, error, setUser };
+const fetchUserDetails = async () => {
+  const response = await axios.post<ApiResponse<UserBase>>(
+    `${DYNAMIC_API_URL}/auth/details`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${getUserCookieToken()}`,
+      },
+    },
+  );
+  return response.data.data;
 };
+
+const useUserDetail = () => {
+  return useQuery<UserBase>({
+    queryKey: "userDetails",
+    queryFn: fetchUserDetails,
+  });
+};
+
+export default useUserDetail;

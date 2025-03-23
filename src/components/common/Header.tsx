@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useUserData } from "~/hooks/useUserData";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavbar } from "../../contexts/NavbarContext";
 import { Clock } from "../clock/Clock";
@@ -13,10 +12,11 @@ import { ROUTING_PATH } from "~/constants/endPoints";
 import { GENERAL_TOAST_MESSAGE } from "~/constants/message";
 import { RoleName } from "~/types/roles.type";
 import "./Header.css";
+import useUserDetail from "~/hooks/useUserData";
 
 const Header = () => {
   const { isNavCollapsed } = useNavbar();
-  const { user } = useUserData();
+  const { data: user, isLoading, error } = useUserDetail();
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const [isVerifyPopupOpen, setIsVerifyPopupOpen] = useState(false);

@@ -21,7 +21,7 @@ import { ROUTING_PATH } from "~/constants/endPoints";
 import { NAVBAR_LABEL } from "~/constants/label";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavbar } from "../../contexts/NavbarContext";
-import { useUserData } from "../../hooks/useUserData";
+import useUserDetail from "~/hooks/useUserData";
 
 // Define interfaces for navigation and account buttons
 interface NavButton {
@@ -105,7 +105,7 @@ const Header = () => {
   const location = useLocation();
   const { isLoggedIn, authLogout } = useAuth();
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const { user } = useUserData();
+  const { data: user, isLoading, error } = useUserDetail();
   const {
     isNavCollapsed,
     isMobileNavVisible,

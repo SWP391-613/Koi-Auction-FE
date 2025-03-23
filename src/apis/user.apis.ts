@@ -1,6 +1,8 @@
 import axios from "axios";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
+import { ApiResponse } from "~/types/api.type";
+import { UserBase } from "~/types/users.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
 import { handleAxiosError } from "~/utils/errors.utils";
 
@@ -148,26 +150,14 @@ export const undoDeleteUser = async (id: number): Promise<void> => {
 };
 
 export const fetchUserDetails = async () => {
-  try {
-    const response = await axios.post(
-      `${DYNAMIC_API_URL}/auth/details`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${getUserCookieToken()}`,
-        },
+  const response = await axios.post<ApiResponse<UserBase>>(
+    `${DYNAMIC_API_URL}/auth/details`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${getUserCookieToken()}`,
       },
-    );
-
-    if (response.status === 200) {
-      return response.data;
-    }
-  } catch (error) {
-    handleAxiosError(
-      error,
-      ERROR_MESSAGE.UNEXPECTED_ERROR,
-      false,
-      ERROR_MESSAGE.FETCH_USER_DETAILS_ERROR,
-    );
-  }
+    },
+  );
+  return response.data.data;
 };

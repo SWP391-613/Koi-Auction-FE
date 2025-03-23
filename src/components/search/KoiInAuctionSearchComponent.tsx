@@ -1,10 +1,12 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
-import React from "react";
-import { useKoiInAuctionSearch } from "~/hooks/useSearch";
+import React, { useState, useEffect } from "react";
 import PaginationComponent from "../common/PaginationComponent";
 import KoiSearchGrid from "../shared/KoiSearchGrid";
 import SearchBar from "../shared/SearchBar";
 import { SEARCH_DESCRIPTION, SEARCH_LABEL } from "~/constants/label";
+import { useQuery } from "react-query";
+import { useKoiInAuction } from "~/hooks/useKois";
+import LoadingComponent from "../shared/LoadingComponent";
 
 interface KoiInAuctionSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
@@ -12,18 +14,60 @@ interface KoiInAuctionSearchComponentProps {
 
 const KoiInAuctionSearchComponent: React.FC<
   KoiInAuctionSearchComponentProps
-> = () => {
-  const {
-    query,
-    setQuery,
-    results,
-    loading,
-    error,
-    page,
-    totalPages,
-    totalItems,
-    handlePageChange,
-  } = useKoiInAuctionSearch(500);
+> = ({ onSearchStateChange }) => {
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const [filteredResults, setFilteredResults] = useState<any[]>([]);
+
+  const { data, isLoading, error } = useKoiInAuction();
+
+  useEffect(() => {
+    // Notify parent component about search state
+    onSearchStateChange(isLoading);
+  }, [isLoading, onSearchStateChange]);
+
+  // Filter results based on search query
+  useEffect(() => {
+    if (!data?.data) return;
+
+    if (!query) {
+      setFilteredResults(data.data);
+      return;
+    }
+
+    const filtered = data.data.filter(
+      (koi: any) =>
+        koi.name.toLowerCase().includes(query.toLowerCase()) ||
+        koi.description.toLowerCase().includes(query.toLowerCase()),
+    );
+
+    setFilteredResults(filtered);
+  }, [data, query]);
+
+  // Calculate pagination
+  const itemsPerPage = 12;
+  const totalItems = filteredResults.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // Get current page items
+  const getCurrentPageItems = () => {
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredResults.slice(startIndex, endIndex);
+  };
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setPage(value);
+  };
+
+  if (isLoading) return <LoadingComponent />;
+  if (error)
+    return <p className="text-red-500 mt-2">Error when fetch koi in auction</p>;
+
+  const currentItems = getCurrentPageItems();
 
   return (
     <div className="container mx-auto p-4 mt-14">
@@ -37,7 +81,7 @@ const KoiInAuctionSearchComponent: React.FC<
         <SearchBar
           value={query}
           onChange={setQuery}
-          loading={loading}
+          loading={isLoading}
           placeholder={SEARCH_LABEL.EXAMPLE_KOI_SEARCH}
         />
         <Typography
@@ -48,29 +92,28 @@ const KoiInAuctionSearchComponent: React.FC<
           {SEARCH_DESCRIPTION.SEARCH_ALL_OUR_AVAILABLE_KOI_DESCRIPTION}
         </Typography>
       </div>
-      {loading && (
-        <Box display="flex" justifyContent="center" my={4}>
-          <CircularProgress />
-        </Box>
-      )}
-      {error && <p className="text-red-500 mt-2">{error.message}</p>}
-      {results?.length > 0 && !loading && (
+
+      {filteredResults.length > 0 && (
         <div className="mt-3 text-gray-500">
           <Typography variant="body2" className="mt-3">
-            Showing 1 - {results.length} of {totalItems} results.
+            Showing {Math.min((page - 1) * itemsPerPage + 1, totalItems)} -{" "}
+            {Math.min(page * itemsPerPage, totalItems)} of {totalItems} results.
           </Typography>
           <KoiSearchGrid
-            kois={results}
+            kois={currentItems}
             getLinkUrl={(koi) => `/auctions/${koi.auction_id}`}
           />
-          <PaginationComponent
-            totalPages={totalPages}
-            currentPage={page}
-            onPageChange={handlePageChange}
-          />
+          {totalPages > 1 && (
+            <PaginationComponent
+              totalPages={totalPages}
+              currentPage={page}
+              onPageChange={handlePageChange}
+            />
+          )}
         </div>
       )}
-      {!loading && query && results.length === 0 && (
+
+      {!isLoading && query && filteredResults.length === 0 && (
         <Typography className="mt-2">No results found.</Typography>
       )}
     </div>

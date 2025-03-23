@@ -37,34 +37,6 @@ export const getKoiData = async (
   }
 };
 
-export const getKoiInAuctionData = async (
-  keyword: string,
-  page: number,
-  limit: number,
-): Promise<KoiInAuctionResponse | void> => {
-  try {
-    const response = await axios.get<KoiInAuctionResponse>(
-      `${DYNAMIC_API_URL}/auctionkois/get-kois-by-keyword`,
-      {
-        params: {
-          keyword: "",
-          page: page - 1, // Assuming the API is zero-based
-          limit,
-        },
-      },
-    );
-
-    return response.data;
-  } catch (error) {
-    handleAxiosError(
-      error,
-      ERROR_MESSAGE.UNEXPECTED_ERROR,
-      false,
-      ERROR_MESSAGE.FAILED_TO_LOAD_KOIS_IN_AUCTION,
-    );
-  }
-};
-
 export const deleteKoiById = async (id: number): Promise<void> => {
   try {
     const response = await axios.delete(`${DYNAMIC_API_URL}/kois/${id}`, {

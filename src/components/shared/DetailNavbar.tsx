@@ -1,17 +1,17 @@
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTING_PATH } from "~/constants/endPoints";
 import { TOP_NAVBAR_LABEL } from "~/constants/label";
 import { USER_STATUS } from "~/constants/status";
-import { useUserData } from "~/hooks/useUserData";
 import { useNavbar } from "~/contexts/NavbarContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
+import useUserDetail from "~/hooks/useUserData";
 
 const DetailNavbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useUserData();
+  const { data: user, isLoading, error } = useUserDetail();
   const { isMobileNavVisible, toggleMobileNav } = useNavbar();
 
   const getNavLinks = () => {

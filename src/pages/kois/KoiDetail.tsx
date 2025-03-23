@@ -21,8 +21,8 @@ import BreederEditKoiDialog from "./BreederEditKoiDialog";
 import { getUserCookieToken, isTokenValid } from "~/utils/auth.utils";
 import { fetchKoiById } from "~/apis/koi.apis";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { useUserData } from "~/hooks/useUserData";
 import { RoleName } from "~/types/roles.type";
+import useUserDetail from "~/hooks/useUserData";
 
 interface KoiDetailItemProps {
   icon: IconDefinition;
@@ -35,7 +35,7 @@ interface KoiDetailItemProps {
 
 const KoiDetail: React.FC = () => {
   const { isLoggedIn } = useAuth();
-  const { user, loading: userLoading, error, setUser } = useUserData();
+  const { data: user, isLoading, error } = useUserDetail();
   const { id } = useParams<{ id: string }>();
   const [koi, setKoi] = useState<KoiDetailModel | null>(null);
   const [loading, setLoading] = useState<boolean>(true);

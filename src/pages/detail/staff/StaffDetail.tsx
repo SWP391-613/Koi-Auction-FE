@@ -7,7 +7,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { useUserData } from "~/hooks/useUserData";
 import { UserResponse } from "~/types/users.type";
 import { getCookie } from "~/utils/cookieUtils";
 import { formatDateV2 } from "~/utils/dateTimeUtils";
@@ -16,6 +15,7 @@ import "./StaffDetail.scss";
 import { sendOtp } from "~/apis/otp.apis";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { RoleName } from "~/types/roles.type";
+import useUserDetail from "~/hooks/useUserData";
 
 const StaffDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,7 +24,7 @@ const StaffDetail: React.FC = () => {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
   const [fetchedUser, setFetchedUser] = useState<UserResponse>();
-  const { user, loading, error, setUser } = useUserData();
+  const { data: user, isLoading: loading, error } = useUserDetail();
   const [showAbout, setShowAbout] = useState(true);
   const toggleAbout = () => setShowAbout(!showAbout);
 
@@ -74,7 +74,7 @@ const StaffDetail: React.FC = () => {
   };
 
   if (loading) return <LoadingComponent />;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <div>Error</div>;
   if (!user) return <div>No user data found</div>;
   if (user.role_name !== RoleName.STAFF) {
     navigate("/notfound");

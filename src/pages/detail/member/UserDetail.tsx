@@ -15,30 +15,28 @@ import axios from "axios";
 import React, { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { sendRequestUpdateRole } from "~/apis/mail.apis";
+import { sendOtp } from "~/apis/otp.apis";
 import AccountTransactionComponent from "~/components/shared/AccountTransactionComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
-import { useUserData } from "~/hooks/useUserData";
+import useUserDetail from "~/hooks/useUserData";
+import { RoleName } from "~/types/roles.type";
 import { UserResponse } from "~/types/users.type";
 import { getCookie } from "~/utils/cookieUtils";
 import { formatCurrency } from "~/utils/currencyUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
-import UserDetailDialog from "./UserDetailDialog";
 import { formatDateV2 } from "~/utils/dateTimeUtils";
-import { sendOtp } from "~/apis/otp.apis";
-import { sendRequestUpdateRole } from "~/apis/mail.apis";
-import NotFound from "~/pages/error/NotFound";
-import { RoleName } from "~/types/roles.type";
+import UserDetailDialog from "./UserDetailDialog";
 
 const UserDetail: React.FC = () => {
-  const { user, loading: userLoading, loading, error, setUser } = useUserData();
+  const { data: user, isLoading, error } = useUserDetail();
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState(false); // Modal state for showing user details
   const [fetchedUser, setFetchedUser] = useState<UserResponse>();
   const navigate = useNavigate();
   const [showAbout, setShowAbout] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<{
     type: "verify" | "update" | null;
     loading: boolean;
@@ -49,8 +47,8 @@ const UserDetail: React.FC = () => {
 
   const toggleAbout = () => setShowAbout(!showAbout);
 
-  if (loading) return <LoadingComponent />;
-  if (error) return <div>Error: {error}</div>;
+  if (isLoading) return <LoadingComponent />;
+  if (error) return <div>Error </div>;
   if (!user) return <div>No user data found</div>;
   if (user.role_name !== RoleName.MEMBER) {
     navigate("/notfound");
@@ -85,14 +83,6 @@ const UserDetail: React.FC = () => {
   const handleClose = () => {
     setOpenModal(false);
   };
-
-  if (userLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <LoadingComponent />
-      </div>
-    );
-  }
 
   const handleVerify = async () => {
     if (!user) return;
@@ -153,11 +143,6 @@ const UserDetail: React.FC = () => {
         navigate("/notfound");
         return;
       }
-
-      const response = await axios.get(`${DYNAMIC_API_URL}/users/${userId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      setUser(response.data);
     } catch (error) {
       console.error("Failed to refresh user data", error);
     }

@@ -26,7 +26,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { getCookie } from "~/utils/cookieUtils";
 import TextField from "@mui/material/TextField";
 import SaveIcon from "@mui/icons-material/Save";
-import { useUserData } from "~/hooks/useUserData";
 import { useMediaQuery } from "@mui/material";
 import Feedback from "./Feedback";
 
@@ -45,6 +44,7 @@ import {
   updateOrder,
 } from "~/apis/order.apis";
 import { createOrderPayment } from "~/apis/payment.apis";
+import useUserDetail from "~/hooks/useUserData";
 
 // Create a styled Button component
 const GrayButton = styled(Button)(({ theme }) => ({
@@ -96,7 +96,11 @@ const UserOrderDetail: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedOrder, setEditedOrder] = useState<Order | null>(null);
-  const { user, loading: userLoading, error: userError } = useUserData();
+  const {
+    data: user,
+    isLoading: userLoading,
+    error: userError,
+  } = useUserDetail();
   const [order, setOrder] = useState<Order | null>(null);
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [openDialog, setOpenDialog] = useState(false);
@@ -257,9 +261,7 @@ const UserOrderDetail: React.FC = () => {
           }
         } catch (error) {
           console.error("Error saving order:", error);
-          toast.error(
-            `Failed to save order changes, ${error.response.data.phoneNumber}.`,
-          );
+          toast.error(`Failed to save order changes`);
           setError("Failed to save order changes");
         } finally {
           setLoading(false);

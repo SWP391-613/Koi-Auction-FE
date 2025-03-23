@@ -16,7 +16,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useUserData } from "~/hooks/useUserData";
+
 import {
   PaymentResponse,
   PaymentStatus,
@@ -29,6 +29,7 @@ import { ToastContainer } from "react-toastify";
 import PaginationComponent from "../common/PaginationComponent";
 import { getUserPaymentHistoryByStatus } from "~/apis/payment.apis";
 import { convertDataToReadable } from "~/utils/dataConverter";
+import useUserDetail from "~/hooks/useUserData";
 
 const formatPaymentDate = (dateArray: number[]): string => {
   const [year, month, day, hour, minute] = dateArray;
@@ -43,7 +44,7 @@ const formatPaymentDate = (dateArray: number[]): string => {
 };
 
 const PaymentTransactions: React.FC = () => {
-  const { user } = useUserData();
+  const { data: user } = useUserDetail();
   const [payments, setPayments] = useState<PaymentResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

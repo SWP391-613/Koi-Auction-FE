@@ -8,13 +8,13 @@ import { toast, ToastContainer } from "react-toastify";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
-import { useUserData } from "~/hooks/useUserData";
 
+import { sendOtp } from "~/apis/otp.apis";
+import useUserDetail from "~/hooks/useUserData";
 import { getCookie } from "~/utils/cookieUtils";
 import { formatDateV2 } from "~/utils/dateTimeUtils";
 import UserDetailDialog from "../member/UserDetailDialog";
 import "./ManagerDetail.scss";
-import { sendOtp } from "~/apis/otp.apis";
 
 const ManagerDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,7 +23,7 @@ const ManagerDetail: React.FC = () => {
   const [updateField, setUpdateField] = useState("");
   const [updateValue, setUpdateValue] = useState("");
   const navigate = useNavigate();
-  const { user, loading, error, setUser } = useUserData();
+  const { data: user, isLoading: loading, error } = useUserDetail();
   const [showAbout, setShowAbout] = useState(true);
   const toggleAbout = () => setShowAbout(!showAbout);
 
@@ -69,7 +69,7 @@ const ManagerDetail: React.FC = () => {
   };
 
   if (loading) return <LoadingComponent />;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <div>Error</div>;
   if (!user) return <div>No user data found</div>;
   if (user.role_name !== "MANAGER") {
     navigate("/notfound");

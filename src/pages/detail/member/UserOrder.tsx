@@ -28,7 +28,7 @@ import { getUserOrderByStatus } from "~/apis/order.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
-import { useUserData } from "~/hooks/useUserData";
+import useUserDetail from "~/hooks/useUserData";
 import { OrderResponse, OrderStatus } from "~/types/orders.type";
 import { BreedersResponse } from "~/types/paginated.types";
 import { getUserCookieToken } from "~/utils/auth.utils";
@@ -43,21 +43,18 @@ import {
 const UserOrder = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { user, loading: userLoading, error: userError } = useUserData();
+  const { data: user, isLoading, error } = useUserDetail();
   const [orders, setOrders] = useState<OrderResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const itemsPerPage = 8;
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus>(
     OrderStatus.ALL,
   );
-  const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>({
-    total_page: 0,
-    total_item: 0,
-    item: [],
-  });
+  const [koiBreeders, setKoiBreeders] = useState<BreedersResponse>(
+    {} as BreedersResponse,
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -75,7 +72,7 @@ const UserOrder = () => {
           setOrders(response.item);
           setTotalPages(response.total_page);
         } catch (err) {
-          setError("Error fetching orders");
+          console.log("Error fetching orders:", err);
         } finally {
           setLoading(false);
         }
@@ -118,14 +115,12 @@ const UserOrder = () => {
     navigate(`order-detail/${orderId}`);
   };
 
-  if (userLoading || loading) {
-    return <LoadingComponent />;
-  }
+  if (isLoading) return <LoadingComponent />;
 
-  if (userError || error) {
+  if (error) {
     return (
       <Container>
-        <Alert severity="error">{userError || error}</Alert>
+        <Alert severity="error">{"Error"}</Alert>
       </Container>
     );
   }
@@ -224,7 +219,7 @@ const UserOrder = () => {
                     mb: 2,
                   }}
                 >
-                  {koiBreeders.item.find(
+                  {koiBreeders.data.find(
                     (breeder) =>
                       breeder.id === order.order_details[0].koi.owner_id,
                   ) && (
@@ -236,7 +231,7 @@ const UserOrder = () => {
                       >
                         <img
                           src={
-                            koiBreeders.item.find(
+                            koiBreeders.data.find(
                               (breeder) =>
                                 breeder.id ===
                                 order.order_details[0].koi.owner_id,

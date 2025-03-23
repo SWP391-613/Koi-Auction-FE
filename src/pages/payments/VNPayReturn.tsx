@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { useUserData } from "~/hooks/useUserData";
+import useUserDetail from "~/hooks/useUserData";
 import { RoleName } from "~/types/roles.type";
 
 const VNPayReturn: React.FC = () => {
@@ -23,7 +23,7 @@ const VNPayReturn: React.FC = () => {
   } | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user } = useUserData();
+  const { data: user } = useUserDetail();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);

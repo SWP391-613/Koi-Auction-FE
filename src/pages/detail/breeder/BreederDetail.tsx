@@ -9,7 +9,6 @@ import { toast, ToastContainer } from "react-toastify";
 import AccountTransactionComponent from "~/components/shared/AccountTransactionComponent";
 import AccountVerificationAlert from "~/components/shared/AccountVerificationAlert";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { useUserData } from "~/hooks/useUserData";
 import { KoiDetailModel } from "~/types/kois.type";
 import { UserResponse } from "~/types/users.type";
 import { getCookie } from "~/utils/cookieUtils";
@@ -20,6 +19,7 @@ import { formatDateV2 } from "~/utils/dateTimeUtils";
 import { sendOtp } from "~/apis/otp.apis";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { RoleName } from "~/types/roles.type";
+import useUserDetail from "~/hooks/useUserData";
 
 export type KoiOfBreederQueryParams = {
   breeder_id: number;
@@ -35,7 +35,7 @@ export type KoiOfBreeder = {
 
 const BreederDetail: React.FC = () => {
   const navigate = useNavigate();
-  const { user, loading, error, setUser } = useUserData();
+  const { data: user, isLoading: loading, error } = useUserDetail();
   const userId = getCookie("user_id");
   const accessToken = getCookie("access_token");
   const [openModal, setOpenModal] = useState(false); // Modal state for showing user details
@@ -90,7 +90,7 @@ const BreederDetail: React.FC = () => {
   };
 
   if (loading) return <LoadingComponent />;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <div>Error</div>;
   if (!user) return <div>No user data found</div>;
   if (user.role_name !== RoleName.BREEDER) {
     navigate("/notfound");

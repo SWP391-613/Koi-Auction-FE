@@ -15,16 +15,16 @@ type AuctionItem = {
   auctioneer_id: number;
 };
 
+const mockUrl = "/api_mock/auctions";
+const url = `${DYNAMIC_API_URL}/auctions`;
+
 // Now define the array type
 export type AuctionModel = AuctionItem[];
 
 export const fetchAuctions = async (page: number, limit: number) => {
-  const response = await axios.get<ApiResponse<AuctionModel>>(
-    `${DYNAMIC_API_URL}/auctions`,
-    {
-      params: { page, limit },
-    },
-  );
+  const response = await axios.get<ApiResponse<AuctionModel>>(mockUrl, {
+    params: { page, limit },
+  });
 
   return response.data.data;
 };

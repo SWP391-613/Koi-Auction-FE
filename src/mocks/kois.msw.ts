@@ -83,7 +83,7 @@ const getKoiList_ByKeyWord_Res = {
 };
 
 export const getKoiListByKeyWord_Req = () => {
-  return http.get("/api_mock/kois-list-by-keyword", () => {
+  return http.get("/api_mock/auctionkois/get-kois-by-keyword", () => {
     return HttpResponse.json(getKoiList_ByKeyWord_Res);
   });
 };

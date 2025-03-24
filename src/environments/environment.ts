@@ -22,5 +22,5 @@ export const API_URL = {
   BASE:
     process.env.NODE_ENV === "development"
       ? (import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080/api/v1")
-      : (import.meta.env.VITE_API_MOCK_URL ?? "http://localhost:3000/api_mock"),
+      : (import.meta.env.VITE_API_MOCK_URL ?? "http://localhost:8080/api_mock"),
 } as const;

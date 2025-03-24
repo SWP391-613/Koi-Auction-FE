@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-import { API_URL } from "~/environments/environment";
+import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import { API_URL, environment } from "~/environments/environment";
 import { ApiResponse } from "~/types/api.type";
-import { UserBase } from "~/types/users.type";
+import { Breeder, UserBase } from "~/types/users.type";
 
 export type BreederRes = ApiResponse<
   {
@@ -29,9 +30,10 @@ export type BreederData = {
 // };
 
 const mockUrl = "/api_mock/breeders";
+const url = `${API_URL.BASE}/breeders`;
 
 const fetchAllBreeders = async () => {
-  const response = await axios.get<BreederRes>(`${API_URL.BASE}/breeders`);
+  const response = await axios.get<BreederRes>(mockUrl);
   return response.data.data;
 };
 

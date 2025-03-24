@@ -22,14 +22,13 @@ import { KoiInAuctionResponse } from "~/types/paginated.types";
 //   return response.data;
 // };
 
-const urlMock = `/api_mock/kois-list-by-keyword`;
+const urlMock = `/api_mock/auctionkois/get-kois-by-keyword`;
+const url = `${API_URL.BASE}/auctionkois/get-kois-by-keyword`;
 
 export const getKoiInAuctionData = async (): Promise<
   KoiInAuctionDetailModel[] | null
 > => {
-  const response = await axios.get<KoiInAuctionResponse>(
-    `${API_URL.BASE}/auctionkois/get-kois-by-keyword`,
-  );
+  const response = await axios.get<KoiInAuctionResponse>(urlMock);
   return response.data.data;
 };
 

@@ -1,11 +1,12 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Alert, Button, Container, Typography } from "@mui/material";
+import { Alert, Container, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { softDeleteUser, undoDeleteUser } from "~/apis/user.apis";
 import { fetchBreedersData } from "~/apis/users/breeder.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
 import { CrudButton } from "~/components/shared/CrudButtonComponent";
+import CustomButton from "~/components/shared/CustomButton";
 import LoadingComponent from "~/components/shared/LoadingComponent";
 import TableHeaderComponent from "~/components/shared/TableHeaderComponent";
 import {
@@ -14,10 +15,9 @@ import {
   SUCCESS_MESSAGE,
 } from "~/constants/message";
 import { BREEDER_MANAGEMENT_HEADER } from "~/constants/tableHeader";
+import AddBreederDialog from "~/pages/detail/breeder/AddBreederDialog";
 import { Breeder } from "~/types/users.type";
 import { extractErrorMessage } from "~/utils/dataConverter";
-import AddBreederDialog from "../detail/breeder/AddBreederDialog";
-import CustomButton from "~/components/shared/CustomButton";
 
 const BreederManagement = () => {
   const [breeders, setBreeders] = useState<Breeder[]>([]);
@@ -37,7 +37,7 @@ const BreederManagement = () => {
       try {
         const data = await fetchBreedersData(page, itemsPerPage); // Use the utility function
 
-        if (data && Array.isArray(data.item)) {
+        if (data && Array.isArray(data)) {
           setBreeders(data.item);
           setTotalItems(data.total_item);
           setTotalPages(data.total_page);

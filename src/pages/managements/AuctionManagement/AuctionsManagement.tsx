@@ -16,7 +16,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import CustomButton from "~/components/shared/CustomButton";
 import {
   deleteAuction,
   endAuctionEmergency,
@@ -24,10 +23,17 @@ import {
   fetchAuctionStatusCount,
   updateAuction,
 } from "~/apis/auction.apis";
+import {
+  fetchAuctionKoi,
+  fetchQuantityKoiInAuctionByBidMethod,
+} from "~/apis/auctionkoi.apis";
 import PaginationComponent from "~/components/common/PaginationComponent";
+import CustomButton from "~/components/shared/CustomButton";
 import LoadingComponent from "~/components/shared/LoadingComponent";
-import { AUCTION_STATUS } from "~/constants/status";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "~/constants/message";
+import { AUCTION_STATUS } from "~/constants/status";
+import AddAuctionDialog from "~/pages/auctions/AddAuctionDialog";
+import EditAuctionDialog from "~/pages/auctions/EditAuctionDialog";
 import { AuctionKoi } from "~/types/auctionkois.type";
 import {
   AuctionModel,
@@ -37,12 +43,6 @@ import {
 import { getCookie } from "~/utils/cookieUtils";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import { formatDateTimeString } from "~/utils/dateTimeUtils";
-import AddAuctionDialog from "../auctions/AddAuctionDialog";
-import EditAuctionDialog from "../auctions/EditAuctionDialog";
-import {
-  fetchAuctionKoi,
-  fetchQuantityKoiInAuctionByBidMethod,
-} from "~/apis/auctionkoi.apis";
 
 const AuctionsManagement: React.FC = () => {
   const [auctions, setAuctions] = useState<AuctionModel[]>([]);

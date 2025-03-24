@@ -61,7 +61,7 @@ export const fetchKoisOfBreederWithStatus = async (
 };
 
 export const fetchBreedersData = async (page: number, itemsPerPage: number) => {
-  const response = await axios.get<ApiResponse<BreedersResponse[]>>(
+  const response = await axios.get<BreedersResponse[]>(
     `${DYNAMIC_API_URL}/breeders`,
     {
       params: {
@@ -74,5 +74,5 @@ export const fetchBreedersData = async (page: number, itemsPerPage: number) => {
     },
   );
 
-  return response.data.data;
+  return response.data;
 };

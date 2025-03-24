@@ -2,6 +2,7 @@ import { debounce } from "@mui/material";
 import axios from "axios";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import { API_URL } from "~/environments/environment";
 import { ApiResponse } from "~/types/api.type";
 import { AuctionModel } from "~/types/auctions.type";
 import { KoiDetailModel, KoiInAuctionDetailModel } from "~/types/kois.type";
@@ -203,7 +204,7 @@ export const useKoiInAuctionSearch = (debounceTime = 500) => {
 
 export const useAuctionSearch = (debounceTime = 500) => {
   return useSearch<AuctionModel>({
-    apiUrl: `${DYNAMIC_API_URL}/auctions`,
+    apiUrl: `${API_URL.BASE}/auctions`,
     limit: 30,
     requiresAuth: false,
     preload: true,

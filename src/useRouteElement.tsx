@@ -23,9 +23,6 @@ const InternalServerError = lazy(
 const Auctions = lazy(() => import("./pages/auctions/Auctions"));
 const AuctionDetail = lazy(() => import("./pages/auctions/AuctionDetail"));
 
-// Breeder
-const BreederInfo = lazy(() => import("./pages/static/BreederInfo"));
-
 // Blog
 const BlogList = lazy(() => import("./pages/blog/BlogList"));
 const BlogPost = lazy(() => import("./pages/blog/BlogPost"));
@@ -54,21 +51,26 @@ const ManagerDetail = lazy(
   () => import("./pages/detail/manager/ManagerDetail"),
 );
 const AuctionsManagement = lazy(
-  () => import("./pages/managements/AuctionsManagement"),
+  () => import("./pages/managements/AuctionManagement/index"),
 );
-const KoiManagement = lazy(() => import("./pages/managements/KoiManagement"));
+const KoiManagement = lazy(
+  () => import("./pages/managements/KoiManagement/index"),
+);
 const BreederManagement = lazy(
-  () => import("./pages/managements/BreederManagement"),
+  () => import("./pages/managements/UserManagement/BreederManagement/index"),
 );
 const StaffManagement = lazy(() => import("./pages/manager/StaffManagement"));
 const MemberManagement = lazy(
-  () => import("./pages/managements/MemberManagement"),
+  () =>
+    import(
+      "./pages/managements/UserManagement/MemberManagement/MemberManagement"
+    ),
 );
 const OrderManagement = lazy(
-  () => import("./pages/managements/OrderManagement"),
+  () => import("./pages/managements/OrderManagement/OrderManagement"),
 );
 const PaymentManagement = lazy(
-  () => import("./pages/managements/PaymentManagement"),
+  () => import("./pages/managements/PaymentManagement/PaymentManagement"),
 );
 const SendNotifications = lazy(
   () => import("./components/shared/SendNotifications"),
@@ -137,10 +139,6 @@ export default function useRouteElements() {
     {
       path: "/auctions/:id",
       element: <AuctionDetail />,
-    },
-    {
-      path: "/breeder/:id/info",
-      element: <BreederInfo />,
     },
     {
       path: "/blog",

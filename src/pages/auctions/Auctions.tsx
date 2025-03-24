@@ -1,36 +1,71 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { AuctionCart } from "./AuctionCart";
-import AuctionList from "~/components/shared/AuctionList";
-import { fetchAuctions } from "~/apis/auction.apis";
+import { Typography } from "@mui/material";
+import React, { useState } from "react";
+import AuctionSearchComponent from "~/components/search/AuctionSearchComponent";
+import LoadingComponent from "~/components/shared/LoadingComponent";
+import useAuctions from "~/hooks/useAuctions";
 
 const AuctionsComponent: React.FC = () => {
-  const fetchAuctionsDataCallback = React.useCallback(
-    (page: number, itemsPerPage: number) => {
-      return fetchAuctions(page, itemsPerPage);
-    },
-    [],
-  );
+  const { data: auctions, isLoading, error } = useAuctions();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMorePages, setHasMorePages] = useState(true);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+
+  const handleSearchStateChange = (isActive: boolean) => {
+    setIsSearchActive(isActive);
+  };
+
+  if (isLoading && !isSearchActive) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingComponent />
+      </div>
+    );
+  }
+
+  if (error && !isSearchActive) {
+    return (
+      <Typography
+        variant="h5"
+        sx={{
+          marginTop: "10rem",
+          marginBottom: "10rem",
+          color: "error.main",
+          fontWeight: "bold",
+          textAlign: "center",
+        }}
+      >
+        {error.toString()}
+      </Typography>
+    );
+  }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-      >
-        <AuctionList
-          fetchAuctionsData={fetchAuctionsDataCallback}
-          cartComponent={AuctionCart}
-          emptyMessage="No auctions found"
-        />
-      </motion.div>
-    </motion.div>
+    <div className="container mx-auto">
+      {!isSearchActive && (
+        <>
+          {auctions && auctions.length === 0 ? (
+            <div className="flex flex-col justify-center items-center h-[30rem]">
+              <Typography
+                variant="h3"
+                sx={{
+                  color: "error.main",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }}
+              >
+                {`No auctions found`}
+              </Typography>
+            </div>
+          ) : (
+            <>
+              <AuctionSearchComponent
+                onSearchStateChange={handleSearchStateChange}
+              />
+            </>
+          )}
+        </>
+      )}
+    </div>
   );
 };
 

@@ -1,33 +1,27 @@
 // src/pages/Login.tsx
-import React from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Typography,
-} from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
-import { useNavigate, Link } from "react-router-dom";
+import { Button, Typography } from "@mui/material";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as yup from "yup";
-import { LoginDTO } from "~/types/users.type";
-import { extractErrorMessage } from "~/utils/dataConverter";
-import { loginValidationSchema } from "~/utils/validation.utils";
-import { useAuth } from "../../contexts/AuthContext";
-import FormField from "~/components/forms/FormField";
-import CheckboxField from "~/components/forms/CheckboxField";
-import AuthFormContainer from "~/components/forms/AuthFormContainer";
+import { login } from "~/apis/auth.apis";
+import { sendOtpForgotPassword } from "~/apis/otp.apis";
 import { routeUserToEachPage } from "~/components/auth/RoleBasedRoute";
-import { emailRegex } from "~/constants/regex";
+import CheckboxField from "~/components/forms/CheckboxField";
+import FormField from "~/components/forms/FormField";
 import {
   GENERAL_TOAST_MESSAGE,
   LOGIN_FORM_TOAST_MESSAGE,
   OTP_TOAST_MESSAGE,
 } from "~/constants/message";
-import { sendOtpForgotPassword } from "~/apis/otp.apis";
-import { login } from "~/apis/auth.apis";
+import { emailRegex } from "~/constants/regex";
+import AuthFormLayout from "~/layouts/AuthFormContainer";
+import { LoginDTO } from "~/types/users.type";
+import { extractErrorMessage } from "~/utils/dataConverter";
+import { loginValidationSchema } from "~/utils/validation.utils";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Login: React.FC = () => {
   const { authLogin } = useAuth();
@@ -108,7 +102,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <AuthFormContainer>
+    <AuthFormLayout>
       <form
         className="form flex flex-col gap-4 rounded-lg bg-white p-9 shadow-md w-full max-w-md"
         onSubmit={handleSubmit(onSubmit)}
@@ -172,7 +166,7 @@ const Login: React.FC = () => {
           </Link>
         </div>
       </form>
-    </AuthFormContainer>
+    </AuthFormLayout>
   );
 };
 

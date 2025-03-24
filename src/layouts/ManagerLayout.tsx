@@ -1,15 +1,16 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import DashboardLayout from "~/components/shared/DashboardLayout";
+import OrderManagement from "~/pages/managements/OrderManagement/OrderManagement";
+import PaymentManagement from "~/pages/managements/PaymentManagement/PaymentManagement";
 import ManagerDetail from "../pages/detail/manager/ManagerDetail";
 import KoiDetail from "../pages/kois/KoiDetail";
-import BreederManagement from "../pages/managements/BreederManagement";
-import KoiManagement from "../pages/managements/KoiManagement";
-import MemberManagement from "../pages/managements/MemberManagement";
-import StaffManagement from "../pages/manager/staff/StaffManagement";
-import { AuctionsManagement } from "~/pages/managements/AuctionsManagement";
-import OrderManagement from "~/pages/managements/OrderManagement";
-import PaymentManagement from "~/pages/managements/PaymentManagement";
+import MemberManagement from "../pages/managements/UserManagement/MemberManagement/MemberManagement";
+
+import AuctionsManagement from "~/pages/managements/AuctionManagement";
+import KoiManagement from "~/pages/managements/KoiManagement";
+import BreederManagement from "~/pages/managements/UserManagement/BreederManagement";
+import StaffManagement from "~/pages/manager/StaffManagement";
 
 const ManagerLayout: React.FC = () => {
   const navLinks = [

@@ -6,9 +6,9 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { register } from "~/apis/auth.apis";
-import AuthFormContainer from "~/components/forms/AuthFormContainer";
 import CheckboxField from "~/components/forms/CheckboxField";
 import FormField from "~/components/forms/FormField";
+import AuthFormLayout from "~/layouts/AuthFormContainer";
 import { UserRegisterDTO } from "~/types/users.type";
 import { extractErrorMessage } from "~/utils/dataConverter";
 import { registerValidationSchema } from "~/utils/validation.utils";
@@ -57,7 +57,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <AuthFormContainer>
+    <AuthFormLayout>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full max-w-md bg-white rounded-lg shadow-md p-8 space-y-6"
@@ -143,7 +143,7 @@ const Register: React.FC = () => {
           </Link>
         </div>
       </form>
-    </AuthFormContainer>
+    </AuthFormLayout>
   );
 };
 

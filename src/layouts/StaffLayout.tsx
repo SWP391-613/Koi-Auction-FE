@@ -4,8 +4,8 @@ import DashboardLayout from "~/components/shared/DashboardLayout";
 import StaffDetail from "~/pages/detail/staff/StaffDetail";
 import VerifyKoiList from "~/pages/kois/VerifyKoiList";
 import { AuctionsManagement } from "~/pages/managements/AuctionsManagement";
-import OrderManagement from "~/pages/managements/OrderManagement";
-import PaymentManagement from "~/pages/managements/PaymentManagement";
+import OrderManagement from "~/pages/managements/OrderManagement/OrderManagement";
+import PaymentManagement from "~/pages/managements/PaymentManagement/PaymentManagement";
 
 const StaffLayout: React.FC = () => {
   const navLinks = [

@@ -1,11 +1,11 @@
 import React from "react";
 import ScrollToTop from "react-scroll-to-top";
 import AuctionCard from "~/components/shared/AuctionCard";
-import { AuctionModel } from "~/types/auctions.type";
+import { AuctionModel } from "~/hooks/useAuctions";
 import { getAuctionStatus } from "~/utils/dateTimeUtils";
 
 interface AuctionCartProps {
-  items: AuctionModel[];
+  items: AuctionModel;
 }
 
 export const AuctionCart: React.FC<AuctionCartProps> = ({ items }) => {

@@ -1,6 +1,5 @@
-import React, { useContext, lazy, Suspense } from "react";
+import React, { lazy, useContext } from "react";
 import { Navigate, Outlet, useRoutes } from "react-router-dom";
-import PageTransition from "./components/shared/PageTransition";
 import { AuthContext } from "./contexts/AuthContext";
 
 // Lazy load components for better performance
@@ -23,7 +22,6 @@ const InternalServerError = lazy(
 // Auctions
 const Auctions = lazy(() => import("./pages/auctions/Auctions"));
 const AuctionDetail = lazy(() => import("./pages/auctions/AuctionDetail"));
-const KoiBidding = lazy(() => import("./pages/auctions/KoiBidding"));
 
 // Breeder
 const BreederInfo = lazy(() => import("./pages/static/BreederInfo"));
@@ -118,83 +116,39 @@ export default function useRouteElements() {
     // Public routes
     {
       path: "/",
-      element: (
-        <PageTransition>
-          <Home />
-        </PageTransition>
-      ),
+      element: <Home />,
     },
     {
       path: "/about",
-      element: (
-        <PageTransition>
-          <About />
-        </PageTransition>
-      ),
+      element: <About />,
     },
     {
       path: "/privacy",
-      element: (
-        <PageTransition>
-          <Privacy />
-        </PageTransition>
-      ),
+      element: <Privacy />,
     },
     {
       path: "/terms",
-      element: (
-        <PageTransition>
-          <Terms />
-        </PageTransition>
-      ),
+      element: <Terms />,
     },
     {
       path: "/auctions",
-      element: (
-        <PageTransition>
-          <Auctions />
-        </PageTransition>
-      ),
+      element: <Auctions />,
     },
     {
       path: "/auctions/:id",
-      element: (
-        <PageTransition>
-          <AuctionDetail />
-        </PageTransition>
-      ),
-    },
-    {
-      path: "/auctionkois/:auctionId/:auctionKoiId",
-      element: (
-        <PageTransition>
-          <KoiBidding />
-        </PageTransition>
-      ),
+      element: <AuctionDetail />,
     },
     {
       path: "/breeder/:id/info",
-      element: (
-        <PageTransition>
-          <BreederInfo />
-        </PageTransition>
-      ),
+      element: <BreederInfo />,
     },
     {
       path: "/blog",
-      element: (
-        <PageTransition>
-          <BlogList />
-        </PageTransition>
-      ),
+      element: <BlogList />,
     },
     {
       path: "/blog/:id",
-      element: (
-        <PageTransition>
-          <BlogPost />
-        </PageTransition>
-      ),
+      element: <BlogPost />,
     },
     {
       path: "/notfound",
@@ -211,35 +165,19 @@ export default function useRouteElements() {
       children: [
         {
           path: "/login",
-          element: (
-            <PageTransition>
-              <Login />
-            </PageTransition>
-          ),
+          element: <Login />,
         },
         {
           path: "/register",
-          element: (
-            <PageTransition>
-              <Register />
-            </PageTransition>
-          ),
+          element: <Register />,
         },
         {
           path: "/auth",
-          element: (
-            <PageTransition>
-              <AuthContainer />
-            </PageTransition>
-          ),
+          element: <AuthContainer />,
         },
         {
           path: "/otp-verification",
-          element: (
-            <PageTransition>
-              <OtpVerification />
-            </PageTransition>
-          ),
+          element: <OtpVerification />,
         },
         {
           path: "/forgot-password",
@@ -258,11 +196,7 @@ export default function useRouteElements() {
         },
         {
           path: "/kois/:id",
-          element: (
-            <PageTransition>
-              <KoiDetail />
-            </PageTransition>
-          ),
+          element: <KoiDetail />,
         },
         {
           path: "/members",
@@ -282,11 +216,7 @@ export default function useRouteElements() {
         },
         {
           path: "/order-detail/:id",
-          element: (
-            <PageTransition>
-              <UserOrderDetail />
-            </PageTransition>
-          ),
+          element: <UserOrderDetail />,
         },
         {
           path: "/managers",
@@ -374,11 +304,7 @@ export default function useRouteElements() {
         },
         {
           path: "/payments/vnpay-payment-return",
-          element: (
-            <PageTransition>
-              <VNPayReturn />
-            </PageTransition>
-          ),
+          element: <VNPayReturn />,
         },
         {
           path: "/feedback/:orderId",

@@ -7,6 +7,8 @@ import { SEARCH_DESCRIPTION, SEARCH_LABEL } from "~/constants/label";
 import { useQuery } from "react-query";
 import { useKoiInAuction } from "~/hooks/useKois";
 import LoadingComponent from "../shared/LoadingComponent";
+import { KoiInAuctionResponse } from "~/types/paginated.types";
+import { KoiInAuctionDetailModel } from "~/types/kois.type";
 
 interface KoiInAuctionSearchComponentProps {
   onSearchStateChange: (isActive: boolean) => void;
@@ -17,7 +19,9 @@ const KoiInAuctionSearchComponent: React.FC<
 > = ({ onSearchStateChange }) => {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [filteredResults, setFilteredResults] = useState<any[]>([]);
+  const [filteredResults, setFilteredResults] = useState<
+    KoiInAuctionDetailModel[]
+  >([]);
 
   const { data, isLoading, error } = useKoiInAuction();
 
@@ -28,20 +32,18 @@ const KoiInAuctionSearchComponent: React.FC<
 
   // Filter results based on search query
   useEffect(() => {
-    if (!data?.data) return;
-
     if (!query) {
-      setFilteredResults(data.data);
+      setFilteredResults(data || []);
       return;
     }
 
-    const filtered = data.data.filter(
+    const filtered = data?.filter(
       (koi: any) =>
         koi.name.toLowerCase().includes(query.toLowerCase()) ||
         koi.description.toLowerCase().includes(query.toLowerCase()),
     );
 
-    setFilteredResults(filtered);
+    setFilteredResults(filtered || []);
   }, [data, query]);
 
   // Calculate pagination

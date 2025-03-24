@@ -6,12 +6,15 @@ import { UserBase } from "~/types/users.type";
 import { getUserCookieToken } from "~/utils/auth.utils";
 
 const fetchUserDetails = async () => {
+  const token = getUserCookieToken();
+  if (!token) return null;
+
   const response = await axios.post<ApiResponse<UserBase>>(
     `${DYNAMIC_API_URL}/auth/details`,
     {},
     {
       headers: {
-        Authorization: `Bearer ${getUserCookieToken()}`,
+        Authorization: `Bearer ${token}`,
       },
     },
   );
@@ -19,8 +22,8 @@ const fetchUserDetails = async () => {
 };
 
 const useUserDetail = () => {
-  return useQuery<UserBase>({
-    queryKey: "userDetails",
+  return useQuery<UserBase | null>({
+    queryKey: ["userDetails"],
     queryFn: fetchUserDetails,
   });
 };

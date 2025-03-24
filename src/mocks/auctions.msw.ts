@@ -49,7 +49,7 @@ const getAllAuction_Pag_Res = {
 };
 
 export const getAllAuction_Pag_Req = () => {
-  return http.get(`/mock_api/auctions?page=0&limit=18`, () => {
+  return http.get(`/api_mock/auctionkois/get-kois-by-keyword`, () => {
     return HttpResponse.json<ApiResponse<AuctionModel[]>>(
       getAllAuction_Pag_Res,
     );
@@ -57,12 +57,9 @@ export const getAllAuction_Pag_Req = () => {
 };
 
 export const getAllAuction_ByKeyWord_Pag_Req = () => {
-  return http.get(
-    `/mock_api/get-auctions-by-keyword?keyword=&page=0&limit=30`,
-    () => {
-      return HttpResponse.json<ApiResponse<AuctionModel[]>>(
-        getAllAuction_Pag_Res,
-      );
-    },
-  );
+  return http.get(`/api_mock/auctionkois/get-kois-by-keyword`, () => {
+    return HttpResponse.json<ApiResponse<AuctionModel[]>>(
+      getAllAuction_Pag_Res,
+    );
+  });
 };

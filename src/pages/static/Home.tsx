@@ -1,89 +1,68 @@
 import { AdvancedVideo } from "@cloudinary/react";
 import { Cloudinary } from "@cloudinary/url-gen";
-import axios from "axios";
 import { format } from "date-fns";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
-import { default as React, useEffect, useRef, useState } from "react";
+import { default as React, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { DYNAMIC_API_URL } from "~/constants/endPoints";
+import KoiInAuctionSearchComponent from "~/components/search/KoiInAuctionSearchComponent";
+import LoadingComponent from "~/components/shared/LoadingComponent";
 import { useAuth } from "~/contexts/AuthContext";
-import { KoiInAuctionDetailModel } from "~/types/kois.type";
-import { BreedersResponse } from "~/types/paginated.types";
+import useBreeders from "~/hooks/useBreeders";
 import { generateBlogPostsPreview } from "~/utils/data/blog.data";
 import FancyButton from "../../components/shared/FancyButton";
-import Kois from "../kois/Kois";
-import useBreeders from "~/hooks/useBreeders";
-import LoadingComponent from "~/components/shared/LoadingComponent";
-import { useKoiInAuction } from "~/hooks/useKois";
+
+const heroTextVariants = {
+  hidden: { opacity: 0, x: -50 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut",
+    },
+  },
+};
+
+const buttonVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  },
+  hover: {
+    scale: 1.05,
+    transition: {
+      duration: 0.2,
+      ease: "easeInOut",
+    },
+  },
+};
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
+  },
+});
 
 const Home = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
-  const {
-    data: randomKois,
-    isLoading: koiLoading,
-    error: koiError,
-  } = useKoiInAuction("", 1, 12);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+
+  const handleSearchStateChange = (isActive: boolean) => {
+    setIsSearchActive(isActive);
+  };
   const { scrollYProgress } = useScroll();
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const { data: koiBreeders, isLoading, error } = useBreeders();
 
-  // Add refs for scroll sections
-  const featuredRef = useRef(null);
-  const breedersRef = useRef(null);
-  const newsRef = useRef(null);
-
-  // Check if sections are in view
-  const isFeaturedInView = useInView(featuredRef, {
-    once: true,
-    margin: "-100px",
-  });
-  const isBreedersInView = useInView(breedersRef, {
-    once: true,
-    margin: "-100px",
-  });
-  const isNewsInView = useInView(newsRef, { once: true, margin: "-100px" });
-
   const handleBreederClick = (breederId: number) => {
     navigate(`/breeder/${breederId}/info`);
   };
-
-  const heroTextVariants = {
-    hidden: { opacity: 0, x: -50 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  const buttonVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    },
-    hover: {
-      scale: 1.05,
-      transition: {
-        duration: 0.2,
-        ease: "easeInOut",
-      },
-    },
-  };
-
-  const cld = new Cloudinary({
-    cloud: {
-      cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
-    },
-  });
 
   const myVideo = cld.video("background_dbkstv").quality("auto").format("auto");
 
@@ -185,32 +164,16 @@ const Home = () => {
       </div>
 
       {/* Featured Kois Section */}
-      <motion.div
-        ref={featuredRef}
-        initial={{ opacity: 0, y: 50 }}
-        animate={{
-          opacity: isFeaturedInView ? 1 : 0,
-          y: isFeaturedInView ? 0 : 50,
-        }}
-        transition={{ duration: 0.6 }}
-        className="bg-white"
-      >
+      <motion.div transition={{ duration: 0.6 }} className="bg-white">
         <div className="container mx-auto">
-          <Kois />
+          <KoiInAuctionSearchComponent
+            onSearchStateChange={handleSearchStateChange}
+          />
         </div>
       </motion.div>
 
       {/* Partner Breeders section */}
-      <motion.div
-        ref={breedersRef}
-        initial={{ opacity: 0, y: 50 }}
-        animate={{
-          opacity: isBreedersInView ? 1 : 0,
-          y: isBreedersInView ? 0 : 50,
-        }}
-        transition={{ duration: 0.6 }}
-        className="py-4 px-4"
-      >
+      <div className="py-4 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="flex items-center justify-center gap-3 text-3xl font-bold text-gray-900">
@@ -220,23 +183,11 @@ const Home = () => {
             </h2>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isBreedersInView ? 1 : 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4"
-          >
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
             {koiBreeders &&
               koiBreeders.length > 0 &&
               koiBreeders.map((breeder, index) => (
-                <motion.div
-                  key={`${breeder.user_response.id}-${index}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{
-                    opacity: isBreedersInView ? 1 : 0,
-                    y: isBreedersInView ? 0 : 20,
-                  }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                <div
                   className="bg-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 p-4 flex flex-col items-center justify-center cursor-pointer"
                   onClick={() => handleBreederClick(breeder.user_response.id)}
                 >
@@ -248,20 +199,14 @@ const Home = () => {
                   <p className="text-center font-medium text-gray-700">
                     {breeder.user_response.first_name}
                   </p>
-                </motion.div>
+                </div>
               ))}
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* News Section */}
-      <motion.div
-        ref={newsRef}
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: isNewsInView ? 1 : 0, y: isNewsInView ? 0 : 50 }}
-        transition={{ duration: 0.6 }}
-        className="py-8 px-4"
-      >
+      <div className="py-8 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="flex items-center justify-center gap-3 text-3xl font-bold text-gray-900">
@@ -271,22 +216,9 @@ const Home = () => {
             </h2>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isNewsInView ? 1 : 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {generateBlogPostsPreview(8).map((post, index) => (
-              <motion.div
-                key={post.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{
-                  opacity: isNewsInView ? 1 : 0,
-                  y: isNewsInView ? 0 : 20,
-                }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
+              <>
                 <Link
                   to={`/blog/${post.id}`}
                   className="group bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300"
@@ -313,25 +245,20 @@ const Home = () => {
                     </p>
                   </div>
                 </Link>
-              </motion.div>
+              </>
             ))}
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isNewsInView ? 1 : 0 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
-            className="text-center mt-8"
-          >
+          <div className="text-center mt-8">
             <Link
               to="/blog"
               className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 hover:underline transition-all duration-300 inline-block"
             >
               See more news
             </Link>
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };

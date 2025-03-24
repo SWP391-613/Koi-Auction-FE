@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-import { DYNAMIC_API_URL } from "~/constants/endPoints";
-import { ApiResponse } from "~/types/api.type";
+import { API_URL } from "~/environments/environment";
+import { KoiInAuctionDetailModel } from "~/types/kois.type";
 import { KoiInAuctionResponse } from "~/types/paginated.types";
 
 // export const getKoiInAuctionData = async (
@@ -22,13 +22,16 @@ import { KoiInAuctionResponse } from "~/types/paginated.types";
 //   return response.data;
 // };
 
-export const getKoiInAuctionData =
-  async (): Promise<KoiInAuctionResponse | void> => {
-    const response = await axios.get<ApiResponse<KoiInAuctionResponse>>(
-      `/api_mock/kois-list-by-keyword`,
-    );
-    return response.data.data;
-  };
+const urlMock = `/api_mock/kois-list-by-keyword`;
+
+export const getKoiInAuctionData = async (): Promise<
+  KoiInAuctionDetailModel[] | null
+> => {
+  const response = await axios.get<KoiInAuctionResponse>(
+    `${API_URL.BASE}/auctionkois/get-kois-by-keyword`,
+  );
+  return response.data.data;
+};
 
 export const useKoiInAuction = () => {
   return useQuery({

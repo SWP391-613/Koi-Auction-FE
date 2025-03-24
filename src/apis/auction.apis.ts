@@ -1,6 +1,7 @@
 import axios from "axios";
 import { DYNAMIC_API_URL } from "~/constants/endPoints";
 import { ERROR_MESSAGE } from "~/constants/message";
+import { API_URL } from "~/environments/environment";
 import { ApiResponse } from "~/types/api.type";
 import {
   AddNewAuctionDTO,
@@ -46,7 +47,7 @@ export const fetchAuctions = async (
   limit: number,
 ): Promise<AuctionModel[]> => {
   const response = await axios.get<ApiResponse<AuctionModel[]>>(
-    `${DYNAMIC_API_URL}/auctions`,
+    `${API_URL.BASE}/auctions`,
     {
       params: { page, limit },
     },

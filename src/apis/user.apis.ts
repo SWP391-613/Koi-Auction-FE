@@ -148,16 +148,3 @@ export const undoDeleteUser = async (id: number): Promise<void> => {
     );
   }
 };
-
-export const fetchUserDetails = async () => {
-  const response = await axios.post<ApiResponse<UserBase>>(
-    `${DYNAMIC_API_URL}/auth/details`,
-    {},
-    {
-      headers: {
-        Authorization: `Bearer ${getUserCookieToken()}`,
-      },
-    },
-  );
-  return response.data.data;
-};
